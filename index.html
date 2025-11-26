@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UK Bazar - فرۆشگای ئۆنلاین</title>
+    <title>UkBazar-World Online Shopping</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -1004,9 +1004,9 @@
             <div class="header-content">
                 <div class="logo" onclick="showHomePage()">
                     <div class="logo-icon">
-                        <img src="https://raw.githubusercontent.com/cis-web/ukbazar/main/logo-ukbazar/ukbazarlogo.jpg" alt="UK Bazar Logo">
+                        <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/refs/heads/main/logo/logo-ukbazar.jfif" alt="UkBazar Logo">
                     </div>
-                    <div class="logo-text">UK Bazar</div>
+                    <div class="logo-text">UkBazar</div>
                 </div>
                 
                 <!-- مینو -->
@@ -1019,9 +1019,9 @@
                         <!-- سەرپەڕەی مینو -->
                         <div class="menu-header">
                             <div class="logo-icon">
-                                <img src="https://raw.githubusercontent.com/cis-web/ukbazar/main/logo-ukbazar/ukbazarlogo.jpg" alt="UK Bazar Logo">
+                                <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/refs/heads/main/logo/logo-ukbazar.jfif" alt="تیکست Logo">
                             </div>
-                            <div class="logo-text">UK Bazar</div>
+                            <div class="logo-text">UkBazar</div>
                         </div>
                         
                         <div class="menu-section">
@@ -1115,7 +1115,7 @@
                 <div class="nav-buttons">
                     <!-- دوگمەی کالا دابنێ - گەورەتر و جوانتر -->
                     <button class="btn btn-add-product" id="addProductBtn">
-                        <i class="fas fa-plus-circle"></i> کاڵا دابنێ
+                        <i class="fas fa-plus-circle"></i> کالا دابنێ
                     </button>
                     <button class="btn btn-outline" id="adminLoginBtn" style="position: relative;">
                         <i class="fas fa-user-shield"></i> داشبۆرد
@@ -1132,8 +1132,8 @@
     <!-- بەشی سەرەکی -->
     <section class="hero-section" id="heroSection">
         <div class="container">
-            <h1 class="hero-title">UK Bazar</h1>
-            <p class="hero-subtitle">World Online Shopping</p>
+            <h1 class="hero-title">UkBazar</h1>
+            <p class="hero-subtitle">فرۆشگای ئۆنلاین</p>
         </div>
     </section>
     
@@ -1172,56 +1172,58 @@
                         <input type="text" id="productName" placeholder="ناوی کاڵا" required>
                     </div>
                     <div class="form-group">
-                        <label for="productPrice">نرخ (دینار)</label>
-                        <input type="number" id="productPrice" placeholder="نرخ بە دینار" required>
+                        <label for="productPrice">نرخ</label>
+                        <input type="number" id="productPrice" placeholder="نرخ" required>
                     </div>
                 </div>
                 
                 <div class="form-row">
+                    <div class="form-group">
+                        <label for="productCurrency">دراو</label>
+                        <select id="productCurrency" required>
+                            <option value="$">$</option>
+                            <option value="Euro">Euro</option>
+                            <option value="دینار">دینار</option>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label for="sellerName">ناوی فرۆشیار</label>
                         <input type="text" id="sellerName" placeholder="ناوی فرۆشیار" required>
                     </div>
-                    <div class="form-group">
-                        <label for="sellerMobile">ژمارەی مۆبایلی فرۆشیار</label>
-                        <input type="tel" id="sellerMobile" placeholder="٠٧٧٠ XXX XXXX" required>
-                    </div>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="productLocation">ناونیشان</label>
-                        <select id="productLocation" required>
-                            <option value="">ناونیشان هەڵبژێرە</option>
-                            <option value="هەولێر">هەولێر</option>
-                            <option value="سلێمانی">سلێمانی</option>
-                            <option value="دهۆک">دهۆک</option>
-                            <option value="کەرکووک">کەرکووک</option>
-                            <option value="بەغدا">بەغدا</option>
-                        </select>
+                        <label for="sellerMobile">ژمارەی مۆبایلی فرۆشیار</label>
+                        <input type="tel" id="sellerMobile" placeholder="٠٧٧٠ XXX XXXX" required>
                     </div>
                     <div class="form-group">
-                        <label for="productCategory">جۆری کاڵا</label>
-                        <select id="productCategory" required>
-                            <option value="">جۆری کاڵا هەڵبژێرە</option>
-                            <option value="مۆبایل">مۆبایل</option>
-                            <option value="لاپتۆپ">لاپتۆپ</option>
-                            <option value="کۆمپیوتەر">کۆمپیوتەر</option>
-                            <option value="ئایپاد">ئایپاد</option>
-                            <option value="ئوتومبێل">ئوتومبێل</option>
-                            <option value="ناوماڵ">کەلوپەلی ناوماڵ</option>
-                            <option value="پاسکیل">پاسکیل</option>
-                            <option value="سکۆتەر">سکۆتەر</option>
-                            <option value="کامێرا">کامێرا</option>
-                            <option value="جوانکاری">جوانکاری</option>
-                            <option value="خانوو">خانوو</option>
-                            <option value="زەوی">زەوی</option>
-                            <option value="باخ">باخ</option>
-                            <option value="ئاژەڵ">ئاژەڵ</option>
-                            <option value="مناڵان">مناڵان</option>
-                            <option value="جلو بەرگ">جلو بەرگ</option>
-                        </select>
+                        <label for="productLocation">ناونیشان</label>
+                        <input type="text" id="productLocation" placeholder="ناونیشان بەدەست بنووسە" required>
                     </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productCategory">جۆری کاڵا</label>
+                    <select id="productCategory" required>
+                        <option value="">جۆری کاڵا هەڵبژێرە</option>
+                        <option value="مۆبایل">مۆبایل</option>
+                        <option value="لاپتۆپ">لاپتۆپ</option>
+                        <option value="کۆمپیوتەر">کۆمپیوتەر</option>
+                        <option value="ئایپاد">ئایپاد</option>
+                        <option value="ئوتومبێل">ئوتومبێل</option>
+                        <option value="ناوماڵ">کەلوپەلی ناوماڵ</option>
+                        <option value="پاسکیل">پاسکیل</option>
+                        <option value="سکۆتەر">سکۆتەر</option>
+                        <option value="کامێرا">کامێرا</option>
+                        <option value="جوانکاری">جوانکاری</option>
+                        <option value="خانوو">خانوو</option>
+                        <option value="زەوی">زەوی</option>
+                        <option value="باخ">باخ</option>
+                        <option value="ئاژەڵ">ئاژەڵ</option>
+                        <option value="مناڵان">مناڵان</option>
+                        <option value="جلو بەرگ">جلو بەرگ</option>
+                    </select>
                 </div>
                 
                 <div class="form-group">
@@ -1361,56 +1363,58 @@
                         <input type="text" id="editProductName" placeholder="ناوی کاڵا" required>
                     </div>
                     <div class="form-group">
-                        <label for="editProductPrice">نرخ (دینار)</label>
-                        <input type="number" id="editProductPrice" placeholder="نرخ بە دینار" required>
+                        <label for="editProductPrice">نرخ</label>
+                        <input type="number" id="editProductPrice" placeholder="نرخ" required>
                     </div>
                 </div>
                 
                 <div class="form-row">
+                    <div class="form-group">
+                        <label for="editProductCurrency">دراو</label>
+                        <select id="editProductCurrency" required>
+                            <option value="$">$</option>
+                            <option value="Euro">Euro</option>
+                            <option value="دینار">دینار</option>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label for="editSellerName">ناوی فرۆشیار</label>
                         <input type="text" id="editSellerName" placeholder="ناوی فرۆشیار" required>
                     </div>
-                    <div class="form-group">
-                        <label for="editSellerMobile">ژمارەی مۆبایلی فرۆشیار</label>
-                        <input type="tel" id="editSellerMobile" placeholder="٠٧٧٠ XXX XXXX" required>
-                    </div>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="editProductLocation">ناونیشان</label>
-                        <select id="editProductLocation" required>
-                            <option value="">ناونیشان هەڵبژێرە</option>
-                            <option value="هەولێر">هەولێر</option>
-                            <option value="سلێمانی">سلێمانی</option>
-                            <option value="دهۆک">دهۆک</option>
-                            <option value="کەرکووک">کەرکووک</option>
-                            <option value="بەغدا">بەغدا</option>
-                        </select>
+                        <label for="editSellerMobile">ژمارەی مۆبایلی فرۆشیار</label>
+                        <input type="tel" id="editSellerMobile" placeholder="٠٧٧٠ XXX XXXX" required>
                     </div>
                     <div class="form-group">
-                        <label for="editProductCategory">جۆری کاڵا</label>
-                        <select id="editProductCategory" required>
-                            <option value="">جۆری کاڵا هەڵبژێرە</option>
-                            <option value="مۆبایل">مۆبایل</option>
-                            <option value="لاپتۆپ">لاپتۆپ</option>
-                            <option value="کۆمپیوتەر">کۆمپیوتەر</option>
-                            <option value="ئایپاد">ئایپاد</option>
-                            <option value="ئوتومبێل">ئوتومبێل</option>
-                            <option value="ناوماڵ">کەلوپەلی ناوماڵ</option>
-                            <option value="پاسکیل">پاسکیل</option>
-                            <option value="سکۆتەر">سکۆتەر</option>
-                            <option value="کامێرا">کامێرا</option>
-                            <option value="جوانکاری">جوانکاری</option>
-                            <option value="خانوو">خانوو</option>
-                            <option value="زەوی">زەوی</option>
-                            <option value="باخ">باخ</option>
-                            <option value="ئاژەڵ">ئاژەڵ</option>
-                            <option value="مناڵان">مناڵان</option>
-                            <option value="جلو بەرگ">جلو بەرگ</option>
-                        </select>
+                        <label for="editProductLocation">ناونیشان</label>
+                        <input type="text" id="editProductLocation" placeholder="ناونیشان بەدەست بنووسە" required>
                     </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editProductCategory">جۆری کاڵا</label>
+                    <select id="editProductCategory" required>
+                        <option value="">جۆری کاڵا هەڵبژێرە</option>
+                        <option value="مۆبایل">مۆبایل</option>
+                        <option value="لاپتۆپ">لاپتۆپ</option>
+                        <option value="کۆمپیوتەر">کۆمپیوتەر</option>
+                        <option value="ئایپاد">ئایپاد</option>
+                        <option value="ئوتومبێل">ئوتومبێل</option>
+                        <option value="ناوماڵ">کەلوپەلی ناوماڵ</option>
+                        <option value="پاسکیل">پاسکیل</option>
+                        <option value="سکۆتەر">سکۆتەر</option>
+                        <option value="کامێرا">کامێرا</option>
+                        <option value="جوانکاری">جوانکاری</option>
+                        <option value="خانوو">خانوو</option>
+                        <option value="زەوی">زەوی</option>
+                        <option value="باخ">باخ</option>
+                        <option value="ئاژەڵ">ئاژەڵ</option>
+                        <option value="مناڵان">مناڵان</option>
+                        <option value="جلو بەرگ">جلو بەرگ</option>
+                    </select>
                 </div>
                 
                 <div class="form-group">
@@ -1443,9 +1447,9 @@
         <div class="container">
             <div class="logo" style="justify-content: center; margin-bottom: 6px;">
                 <div class="logo-icon">
-                    <img src="https://raw.githubusercontent.com/cis-web/ukbazar/main/logo-ukbazar/ukbazarlogo.jpg" alt="UK Bazar Logo">
+                    <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/refs/heads/main/logo/logo-ukbazar.jfif" alt="UkBazar Logo">
                 </div>
-                <div class="logo-text">UK Bazar</div>
+                <div class="logo-text">UkBazar</div>
             </div>
             <p class="footer-text">فرۆشگای ئۆنلاین بۆ کڕین و فرۆشتن</p>
             <p class="footer-text">پەیوەندی-itnettiknologe@gmail.com - 2025</p>
@@ -1511,7 +1515,7 @@
                         <div class="product-category">${product.category}</div>
                         <h3 class="product-name">${product.name}</h3>
                         <p class="product-description">${product.description}</p>
-                        <div class="product-price">${product.price}</div>
+                        <div class="product-price">${product.price} ${product.currency}</div>
                         <div class="product-location">
                             <i class="fas fa-map-marker-alt"></i> ${product.location}
                         </div>
@@ -1617,6 +1621,7 @@
                 name: product.name,
                 category: product.category,
                 price: product.price,
+                currency: product.currency,
                 location: product.location,
                 description: product.description,
                 sellerName: product.sellerName,
@@ -1681,6 +1686,7 @@
             // کۆکردنەوەی زانیاریەکان لە فۆرمەکە
             const productName = document.getElementById('productName').value;
             const productPrice = document.getElementById('productPrice').value;
+            const productCurrency = document.getElementById('productCurrency').value;
             const sellerName = document.getElementById('sellerName').value;
             const sellerMobile = document.getElementById('sellerMobile').value;
             const productLocation = document.getElementById('productLocation').value;
@@ -1692,7 +1698,8 @@
             const newProduct = {
                 name: productName,
                 category: productCategory,
-                price: productPrice + ' دینار',
+                price: productPrice,
+                currency: productCurrency,
                 location: productLocation,
                 description: productDescription,
                 sellerName: sellerName,
@@ -1758,7 +1765,7 @@
                     <p><strong>فرۆشیار:</strong> ${product.sellerName} - ${product.sellerMobile}</p>
                     <p><strong>جۆر:</strong> ${product.category}</p>
                     <p><strong>ناونیشان:</strong> ${product.location}</p>
-                    <p><strong>نرخ:</strong> ${product.price}</p>
+                    <p><strong>نرخ:</strong> ${product.price} ${product.currency}</p>
                 </div>
                 <div class="product-actions">
                     <button class="btn-edit" onclick="openEditModal('${product.firebaseId}')">دەستکاری</button>
@@ -1776,7 +1783,8 @@
             if (product) {
                 document.getElementById('editProductId').value = product.firebaseId;
                 document.getElementById('editProductName').value = product.name;
-                document.getElementById('editProductPrice').value = product.price.replace(' دینار', '') || '';
+                document.getElementById('editProductPrice').value = product.price;
+                document.getElementById('editProductCurrency').value = product.currency;
                 document.getElementById('editSellerName').value = product.sellerName;
                 document.getElementById('editSellerMobile').value = product.sellerMobile;
                 document.getElementById('editProductLocation').value = product.location;
@@ -1811,7 +1819,8 @@
                 const updatedProduct = {
                     ...products[productIndex],
                     name: document.getElementById('editProductName').value,
-                    price: document.getElementById('editProductPrice').value + ' دینار',
+                    price: document.getElementById('editProductPrice').value,
+                    currency: document.getElementById('editProductCurrency').value,
                     sellerName: document.getElementById('editSellerName').value,
                     sellerMobile: document.getElementById('editSellerMobile').value,
                     location: document.getElementById('editProductLocation').value,
@@ -1934,6 +1943,7 @@
                 const updateData = {
                     name: product.name,
                     price: product.price,
+                    currency: product.currency,
                     sellerName: product.sellerName,
                     sellerMobile: product.sellerMobile,
                     location: product.location,
