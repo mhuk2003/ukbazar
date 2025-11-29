@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>UkBazar-World Online Shopping</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -409,9 +408,10 @@
             border-radius: 1px;
         }
         
+        /* گۆڕاو: ڕێکخستنی کاڵاکان بۆ ٢ دانە لەتەنیشت یەک */
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             padding: 0 5px;
         }
@@ -422,7 +422,7 @@
             overflow: hidden;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
             transition: all 0.3s;
-            height: 300px;
+            height: 320px;
             display: flex;
             flex-direction: column;
         }
@@ -507,10 +507,10 @@
             color: var(--danger);
         }
         
-        /* سلایدشۆ بۆ وینەکان */
+        /* سلایدشۆ بۆ وینەکان - چارەسەرکراو بۆ RTL */
         .product-slideshow {
             position: relative;
-            height: 120px;
+            height: 140px;
             overflow: hidden;
             border-radius: 0;
         }
@@ -520,6 +520,7 @@
             transition: transform 0.5s ease;
             height: 100%;
             width: 100%;
+            direction: ltr; /* زیادکراو: چارەسەری کێشەی RTL */
         }
         
         .slide {
@@ -587,6 +588,7 @@
             transform: translateY(-50%);
             opacity: 0;
             transition: opacity 0.3s;
+            direction: ltr; /* زیادکراو: چارەسەری کێشەی RTL */
         }
         
         .product-card:hover .slideshow-arrows {
@@ -614,7 +616,7 @@
         }
 
         .product-image {
-            height: 120px;
+            height: 140px;
             background: linear-gradient(135deg, #f8f9fa, #e9ecef);
             display: flex;
             align-items: center;
@@ -639,20 +641,21 @@
             overflow: hidden;
         }
         
+        /* گۆڕاو: قەبارەی نوسین بچووکتر */
         .product-category {
             color: var(--primary);
-            font-size: 0.65rem;
-            margin-bottom: 5px;
+            font-size: 0.6rem;
+            margin-bottom: 4px;
             font-weight: 600;
         }
         
         .product-name {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             font-weight: 700;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
             color: var(--dark);
-            line-height: 1.3;
-            height: 2.2em;
+            line-height: 1.2;
+            height: 1.8em;
             overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -661,10 +664,10 @@
         
         .product-description {
             color: var(--gray);
-            font-size: 0.7rem;
-            margin-bottom: 8px;
-            line-height: 1.3;
-            height: 2.8em;
+            font-size: 0.65rem;
+            margin-bottom: 6px;
+            line-height: 1.2;
+            height: 2.4em;
             overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -673,20 +676,20 @@
         }
         
         .product-price {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: 700;
             background: linear-gradient(135deg, var(--primary), #764ba2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
         
         .product-location {
             display: flex;
             align-items: center;
             color: var(--gray);
-            font-size: 0.65rem;
-            margin-bottom: 5px;
+            font-size: 0.6rem;
+            margin-bottom: 4px;
         }
         
         .product-location i {
@@ -697,7 +700,7 @@
             display: inline-block;
             padding: 3px 6px;
             border-radius: 6px;
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             font-weight: 600;
             margin-top: auto;
         }
@@ -717,16 +720,16 @@
             background: linear-gradient(135deg, #0066cc, #004499);
             color: white;
             border: none;
-            padding: 8px 15px;
-            border-radius: 8px;
+            padding: 6px 12px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             transition: all 0.3s;
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
             box-shadow: 0 2px 5px rgba(0,102,204,0.3);
-            margin-top: 8px;
+            margin-top: 6px;
             width: 100%;
             justify-content: center;
         }
@@ -1271,8 +1274,9 @@
                 flex-direction: row;
             }
             
+            /* گۆڕاو: لەسەر تابلێت ٣ دانە لەتەنیشت یەک */
             .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+                grid-template-columns: repeat(3, 1fr);
             }
             
             .stats-grid {
@@ -1297,8 +1301,9 @@
         
         /* وەشانتی دێسکتۆپ */
         @media (min-width: 1024px) {
+            /* گۆڕاو: لەسەر دێسکتۆپ ٤ دانە لەتەنیشت یەک */
             .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                grid-template-columns: repeat(4, 1fr);
             }
         }
         
@@ -1547,8 +1552,8 @@
             display: flex;
             align-items: center;
             color: var(--gray);
-            font-size: 0.65rem;
-            margin-bottom: 5px;
+            font-size: 0.6rem;
+            margin-bottom: 4px;
         }
         
         .product-duration i {
@@ -1700,7 +1705,7 @@
     <section class="hero-section" id="heroSection">
         <div class="container">
             <h1 class="hero-title">UkBazar</h1>
-            <p class="hero-subtitle">World Online Shopping</p>
+            <p class="hero-subtitle">Wold Online Shopping</p>
         </div>
     </section>
     
@@ -2054,12 +2059,12 @@
                     
                     <div class="settings-option">
                         <div class="settings-label">ژمارەی مۆبایل</div>
-                        <div class="settings-value">+447449218670</div>
+                        <div class="settings-value">٠٧٧٠١٩٢٢٠٦٠</div>
                     </div>
                     
                     <div class="settings-option">
                         <div class="settings-label">شوێن</div>
-                        <div class="settings-value">uk</div>
+                        <div class="settings-value">هەولێر، کوردستان</div>
                     </div>
                 </div>
             </div>
@@ -2287,11 +2292,11 @@
         <div class="container">
             <div class="logo" style="justify-content: center; margin-bottom: 6px;">
                 <div class="logo-icon">
-                    <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/refs/heads/main/logo/logo-ukbazar.jfif" alt="UkBazar Logo">
+                    <img src="https://raw.githubusercontent.com/mhuk2005/ukbazar/refs/heads/main/logo/logo-ukbazar.jfif" alt="UkBazar Logo">
                 </div>
                 <div class="logo-text">UkBazar</div>
             </div>
-            <p class="footer-text">World Online Shopping</p>
+            <p class="footer-text">World Online  Shopping</p>
             <p class="footer-text">پەیوەندی-Info@ukbazar.online - 2025</p>
         </div>
     </footer>
@@ -2330,7 +2335,7 @@
             return diffDays;
         }
 
-        // فەنکشنی دروستکردنی کارتی کاڵا بۆ وینەی فرە
+        // فەنکشنی دروستکردنی کارتی کاڵا بۆ وینەی فرە - چارەسەرکراو بۆ RTL
         function createProductCard(product) {
             const icons = {
                 'مۆبایل': 'fas fa-mobile-alt',
@@ -2372,12 +2377,12 @@
                     durationText = `${Math.floor(daysSince / 7)} هەفتە لەمەوپێش`;
                     durationClass = 'duration-old';
                 } else {
-                    durationText = `${Math.floor(daysSince / 30)} مانگ لەمەوپێش`;
+                    durationText = `${Math.floor(daysSince / 30)} مانگ لەmەوپێش`;
                     durationClass = 'duration-old';
                 }
             }
             
-            // دروستکردنی سلایدشۆ بۆ وینەکان
+            // دروستکردنی سلایدشۆ بۆ وینەکان - چارەسەرکراو بۆ RTL
             let imageContent = '';
             
             if (product.images && product.images.length > 0) {
@@ -2402,11 +2407,12 @@
                             ${numbers}
                         </div>
                         <div class="slideshow-arrows">
+                            <!-- گۆڕاو: هاوئاھەنگی ئایکۆنەکانی هەڵگەڕان لەگەڵ RTL -->
                             <button class="arrow" onclick="changeSlide(this.closest('.product-slideshow'), -1); event.stopPropagation();">
-                                <i class="fas fa-chevron-right"></i>
+                                <i class="fas fa-chevron-left"></i> <!-- گۆڕدراو: چەپ -->
                             </button>
                             <button class="arrow" onclick="changeSlide(this.closest('.product-slideshow'), 1); event.stopPropagation();">
-                                <i class="fas fa-chevron-left"></i>
+                                <i class="fas fa-chevron-right"></i> <!-- گۆڕدراو: ڕاست -->
                             </button>
                         </div>
                     </div>
@@ -2556,7 +2562,7 @@
             renderImagesPreview();
         }
 
-        // فەنکشنی گۆڕینی سلاید
+        // فەنکشنی گۆڕینی سلاید - چارەسەرکراو بۆ RTL
         function changeSlide(slideshowElement, direction) {
             const slideshow = slideshowElement.querySelector('.slideshow-container');
             const slides = slideshow.querySelectorAll('.slide');
@@ -2568,11 +2574,12 @@
             const currentTransform = slideshow.style.transform || 'translateX(0%)';
             const currentIndex = parseInt(currentTransform.match(/-?\d+/) || [0]) / 100;
             
-            let newIndex = Math.abs(currentIndex) + direction;
+            let newIndex = currentIndex + direction;
             
             if (newIndex < 0) newIndex = slides.length - 1;
             if (newIndex >= slides.length) newIndex = 0;
             
+            // گۆڕاو: translateX بە شێوەیەکی دروست بۆ RTL
             slideshow.style.transform = `translateX(-${newIndex * 100}%)`;
             
             // نوێکردنەوەی ژمارەکان
@@ -2585,13 +2592,14 @@
             });
         }
 
-        // فەنکشنی ڕۆشتن بۆ سلایدی دیاریکراو
+        // فەنکشنی ڕۆشتن بۆ سلایدی دیاریکراو - چارەسەرکراو بۆ RTL
         function goToSlide(slideshowElement, index) {
             const slideshow = slideshowElement.querySelector('.slideshow-container');
             const numbers = slideshowElement.querySelectorAll('.number-dot');
             
             if (!slideshow) return;
             
+            // گۆڕاو: translateX بە شێوەیەکی دروست بۆ RTL
             slideshow.style.transform = `translateX(-${index * 100}%)`;
             
             // نوێکردنەوەی ژمارەکان
@@ -3614,8 +3622,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
