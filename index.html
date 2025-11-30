@@ -1454,6 +1454,7 @@
         .slider:before {
             position: absolute;
             content: "";
+;
             height: 16px;
             width: 16px;
             left: 2px;
@@ -1597,6 +1598,16 @@
             .bottom-panel {
                 padding-bottom: env(safe-area-inset-bottom);
             }
+            
+            /* زیادکراو: باشترکردنی لۆگۆ لە PWA */
+            .logo-icon {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .logo-text {
+                font-size: 1.3rem;
+            }
         }
 
         /* زیادکراو: ستایل بۆ دەقەی لۆگۆ لەسەر ئامێری بچووک */
@@ -1620,6 +1631,26 @@
             .logo-icon {
                 width: 35px;
                 height: 35px;
+            }
+        }
+        
+        /* زیادکراو: باشترکردنی لۆگۆ بۆ موبایل */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 5px 0;
+            }
+            
+            .logo {
+                min-width: 120px;
+            }
+            
+            .logo-icon {
+                width: 42px;
+                height: 42px;
+            }
+            
+            .logo-text {
+                font-size: 1.25rem;
             }
         }
     </style>
@@ -3699,4 +3730,3 @@
     </script>
 </body>
 </html>
-
