@@ -2382,23 +2382,21 @@
         let currentEditImages = [];
 
         // فەنکشنی پشکنینی باربوونی وینەی لۆگۆ
-        function checkLogoImage() {
-            const logoImages = document.querySelectorAll('.logo-icon img');
-            const logoUrl = 'https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo/logo-ukbazar.jfif';
-            
-            logoImages.forEach(img => {
-                const testImage = new Image();
-                testImage.onload = function() {
-                    // وینە باربووە
-                    console.log('لۆگۆ بە سەرکەوتوویی بارکرا');
-                };
-                testImage.onerror = function() {
-                    // وینە بارنەبووە
-                    console.log('لۆگۆ بارنەکرا، ئایکۆنی جایگرەوە بەکاردەهێنرێت');
-                };
-                testImage.src = logoUrl;
-            });
-        }
+       function checkLogoImage() {
+    const logoImages = document.querySelectorAll('.logo-icon img');
+    const logoUrl = '/logo/logo-ukbazar.jfif';  // گۆڕاوە بۆ لینکی ڕێسک
+    
+    logoImages.forEach(img => {
+        const testImage = new Image();
+        testImage.onload = function() {
+            console.log('لۆگۆ بە سەرکەوتوویی بارکرا');
+        };
+        testImage.onerror = function() {
+            console.log('لۆگۆ بارنەکرا، ئایکۆنی جایگرەوە بەکاردەهێنرێت');
+        };
+        testImage.src = logoUrl;
+    });
+}
 
         // فەنکشنی هەژمارکردنی ماوەی کاڵا
         function calculateDaysSince(createdAt) {
@@ -3699,3 +3697,4 @@
     </script>
 </body>
 </html>
+
