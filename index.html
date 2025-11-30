@@ -4,6 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UkBazar - World Online Shopping</title>
+    
+    <!-- ئایکۆنی سایت بۆ هەموو ئامێرەکان -->
+    <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo/logo-ukbazar.jfif">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo/logo-ukbazar.jfif">
+    
+    <!-- ئایکۆنی بەرنامەی موبایل (PWA) -->
+    <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo/logo-ukbazar.jfif">
+    <link rel="apple-touch-icon" sizes="167x167" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo/logo-ukbazar.jfif">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo/logo-ukbazar.jfif">
+    <link rel="apple-touch-icon" sizes="120x120" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo/logo-ukbazar.jfif">
+    
+    <!-- ڕەنگی سەری ئەپ لەسەر موبایل -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="UkBazar">
+    
+    <!-- وەسفی سایت -->
+    <meta name="description" content="UkBazar - World Online Shopping - فرۆشگای ئۆنلاینی جیهانی">
+    
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -1567,6 +1587,41 @@
         .duration-old {
             color: var(--warning);
         }
+
+        /* زیادکراو: ستایل بۆ پشتیوانی PWA */
+        @media all and (display-mode: standalone) {
+            .header {
+                padding-top: env(safe-area-inset-top);
+            }
+            
+            .bottom-panel {
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+        }
+
+        /* زیادکراو: ستایل بۆ دەقەی لۆگۆ لەسەر ئامێری بچووک */
+        @media (max-width: 480px) {
+            .logo-text {
+                font-size: 1.2rem;
+            }
+            
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        /* زیادکراو: ستایل بۆ دەقەی لۆگۆ لەسەر ئامێری زۆر بچووک */
+        @media (max-width: 360px) {
+            .logo-text {
+                font-size: 1.1rem;
+            }
+            
+            .logo-icon {
+                width: 35px;
+                height: 35px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1576,7 +1631,7 @@
             <div class="header-content">
                 <div class="logo" onclick="showHomePage()">
                     <div class="logo-icon">
-                        <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo/logo-ukbazar.jfif" alt="UkBazar Logo">
+                        <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo/logo-ukbazar.jfif" alt="UkBazar Logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiByeD0iMTIiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDMwIDMwIiBmaWxsPSJub25lIj4KPHBhdGggZD0iTTE1IDVMMjAgMTBIMTBMMTUgNVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xMCAxNUgyMEwxNSAyMEwxMCAxNVoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo8L3N2Zz4K'">
                     </div>
                     <div class="logo-text">UkBazar</div>
                 </div>
@@ -1591,7 +1646,7 @@
                         <!-- سەرپەڕەی مینو -->
                         <div class="menu-header">
                             <div class="logo-icon">
-                                <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo/logo-ukbazar.jfif" alt="UkBazar Logo">
+                                <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo/logo-ukbazar.jfif" alt="UkBazar Logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxwYXRoIGQ9Ik0xMiA0TDE2IDhIOEwxMiA0WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTggMTJIMTZMMTIgMTZIOFYxMloiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo8L3N2Zz4K'">
                             </div>
                             <div class="logo-text">UkBazar</div>
                         </div>
@@ -2292,7 +2347,7 @@
         <div class="container">
             <div class="logo" style="justify-content: center; margin-bottom: 6px;">
                 <div class="logo-icon">
-                    <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo/logo-ukbazar.jfif" alt="UkBazar Logo">
+                    <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo/logo-ukbazar.jfif" alt="UkBazar Logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiByeD0iMTIiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDMwIDMwIiBmaWxsPSJub25lIj4KPHBhdGggZD0iTTE1IDVMMjAgMTBIMTBMMTUgNVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xMCAxNUgyMEwxNSAyMEwxMCAxNVoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo8L3N2Zz4K'">
                 </div>
                 <div class="logo-text">UkBazar</div>
             </div>
@@ -2325,6 +2380,25 @@
         // زانیاری وینەکان
         let selectedImages = [];
         let currentEditImages = [];
+
+        // فەنکشنی پشکنینی باربوونی وینەی لۆگۆ
+        function checkLogoImage() {
+            const logoImages = document.querySelectorAll('.logo-icon img');
+            const logoUrl = 'https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo/logo-ukbazar.jfif';
+            
+            logoImages.forEach(img => {
+                const testImage = new Image();
+                testImage.onload = function() {
+                    // وینە باربووە
+                    console.log('لۆگۆ بە سەرکەوتوویی بارکرا');
+                };
+                testImage.onerror = function() {
+                    // وینە بارنەبووە
+                    console.log('لۆگۆ بارنەکرا، ئایکۆنی جایگرەوە بەکاردەهێنرێت');
+                };
+                testImage.src = logoUrl;
+            });
+        }
 
         // فەنکشنی هەژمارکردنی ماوەی کاڵا
         function calculateDaysSince(createdAt) {
@@ -3448,6 +3522,9 @@
 
         // بارکردنی سەرەتایی کاڵاکان
         document.addEventListener('DOMContentLoaded', function() {
+            // پشکنینی وینەی لۆگۆ
+            checkLogoImage();
+            
             // ڕێکخستنی پێشبینینی وینەی فرە
             setupMultiImagePreview();
             
