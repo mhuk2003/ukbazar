@@ -2,257 +2,485 @@
 <html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- ئەمە پەڕەکە دەکاتە ئەپ -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#667eea">
+    
     <title>UkBazar - World Online Shopping</title>
     
-    <!-- ✅ چاککردنەوە: لینکەکانی لۆگۆ بە شێوەی دروست -->
-    <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png">
+    <!-- لینکی لۆگۆ - چاککراوە -->
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png">
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png">
     
-    <!-- ✅ زیادکراو: لینکەکانی Apple Touch بە قەبارەی جیاواز -->
-    <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png">
-    <link rel="apple-touch-icon" sizes="57x57" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png">
-    
-    <!-- ✅ زیادکراو: مێتا تاگەکانی PWA -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="UkBazar">
-    <meta name="theme-color" content="#667eea">
-    <meta name="mobile-web-app-capable" content="yes">
-    
-    <!-- ✅ زیادکراو: Manifest.json لینک -->
+    <!-- Manifest بۆ PWA -->
     <link rel="manifest" id="manifest-placeholder">
     
-    <meta name="description" content="UkBazar - World Online Shopping - فرۆشگای ئۆنلاینی جیهانی">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        /* نموونەیەکی سادە بۆ پیشاندانی سیستەم */
-        :root {
-            --primary: #667eea;
-            --primary-dark: #5a67d8;
-            --secondary: #48bb78;
-            --danger: #f56565;
-            --dark: #2d3748;
-            --light: #f7fafc;
-            --gray: #718096;
-            --border: #e2e8f0;
-        }
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Noto Sans Arabic', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
         
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: var(--dark);
-            direction: rtl;
-            font-size: 13px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .demo-container {
-            background: white;
-            border-radius: 20px;
-            padding: 40px 30px;
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            text-align: center;
-        }
-        
-        .logo-display {
-            width: 150px;
-            height: 150px;
-            margin: 0 auto 30px;
-            border-radius: 30px;
-            overflow: hidden;
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-            border: 4px solid var(--primary);
-            animation: logoFloat 3s ease-in-out infinite;
-        }
-        
-        .logo-display img {
+        html, body {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            overflow: hidden;
+            background-color: #000000;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
         }
         
-        @keyframes logoFloat {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        h1 {
-            font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 15px;
-            font-weight: 800;
-        }
-        
-        .subtitle {
-            font-size: 1.1rem;
-            color: var(--gray);
-            margin-bottom: 30px;
-        }
-        
-        .status-box {
-            background: #e6f9f0;
-            border-left: 4px solid var(--secondary);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: right;
-        }
-        
-        .status-box h3 {
-            color: var(--secondary);
-            margin-bottom: 10px;
-            font-size: 1rem;
-        }
-        
-        .status-box p {
-            color: var(--dark);
-            line-height: 1.6;
-            font-size: 0.9rem;
-        }
-        
-        .instruction-list {
-            background: #fff5e1;
-            border-left: 4px solid #ed8936;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: right;
-            margin-bottom: 20px;
-        }
-        
-        .instruction-list h3 {
-            color: #ed8936;
-            margin-bottom: 15px;
-            font-size: 1rem;
-        }
-        
-        .instruction-list ol {
-            margin-right: 20px;
-            color: var(--dark);
-        }
-        
-        .instruction-list li {
-            margin-bottom: 10px;
-            line-height: 1.6;
-            font-size: 0.9rem;
-        }
-        
-        .btn-demo {
-            background: linear-gradient(135deg, var(--primary), #764ba2);
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-            transition: all 0.3s;
+        .app-container {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: 
+                radial-gradient(circle at 20% 20%, #667eea 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, #764ba2 0%, transparent 40%),
+                linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-size: 400% 400%;
+            animation: gradientMove 15s ease infinite;
+            cursor: pointer;
+            z-index: 1;
         }
         
-        .btn-demo:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
+        .ukbazar-logo {
+            width: 85vw;
+            height: 85vw;
+            max-width: 320px;
+            max-height: 320px;
+            min-width: 200px;
+            min-height: 200px;
+            
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            object-fit: cover;
+            border: 10px solid rgba(255, 255, 255, 0.95);
+            
+            box-shadow:
+                0 0 60px rgba(102, 126, 234, 0.8),
+                0 0 120px rgba(102, 126, 234, 0.6),
+                0 0 180px rgba(102, 126, 234, 0.4),
+                inset 0 0 40px rgba(255, 255, 255, 0.3);
+            
+            animation:
+                morphAnimation 8s ease-in-out infinite,
+                glowPulse 3s ease-in-out infinite,
+                floatAnimation 6s ease-in-out infinite;
+            
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: brightness(1.05) contrast(1.1);
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+            
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
         }
         
-        .footer-note {
-            margin-top: 20px;
-            color: var(--gray);
-            font-size: 0.8rem;
+        .tap-instruction {
+            position: absolute;
+            bottom: 50px;
+            width: 100%;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.95);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui;
+            font-size: 20px;
+            font-weight: 600;
+            text-shadow: 
+                0 2px 4px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(102, 126, 234, 0.7);
+            animation: textPulse 2s ease-in-out infinite;
+            padding: 0 20px;
+            direction: rtl;
+            z-index: 10;
         }
         
-        /* بۆ موبایل */
-        @media (max-width: 480px) {
-            .demo-container {
-                padding: 30px 20px;
+        .tap-instruction::after {
+            content: ' 👆';
+            font-size: 24px;
+            animation: arrowBounce 1s ease-in-out infinite;
+        }
+        
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #667eea;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        
+        .preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        
+        .spinner {
+            width: 70px;
+            height: 70px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 1.2s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        .loading-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            font-family: -apple-system, system-ui;
+            animation: fadeInOut 1.5s ease-in-out infinite;
+        }
+        
+        .logo-error {
+            display: none;
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+        
+        .logo-error.show {
+            display: block;
+        }
+        
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes morphAnimation {
+            0%, 100% { 
+                border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+                transform: rotate(0deg) scale(1);
+            }
+            25% { 
+                border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%;
+                transform: rotate(90deg) scale(1.02);
+            }
+            50% { 
+                border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%;
+                transform: rotate(180deg) scale(1);
+            }
+            75% { 
+                border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%;
+                transform: rotate(270deg) scale(1.02);
+            }
+        }
+        
+        @keyframes glowPulse {
+            0%, 100% { 
+                box-shadow:
+                    0 0 60px rgba(102, 126, 234, 0.8),
+                    0 0 120px rgba(102, 126, 234, 0.6),
+                    0 0 180px rgba(102, 126, 234, 0.4),
+                    inset 0 0 40px rgba(255, 255, 255, 0.3);
+            }
+            50% { 
+                box-shadow:
+                    0 0 80px rgba(102, 126, 234, 1),
+                    0 0 160px rgba(102, 126, 234, 0.8),
+                    0 0 240px rgba(102, 126, 234, 0.6),
+                    inset 0 0 60px rgba(255, 255, 255, 0.4);
+            }
+        }
+        
+        @keyframes floatAnimation {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        @keyframes textPulse {
+            0%, 100% { opacity: 0.8; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(-5px); }
+        }
+        
+        @keyframes arrowBounce {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-5px); }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        
+        @media (hover: none) and (pointer: coarse) {
+            .ukbazar-logo:active {
+                transform: scale(0.95) !important;
+                animation-play-state: paused;
+            }
+        }
+        
+        @supports (-webkit-touch-callout: none) {
+            .app-container {
+                padding-top: env(safe-area-inset-top);
+                padding-bottom: env(safe-area-inset-bottom);
+                height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
             }
             
-            h1 {
-                font-size: 1.5rem;
+            .tap-instruction {
+                bottom: calc(50px + env(safe-area-inset-bottom));
             }
             
-            .subtitle {
-                font-size: 1rem;
+            .ukbazar-logo {
+                -webkit-mask-image: -webkit-radial-gradient(white, black);
+            }
+        }
+        
+        @media (max-width: 350px) {
+            .ukbazar-logo {
+                width: 80vw;
+                height: 80vw;
+                border-width: 8px;
             }
             
-            .logo-display {
-                width: 120px;
-                height: 120px;
+            .tap-instruction {
+                font-size: 18px;
+                bottom: 40px;
             }
+        }
+        
+        @media (min-width: 768px) {
+            .ukbazar-logo {
+                width: 50vh;
+                height: 50vh;
+                max-width: 400px;
+                max-height: 400px;
+            }
+            
+            .tap-instruction {
+                font-size: 24px;
+                bottom: 60px;
+            }
+        }
+        
+        @media (orientation: landscape) and (max-height: 600px) {
+            .ukbazar-logo {
+                width: 60vh;
+                height: 60vh;
+            }
+            
+            .tap-instruction {
+                bottom: 30px;
+                font-size: 18px;
+            }
+        }
+        
+        .will-change {
+            will-change: transform, opacity, box-shadow;
         }
     </style>
 </head>
 <body>
-    <div class="demo-container">
-        <div class="logo-display">
-            <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png" 
-                 alt="UkBazar Logo"
-                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDE1MCAxNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiByeD0iMzAiIGZpbGw9IiM2NjdlZWEiLz4KPHRleHQgeD0iNzUiIHk9Ijg1IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDgiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VUs8L3RleHQ+Cjwvc3ZnPg=='">
-        </div>
-        
-        <h1>UkBazar</h1>
-        <p class="subtitle">World Online Shopping</p>
-        
-        <div class="status-box">
-            <h3>✅ لۆگۆ چاککراوەتەوە!</h3>
-            <p>لۆگۆی UkBazar ئێستا بە دروستی کاردەکات. کاتێک ئەم پەڕەیە وەک ئەپ دادەبەزێنیت، لۆگۆکە لەسەر شاشەی سەرەکی پیشان دەدرێت.</p>
-        </div>
-        
-        <div class="instruction-list">
-            <h3>📱 چۆنیەتی دابەزاندن:</h3>
-            <ol>
-                <li><strong>بۆ iOS (iPhone/iPad):</strong>
-                    <ul style="margin-right: 20px; margin-top: 5px;">
-                        <li>لە Safari پەڕەکە بکەرەوە</li>
-                        <li>بگرە لەسەر دوگمەی "Share" (🔼)</li>
-                        <li>هەڵبژێرە "Add to Home Screen"</li>
-                    </ul>
-                </li>
-                <li><strong>بۆ Android:</strong>
-                    <ul style="margin-right: 20px; margin-top: 5px;">
-                        <li>لە Chrome پەڕەکە بکەرەوە</li>
-                        <li>بگرە لەسەر دوگمەی "⋮" (سێ خاڵ)</li>
-                        <li>هەڵبژێرە "Add to Home screen"</li>
-                    </ul>
-                </li>
-            </ol>
-        </div>
-        
-        <button class="btn-demo" onclick="showInstallPrompt()">
-            <i class="fas fa-download"></i> دابەزاندن وەک ئەپ
-        </button>
-        
-        <p class="footer-note">
-            <i class="fas fa-info-circle"></i> 
-            ئەگەر لۆگۆ پیشان نەدرا، تکایە ئینتەرنێت چێک بکەرەوە
-        </p>
+    <!-- Preloader -->
+    <div class="preloader" id="preloader">
+        <div class="spinner"></div>
+        <div class="loading-text">چالاککردنی UkBazar...</div>
     </div>
-
+    
+    <!-- Main App -->
+    <div class="app-container" id="appContainer">
+        <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png"
+             alt="UkBazar"
+             class="ukbazar-logo will-change"
+             id="mainLogo"
+             crossorigin="anonymous"
+             onerror="handleLogoError()">
+        
+        <div class="logo-error" id="logoError">
+            <h2>⚠️ کێشە لە بارکردنی لۆگۆ</h2>
+            <p>تکایە دڵنیابەرەوە کە ئینتەرنێت هەیە</p>
+        </div>
+        
+        <div class="tap-instruction will-change" id="tapInstruction">
+            تاپ بکە بۆ چوونە ژوورەوە
+        </div>
+    </div>
+    
     <script>
+        // لینکەکانی لۆگۆ - زیاتر لە یەک ئاڵتەرنەتیڤ
+        const logoUrls = [
+            'https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png',
+            'https://via.placeholder.com/400x400/667eea/ffffff?text=UkBazar'
+        ];
+        
+        let currentLogoIndex = 0;
+        
+        // فەنکشن بۆ چێکی لۆگۆ
+        function handleLogoError() {
+            console.error('کێشە لە بارکردنی لۆگۆ:', logoUrls[currentLogoIndex]);
+            
+            const logo = document.getElementById('mainLogo');
+            const logoError = document.getElementById('logoError');
+            
+            currentLogoIndex++;
+            
+            if (currentLogoIndex < logoUrls.length) {
+                console.log('هەوڵدان بۆ لینکی دواتر:', logoUrls[currentLogoIndex]);
+                logo.src = logoUrls[currentLogoIndex];
+            } else {
+                logo.style.display = 'none';
+                logoError.classList.add('show');
+            }
+        }
+        
+        // بەکارهێنەرەکانی DOM
+        const preloader = document.getElementById('preloader');
+        const appContainer = document.getElementById('appContainer');
+        const mainLogo = document.getElementById('mainLogo');
+        const tapInstruction = document.getElementById('tapInstruction');
+        
+        // Preload لۆگۆ پێش هەموو شتێک
+        function preloadLogo() {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                let attempts = 0;
+                
+                function tryLoad() {
+                    if (attempts >= logoUrls.length) {
+                        reject(new Error('هەموو هەوڵەکان سەرکەوتوو نەبوون'));
+                        return;
+                    }
+                    
+                    img.src = logoUrls[attempts];
+                    
+                    img.onload = function() {
+                        console.log('✅ لۆگۆ بە سەرکەوتوویی بارکرا');
+                        mainLogo.src = logoUrls[attempts];
+                        
+                        // تۆمارکردنی لۆگۆ لە cache بۆ کاتی ئایندە
+                        if ('caches' in window) {
+                            caches.open('ukbazar-v1').then(cache => {
+                                cache.add(logoUrls[attempts]);
+                            });
+                        }
+                        
+                        resolve();
+                    };
+                    
+                    img.onerror = function() {
+                        console.log('⚠️ کێشە لە بارکردنی لۆگۆ، هەوڵدانەوە...');
+                        attempts++;
+                        tryLoad();
+                    };
+                }
+                
+                tryLoad();
+            });
+        }
+        
+        // بارکردنی پەڕە
+        window.addEventListener('load', async function() {
+            try {
+                await preloadLogo();
+                setTimeout(() => {
+                    preloader.classList.add('hidden');
+                    appContainer.style.opacity = '1';
+                }, 800);
+            } catch (error) {
+                console.error('❌ هەڵە لە بارکردنی لۆگۆ:', error);
+                setTimeout(() => {
+                    preloader.classList.add('hidden');
+                    appContainer.style.opacity = '1';
+                }, 800);
+            }
+        });
+        
+        // کلیک/تاپ کردن - گواستنەوە بۆ ukbazar.html
+        let isClicking = false;
+        
+        function goToMainPage() {
+            if (isClicking) return;
+            isClicking = true;
+            
+            // کاریگەری کلیک
+            mainLogo.style.animation = 'none';
+            mainLogo.style.transform = 'scale(0.9) rotate(180deg)';
+            mainLogo.style.filter = 'brightness(0.8)';
+            tapInstruction.style.opacity = '0.3';
+            
+            // نمایشی loading
+            preloader.classList.remove('hidden');
+            preloader.style.opacity = '1';
+            
+            // گواستنەوە بۆ ukbazar.html
+            setTimeout(() => {
+                window.location.href = 'ukbazar.html';
+            }, 800);
+        }
+        
+        // Event listeners بۆ کلیک
+        appContainer.addEventListener('click', goToMainPage);
+        
+        // Event listeners بۆ تاپ (موبایل)
+        let touchStartTime = 0;
+        
+        appContainer.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            touchStartTime = Date.now();
+            mainLogo.style.transform = 'scale(0.95)';
+        }, { passive: false });
+        
+        appContainer.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            const touchDuration = Date.now() - touchStartTime;
+            mainLogo.style.transform = '';
+            
+            if (touchDuration < 500) {
+                goToMainPage();
+            }
+        }, { passive: false });
+        
+        // بۆ کیبۆرد
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                goToMainPage();
+            }
+        });
+        
+        // پشکنینی پەڕەی سەرەکی
+        fetch('ukbazar.html')
+            .then(response => {
+                if (!response.ok) {
+                    console.warn('⚠️ ukbazar.html بوونی نیە');
+                }
+            })
+            .catch(error => {
+                console.error('❌ هەڵە لە پشکنینی پەڕە:', error);
+            });
+        
         // دروستکردنی manifest.json بە شێوەی داینامیک
         const manifestData = {
             "name": "UkBazar - World Online Shopping",
@@ -281,12 +509,6 @@
                     "sizes": "180x180",
                     "type": "image/png",
                     "purpose": "any maskable"
-                },
-                {
-                    "src": "https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png",
-                    "sizes": "144x144",
-                    "type": "image/png",
-                    "purpose": "any maskable"
                 }
             ]
         };
@@ -296,58 +518,19 @@
         const manifestURL = URL.createObjectURL(manifestBlob);
         document.getElementById('manifest-placeholder').setAttribute('href', manifestURL);
         
-        // چێککردنەوەی بارکردنی لۆگۆ
-        window.addEventListener('load', function() {
-            const logoImg = document.querySelector('.logo-display img');
-            const logoUrl = 'https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png';
-            
-            const testImage = new Image();
-            testImage.onload = function() {
-                console.log('✅ لۆگۆ بە سەرکەوتوویی بارکرا');
-            };
-            testImage.onerror = function() {
-                console.log('❌ لۆگۆ بارنەکرا - بەکارهێنانی لۆگۆی جێگرەوە');
-            };
-            testImage.src = logoUrl;
-        });
-        
-        // فەنکشنی دابەزاندنی PWA
-        let deferredPrompt;
-        
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            console.log('PWA ئامادەیە بۆ دابەزاندن');
-        });
-        
-        function showInstallPrompt() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('بەکارهێنەر پەسەندی کرد');
-                    }
-                    deferredPrompt = null;
-                });
-            } else {
-                // بۆ iOS یان ئامێرەکانی تر
-                alert('تکایە لە مێنیوی وێبگەڕەکەت "Add to Home Screen" هەڵبژێرە');
-            }
-        }
-        
-        // تۆمارکردنی Service Worker
+        // Service Worker بۆ کارکردن بەبێ ئینتەرنێت
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').then(() => {
+            navigator.serviceWorker.register('sw.js').then(() => {
                 console.log('✅ Service Worker تۆمارکرا');
             }).catch(err => {
                 console.log('❌ کێشە لە Service Worker:', err);
             });
         }
         
-        // Cache کردنی لۆگۆ
-        if ('caches' in window) {
-            caches.open('ukbazar-v1').then(cache => {
-                cache.add('https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png');
+        // بۆ performance باشتر
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => {
+                appContainer.classList.add('will-change');
             });
         }
     </script>
