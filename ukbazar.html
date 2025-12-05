@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> یوکەی بازاڕ- World Online Shopping</title>
+    <title>یوکەی بازاڕ- World Online Shopping</title>
     
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json">
@@ -55,7 +55,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f5f5f5; /* گۆڕدراو: لە شین بۆ light gray */
             min-height: 100vh;
             color: var(--dark);
             direction: rtl;
@@ -372,7 +372,7 @@
         .hero-section {
             padding: 10px 0 5px;
             background: transparent;
-            color: white;
+            color: #333; /* گۆڕدراو: ڕەنگی دەق بۆ تاریکتر */
             text-align: center;
         }
         
@@ -416,7 +416,7 @@
             text-align: center;
             margin-bottom: 15px;
             font-size: 1.1rem;
-            color: white;
+            color: #333; /* گۆڕدراو: لە سپی بۆ تاریکتر */
             position: relative;
             padding-bottom: 8px;
             font-weight: 700;
@@ -430,7 +430,7 @@
             transform: translateX(-50%);
             width: 60px;
             height: 2px;
-            background: white;
+            background: var(--primary); /* گۆڕدراو: لە سپی بۆ ڕەنگی سەرەکی */
             border-radius: 1px;
         }
         
@@ -995,7 +995,7 @@
             justify-content: space-between;
         }
         
-        .btn-approve, .btn-reject, .btn-edit {
+        .btn-approve, .btn-reject, .btn-edit, .btn-delete {
             padding: 5px 8px;
             border: none;
             border-radius: 5px;
@@ -1021,7 +1021,12 @@
             color: white;
         }
         
-        .btn-approve:hover, .btn-reject:hover, .btn-edit:hover {
+        .btn-delete {
+            background: linear-gradient(135deg, #999, #666);
+            color: white;
+        }
+        
+        .btn-approve:hover, .btn-reject:hover, .btn-edit:hover, .btn-delete:hover {
             transform: translateY(-1px);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
@@ -1685,31 +1690,31 @@
                         <div class="menu-section">
                             <div class="menu-section-title">جۆرەکانی کاڵا</div>
                             <div class="menu-items">
-                                <button class="menu-item" data-category="">
+                                <button class="menu-item" onclick="showAllProducts()">
                                     <i class="fas fa-th-large"></i>
                                     <span>هەموو کاڵاکان</span>
                                 </button>
-                                <button class="menu-item" data-category="مۆبایل">
+                                <button class="menu-item" onclick="addProductWithCategory('مۆبایل')">
                                     <i class="fas fa-mobile-alt"></i>
                                     <span>مۆبایل</span>
                                 </button>
-                                <button class="menu-item" data-category="لاپتۆپ">
+                                <button class="menu-item" onclick="addProductWithCategory('لاپتۆپ')">
                                     <i class="fas fa-laptop"></i>
                                     <span>لاپتۆپ</span>
                                 </button>
-                                <button class="menu-item" data-category="کۆمپیوتەر">
+                                <button class="menu-item" onclick="addProductWithCategory('کۆمپیوتەر')">
                                     <i class="fas fa-desktop"></i>
                                     <span>کۆمپیوتەر</span>
                                 </button>
-                                <button class="menu-item" data-category="ئایپاد">
+                                <button class="menu-item" onclick="addProductWithCategory('ئایپاد')">
                                     <i class="fas fa-tablet-alt"></i>
                                     <span>ئایپاد</span>
                                 </button>
-                                <button class="menu-item" data-category="ئوتومبێل">
+                                <button class="menu-item" onclick="addProductWithCategory('ئوتومبێل')">
                                     <i class="fas fa-car"></i>
                                     <span>ئوتومبێل</span>
                                 </button>
-                                <button class="menu-item" data-category="ناوماڵ">
+                                <button class="menu-item" onclick="addProductWithCategory('ناوماڵ')">
                                     <i class="fas fa-home"></i>
                                     <span>ناوماڵ</span>
                                 </button>
@@ -1719,27 +1724,27 @@
                         <div class="menu-section">
                             <div class="menu-section-title">کاڵای تر</div>
                             <div class="menu-items">
-                                <button class="menu-item" data-category="پاسکیل">
+                                <button class="menu-item" onclick="addProductWithCategory('پاسکیل')">
                                     <i class="fas fa-bicycle"></i>
                                     <span>پاسکیل</span>
                                 </button>
-                                <button class="menu-item" data-category="سکۆتەر">
+                                <button class="menu-item" onclick="addProductWithCategory('سکۆتەر')">
                                     <i class="fas fa-motorcycle"></i>
                                     <span>سکۆتەر</span>
                                 </button>
-                                <button class="menu-item" data-category="کامێرا">
+                                <button class="menu-item" onclick="addProductWithCategory('کامێرا')">
                                     <i class="fas fa-camera"></i>
                                     <span>کامێرا</span>
                                 </button>
-                                <button class="menu-item" data-category="جوانکاری">
+                                <button class="menu-item" onclick="addProductWithCategory('جوانکاری')">
                                     <i class="fas fa-paint-brush"></i>
                                     <span>جوانکاری</span>
                                 </button>
-                                <button class="menu-item" data-category="خانوو">
+                                <button class="menu-item" onclick="addProductWithCategory('خانوو')">
                                     <i class="fas fa-house-user"></i>
                                     <span>خانوو</span>
                                 </button>
-                                <button class="menu-item" data-category="زەوی">
+                                <button class="menu-item" onclick="addProductWithCategory('زەوی')">
                                     <i class="fas fa-mountain"></i>
                                     <span>زەوی</span>
                                 </button>
@@ -1749,19 +1754,19 @@
                         <div class="menu-section">
                             <div class="menu-section-title">کاڵای زیاتر</div>
                             <div class="menu-items">
-                                <button class="menu-item" data-category="باخ">
+                                <button class="menu-item" onclick="addProductWithCategory('باخ')">
                                     <i class="fas fa-tree"></i>
                                     <span>باخ</span>
                                 </button>
-                                <button class="menu-item" data-category="ئاژەڵ">
+                                <button class="menu-item" onclick="addProductWithCategory('ئاژەڵ')">
                                     <i class="fas fa-paw"></i>
                                     <span>ئاژەڵ</span>
                                 </button>
-                                <button class="menu-item" data-category="مناڵان">
+                                <button class="menu-item" onclick="addProductWithCategory('مناڵان')">
                                     <i class="fas fa-baby"></i>
                                     <span>مناڵان</span>
                                 </button>
-                                <button class="menu-item" data-category="جلو بەرگ">
+                                <button class="menu-item" onclick="addProductWithCategory('جلو بەرگ')">
                                     <i class="fas fa-tshirt"></i>
                                     <span>جلو بەرگ</span>
                                 </button>
@@ -1798,7 +1803,7 @@
     <!-- بەشی کاڵاکان -->
     <section class="products-section" id="productsSection">
         <div class="container">
-            <h2 class="section-title"></h2>
+            <h2 class="section-title" id="productsTitle">هەموو کاڵاکان</h2>
             <div class="products-grid" id="productsGrid">
                 <!-- کاڵاکان لێرە دەردەکەون -->
             </div>
@@ -2482,7 +2487,7 @@
                     durationText = `${Math.floor(daysSince / 7)} هەفتە لەمەوپێش`;
                     durationClass = 'duration-old';
                 } else {
-                    durationText = `${Math.floor(daysSince / 30)} مانگ لەmەوپێش`;
+                    durationText = `${Math.floor(daysSince / 30)} مانگ لەمەوپێش`;
                     durationClass = 'duration-old';
                 }
             }
@@ -2588,15 +2593,34 @@
 
         // فەنکشنی فلتەرکردنی کاڵاکان
         function filterProducts(category = '') {
-            let filteredProducts = products;
+            let filteredProducts = products.filter(p => p.status === 'approved');
             
             if (category) {
                 filteredProducts = filteredProducts.filter(product => 
                     product.category === category
                 );
+                document.getElementById('productsTitle').textContent = `کاڵاکانی ${category}`;
+            } else {
+                document.getElementById('productsTitle').textContent = 'هەموو کاڵاکان';
             }
             
             renderProducts(filteredProducts);
+        }
+
+        // فەنکشنی پیشاندانی هەموو کاڵاکان
+        function showAllProducts() {
+            const filteredProducts = products.filter(p => p.status === 'approved');
+            document.getElementById('productsTitle').textContent = 'هەموو کاڵاکان';
+            renderProducts(filteredProducts);
+            document.getElementById('dropdownMenu').classList.remove('show');
+            showHomePage();
+        }
+
+        // فەنکشنی زیادکردنی کاڵا بە جۆری دیاریکراو
+        function addProductWithCategory(category) {
+            document.getElementById('dropdownMenu').classList.remove('show');
+            showAddProductForm();
+            document.getElementById('productCategory').value = category;
         }
 
         // فەنکشنی پێشبینینی وینەی فرە
@@ -2933,7 +2957,7 @@
                 <div class="product-actions">
                     <button class="btn-edit" onclick="openEditModal('${product.firebaseId}')">دەستکاری</button>
                     <button class="btn-approve" onclick="approveProduct('${product.firebaseId}')">پەسەندکردن</button>
-                    <button class="btn-reject" onclick="rejectProduct('${product.firebaseId}')">ڕەتکردنەوە</button>
+                    <button class="btn-reject" onclick="srejectProduct('${product.firebaseId}')">ڕەتکردنەوە</button>
                 </div>
             `;
             
@@ -2985,9 +3009,9 @@
                         <button class="btn-edit" onclick="openEditModal('${product.firebaseId}')">دەستکاری</button>
                         ${product.status === 'pending' ? 
                             `<button class="btn-approve" onclick="approveProduct('${product.firebaseId}')">پەسەندکردن</button>` : 
-                            `<button class="btn-reject" onclick="rejectProduct('${product.firebaseId}')">ڕەتکردنەوە</button>`
+                            `<button class="btn-reject" onclick="srejectProduct('${product.firebaseId}')">ڕەتکردنەوە</button>`
                         }
-                        <button class="btn-reject" onclick="deleteProduct('${product.firebaseId}')">سڕینەوە</button>
+                        <button class="btn-delete" onclick="deleteProduct('${product.firebaseId}')">سڕینەوە</button>
                     </div>
                 `;
                 
@@ -3259,29 +3283,34 @@
             }
         }
 
-        // فەنکشنی ڕەتکردنەوەی کاڵا
-        function rejectProduct(productId) {
+        // فەنکشنی ڕەتکردنەوەی کاڵا - گۆڕدراو بۆ srejectProduct
+        function srejectProduct(productId) {
             const productIndex = products.findIndex(p => p.firebaseId == productId);
             if (productIndex !== -1) {
-                products[productIndex].status = 'pending';
-                
-                // نوێکردنەوەی کاڵا لە فەیەربەیس
-                updateProductInFirebase(products[productIndex], 'pending');
-                
-                // نوێکردنەوەی لیستی کاڵاکان
-                renderProducts();
-                
-                // نوێکردنەوەی لیستی هەموو کاڵاکان
-                renderAllProductsList();
-                
-                // نوێکردنەوەی ئامارەکان
-                updateAdminStats();
-                
-                // نوێکردنەوەی لیستی چاوەڕوانەکان
-                updatePendingProductsList();
-                
-                // پیشاندانی نوتیفیکەیشن
-                showNotification('کاڵا گەڕێندرایەوە بۆ دۆخی چاوەڕوان!', 'success');
+                // تەنها کاڵای پەسەندکراو دەگێڕێتەوە بۆ چاوەڕوان
+                if (products[productIndex].status === 'approved') {
+                    products[productIndex].status = 'pending';
+                    
+                    // نوێکردنەوەی کاڵا لە فەیەربەیس
+                    updateProductInFirebase(products[productIndex], 'pending');
+                    
+                    // نوێکردنەوەی لیستی کاڵاکان
+                    renderProducts();
+                    
+                    // نوێکردنەوەی لیستی هەموو کاڵاکان
+                    renderAllProductsList();
+                    
+                    // نوێکردنەوەی ئامارەکان
+                    updateAdminStats();
+                    
+                    // نوێکردنەوەی لیستی چاوەڕوانەکان
+                    updatePendingProductsList();
+                    
+                    // پیشاندانی نوتیفیکەیشن
+                    showNotification('کاڵا گەڕێندرایەوە بۆ دۆخی چاوەڕوان!', 'success');
+                } else {
+                    showNotification('کاڵا ئێستا لە دۆخی چاوەڕواندایە!', 'error');
+                }
             }
         }
 
@@ -3413,7 +3442,7 @@
             document.getElementById('adminLoginBtn').style.display = 'flex';
             
             // نوێکردنەوەی لیستی کاڵاکان
-            renderProducts();
+            showAllProducts();
         }
 
         // نیشاندانی مارکێت
@@ -3427,7 +3456,8 @@
             document.getElementById('settingsSection').style.display = 'none';
             
             // نوێکردنەوەی لیستی کاڵاکان
-            renderProducts();
+            const approvedProducts = products.filter(p => p.status === 'approved');
+            renderProducts(approvedProducts);
         }
 
         // نیشاندانی شوێنەکان
@@ -3540,17 +3570,6 @@
             }
         });
 
-        // ڕێکخستنی کلیککردن لەسەر بەشەکانی مینو
-        document.querySelectorAll('.menu-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const category = this.getAttribute('data-category');
-                filterProducts(category);
-                
-                // داخستنی مینو دوای هەڵبژاردن
-                document.getElementById('dropdownMenu').classList.remove('show');
-            });
-        });
-
         // بارکردنی سەرەتایی کاڵاکان
         document.addEventListener('DOMContentLoaded', function() {
             // پشکنینی وینەی لۆگۆ
@@ -3562,7 +3581,7 @@
             // بارکردنی کاڵاکان لە فەیەربەیس
             loadProductsFromFirebase();
             
-            renderProducts();
+            showAllProducts();
             updateNotificationBadge();
             
             // Service Worker تۆمارکردن بۆ PWA
@@ -3740,8 +3759,4 @@
         }
     </script>
 </body>
-
 </html>
-
-
-
