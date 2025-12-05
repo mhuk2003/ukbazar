@@ -240,132 +240,53 @@
             50% { transform: scale(1.1); }
         }
         
-        /* مینو - زیادکردنی لۆگۆ و جوانتر */
-        .menu {
-            display: flex;
-            align-items: center;
-            margin-right: 15px;
-        }
-        
-        .menu-btn {
-            background: none;
-            border: none;
-            color: var(--dark);
-            font-size: 1.2rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 5px 10px;
-            border-radius: 5px;
-            transition: all 0.3s;
-        }
-        
-        .menu-btn:hover {
-            background: rgba(102, 126, 234, 0.1);
-        }
-        
-        .dropdown-menu {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            width: 280px;
-            max-height: 70vh;
-            overflow-y: auto;
-            display: none;
-            z-index: 1000;
-            margin-top: 5px;
-            border: 1px solid var(--border);
-        }
-        
-        .dropdown-menu.show {
-            display: block;
-            animation: fadeIn 0.3s;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .menu-header {
-            padding: 15px;
-            background: linear-gradient(135deg, var(--primary), #764ba2);
-            color: white;
-            border-radius: 12px 12px 0 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .menu-header .logo-icon {
-            width: 40px;
-            height: 40px;
-            margin-left: 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            border: none;
-        }
-        
-        .menu-header .logo-text {
-            font-size: 1.1rem;
-            color: white;
-            -webkit-text-fill-color: white;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-        }
-        
-        .menu-section {
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .menu-section:last-child {
-            border-bottom: none;
-        }
-        
-        .menu-section-title {
-            padding: 8px 15px;
-            font-weight: 700;
-            color: var(--primary);
-            font-size: 0.8rem;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 5px;
-            background: rgba(102, 126, 234, 0.05);
-        }
-        
-        .menu-items {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .menu-item {
-            padding: 8px 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--dark);
-            text-decoration: none;
-            transition: all 0.3s;
-            border: none;
-            background: none;
-            width: 100%;
-            text-align: right;
-            font-size: 0.8rem;
-            border-radius: 0;
-        }
-        
-        .menu-item:hover {
-            background: rgba(102, 126, 234, 0.1);
-            color: var(--primary);
-        }
-        
-        .menu-item i {
-            font-size: 0.9rem;
-            width: 20px;
+        /* زیادکراو: بەشی کاتیگۆریەکان */
+        .categories-section {
+            padding: 8px 0 12px;
             text-align: center;
-            color: var(--primary);
+        }
+
+        .categories-title {
+            font-size: 0.9rem;
+            color: var(--dark);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .categories-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            padding: 0 5px;
+        }
+
+        .category-btn {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 6px 10px;
+            font-size: 0.65rem;
+            color: var(--dark);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .category-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .category-btn i {
+            font-size: 0.7rem;
         }
         
         /* بەشی سەرەکی */
@@ -1667,112 +1588,9 @@
             <div class="header-content">
                 <div class="logo" onclick="showHomePage()">
                     <div class="logo-icon">
-                        <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png" alt="UkBazar Logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiByeD0iMTIiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDMwIDMwIiBmaWxsPSJub25lIj4KPHBhdGggZD0iTTE1IDVMMjAgMTBIMTBMMTUgNVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xMCAxNUgyMEwxNSAyMEwxMCAxNVoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo8L3N2Zz4K'">
+                        <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png" alt="UkBazar Logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiByeD0iMTIiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDMwIDMwIiBZpbGw9Im5vbmUiPgo8cGF0aCBkPSJNMTUgNUwyMCAxMEgxMEwxNSA1WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTEwIDE1SDIwTDE1IDIwSDEwVjE1WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo8L3N2Zz4K'">
                     </div>
                     <div class="logo-text">یوکەی بازاڕ</div>
-                </div>
-                
-                <!-- مینو -->
-                <div class="menu">
-                    <button class="menu-btn" id="menuToggle">
-                        <i class="fas fa-bars"></i>
-                        <span>مینو</span>
-                    </button>
-                    <div class="dropdown-menu" id="dropdownMenu">
-                        <!-- سەرپەڕەی مینو -->
-                        <div class="menu-header">
-                            <div class="logo-icon">
-                                <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png" alt="UkBazar Logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxwYXRoIGQ9Ik0xMiA0TDE2IDhIOEwxMiA0WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTggMTJIMTZMMTIgMTZIOFYxMloiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo8L3N2Zz4K'">
-                            </div>
-                            <div class="logo-text">یوکەی بازاڕ</div>
-                        </div>
-                        
-                        <div class="menu-section">
-                            <div class="menu-section-title">جۆرەکانی کاڵا</div>
-                            <div class="menu-items">
-                                <button class="menu-item" onclick="showAllProducts()">
-                                    <i class="fas fa-th-large"></i>
-                                    <span>هەموو کاڵاکان</span>
-                                </button>
-                                <button class="menu-item" onclick="addProductWithCategory('مۆبایل')">
-                                    <i class="fas fa-mobile-alt"></i>
-                                    <span>مۆبایل</span>
-                                </button>
-                                <button class="menu-item" onclick="addProductWithCategory('لاپتۆپ')">
-                                    <i class="fas fa-laptop"></i>
-                                    <span>لاپتۆپ</span>
-                                </button>
-                                <button class="menu-item" onclick="addProductWithCategory('کۆمپیوتەر')">
-                                    <i class="fas fa-desktop"></i>
-                                    <span>کۆمپیوتەر</span>
-                                </button>
-                                <button class="menu-item" onclick="addProductWithCategory('ئایپاد')">
-                                    <i class="fas fa-tablet-alt"></i>
-                                    <span>ئایپاد</span>
-                                </button>
-                                <button class="menu-item" onclick="addProductWithCategory('ئوتومبێل')">
-                                    <i class="fas fa-car"></i>
-                                    <span>ئوتومبێل</span>
-                                </button>
-                                <button class="menu-item" onclick="addProductWithCategory('ناوماڵ')">
-                                    <i class="fas fa-home"></i>
-                                    <span>ناوماڵ</span>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="menu-section">
-                            <div class="menu-section-title">کاڵای تر</div>
-                            <div class="menu-items">
-                                <button class="menu-item" onclick="addProductWithCategory('پاسکیل')">
-                                    <i class="fas fa-bicycle"></i>
-                                    <span>پاسکیل</span>
-                                </button>
-                                <button class="menu-item" onclick="addProductWithCategory('سکۆتەر')">
-                                    <i class="fas fa-motorcycle"></i>
-                                    <span>سکۆتەر</span>
-                                </button>
-                                <button class="menu-item" onclick="addProductWithCategory('کامێرا')">
-                                    <i class="fas fa-camera"></i>
-                                    <span>کامێرا</span>
-                                </button>
-                                <button class="menu-item" onclick="addProductWithCategory('جوانکاری')">
-                                    <i class="fas fa-paint-brush"></i>
-                                    <span>جوانکاری</span>
-                                </button>
-                                <button class="menu-item" onclick="addProductWithCategory('خانوو')">
-                                    <i class="fas fa-house-user"></i>
-                                    <span>خانوو</span>
-                                </button>
-                                <button class="menu-item" onclick="addProductWithCategory('زەوی')">
-                                    <i class="fas fa-mountain"></i>
-                                    <span>زەوی</span>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="menu-section">
-                            <div class="menu-section-title">کاڵای زیاتر</div>
-                            <div class="menu-items">
-                                <button class="menu-item" onclick="addProductWithCategory('باخ')">
-                                    <i class="fas fa-tree"></i>
-                                    <span>باخ</span>
-                                </button>
-                                <button class="menu-item" onclick="addProductWithCategory('ئاژەڵ')">
-                                    <i class="fas fa-paw"></i>
-                                    <span>ئاژەڵ</span>
-                                </button>
-                                <button class="menu-item" onclick="addProductWithCategory('مناڵان')">
-                                    <i class="fas fa-baby"></i>
-                                    <span>مناڵان</span>
-                                </button>
-                                <button class="menu-item" onclick="addProductWithCategory('جلو بەرگ')">
-                                    <i class="fas fa-tshirt"></i>
-                                    <span>جلو بەرگ</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 
                 <div class="nav-buttons">
@@ -1797,6 +1615,16 @@
         <div class="container">
             <h1 class="hero-title">یوکەی بازاڕ</h1>
             <p class="hero-subtitle">World Online Shopping</p>
+        </div>
+    </section>
+    
+    <!-- بەشی کاتیگۆریەکان -->
+    <section class="categories-section" id="categoriesSection">
+        <div class="container">
+            <div class="categories-title">جۆرەکانی کاڵاکان</div>
+            <div class="categories-grid" id="categoriesGrid">
+                <!-- دوگمەکانی کاتیگۆری لێرە دەردەکەون -->
+            </div>
         </div>
     </section>
     
@@ -2383,7 +2211,7 @@
         <div class="container">
             <div class="logo" style="justify-content: center; margin-bottom: 6px;">
                 <div class="logo-icon">
-                    <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png" alt="UkBazar Logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiByeD0iMTIiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDMwIDMwIiBZpbGw9Im5vbmUiPgo8cGF0aCBkPSJNMTUgNUwyMCAxMEgxMEwxNSA1WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTEwIDE1SDIwTDE1IDIwSDEwVjE1WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo='">
+                    <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png" alt="UkBazar Logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiByeD0iMTIiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDMwIDMwIiBZpbGw9Im5vbmUiPgo8cGF0aCBkPSJNMTUgNUwyMCAxMEgxMEwxNSA1WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTEwIDE1SDIwTDE1IDIwSDEwVjE1WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo8L3N2Zz4K'">
                 </div>
                 <div class="logo-text">UkBazar</div>
             </div>
@@ -2416,6 +2244,70 @@
         // زانیاری وینەکان
         let selectedImages = [];
         let currentEditImages = [];
+
+        // زانیاری کاتیگۆریەکان
+        const categories = [
+            { id: 'all', name: 'هەموو کاڵاکان', icon: 'fas fa-th-large' },
+            { id: 'مۆبایل', name: 'مۆبایل', icon: 'fas fa-mobile-alt' },
+            { id: 'لاپتۆپ', name: 'لاپتۆپ', icon: 'fas fa-laptop' },
+            { id: 'کۆمپیوتەر', name: 'کۆمپیوتەر', icon: 'fas fa-desktop' },
+            { id: 'ئایپاد', name: 'ئایپاد', icon: 'fas fa-tablet-alt' },
+            { id: 'ئوتومبێل', name: 'ئوتومبێل', icon: 'fas fa-car' },
+            { id: 'ناوماڵ', name: 'ناوماڵ', icon: 'fas fa-home' },
+            { id: 'پاسکیل', name: 'پاسکیل', icon: 'fas fa-bicycle' },
+            { id: 'سکۆتەر', name: 'سکۆتەر', icon: 'fas fa-motorcycle' },
+            { id: 'کامێرا', name: 'کامێرا', icon: 'fas fa-camera' },
+            { id: 'جوانکاری', name: 'جوانکاری', icon: 'fas fa-paint-brush' },
+            { id: 'خانوو', name: 'خانوو', icon: 'fas fa-house-user' },
+            { id: 'زەوی', name: 'زەوی', icon: 'fas fa-mountain' },
+            { id: 'باخ', name: 'باخ', icon: 'fas fa-tree' },
+            { id: 'ئاژەڵ', name: 'ئاژەڵ', icon: 'fas fa-paw' },
+            { id: 'مناڵان', name: 'مناڵان', icon: 'fas fa-baby' },
+            { id: 'جلو بەرگ', name: 'جلو بەرگ', icon: 'fas fa-tshirt' }
+        ];
+
+        // فەنکشنی دروستکردنی دوگمەکانی کاتیگۆری
+        function renderCategoryButtons() {
+            const categoriesGrid = document.getElementById('categoriesGrid');
+            categoriesGrid.innerHTML = '';
+            
+            categories.forEach(category => {
+                const button = document.createElement('button');
+                button.className = 'category-btn';
+                button.innerHTML = `
+                    <i class="${category.icon}"></i>
+                    <span>${category.name}</span>
+                `;
+                
+                button.addEventListener('click', () => {
+                    if (category.id === 'all') {
+                        showAllProducts();
+                        // ڕیستکردنی هەموو دوگمەکان
+                        document.querySelectorAll('.category-btn').forEach(btn => {
+                            btn.style.background = 'white';
+                            btn.style.color = 'var(--dark)';
+                            btn.style.borderColor = 'var(--border)';
+                        });
+                        button.style.background = 'var(--primary)';
+                        button.style.color = 'white';
+                        button.style.borderColor = 'var(--primary)';
+                    } else {
+                        filterProducts(category.id);
+                        // زیادکردنی چالاکی بۆ دوگمەی کراوە
+                        document.querySelectorAll('.category-btn').forEach(btn => {
+                            btn.style.background = 'white';
+                            btn.style.color = 'var(--dark)';
+                            btn.style.borderColor = 'var(--border)';
+                        });
+                        button.style.background = 'var(--primary)';
+                        button.style.color = 'white';
+                        button.style.borderColor = 'var(--primary)';
+                    }
+                });
+                
+                categoriesGrid.appendChild(button);
+            });
+        }
 
         // فەنکشنی پشکنینی باربوونی وینەی لۆگۆ
         function checkLogoImage() {
@@ -2612,15 +2504,25 @@
             const filteredProducts = products.filter(p => p.status === 'approved');
             document.getElementById('productsTitle').textContent = 'هەموو کاڵاکان';
             renderProducts(filteredProducts);
-            document.getElementById('dropdownMenu').classList.remove('show');
-            showHomePage();
         }
 
         // فەنکشنی زیادکردنی کاڵا بە جۆری دیاریکراو
         function addProductWithCategory(category) {
-            document.getElementById('dropdownMenu').classList.remove('show');
             showAddProductForm();
             document.getElementById('productCategory').value = category;
+            // زیادکردنی چالاکی بۆ دوگمەی کاتیگۆری
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                const btnText = btn.querySelector('span')?.textContent;
+                if (btnText === category) {
+                    btn.style.background = 'var(--primary)';
+                    btn.style.color = 'white';
+                    btn.style.borderColor = 'var(--primary)';
+                } else {
+                    btn.style.background = 'white';
+                    btn.style.color = 'var(--dark)';
+                    btn.style.borderColor = 'var(--border)';
+                }
+            });
         }
 
         // فەنکشنی پێشبینینی وینەی فرە
@@ -3415,6 +3317,7 @@
             document.getElementById('productsSection').style.display = 'none';
             document.getElementById('adminSection').style.display = 'none';
             document.getElementById('heroSection').style.display = 'none';
+            document.getElementById('categoriesSection').style.display = 'none';
             document.getElementById('marketplaceSection').style.display = 'none';
             document.getElementById('locationsSection').style.display = 'none';
             document.getElementById('settingsSection').style.display = 'none';
@@ -3435,6 +3338,7 @@
             document.getElementById('productsSection').style.display = 'block';
             document.getElementById('adminSection').style.display = 'none';
             document.getElementById('heroSection').style.display = 'block';
+            document.getElementById('categoriesSection').style.display = 'block';
             document.getElementById('marketplaceSection').style.display = 'none';
             document.getElementById('locationsSection').style.display = 'none';
             document.getElementById('settingsSection').style.display = 'none';
@@ -3443,6 +3347,22 @@
             
             // نوێکردنەوەی لیستی کاڵاکان
             showAllProducts();
+            
+            // ڕیستکردنی چالاکی دوگمەکانی کاتیگۆری
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.style.background = 'white';
+                btn.style.color = 'var(--dark)';
+                btn.style.borderColor = 'var(--border)';
+            });
+            // چالاککردنی دوگمەی "هەموو کاڵاکان"
+            const allBtn = Array.from(document.querySelectorAll('.category-btn')).find(btn => 
+                btn.querySelector('span')?.textContent === 'هەموو کاڵاکان'
+            );
+            if (allBtn) {
+                allBtn.style.background = 'var(--primary)';
+                allBtn.style.color = 'white';
+                allBtn.style.borderColor = 'var(--primary)';
+            }
         }
 
         // نیشاندانی مارکێت
@@ -3451,6 +3371,7 @@
             document.getElementById('productsSection').style.display = 'none';
             document.getElementById('adminSection').style.display = 'none';
             document.getElementById('heroSection').style.display = 'none';
+            document.getElementById('categoriesSection').style.display = 'none';
             document.getElementById('marketplaceSection').style.display = 'block';
             document.getElementById('locationsSection').style.display = 'none';
             document.getElementById('settingsSection').style.display = 'none';
@@ -3466,6 +3387,7 @@
             document.getElementById('productsSection').style.display = 'none';
             document.getElementById('adminSection').style.display = 'none';
             document.getElementById('heroSection').style.display = 'none';
+            document.getElementById('categoriesSection').style.display = 'none';
             document.getElementById('marketplaceSection').style.display = 'none';
             document.getElementById('locationsSection').style.display = 'block';
             document.getElementById('settingsSection').style.display = 'none';
@@ -3477,6 +3399,7 @@
             document.getElementById('productsSection').style.display = 'none';
             document.getElementById('adminSection').style.display = 'none';
             document.getElementById('heroSection').style.display = 'none';
+            document.getElementById('categoriesSection').style.display = 'none';
             document.getElementById('marketplaceSection').style.display = 'none';
             document.getElementById('locationsSection').style.display = 'none';
             document.getElementById('settingsSection').style.display = 'block';
@@ -3517,6 +3440,7 @@
                 document.getElementById('productsSection').style.display = 'none';
                 document.getElementById('adminSection').style.display = 'block';
                 document.getElementById('heroSection').style.display = 'none';
+                document.getElementById('categoriesSection').style.display = 'none';
                 document.getElementById('marketplaceSection').style.display = 'none';
                 document.getElementById('locationsSection').style.display = 'none';
                 document.getElementById('settingsSection').style.display = 'none';
@@ -3554,26 +3478,13 @@
             showNotification('بە سەرکەوتوویی چوویتە دەرەوە!', 'success');
         });
 
-        // ڕێکخستنی مینو
-        document.getElementById('menuToggle').addEventListener('click', function() {
-            const dropdownMenu = document.getElementById('dropdownMenu');
-            dropdownMenu.classList.toggle('show');
-        });
-
-        // داخستنی مینو کاتێک کلیک لە دەرەوە دەکرێت
-        document.addEventListener('click', function(event) {
-            const dropdownMenu = document.getElementById('dropdownMenu');
-            const menuToggle = document.getElementById('menuToggle');
-            
-            if (!menuToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
-                dropdownMenu.classList.remove('show');
-            }
-        });
-
         // بارکردنی سەرەتایی کاڵاکان
         document.addEventListener('DOMContentLoaded', function() {
             // پشکنینی وینەی لۆگۆ
             checkLogoImage();
+            
+            // دروستکردنی دوگمەکانی کاتیگۆری
+            renderCategoryButtons();
             
             // ڕێکخستنی پێشبینینی وینەی فرە
             setupMultiImagePreview();
@@ -3583,6 +3494,18 @@
             
             showAllProducts();
             updateNotificationBadge();
+            
+            // چالاککردنی دوگمەی "هەموو کاڵاکان"
+            setTimeout(() => {
+                const allBtn = Array.from(document.querySelectorAll('.category-btn')).find(btn => 
+                    btn.querySelector('span')?.textContent === 'هەموو کاڵاکان'
+                );
+                if (allBtn) {
+                    allBtn.style.background = 'var(--primary)';
+                    allBtn.style.color = 'white';
+                    allBtn.style.borderColor = 'var(--primary)';
+                }
+            }, 100);
             
             // Service Worker تۆمارکردن بۆ PWA
             if ('serviceWorker' in navigator) {
