@@ -55,7 +55,7 @@
         }
         
         body {
-            background: #f5f5f5; /* گۆڕدراو: لە شین بۆ light gray */
+            background: #f5f5f5;
             min-height: 100vh;
             color: var(--dark);
             direction: rtl;
@@ -293,7 +293,7 @@
         .hero-section {
             padding: 10px 0 5px;
             background: transparent;
-            color: #333; /* گۆڕدراو: ڕەنگی دەق بۆ تاریکتر */
+            color: #333;
             text-align: center;
         }
         
@@ -337,7 +337,7 @@
             text-align: center;
             margin-bottom: 15px;
             font-size: 1.1rem;
-            color: #333; /* گۆڕدراو: لە سپی بۆ تاریکتر */
+            color: #333;
             position: relative;
             padding-bottom: 8px;
             font-weight: 700;
@@ -351,7 +351,7 @@
             transform: translateX(-50%);
             width: 60px;
             height: 2px;
-            background: var(--primary); /* گۆڕدراو: لە سپی بۆ ڕەنگی سەرەکی */
+            background: var(--primary);
             border-radius: 1px;
         }
         
@@ -467,7 +467,7 @@
             transition: transform 0.5s ease;
             height: 100%;
             width: 100%;
-            direction: ltr; /* زیادکراو: چارەسەری کێشەی RTL */
+            direction: ltr;
         }
         
         .slide {
@@ -526,7 +526,7 @@
             transform: translateY(-50%);
             opacity: 0;
             transition: opacity 0.3s;
-            direction: ltr; /* زیادکراو: چارەسەری کێشەی RTL */
+            direction: ltr;
         }
         
         .product-card:hover .slideshow-arrows {
@@ -1377,7 +1377,6 @@
         .slider:before {
             position: absolute;
             content: "";
-;
             height: 16px;
             width: 16px;
             left: 2px;
@@ -1588,7 +1587,7 @@
             <div class="header-content">
                 <div class="logo" onclick="showHomePage()">
                     <div class="logo-icon">
-                        <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png" alt="UkBazar Logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiByeD0iMTIiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDMwIDMwIiBZpbGw9Im5vbmUiPgo8cGF0aCBkPSJNMTUgNUwyMCAxMEgxMEwxNSA1WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTEwIDE1SDIwTDE1IDIwSDEwVjE1WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo8L3N2Zz4K'">
+                        <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png" alt="UkBazar Logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiByeD0iMTIiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDMwIDMwIiBZmlGw9Im5vbmUiPgo8cGF0aCBkPSJNMTUgNUwyMCAxMEgxMEwxNSA1WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTEwIDE1SDIwTDE1IDIwSDEwVjE1WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo8L3N2Zz4K'">
                     </div>
                     <div class="logo-text">یوکەی بازاڕ</div>
                 </div>
@@ -1907,6 +1906,18 @@
                         <p>سەنتەری شاری زاخۆ</p>
                     </div>
                 </div>
+                
+                <!-- زیادکراو: لینکی شوێنی سەرەکی -->
+                <div class="location-item" onclick="window.open('https://maps.app.goo.gl/TDQuJ2eRiDfxUrEW8', '_blank')" style="cursor: pointer; background: #f0f4ff; border-radius: 8px; margin-top: 10px;">
+                    <div class="location-icon">
+                        <i class="fas fa-map-pin" style="color: #667eea;"></i>
+                    </div>
+                    <div class="location-info">
+                        <h4>یوکەی بازاڕ - شوێنی سەرەکی</h4>
+                        <p>بینینی شوێن لەسەر Google Maps</p>
+                    </div>
+                    <i class="fas fa-external-link-alt" style="color: var(--gray); font-size: 0.8rem;"></i>
+                </div>
             </div>
         </div>
     </section>
@@ -1977,13 +1988,13 @@
                     </div>
                     
                     <div class="settings-option">
-                        <div class="settings-label">ژمارەی مۆبایل</div>
-                        <div class="settings-value">07507472656--07755436275</div>
+                        <div class="settings-label">ژمارەی WhatsApp & FIB</div>
+                        <div class="settings-value">07755436275</div>
                     </div>
                     
                     <div class="settings-option">
                         <div class="settings-label">شوێن</div>
-                        <div class="settings-value">uk، </div>
+                        <div class="settings-value"><a href="https://maps.app.goo.gl/TDQuJ2eRiDfxUrEW8" target="_blank" style="color: var(--primary); text-decoration: none;">بینینی شوێن</a></div>
                     </div>
                 </div>
             </div>
@@ -2177,7 +2188,8 @@
                 <form id="fibPaymentForm">
                     <input type="text" class="admin-input" id="fibPhone" placeholder="ژمارەی تەلەفۆنی کڕیار (07xx xxx xxxx)" style="text-align: center;" required pattern="[0-9]{11}">
                     
-                    <input type="text" class="admin-input" id="adminPhone" placeholder="ژمارەی تەلەفۆنی بەڕێوەبەر" style="text-align: center;" value="07701922060" readonly>
+                    <!-- گۆڕدراو: ژمارەی WhatsApp & FIB -->
+                    <input type="text" class="admin-input" id="adminPhone" placeholder="ژمارەی تەلەفۆنی بەڕێوەبەر" style="text-align: center;" value="07755436275" readonly>
                     
                     <input type="number" class="admin-input" id="paymentAmount" placeholder="بڕی پارە (€)" style="text-align: center;" required min="1" step="0.01">
                     
@@ -2211,12 +2223,17 @@
         <div class="container">
             <div class="logo" style="justify-content: center; margin-bottom: 6px;">
                 <div class="logo-icon">
-                    <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png" alt="UkBazar Logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiByeD0iMTIiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDMwIDMwIiBZpbGw9Im5vbmUiPgo8cGF0aCBkPSJNMTUgNUwyMCAxMEgxMEwxNSA1WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTEwIDE1SDIwTDE1IDIwSDEwVjE1WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo8L3N2Zz4K'">
+                    <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png" alt="UkBazar Logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiByeD0iMTIiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDMwIDMwIiBZmlGw9Im5vbmUiPgo8cGF0aCBkPSJNMTUgNUwyMCAxMEgxMEwxNSA1WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTEwIDE1SDIwTDE1IDIwSDEwVjE1WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo8L3N2Zz4K'">
                 </div>
                 <div class="logo-text">UkBazar</div>
             </div>
-            <p class="footer-text">World Online  Shopping</p>
-            <p class="footer-text">پەیوەندی-Info@ukbazar.online - 2025</p>
+            <p class="footer-text">World Online Shopping</p>
+            <p class="footer-text">پەیوەندی: Info@ukbazar.online - WhatsApp & FIB: 07755436275</p>
+            <p class="footer-text" style="margin-top: 5px;">
+                <a href="https://maps.app.goo.gl/TDQuJ2eRiDfxUrEW8" target="_blank" style="color: var(--primary); text-decoration: none;">
+                    <i class="fas fa-map-marker-alt"></i> شوێن: بینینی لە Google Maps
+                </a>
+            </p>
         </div>
     </footer>
 
@@ -2265,6 +2282,9 @@
             { id: 'مناڵان', name: 'مناڵان', icon: 'fas fa-baby' },
             { id: 'جلو بەرگ', name: 'جلو بەرگ', icon: 'fas fa-tshirt' }
         ];
+
+        // Object to store slide intervals
+        let slideIntervals = {};
 
         // فەنکشنی دروستکردنی دوگمەکانی کاتیگۆری
         function renderCategoryButtons() {
@@ -2395,28 +2415,12 @@
                     </div>
                 `).join('');
                 
-                // گۆڕاو: لە جیاتی ژمارە، خاڵ بەکاردهێنین وەک ئینستاگرام
-                const dots = product.images.map((_, index) => `
-                    <div class="dot ${index === 0 ? 'active' : ''}" onclick="goToSlide(this.closest('.product-slideshow'), ${index}); event.stopPropagation();"></div>
-                `).join('');
-                
                 imageContent = `
-                    <div class="product-slideshow">
-                        <div class="slideshow-container" id="slideshow-${product.firebaseId || product.id}">
+                    <div class="product-slideshow" id="slideshow-${product.firebaseId || product.id}">
+                        <div class="slideshow-container">
                             ${slides}
                         </div>
-                        <div class="slideshow-dots">
-                            ${dots}
-                        </div>
-                        <div class="slideshow-arrows">
-                            <!-- گۆڕاو: هاوئاھەنگی ئایکۆنەکانی هەڵگەڕان لەگەڵ RTL -->
-                            <button class="arrow" onclick="changeSlide(this.closest('.product-slideshow'), -1); event.stopPropagation();">
-                                <i class="fas fa-chevron-left"></i> <!-- گۆڕدراو: چەپ -->
-                            </button>
-                            <button class="arrow" onclick="changeSlide(this.closest('.product-slideshow'), 1); event.stopPropagation();">
-                                <i class="fas fa-chevron-right"></i> <!-- گۆڕدراو: ڕاست -->
-                            </button>
-                        </div>
+                        <!-- لابردنی خاڵەکان چونکە ئێستا لەسەر وینەکانن -->
                     </div>
                 `;
             } else if (product.imageUrl) {
@@ -2481,6 +2485,46 @@
                 productsGrid.innerHTML += createProductCard(product);
                 marketplaceProducts.innerHTML += createProductCard(product);
             });
+            
+            // Start auto slideshow for all product cards
+            setTimeout(() => {
+                startAllSlideshows();
+            }, 100);
+        }
+
+        // فەنکشنی دەستپێکردنی هەموو سلایدشۆکان
+        function startAllSlideshows() {
+            // پاککردنەوەی هەموو کاتبەندە پێشووەکان
+            Object.values(slideIntervals).forEach(interval => {
+                clearInterval(interval);
+            });
+            slideIntervals = {};
+            
+            document.querySelectorAll('.product-slideshow').forEach(slideshow => {
+                startSlideshow(slideshow);
+            });
+        }
+
+        // فەنکشنی دەستپێکردنی سلایدشۆی تاک
+        function startSlideshow(slideshowElement) {
+            const slideshowId = slideshowElement.id;
+            const slideshow = slideshowElement.querySelector('.slideshow-container');
+            const slides = slideshow.querySelectorAll('.slide');
+            
+            if (!slideshow || slides.length <= 1) return;
+            
+            // پاککردنەوەی کاتبەندی پێشوو
+            if (slideIntervals[slideshowId]) {
+                clearInterval(slideIntervals[slideshowId]);
+            }
+            
+            let currentIndex = 0;
+            
+            // دەستپێکردنی سلایدەری ئۆتۆماتیکی (٢ چرکە)
+            slideIntervals[slideshowId] = setInterval(() => {
+                currentIndex = (currentIndex + 1) % slides.length;
+                slideshow.style.transform = `translateX(-${currentIndex * 100}%)`;
+            }, 2000); // ٢٠٠٠ میلیچرکە = ٢ چرکە
         }
 
         // فەنکشنی فلتەرکردنی کاڵاکان
@@ -2591,56 +2635,6 @@
         function removeImage(index) {
             selectedImages.splice(index, 1);
             renderImagesPreview();
-        }
-
-        // فەنکشنی گۆڕینی سلاید - چارەسەرکراو بۆ RTL
-        function changeSlide(slideshowElement, direction) {
-            const slideshow = slideshowElement.querySelector('.slideshow-container');
-            const slides = slideshow.querySelectorAll('.slide');
-            const dots = slideshowElement.querySelectorAll('.dot');
-            
-            if (!slideshow || slides.length === 0) return;
-            
-            // بەدەستهێنانی ئیندێکسی ئێستا لە transform
-            const currentTransform = slideshow.style.transform || 'translateX(0%)';
-            const currentIndex = parseInt(currentTransform.match(/-?\d+/) || [0]) / 100;
-            
-            let newIndex = currentIndex + direction;
-            
-            if (newIndex < 0) newIndex = slides.length - 1;
-            if (newIndex >= slides.length) newIndex = 0;
-            
-            // گۆڕاو: translateX بە شێوەیەکی دروست بۆ RTL
-            slideshow.style.transform = `translateX(-${newIndex * 100}%)`;
-            
-            // نوێکردنەوەی خاڵەکان
-            dots.forEach((dot, idx) => {
-                if (idx === newIndex) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
-            });
-        }
-
-        // فەنکشنی ڕۆشتن بۆ سلایدی دیاریکراو - چارەسەرکراو بۆ RTL
-        function goToSlide(slideshowElement, index) {
-            const slideshow = slideshowElement.querySelector('.slideshow-container');
-            const dots = slideshowElement.querySelectorAll('.dot');
-            
-            if (!slideshow) return;
-            
-            // گۆڕاو: translateX بە شێوەیەکی دروست بۆ RTL
-            slideshow.style.transform = `translateX(-${index * 100}%)`;
-            
-            // نوێکردنەوەی خاڵەکان
-            dots.forEach((dot, idx) => {
-                if (idx === index) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
-            });
         }
 
         // فەنکشنی بارکردنی وینە بۆ فەیەربەیس
@@ -3635,7 +3629,7 @@
                     <form id="fibPaymentForm">
                         <input type="text" class="admin-input" id="fibPhone" placeholder="ژمارەی تەلەفۆنی کڕیار (07xx xxx xxxx)" style="text-align: center;" required pattern="[0-9]{11}">
                         
-                        <input type="text" class="admin-input" id="adminPhone" placeholder="ژمارەی تەلەفۆنی بەڕێوەبەر" style="text-align: center;" value="07701922060" readonly>
+                        <input type="text" class="admin-input" id="adminPhone" placeholder="ژمارەی تەلەفۆنی بەڕێوەبەر" style="text-align: center;" value="07755436275" readonly>
                         
                         <input type="number" class="admin-input" id="paymentAmount" placeholder="بڕی پارە (€)" style="text-align: center;" required min="1" step="0.01">
                         
