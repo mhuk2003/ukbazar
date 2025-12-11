@@ -123,38 +123,93 @@
             white-space: nowrap;
         }
         
-        /* تیکستی گەران */
-        .search-container {
-            flex: 2;
-            max-width: 400px;
-            margin: 0 10px;
+        /* ستایلەکانی بەشی گەران */
+        .search-section {
+            padding: 15px 0;
+            background: white;
+            margin: 10px 0;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
-        
-        .search-box {
+
+        .search-section .search-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-section .search-box {
             display: flex;
             align-items: center;
             background: white;
-            border-radius: 25px;
-            padding: 5px 15px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 10px 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid var(--primary);
         }
-        
-        .search-box input {
+
+        .search-section .search-box input {
             flex: 1;
             border: none;
             outline: none;
-            padding: 8px;
-            font-size: 0.8rem;
+            padding: 10px;
+            font-size: 1rem;
             background: transparent;
         }
-        
-        .search-box button {
-            background: transparent;
+
+        .search-section .search-box button {
+            background: var(--primary);
             border: none;
-            color: var(--primary);
+            color: white;
             cursor: pointer;
-            padding: 5px;
+            padding: 10px 15px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .search-section .search-box button:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+        
+        /* ستایلەکانی فیلتەری کاتیگۆری */
+        .category-filter-section {
+            padding: 10px 0;
+            background: white;
+            margin: 10px 0;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .category-btn {
+            padding: 6px 12px;
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            background: white;
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .category-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .category-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
         
         .nav-buttons {
@@ -225,6 +280,12 @@
             background: linear-gradient(135deg, #17a2b8, #138496);
             color: white;
             box-shadow: 0 2px 6px rgba(23, 162, 184, 0.4);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning), #dd6b20);
+            color: white;
+            box-shadow: 0 2px 6px rgba(237, 137, 54, 0.4);
         }
         
         .btn:hover {
@@ -502,7 +563,7 @@
             overflow: hidden;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
             transition: all 0.3s;
-            height: 320px;
+            height: 350px;
             display: flex;
             flex-direction: column;
         }
@@ -621,29 +682,50 @@
             color: var(--secondary);
         }
         
-        /* دوگمەی پارەدان */
+        /* ستایلەکانی دوگمەکانی پارەدان */
+        .payment-buttons {
+            display: flex;
+            gap: 5px;
+            margin-top: 8px;
+        }
+
         .fib-payment-btn {
             background: linear-gradient(135deg, #0066cc, #003366);
             color: white;
             border: none;
-            padding: 6px 12px;
+            padding: 8px 12px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             transition: all 0.3s;
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
             box-shadow: 0 2px 5px rgba(0,102,204,0.3);
-            margin-top: 6px;
-            width: 100%;
+            flex: 1;
             justify-content: center;
         }
-        
-        .fib-payment-btn:hover {
-            background: linear-gradient(135deg, #004499, #002244);
+
+        .whatsapp-btn {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 5px rgba(37,211,102,0.3);
+            flex: 1;
+            justify-content: center;
+        }
+
+        .fib-payment-btn:hover, .whatsapp-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,102,204,0.4);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
         
         /* فۆرمی زیادکردنی کاڵا */
@@ -925,6 +1007,52 @@
             color: white;
         }
         
+        /* ستایلەکانی تۆری کۆمەلایەتی */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .social-icon.facebook {
+            background: var(--primary);
+        }
+
+        .social-icon.instagram {
+            background: linear-gradient(45deg, #E4405F, #C13584);
+        }
+
+        .social-icon.whatsapp {
+            background: linear-gradient(45deg, #25D366, #128C7E);
+        }
+
+        .social-icon.telegram {
+            background: linear-gradient(45deg, #0088cc, #0077b5);
+        }
+
+        .social-icon.youtube {
+            background: linear-gradient(45deg, #FF0000, #FF3333);
+        }
+        
         /* مۆدالەکان */
         .modal {
             display: none;
@@ -983,6 +1111,39 @@
             font-size: 1rem;
             color: var(--gray);
             cursor: pointer;
+        }
+        
+        /* ستایلەکانی مۆدالی لۆکەیشن */
+        .location-details {
+            margin: 20px 0;
+        }
+
+        .location-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .location-item i {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-top: 5px;
+        }
+
+        .location-item h4 {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .location-item p {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 3px;
         }
         
         /* چارەسەرکراو: چوارچیوەی خوارەوە */
@@ -1116,28 +1277,14 @@
             <div class="header-content">
                 <div class="logo" onclick="showHomePage()">
                     <div class="logo-icon">
-                        <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png" alt="UkBazar Logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiByeD0iMTIiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDMwIDMwIiBZmlFsPSJub25lIj4KPHBhdGggZD0iTTE1IDVMMjAgMTBIMTBMMTUgNVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xMCAxNUgyMExNNSAyMEgxMFYxNVoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo8L3N2Zz4KPC9zdmc+Cg=='">
+                        <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png" alt="UkBazar Logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiByeD0iMTIiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgdmlld0BveD0iMCAwIDMwIDMwIiBZmlFsPSJub25lIj4KPHBhdGggZD0iTTE1IDVMMjAgMTBIMTBMMTUgNVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xMCAxNUgyMExNNSAyMEgxMFYxNVoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo8L3N2Zz4KPC9zdmc+Cg=='">
                     </div>
                     <div class="logo-text">UK BAZAR</div>
-                </div>
-                
-                <!-- تیکستی گەران -->
-                <div class="search-container">
-                    <div class="search-box">
-                        <input type="text" id="searchInput" placeholder="گەڕان بۆ کاڵا...">
-                        <button id="searchButton">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
                 </div>
                 
                 <div class="nav-buttons">
                     <button class="btn btn-add-product" id="addProductBtn">
                         <i class="fas fa-plus-circle"></i> کالا دابنێ
-                    </button>
-                    <button class="btn btn-outline" id="adminLoginBtn" style="position: relative;">
-                        <i class="fas fa-user-shield"></i> داشبۆرد
-                        <span class="notification-badge" id="adminBadge" style="display: none;">0</span>
                     </button>
                     <button class="btn btn-primary" id="logoutBtn" style="display: none;">
                         <i class="fas fa-sign-out-alt"></i> دەرچوون
@@ -1146,6 +1293,29 @@
             </div>
         </div>
     </header>
+    
+    <!-- بەشی گەران -->
+    <section class="search-section" id="searchSection">
+        <div class="container">
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="گەڕان بۆ کاڵا...">
+                    <button id="searchButton">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- بەشی فیلتەری کاتیگۆری -->
+    <section class="category-filter-section" id="categoryFilterSection">
+        <div class="container">
+            <div class="category-buttons" id="categoryButtons">
+                <!-- کاتیگۆریەکان لێرە دەردەکەون -->
+            </div>
+        </div>
+    </section>
     
     <!-- سلایدەری تەنها (خوارەوە) -->
     <section class="slider-section" id="sliderSection">
@@ -1268,7 +1438,7 @@
                         <option value="مناڵان">مناڵان</option>
                         <option value="کتێبخانە">کتێبخانە</option>
                         <option value="وەرزش و هونەر">وەرزش و هونەر</option>
-                        <option value="جلو بەرگ">جلو بەرگ</option>
+                        <option value="جل و بەرگ">جل و بەرگ</option>
                         <option value="ئامێری تر">ئامێری تر</option>
                         <option value="کۆمپیوتەری تر">کۆمپیوتەری تر</option>
                     </select>
@@ -1375,10 +1545,95 @@
                     <span>کاڵا</span>
                 </a>
                 
+                <a href="#" class="bottom-nav-item" onclick="showLocationModal(); setActiveNav(this); return false;">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>لۆکەیشن</span>
+                </a>
+                
                 <a href="#" class="bottom-nav-item" onclick="showAdminDashboard(); setActiveNav(this); return false;">
-                    <i class="fas fa-user-shield"></i>
+                    <i class="fas fa-user-cog"></i>
                     <span>داشبۆرد</span>
                 </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- مۆدالی لۆکەیشن -->
+    <div class="modal" id="locationModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeLocationModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h2>لۆکەیشنی فرۆشگا</h2>
+                <p>پەیوەندی و شوێنی فرۆشگا</p>
+            </div>
+            
+            <div class="location-details">
+                <div class="location-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <h4>ناونیشان:</h4>
+                        <p>شوێنی فرۆشگا لە سلێمانی</p>
+                        <a href="https://maps.app.goo.gl/TDQuJ2eRiDfxUrEW8" target="_blank" class="btn btn-outline" style="margin-top: 10px;">
+                            <i class="fas fa-map"></i> بینینی لە Google Maps
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="location-item">
+                    <i class="fas fa-phone"></i>
+                    <div>
+                        <h4>ژمارەی پەیوەندی:</h4>
+                        <p>UK: 00447449218670</p>
+                        <p>UK: 07507472656</p>
+                        <p>کوردستان: 07755436275</p>
+                    </div>
+                </div>
+                
+                <div class="location-item">
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <h4>ئیمەیڵ:</h4>
+                        <p>Info@ukbazar.online</p>
+                    </div>
+                </div>
+                
+                <div class="location-item">
+                    <i class="fas fa-whatsapp"></i>
+                    <div>
+                        <h4>واتساپ و FIB:</h4>
+                        <p>کوردستان: 07755436275</p>
+                        <button class="btn btn-primary" onclick="copyFibNumber()" style="margin-top: 10px;">
+                            <i class="fas fa-copy"></i> کۆپی کردنی ژمارە
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- تۆری کۆمەلایەتی لە مۆدالی لۆکەیشن -->
+            <div class="social-links" style="margin: 20px 0;">
+                <a href="https://www.facebook.com/UKBazarOnline/" target="_blank" class="social-icon facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.instagram.com/ukbazar.online/" target="_blank" class="social-icon instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://wa.me/9647755436275" target="_blank" class="social-icon whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="https://t.me/ukbazar" target="_blank" class="social-icon telegram">
+                    <i class="fab fa-telegram"></i>
+                </a>
+                <a href="https://www.youtube.com/@UKBazar" target="_blank" class="social-icon youtube">
+                    <i class="fab fa-youtube"></i>
+                </a>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-danger" onclick="closeLocationModal()">
+                    <i class="fas fa-times"></i> داخستن
+                </button>
             </div>
         </div>
     </div>
@@ -1593,14 +1848,32 @@
     <!-- فۇتەر -->
     <footer class="footer">
         <div class="container">
-            <div class="logo-text">UK BAZAR</div>
-            <p class="footer-text">World Online Shopping</p>
+           
             <p class="footer-text">پەیوەندی:UK 00447449218670 07507472656 Info@ukbazar.online - WhatsApp & FIB:KURDISTAN  07755436275</p>
             <p class="footer-text" style="margin-top: 5px;">
                 <a href="https://maps.app.goo.gl/TDQuJ2eRiDfxUrEW8" target="_blank" style="color: var(--primary); text-decoration: none;">
                     <i class="fas fa-map-marker-alt"></i> شوێن: بینینی لە Google Maps
                 </a>
             </p>
+            
+            <!-- تۆری کۆمەلایەتی -->
+            <div class="social-links">
+                <a href="https://www.facebook.com/UKBazarOnline/" target="_blank" class="social-icon facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.instagram.com/ukbazar.online/" target="_blank" class="social-icon instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://wa.me/9647755436275" target="_blank" class="social-icon whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="https://t.me/ukbazar" target="_blank" class="social-icon telegram">
+                    <i class="fab fa-telegram"></i>
+                </a>
+                <a href="https://www.youtube.com/@UKBazar" target="_blank" class="social-icon youtube">
+                    <i class="fab fa-youtube"></i>
+                </a>
+            </div>
         </div>
     </footer>
 
@@ -1641,6 +1914,212 @@
 
         // Object to store slide intervals for product cards
         let slideIntervals = {};
+        
+        // نیشاندانی ئەوەی ئایا بەڕێوەبەر چووەتە ژوورەوە
+        let isAdminLoggedIn = false;
+
+        // ============================
+        // فەنکشنەکانی نوێ
+        // ============================
+
+        // فەنکشنی دروستکردنی دوگمەی کاتیگۆریەکان
+        function createCategoryButtons() {
+            const categories = [
+                'مۆبایل', 'لاپتۆپ', 'کۆمپیوتەر', 'ئایپاد', 'ئوتومبێل', 
+                'ناوماڵ', 'پاسکیل', 'سکۆتەر', 'کامێرا', 'جوانکاری', 
+                'خانوو', 'زەوی', 'باخ', 'ئاژەڵ', 'مناڵان', 
+                'کتێبخانە', 'وەرزش و هونەر', 'جل و بەرگ', 'ئامێری تر', 
+                'کۆمپیوتەری تر', 'هەموو کاڵاکان'
+            ];
+            
+            const container = document.getElementById('categoryButtons');
+            container.innerHTML = '';
+            
+            categories.forEach(category => {
+                const button = document.createElement('button');
+                button.className = 'category-btn';
+                button.textContent = category;
+                button.dataset.category = category === 'هەموو کاڵاکان' ? 'all' : category;
+                
+                button.addEventListener('click', () => {
+                    // لابردنی چالاکی لە هەموو دوگمەکان
+                    document.querySelectorAll('.category-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // چالاککردنی دوگمەی هەڵبژێردراو
+                    button.classList.add('active');
+                    
+                    // فیلتەرکردنی کاڵاکان
+                    filterProductsByCategory(category === 'هەموو کاڵاکان' ? 'all' : category);
+                });
+                
+                container.appendChild(button);
+            });
+            
+            // چالاککردنی دوگمەی 'هەموو کاڵاکان' بە شێوەیەکی بنەڕەتی
+            document.querySelector('.category-btn[data-category="all"]').classList.add('active');
+        }
+
+        // فەنکشنی فیلتەرکردنی کاڵاکان بەپێی کاتیگۆری
+        function filterProductsByCategory(category) {
+            if (category === 'all') {
+                renderProducts();
+                document.getElementById('productsTitle').textContent = 'هەموو کاڵاکان';
+            } else {
+                const filteredProducts = products.filter(p => 
+                    p.category === category && p.status === 'approved'
+                );
+                
+                document.getElementById('productsTitle').textContent = `کاڵاکانی ${category}`;
+                
+                if (filteredProducts.length === 0) {
+                    document.getElementById('productsGrid').innerHTML = `
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 30px; color: var(--gray);">
+                            <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                            <p>هیچ کاڵایەک نیە لەم کاتیگۆریەدا!</p>
+                        </div>
+                    `;
+                } else {
+                    const productsGrid = document.getElementById('productsGrid');
+                    productsGrid.innerHTML = '';
+                    
+                    filteredProducts.forEach(product => {
+                        productsGrid.innerHTML += createProductCard(product);
+                    });
+                    
+                    // دەستپێکردنی سلایدشۆکان
+                    setTimeout(() => {
+                        startAllProductSlideshows();
+                    }, 100);
+                }
+            }
+        }
+
+        // فەنکشنی نیشاندانی مۆدالی لۆکەیشن
+        function showLocationModal() {
+            document.getElementById('locationModal').classList.add('show');
+        }
+
+        // فەنکشنی داخستنی مۆدالی لۆکەیشن
+        function closeLocationModal() {
+            document.getElementById('locationModal').classList.remove('show');
+        }
+
+        // فەنکشنی کۆپی کردنی ژمارەی FIB
+        function copyFibNumber() {
+            navigator.clipboard.writeText('07755436275').then(() => {
+                showNotification('ژمارەی FIB کۆپی کرا بۆ کلیپبۆرد!', 'success');
+            });
+        }
+
+        // فەنکشنی پەیوەندیکردن بە فرۆشیار بە واتساپ
+        function contactSellerWhatsApp(mobile, productName) {
+            const message = `سڵاو، من ئارەزووم لە کڕینی ئەم کاڵایەیە: ${productName}`;
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${mobile.replace(/\D/g, '')}?text=${encodedMessage}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // فەنکشنی نیشاندانی مۆدالی پارەدان بە FIB
+        function showPaymentModal(productId, productName, price, currency) {
+            const modalHtml = `
+                <div class="modal show" id="fibPaymentModal">
+                    <div class="modal-content">
+                        <button class="close-modal" onclick="closePaymentModal()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <div class="modal-header">
+                            <h2>پارەدان بە FIB</h2>
+                            <p>زانیاری پارەدان بۆ کاڵا: ${productName}</p>
+                        </div>
+                        
+                        <div class="payment-details">
+                            <div class="payment-item">
+                                <i class="fas fa-shopping-cart"></i>
+                                <div>
+                                    <h4>کاڵا:</h4>
+                                    <p>${productName}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-item">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <div>
+                                    <h4>نرخ:</h4>
+                                    <p>${price} ${currency}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-item">
+                                <i class="fas fa-credit-card"></i>
+                                <div>
+                                    <h4>ژمارەی FIB:</h4>
+                                    <p style="font-size: 1.2rem; font-weight: bold; color: var(--primary);">07755436275</p>
+                                    <p style="font-size: 0.8rem; color: var(--gray);">ناوی خاوەن کارت: UK BAZAR</p>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-instructions">
+                                <h4>ڕێنمایی پارەدان:</h4>
+                                <ol style="margin-right: 20px; font-size: 0.85rem;">
+                                    <li>ژمارەی کارتی FIB کۆپی بکە</li>
+                                    <li>بچۆرە نێو ئەپلیکەیشنی FIB</li>
+                                    <li>بەشەکەی پارەدان هەڵبژێرە</li>
+                                    <li>ژمارەی کارتەکە پەیست بکە</li>
+                                    <li>بڕی پارەی ${price} ${currency} بنووسە</li>
+                                    <li>پارەکە بنێرە</li>
+                                    <li>بڕوانامەی پارەدانەکە پێشکەش بە فرۆشیار بکە</li>
+                                </ol>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-danger" onclick="closePaymentModal()">
+                                <i class="fas fa-times"></i> داخستن
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="copyFibNumberForPayment()">
+                                <i class="fas fa-copy"></i> کۆپی کردنی ژمارە
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // دروستکردنی مۆدال و زیادکردنی بە بۆدی
+            const modalContainer = document.createElement('div');
+            modalContainer.innerHTML = modalHtml;
+            document.body.appendChild(modalContainer.firstElementChild);
+        }
+
+        // فەنکشنی داخستنی مۆدالی پارەدان
+        function closePaymentModal() {
+            const modal = document.getElementById('fibPaymentModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // فەنکشنی کۆپی کردنی ژمارەی FIB بۆ پارەدان
+        function copyFibNumberForPayment() {
+            navigator.clipboard.writeText('07755436275').then(() => {
+                showNotification('ژمارەی FIB کۆپی کرا بۆ کلیپبۆرد!', 'success');
+            });
+        }
+
+        // فەنکشنی ڕێکخستنی ناوەڕۆکی سەرەکی
+        function setupMainContent() {
+            // دروستکردنی دوگمەی کاتیگۆریەکان
+            createCategoryButtons();
+            
+            // ڕێکخستنی گەڕان
+            document.getElementById('searchButton').addEventListener('click', performSearch);
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+        }
 
         // ============================
         // فەنکشنەکانی سلایدەر
@@ -1838,7 +2317,7 @@
                 'مناڵان': 'fas fa-baby',
                 'کتێبخانە': 'fas fa-book',
                 'وەرزش و هونەر': 'fas fa-dumbbell',
-                'جلو بەرگ': 'fas fa-tshirt',
+                'جل و بەرگ': 'fas fa-tshirt',
                 'ئامێری تر': 'fas fa-microchip',
                 'کۆمپیوتەری تر': 'fas fa-server'
             };
@@ -1876,7 +2355,7 @@
                 // وینەی فرە - سلایدشۆ
                 const slides = product.images.map((img, index) => `
                     <div class="product-slide">
-                        <img src="${img}" alt="${product.name} - وینەی ${index + 1}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0BveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNGNEY0RjQiLz48cGF0aCBkPSJNNTAgMzVMMzAgNjBINzBMNTAgMzVaIiBmaWxsPSIjNjY3ZWVhIi8+PHBhdGggZD0iTTMwIDU1SDcwTTIwIDY1SDMwVjU1IiBmaWxsPSIjNjY3ZWVhIi8+PC9zdmc+'">
+                        <img src="${img}" alt="${product.name} - وینەی ${index + 1}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0BveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNGNEY0RjQiLz48cGF0aCBkPSJNNTAgMzVMMzAgNjBINzBMNTAgMzVaIiBmaWxsPSIjNjY3ZWVhIi8+PHBhdGggZD0iTTMwIDU1SDcwTTIwIDY1SDMwVjU1IiBmaWxsPSIjNjY۳ZWVhIi۸+PC۹zdmc+'">
                     </div>
                 `).join('');
                 
@@ -1893,7 +2372,7 @@
                     <div class="product-slideshow">
                         <div class="slideshow-container">
                             <div class="product-slide">
-                                <img src="${product.imageUrl}" alt="${product.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0BveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNGNEY0RjQiLz48cGF0aCBkPSJNNTAgMzVMMzAgNjBINzBMNTAgMzVaIiBmaWxsPSIjNjY3ZWVhIi8+PHBhdGggZD0iTTMwIDU۱SDcwTTIwIDY۱SDMwVjU۱IiBmaWxsPSIjNjY۳ZWVhIi۸+PC۹zdmc+'">
+                                <img src="${product.imageUrl}" alt="${product.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0BveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNGNEY0RjQiLz48cGF0aCBkPSJNNTAgMzVMMzAgNjBINzBMNTAgMzVaIiBmaWxsPSIjNjY3ZWVhIi8+PHBhdGggZD0iTTMwIDU۱SDcwTTIwIDY۱HDMwVjU۱IiBmaWxsPSIjNjY۳ZWVhIi۸+PC۹zdmc+'">
                             </div>
                         </div>
                     </div>
@@ -1929,9 +2408,16 @@
                             <i class="fas fa-clock"></i> ${durationText}
                         </div>
                         <div class="product-status ${statusClass}">${statusText}</div>
-                        <button class="fib-payment-btn" onclick="showPaymentModal('${product.firebaseId || product.id}')">
-                            <i class="fas fa-wallet"></i> کڕین بە Fib
-                        </button>
+                        
+                        <!-- دوگمەی پارەدان FIB -->
+                        <div class="payment-buttons">
+                            <button class="fib-payment-btn" onclick="showPaymentModal('${product.firebaseId || product.id}', '${product.name}', '${product.price}', '${product.currency}')">
+                                <i class="fas fa-wallet"></i> کڕین بە FIB
+                            </button>
+                            <button class="whatsapp-btn" onclick="contactSellerWhatsApp('${product.sellerMobile}', '${product.name}')">
+                                <i class="fab fa-whatsapp"></i> واتساپ
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;
@@ -2427,7 +2913,7 @@
             currentEditImages = [];
         }
 
-        // فەنکشنی پاشکەوتکردنی دەستکاری
+        // فەنکشنی پاشەکەوتکردنی دەستکاری
         document.getElementById('editProductForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -2625,15 +3111,7 @@
 
         // فەنکشنی نوێکردنەوەی زەنگۆلەی ئاگاداری
         function updateNotificationBadge() {
-            const pendingProducts = products.filter(p => p.status === 'pending').length;
-            const adminBadge = document.getElementById('adminBadge');
-            
-            if (pendingProducts > 0) {
-                adminBadge.textContent = pendingProducts;
-                adminBadge.style.display = 'flex';
-            } else {
-                adminBadge.style.display = 'none';
-            }
+            // ئێستا زەنگۆلەی ئاگاداری نیە لە هێدەردا
         }
 
         // فەنکشنی پڕکردنەوەی لیستی کاڵای چاوەڕوان
@@ -2685,6 +3163,8 @@
             document.getElementById('adminSection').style.display = 'none';
             document.getElementById('heroSection').style.display = 'none';
             document.getElementById('sliderSection').style.display = 'block';
+            document.getElementById('categoryFilterSection').style.display = 'none';
+            document.getElementById('searchSection').style.display = 'none';
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -2703,18 +3183,19 @@
             document.getElementById('adminSection').style.display = 'none';
             document.getElementById('heroSection').style.display = 'block';
             document.getElementById('sliderSection').style.display = 'block';
+            document.getElementById('categoryFilterSection').style.display = 'block';
+            document.getElementById('searchSection').style.display = 'block';
             document.getElementById('logoutBtn').style.display = 'none';
-            document.getElementById('adminLoginBtn').style.display = 'flex';
             
             renderProducts();
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // نیشاندانی داشبۆردی بەڕێوەبەر
+        // فەنکشنی نیشاندانی داشبۆردی بەڕێوەبەر
         function showAdminDashboard() {
             if (!isAdminLoggedIn) {
-                document.getElementById('loginModal').classList.add('show');
+                showLoginModal();
                 return;
             }
             
@@ -2722,9 +3203,10 @@
             document.getElementById('productsSection').style.display = 'none';
             document.getElementById('adminSection').style.display = 'block';
             document.getElementById('heroSection').style.display = 'none';
-            document.getElementById('sliderSection').style.display = 'block';
+            document.getElementById('sliderSection').style.display = 'none';
+            document.getElementById('categoryFilterSection').style.display = 'none';
+            document.getElementById('searchSection').style.display = 'none';
             document.getElementById('logoutBtn').style.display = 'flex';
-            document.getElementById('adminLoginBtn').style.display = 'none';
             
             updateAdminStats();
             renderPendingProducts();
@@ -2733,34 +3215,24 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // دیاریکردنی مینیوی چالاک
-        function setActiveNav(clickedItem) {
-            document.querySelectorAll('.bottom-nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            clickedItem.classList.add('active');
+        // فەنکشنی پیشاندانی مۆدالی چوونەژوورەوە
+        function showLoginModal() {
+            document.getElementById('loginModal').classList.add('show');
         }
 
-        // نیشاندانی مۆدالی چوونەژوورەوە
-        document.getElementById('adminLoginBtn').addEventListener('click', function() {
-            document.getElementById('loginModal').classList.add('show');
-        });
-
-        // داخستنی مۆدالی چوونەژوورەوە
+        // فەنکشنی داخستنی مۆدالی چوونەژوورەوە
         function closeLoginModal() {
             document.getElementById('loginModal').classList.remove('show');
         }
 
         // چوونەژوورەوەی بەڕێوەبەر
-        let isAdminLoggedIn = false;
-        
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const username = document.getElementById('adminUsername').value;
             const password = document.getElementById('adminPassword').value;
             
+            // لێرە دەتوانیت پەیوەندی بە فەیەربەیسەوە بکەیت بۆ چوونەژوورەوە
             if (username === 'admin' && password === 'admin123') {
                 isAdminLoggedIn = true;
                 showAdminDashboard();
@@ -2785,11 +3257,23 @@
             showNotification('بە سەرکەوتوویی چوویتە دەرەوە!', 'success');
         });
 
+        // دیاریکردنی مینیوی چالاک
+        function setActiveNav(clickedItem) {
+            document.querySelectorAll('.bottom-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            clickedItem.classList.add('active');
+        }
+
         // بارکردنی سەرەتایی کاڵاکان
         document.addEventListener('DOMContentLoaded', function() {
             checkLogoImage();
             
             setupMultiImagePreview();
+            
+            // ڕێکخستنی ناوەڕۆکی سەرەکی
+            setupMainContent();
             
             // بارکردنی کاڵاکان
             loadProductsFromFirebase()
@@ -2801,7 +3285,6 @@
                     }
                     
                     renderProducts();
-                    updateNotificationBadge();
                     updateAdminStats();
                 })
                 .catch(error => {
@@ -2812,14 +3295,6 @@
             // بارکردنی سلایدەر
             loadSliderFromFirebase().then(() => {
                 initializeSlider();
-            });
-            
-            // تیکستی گەران
-            document.getElementById('searchButton').addEventListener('click', performSearch);
-            document.getElementById('searchInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    performSearch();
-                }
             });
             
             // ڕێکخستنی بەڕێوەبردنی سلایدەر
@@ -2842,6 +3317,7 @@
             
             if (!searchTerm) {
                 renderProducts();
+                document.getElementById('productsTitle').textContent = 'هەموو کاڵاکان';
                 return;
             }
             
@@ -2871,20 +3347,6 @@
             showNotification(`${searchResults.length} کاڵا دۆزرایەوە بە وشەی "${searchTerm}"`, 'success');
         }
 
-        // فەنکشنی نیشاندانی مۆدالی پارەدان
-        function showPaymentModal(productId) {
-            const product = products.find(p => p.firebaseId == productId || p.id == productId);
-            if (product) {
-                alert(`ژمارەی FIB بۆ پارەدان: 07769654490\nکاڵا: ${product.name}\nنرخ: ${product.price} ${product.currency}`);
-                showNotification('ژمارەی FIB کۆپی کرا بۆ کلیپبۆرد!', 'success');
-                
-                // کۆپی کردنی ژمارە بۆ کلیپبۆرد
-                navigator.clipboard.writeText('07769654490').then(function() {
-                    console.log('ژمارەی FIB کۆپی کرا');
-                });
-            }
-        }
-
         // ============================
         // فەنکشنەکانی بەڕێوەبردنی سلایدەر
         // ============================
@@ -2893,7 +3355,7 @@
         function showSliderManagement() {
             if (!isAdminLoggedIn) {
                 showNotification('تەنها بەڕێوەبەر دەتوانێت سلایدەر بەڕێوەببات!', 'error');
-                document.getElementById('loginModal').classList.add('show');
+                showLoginModal();
                 return;
             }
             
@@ -3192,5 +3654,3 @@
     </script>
 </body>
 </html>
-
-
