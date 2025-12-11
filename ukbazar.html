@@ -876,9 +876,9 @@
             color: var(--secondary);
         }
         
-        /* گۆڕاو: دوگمەی پارەدان بە Fib - ناوی بگۆڕین بۆ "کڕین بە Fib" */
+        /* چارەسەرکراو: دوگمەی پارەدان بە Fib - بە سکرۆلکردنی ئۆتۆماتیکی */
         .fib-payment-btn {
-            background: linear-gradient(135deg, #0066cc, #fefeff);
+            background: linear-gradient(135deg, #0066cc, #003366);
             color: white;
             border: none;
             padding: 6px 12px;
@@ -896,7 +896,7 @@
         }
         
         .fib-payment-btn:hover {
-            background: linear-gradient(135deg, #004499, #003366);
+            background: linear-gradient(135deg, #004499, #002244);
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,102,204,0.4);
         }
@@ -906,7 +906,7 @@
             box-shadow: 0 2px 3px rgba(0,102,204,0.3);
         }
         
-        /* بەشی فۆرم */
+        /* چارەسەرکراو: بەشی فۆرم بۆ سکرۆلکردنی باشتر */
         .form-section {
             padding: 15px 10px;
             background: white;
@@ -915,6 +915,8 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             width: 100%;
             display: none;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
         }
         
         .form-group {
@@ -927,10 +929,17 @@
             gap: 10px;
         }
         
+        /* چارەسەرکراو: دوگمەی دەرچوون و پاشەکەوت بە شێوەیەکی باشتر */
         .form-actions {
             display: flex;
             gap: 10px;
             margin-top: 15px;
+            position: sticky;
+            bottom: 0;
+            background: white;
+            padding: 10px 0;
+            z-index: 10;
+            border-top: 1px solid var(--border);
         }
         
         .form-actions .btn {
@@ -1189,6 +1198,7 @@
             align-items: center;
             justify-content: center;
             padding: 10px;
+            overflow-y: auto;
         }
         
         .modal.show {
@@ -1203,6 +1213,8 @@
             max-width: 350px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
             animation: modalSlideIn 0.3s;
+            max-height: 90vh;
+            overflow-y: auto;
         }
         
         @keyframes modalSlideIn {
@@ -1256,6 +1268,7 @@
             align-items: center;
             justify-content: center;
             padding: 10px;
+            overflow-y: auto;
         }
         
         .edit-modal.show {
@@ -1274,7 +1287,7 @@
             animation: modalSlideIn 0.3s;
         }
         
-        /* مۆدالی پارەدان بەVisa IBank Fib */
+        /* چارەسەرکراو: مۆدالی پارەدان بەVisa IBank Fib - باشترکردنی سکرۆل */
         .fib-modal {
             display: none;
             position: fixed;
@@ -1288,6 +1301,7 @@
             align-items: center;
             justify-content: center;
             padding: 10px;
+            overflow-y: auto;
         }
         
         .fib-modal.show {
@@ -1303,6 +1317,8 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
             animation: modalSlideIn 0.3s;
             position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
         }
         
         .fib-logo {
@@ -1486,7 +1502,7 @@
             }
         }
         
-        /* چوارچیوەی خوارەوە */
+        /* چارەسەرکراو: چوارچیوەی خوارەوە - چالاککردنی دوگمەی پاشەکەوت و دەرچوون */
         .bottom-panel {
             position: fixed;
             bottom: 0;
@@ -1854,6 +1870,7 @@
                         <i class="fas fa-user-shield"></i> داشبۆرد
                         <span class="notification-badge" id="adminBadge" style="display: none;">0</span>
                     </button>
+                    <!-- چارەسەرکراو: دوگمەی دەرچوون دیارە -->
                     <button class="btn btn-primary" id="logoutBtn" style="display: none;">
                         <i class="fas fa-sign-out-alt"></i> دەرچوون
                     </button>
@@ -1943,7 +1960,7 @@
         </div>
     </section>
     
-    <!-- بەشی فۆرمی زیادکردنی کاڵا -->
+    <!-- چارەسەرکراو: بەشی فۆرمی زیادکردنی کاڵا - بە سکرۆلکردنی باشتر -->
     <section class="form-section" id="productFormSection">
         <h2 class="section-title">فۆرمی زیادکردنی کاڵای نوێ</h2>
         <div class="form-container">
@@ -2032,11 +2049,12 @@
                     <textarea id="productDescription" placeholder="زانیاری زیاتر دەربارەی کاڵاکە"></textarea>
                 </div>
                 
+                <!-- چارەسەرکراو: دوگمەی پاشەکەوت و دەرچوون دیارە -->
                 <div class="form-actions">
                     <button type="button" class="btn btn-danger" id="cancelProductBtn">
                         <i class="fas fa-times"></i> دەرچوون
                     </button>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary" id="submitProductBtn">
                         <i class="fas fa-paper-plane"></i> ناردنی کاڵا
                     </button>
                 </div>
@@ -2059,6 +2077,7 @@
                     <button class="btn btn-info" onclick="printReport()">
                         <i class="fas fa-print"></i> چاپی راپۆرت
                     </button>
+                    <!-- چارەسەرکراو: دوگمەی دەرچوون دیارە -->
                     <button class="btn btn-danger" id="adminLogoutBtn">
                         <i class="fas fa-sign-out-alt"></i> دەرچوون
                     </button>
@@ -2332,7 +2351,7 @@
         </div>
     </section>
     
-    <!-- چوارچیوەی خوارەوە -->
+    <!-- چارەسەرکراو: چوارچیوەی خوارەوە -->
     <div class="bottom-panel">
         <div class="container">
             <div class="bottom-nav">
@@ -2492,19 +2511,20 @@
                     <textarea id="editProductDescription" placeholder="زانیاری زیاتر دەربارەی کاڵاکە"></textarea>
                 </div>
                 
+                <!-- چارەسەرکراو: دوگمەی پاشەکەوت و دەرچوون دیارە -->
                 <div class="form-actions">
                     <button type="button" class="btn btn-danger" onclick="closeEditModal()">
                         <i class="fas fa-times"></i> دەرچوون
                     </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> پاشکەوتکردن
+                    <button type="submit" class="btn btn-primary" id="submitEditProductBtn">
+                        <i class="fas fa-save"></i> پاشەکەوتکردن
                     </button>
                 </div>
             </form>
         </div>
     </div>
     
-    <!-- مۆدالی پارەدان بە Fib -->
+    <!-- چارەسەرکراو: مۆدالی پارەدان بە Fib - بە سکرۆلکردنی باشتر -->
     <div class="fib-modal" id="fibModal">
         <div class="fib-modal-content">
             <button class="close-modal" onclick="closeFibModal()">
@@ -2623,6 +2643,7 @@
                         <strong>ژمارەی پەیوەندی:</strong>UK 00447449218670-KURDISTAN-07755436275-07507472656 EMAIL: INFO@UKBAZAR.ONLINE
                     </div>
 
+                    <!-- چارەسەرکراو: دوگمەی پاشەکەوت و داخستن دیارە -->
                     <div class="form-actions" style="display: flex; gap: 10px; margin-top: 20px;">
                         <button type="button" 
                                 class="btn btn-danger" 
@@ -2632,6 +2653,7 @@
                         </button>
                         <button type="submit" 
                                 class="btn btn-primary" 
+                                id="submitPaymentBtn"
                                 style="flex: 1; background: #3b82f6; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;">
                             <i class="fas fa-check-circle"></i> پاشەکەوت کردنی داواکاری
                         </button>
@@ -2748,6 +2770,7 @@
                     </div>
                 </div>
                 
+                <!-- چارەسەرکراو: دوگمەی پاشەکەوت و دەرچوون دیارە -->
                 <div class="form-actions">
                     <button type="button" class="btn btn-danger" onclick="closePromoFormModal()">
                         <i class="fas fa-times"></i> دەرچوون
@@ -2850,6 +2873,29 @@
 
         // Object to store slide intervals for product cards
         let slideIntervals = {};
+
+        // چارەسەرکراو: فەنکشنی سکرۆلکردن بۆ دوگمەی Fib لە مۆدال
+        function scrollToFibPayment() {
+            const fibModal = document.getElementById('fibModal');
+            if (fibModal.classList.contains('show')) {
+                const submitButton = document.querySelector('.fib-modal .form-actions');
+                if (submitButton) {
+                    setTimeout(() => {
+                        submitButton.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                    }, 300);
+                }
+            }
+        }
+
+        // چارەسەرکراو: فەنکشنی سکرۆلکردن بۆ دوگمەکانی فۆرمەکان
+        function scrollToFormButtons() {
+            const formActions = document.querySelector('.form-actions');
+            if (formActions) {
+                setTimeout(() => {
+                    formActions.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                }, 300);
+            }
+        }
 
         // فەنکشنی دروستکردنی دوگمەکانی کاتیگۆری
         function renderCategoryButtons() {
@@ -3035,7 +3081,7 @@
                             <i class="fas fa-clock"></i> ${durationText}
                         </div>
                         <div class="product-status ${statusClass}">${statusText}</div>
-                        <!-- گۆڕاو: ناوی دوگمە بگۆڕین بۆ "کڕین بە Fib" -->
+                        <!-- چارەسەرکراو: ناوی دوگمە بگۆڕین بۆ "کڕین بە Fib" -->
                         <button class="fib-payment-btn" onclick="openFibPayment('${product.firebaseId || product.id}')">
                             <i class="fas fa-wallet"></i> کڕین بە Fib
                         </button>
@@ -3373,7 +3419,7 @@
             });
         }
 
-        // فەنکشنی ناردنی کاڵا
+        // چارەسەرکراو: فەنکشنی ناردنی کاڵا - بە سکرۆلکردنی ئۆتۆماتیکی
         document.getElementById('productForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -3430,6 +3476,9 @@
                 updateAdminStats();
                 
                 updateNotificationBadge();
+                
+                // سکرۆلکردن بۆ سەرەوەی پەڕەکە
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             })
             .catch((error) => {
                 showNotification('هەڵە لە ناردنی کاڵا!', 'error');
@@ -3588,7 +3637,7 @@
             });
         }
 
-        // فەنکشنی کردنەوەی مۆدالی دەستکاری
+        // چارەسەرکراو: فەنکشنی کردنەوەی مۆدالی دەستکاری - بە سکرۆلکردنی ئۆتۆماتیکی
         function openEditModal(productId) {
             const product = products.find(p => p.firebaseId == productId);
             if (product) {
@@ -3615,6 +3664,14 @@
                 setupEditMultiImagePreview();
                 
                 document.getElementById('editProductModal').classList.add('show');
+                
+                // سکرۆلکردن بۆ دوگمەکان دوای ماوەیەک
+                setTimeout(() => {
+                    const formActions = document.querySelector('.edit-modal .form-actions');
+                    if (formActions) {
+                        formActions.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                    }
+                }, 300);
             }
         }
 
@@ -3692,7 +3749,7 @@
             currentEditImages = [];
         }
 
-        // فەنکشنی پاشکەوتکردنی دەستکاری
+        // چارەسەرکراو: فەنکشنی پاشکەوتکردنی دەستکاری - بە سکرۆلکردنی ئۆتۆماتیکی
         document.getElementById('editProductForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -3748,6 +3805,9 @@
                 closeEditModal();
                 
                 showNotification('زانیاری کاڵا بە سەرکەوتوویی نوێکرایەوە!', 'success');
+                
+                // سکرۆلکردن بۆ سەرەوەی پەڕەکە
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         });
 
@@ -3941,7 +4001,7 @@
             document.getElementById('notification').classList.remove('show');
         });
 
-        // نیشاندانی فۆرمی زیادکردنی کاڵا
+        // چارەسەرکراو: نیشاندانی فۆرمی زیادکردنی کاڵا - بە سکرۆلکردنی ئۆتۆماتیکی
         function showAddProductForm() {
             document.getElementById('productFormSection').style.display = 'block';
             document.getElementById('productsSection').style.display = 'none';
@@ -3953,7 +4013,17 @@
             document.getElementById('locationsSection').style.display = 'none';
             document.getElementById('settingsSection').style.display = 'none';
             document.getElementById('bannerSection').style.display = 'block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // سکرۆلکردن بۆ سەرەوەی فۆرم
+            setTimeout(() => {
+                const formSection = document.getElementById('productFormSection');
+                if (formSection) {
+                    formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                
+                // سکرۆلکردن بۆ دوگمەکان دوای ماوەیەک
+                setTimeout(scrollToFormButtons, 500);
+            }, 100);
         }
 
         document.getElementById('addProductBtn').addEventListener('click', showAddProductForm);
@@ -3996,6 +4066,9 @@
             }
             
             renderBannerSlider();
+            
+            // سکرۆلکردن بۆ سەرەوەی پەڕەکە
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // نیشاندانی مارکێت
@@ -4013,6 +4086,9 @@
             
             const approvedProducts = products.filter(p => p.status === 'approved');
             renderProducts(approvedProducts);
+            
+            // سکرۆلکردن بۆ سەرەوەی پەڕەکە
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // نیشاندانی شوێنەکان
@@ -4027,6 +4103,9 @@
             document.getElementById('locationsSection').style.display = 'block';
             document.getElementById('settingsSection').style.display = 'none';
             document.getElementById('bannerSection').style.display = 'none';
+            
+            // سکرۆلکردن بۆ سەرەوەی پەڕەکە
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // نیشاندانی ڕێکخستنەکان
@@ -4041,6 +4120,9 @@
             document.getElementById('locationsSection').style.display = 'none';
             document.getElementById('settingsSection').style.display = 'block';
             document.getElementById('bannerSection').style.display = 'none';
+            
+            // سکرۆلکردن بۆ سەرەوەی پەڕەکە
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // فەنکشنی دیاریکردنی مینیوی چالاک
@@ -4055,6 +4137,14 @@
         // نیشاندانی مۆدالی چوونەژوورەوە
         document.getElementById('adminLoginBtn').addEventListener('click', function() {
             document.getElementById('loginModal').classList.add('show');
+            
+            // سکرۆلکردن بۆ دوگمەکان
+            setTimeout(() => {
+                const formActions = document.querySelector('.modal .form-actions');
+                if (formActions) {
+                    formActions.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                }
+            }, 300);
         });
 
         // داخستنی مۆدالی چوونەژوورەوە
@@ -4096,6 +4186,9 @@
                 renderAllProductsList();
                 
                 showNotification('بە سەرکەوتوویی چوویتە ژوورەوە بۆ داشبۆردی بەڕێوەبەر!', 'success');
+                
+                // سکرۆلکردن بۆ سەرەوەی پەڕەکە
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
                 showNotification('ناوی بەکارهێنەر یان وشەی نهێنی هەڵەیە!', 'error');
             }
@@ -4194,12 +4287,12 @@
             });
         }
 
-        // فەنکشنی داخستنی مۆدالی FIB
+        // چارەسەرکراو: فەنکشنی داخستنی مۆدالی FIB
         function closeFibModal() {
             document.getElementById('fibModal').classList.remove('show');
         }
 
-        // فەنکشنی پارەدان بە FIB (نوێ)
+        // چارەسەرکراو: فەنکشنی پارەدان بە FIB - بە سکرۆلکردنی ئۆتۆماتیکی
         function openFibPayment(productId) {
             const product = products.find(p => p.firebaseId == productId || p.id == productId);
             if (product) {
@@ -4218,10 +4311,13 @@
                 if (titleElement) {
                     titleElement.innerHTML = `پارەدان بە FIB<br><small style="font-size: 14px; opacity: 0.9;">بۆ: ${product.name}</small>`;
                 }
+                
+                // سکرۆلکردن بۆ دوگمەکان دوای ماوەیەک
+                setTimeout(scrollToFibPayment, 300);
             }
         }
 
-        // فۆرمی پارە ناردن
+        // چارەسەرکراو: فۆرمی پارە ناردن - بە سکرۆلکردنی ئۆتۆماتیکی
         document.getElementById('fibPaymentForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -4293,6 +4389,14 @@
                         `;
                         
                         showNotification('داواکاریەکەت بە سەرکەوتوویی نێردرا! بەڕێوەبەر زووترین پەیوەندیت پێوە دەکات.', 'success');
+                        
+                        // سکرۆلکردن بۆ دوگمەی گەڕانەوە
+                        setTimeout(() => {
+                            const closeButton = document.querySelector('.fib-modal .btn-primary');
+                            if (closeButton) {
+                                closeButton.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                            }
+                        }, 300);
                         
                         // پاککردنەوەی فۆرم دوای 3 چرکە
                         setTimeout(() => {
@@ -4468,6 +4572,14 @@
             document.getElementById('bannerManagementModal').classList.add('show');
             loadCurrentBannersList();
             setupBannerImageUpload();
+            
+            // سکرۆلکردن بۆ دوگمەکان
+            setTimeout(() => {
+                const formActions = document.querySelector('#bannerManagementModal .form-actions');
+                if (formActions) {
+                    formActions.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                }
+            }, 300);
         }
 
         // فەنکشنی داخستنی بەڕێوەبردنی بانەر
@@ -4757,7 +4869,7 @@
             }
         }
 
-        // فەنکشنی نیشاندانی فۆرمی ڕیکلام
+        // چارەسەرکراو: فەنکشنی نیشاندانی فۆرمی ڕیکلام - بە سکرۆلکردنی ئۆتۆماتیکی
         window.showAddPromoForm = function() {
             if (!isAdminLoggedIn) {
                 alert("تەنها بەڕێوەبەر دەتوانێت ڕیکلام بگۆڕێت!");
@@ -4785,6 +4897,14 @@
             }
             
             document.getElementById('promoFormModal').classList.add('show');
+            
+            // سکرۆلکردن بۆ دوگمەکان
+            setTimeout(() => {
+                const formActions = document.querySelector('#promoFormModal .form-actions');
+                if (formActions) {
+                    formActions.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                }
+            }, 300);
         }
 
         // فەنکشنی داخستنی فۆرمی ڕیکلام
