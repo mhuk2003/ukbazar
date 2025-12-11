@@ -9,23 +9,16 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#667eea">
     
-    <!-- ئایکۆنی سایت بۆ هەموو ئامێرەکان -->
+    <!-- ئایکۆنی سایت -->
     <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png">
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png">
-    
-    <!-- ئایکۆنی بەرنامەی موبایل (PWA) -->
     <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png">
-    <link rel="apple-touch-icon" sizes="167x167" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png">
     
-    <!-- ڕەنگی سەری ئەپ لەسەر موبایل -->
+    <!-- ڕەنگی سەری ئەپ -->
     <meta name="theme-color" content="#667eea">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="UK BAZAR">
     
-    <!-- وەسفی سایت -->
     <meta name="description" content="World Online Shopping">
     
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -199,23 +192,6 @@
             font-weight: 700;
         }
         
-        .btn-add-product::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #38a169, var(--secondary));
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: -1;
-        }
-        
-        .btn-add-product:hover::before {
-            opacity: 1;
-        }
-        
         .btn-add-product:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 16px rgba(72, 187, 120, 0.7);
@@ -279,240 +255,6 @@
             50% { transform: scale(1.1); }
         }
         
-        /* بانەری سڵایدەر */
-        .banner-section {
-            padding: 10px 0;
-        }
-        
-        .banner-slider {
-            position: relative;
-            overflow: hidden;
-            border-radius: 12px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-            background: white;
-            height: 180px;
-        }
-        
-        .banner-container {
-            display: flex;
-            transition: transform 0.5s ease;
-            height: 100%;
-        }
-        
-        .banner-slide {
-            min-width: 100%;
-            width: 100%;
-            height: 100%;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        
-        .banner-slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .banner-dots {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 5px;
-            z-index: 2;
-        }
-        
-        .banner-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .banner-dot.active {
-            background: white;
-            transform: scale(1.2);
-        }
-        
-        .banner-arrows {
-            position: absolute;
-            top: 50%;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 8px;
-            transform: translateY(-50%);
-            z-index: 2;
-        }
-        
-        .banner-arrow {
-            background: rgba(255, 255, 255, 0.8);
-            border: none;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 0.9rem;
-            color: var(--dark);
-            transition: all 0.3s;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        
-        .banner-arrow:hover {
-            background: white;
-            transform: scale(1.1);
-        }
-        
-        /* زیادکراو: بەشی کاتیگۆریەکان */
-        .categories-section {
-            padding: 8px 0 12px;
-            text-align: center;
-        }
-
-        .categories-title {
-            font-size: 0.9rem;
-            color: var(--dark);
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .categories-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 5px;
-            padding: 0 5px;
-        }
-
-        .category-btn {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 6px 10px;
-            font-size: 0.65rem;
-            color: var(--dark);
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            white-space: nowrap;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        .category-btn:hover {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: 0 3px 8px rgba(102, 126, 234, 0.3);
-        }
-
-        .category-btn i {
-            font-size: 0.7rem;
-        }
-
-        /* زیادکراو: ستایل بۆ بانەری ڕیکلامی نوێ */
-        .promo-banner-section {
-            position: relative;
-            border-radius: 12px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            color: white;
-            overflow: hidden;
-            min-height: 150px;
-            margin: 10px 0;
-            display: flex;
-            align-items: center;
-            padding: 15px;
-        }
-
-        .promo-admin-actions {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 10;
-        }
-
-        .promo-admin-btn {
-            background: white;
-            color: var(--primary);
-            border: none;
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.3s;
-        }
-
-        .promo-admin-btn:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .promo-banner-image {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: 1;
-        }
-
-        .promo-banner-content {
-            position: relative;
-            z-index: 2;
-            padding: 15px;
-            width: 100%;
-            text-align: center;
-        }
-
-        .promo-banner-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .promo-banner-subtitle {
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-            opacity: 0.9;
-        }
-
-        .discount-badge {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            display: inline-block;
-        }
-
-        .promo-price {
-            font-size: 1.5rem;
-            font-weight: 800;
-            margin: 10px 0;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-        
         /* بەشی سەرەکی */
         .hero-section {
             padding: 10px 0 5px;
@@ -552,6 +294,161 @@
             }
         }
         
+        /* ستایلەکانی سلایدەری دوەم (تەنها ئەمە دەمێنێتەوە) */
+        .slider-section {
+            padding: 15px 0;
+            margin: 20px 0;
+        }
+
+        .slider-title {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            background: white;
+        }
+
+        .slides-wrapper {
+            display: flex;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            direction: ltr;
+        }
+
+        .slide {
+            min-width: 100%;
+            width: 100%;
+            height: 100%;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .slide:hover img {
+            transform: scale(1.05);
+        }
+
+        .slide-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%);
+            padding: 20px;
+            color: white;
+            direction: rtl;
+            backdrop-filter: blur(2px);
+        }
+
+        .slide-title {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .slide-description {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .slide-price {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #ffd700;
+            margin-top: 5px;
+        }
+
+        /* دوگمەکانی پێشوو/دواتر */
+        .slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+        }
+
+        .slider-container:hover .slider-arrow {
+            opacity: 1;
+        }
+
+        .slider-arrow:hover {
+            background: white;
+            transform: translateY(-50%) scale(1.15);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .slider-arrow.prev {
+            right: 15px;
+        }
+
+        .slider-arrow.next {
+            left: 15px;
+        }
+
+        /* خاڵەکان (dots) */
+        .slider-dots {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .dot:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: scale(1.2);
+        }
+
+        .dot.active {
+            background: white;
+            transform: scale(1.3);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+        
         /* بەشی کاڵاکان */
         .products-section {
             padding: 12px 0 15px;
@@ -579,12 +476,24 @@
             border-radius: 1px;
         }
         
-        /* گۆڕاو: ڕێکخستنی کاڵاکان بۆ ٢ دانە لەتەنیشت یەک */
+        /* ڕێکخستنی کاڵاکان */
         .products-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             padding: 0 5px;
+        }
+        
+        @media (min-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .products-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
         }
         
         .product-card {
@@ -603,82 +512,6 @@
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.12);
         }
         
-        /* زیادکراو بۆ سیستەمی وینەی فرە */
-        .multi-image-upload-container {
-            border: 2px dashed var(--border);
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-            margin-bottom: 15px;
-            transition: all 0.3s;
-            background: #f8f9fa;
-        }
-        
-        .multi-image-upload-container:hover {
-            border-color: var(--primary);
-            background: #f0f4ff;
-        }
-        
-        .multi-image-upload-label {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            color: var(--gray);
-        }
-        
-        .multi-image-upload-label i {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-            color: var(--primary);
-        }
-        
-        .multi-image-upload-label span {
-            font-size: 0.8rem;
-            margin-bottom: 5px;
-        }
-        
-        .images-preview {
-            margin-top: 10px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-        }
-        
-        .image-preview-item {
-            position: relative;
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        
-        .image-preview-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .remove-image {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            background: rgba(255, 255, 255, 0.8);
-            border: none;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 0.7rem;
-            color: var(--danger);
-        }
-        
-        /* سلایدشۆ بۆ وینەکان - چارەسەرکراو بۆ RTL */
         .product-slideshow {
             position: relative;
             height: 140px;
@@ -694,7 +527,7 @@
             direction: ltr;
         }
         
-        .slide {
+        .product-slide {
             min-width: 100%;
             width: 100%;
             height: 100%;
@@ -705,90 +538,7 @@
             background: linear-gradient(135deg, #f8f9fa, #e9ecef);
         }
         
-        .slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .slide-icon {
-            font-size: 2rem;
-            color: var(--gray);
-        }
-        
-        .slideshow-dots {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 5px;
-        }
-        
-        .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .dot.active {
-            background: white;
-            transform: scale(1.2);
-        }
-        
-        .slideshow-arrows {
-            position: absolute;
-            top: 50%;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 5px;
-            transform: translateY(-50%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            direction: ltr;
-        }
-        
-        .product-card:hover .slideshow-arrows {
-            opacity: 1;
-        }
-        
-        .arrow {
-            background: rgba(255, 255, 255, 0.7);
-            border: none;
-            border-radius: 50%;
-            width: 25px;
-            height: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 0.8rem;
-            color: var(--dark);
-            transition: all 0.3s;
-        }
-        
-        .arrow:hover {
-            background: white;
-            transform: scale(1.1);
-        }
-
-        .product-image {
-            height: 140px;
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--gray);
-            font-size: 1.5rem;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-        
-        .product-image img {
+        .product-slide img {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -802,7 +552,6 @@
             overflow: hidden;
         }
         
-        /* گۆڕاو: قەبارەی نوسین بچووکتر */
         .product-category {
             color: var(--primary);
             font-size: 0.6rem;
@@ -853,10 +602,6 @@
             margin-bottom: 4px;
         }
         
-        .product-location i {
-            margin-left: 4px;
-        }
-        
         .product-status {
             display: inline-block;
             padding: 3px 6px;
@@ -876,7 +621,7 @@
             color: var(--secondary);
         }
         
-        /* چارەسەرکراو: دوگمەی پارەدان بە Fib - بە سکرۆلکردنی ئۆتۆماتیکی */
+        /* دوگمەی پارەدان */
         .fib-payment-btn {
             background: linear-gradient(135deg, #0066cc, #003366);
             color: white;
@@ -901,12 +646,7 @@
             box-shadow: 0 4px 8px rgba(0,102,204,0.4);
         }
         
-        .fib-payment-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 3px rgba(0,102,204,0.3);
-        }
-        
-        /* چارەسەرکراو: بەشی فۆرم بۆ سکرۆلکردنی باشتر */
+        /* فۆرمی زیادکردنی کاڵا */
         .form-section {
             padding: 15px 10px;
             background: white;
@@ -929,7 +669,6 @@
             gap: 10px;
         }
         
-        /* چارەسەرکراو: دوگمەی دەرچوون و پاشەکەوت بە شێوەیەکی باشتر */
         .form-actions {
             display: flex;
             gap: 10px;
@@ -975,15 +714,8 @@
             resize: vertical;
         }
         
-        .btn-block {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            font-size: 0.85rem;
-        }
-        
-        /* فۆرمی وێنە */
-        .image-upload-container {
+        /* وێنەی فرە */
+        .multi-image-upload-container {
             border: 2px dashed var(--border);
             border-radius: 8px;
             padding: 15px;
@@ -993,12 +725,12 @@
             background: #f8f9fa;
         }
         
-        .image-upload-container:hover {
+        .multi-image-upload-container:hover {
             border-color: var(--primary);
             background: #f0f4ff;
         }
         
-        .image-upload-label {
+        .multi-image-upload-label {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -1006,27 +738,50 @@
             color: var(--gray);
         }
         
-        .image-upload-label i {
+        .multi-image-upload-label i {
             font-size: 1.5rem;
             margin-bottom: 8px;
             color: var(--primary);
         }
         
-        .image-upload-label span {
-            font-size: 0.8rem;
-            margin-bottom: 5px;
-        }
-        
-        .image-preview {
+        .images-preview {
             margin-top: 10px;
-            display: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
         }
         
-        .image-preview img {
-            max-width: 120px;
-            max-height: 120px;
+        .image-preview-item {
+            position: relative;
+            width: 80px;
+            height: 80px;
             border-radius: 8px;
+            overflow: hidden;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .image-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .remove-image {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.7rem;
+            color: var(--danger);
         }
         
         .file-input {
@@ -1063,6 +818,15 @@
             margin-bottom: 15px;
         }
         
+        @media (min-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .admin-header {
+                flex-direction: row;
+            }
+        }
+        
         .stat-card {
             background: white;
             padding: 15px;
@@ -1094,24 +858,6 @@
         
         .stat-icon.total {
             background: linear-gradient(135deg, var(--primary), #764ba2);
-        }
-        
-        .stat-info h3 {
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-            color: var(--dark);
-        }
-        
-        .stat-info p {
-            color: var(--gray);
-            font-size: 0.7rem;
-        }
-        
-        .pending-products {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
         
         .product-item {
@@ -1179,11 +925,6 @@
             color: white;
         }
         
-        .btn-approve:hover, .btn-reject:hover, .btn-edit:hover, .btn-delete:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        
         /* مۆدالەکان */
         .modal {
             display: none;
@@ -1233,17 +974,6 @@
             margin-bottom: 15px;
         }
         
-        .modal-header h2 {
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-            color: var(--dark);
-        }
-        
-        .modal-header p {
-            color: var(--gray);
-            font-size: 0.75rem;
-        }
-        
         .close-modal {
             position: absolute;
             top: 10px;
@@ -1255,133 +985,52 @@
             cursor: pointer;
         }
         
-        .edit-modal {
-            display: none;
+        /* چارەسەرکراو: چوارچیوەی خوارەوە */
+        .bottom-panel {
             position: fixed;
-            top: 0;
+            bottom: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-            overflow-y: auto;
+            right: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            padding: 8px 0;
+            z-index: 99;
+            border-top: 1px solid var(--border);
         }
         
-        .edit-modal.show {
+        .bottom-nav {
             display: flex;
-        }
-        
-        .edit-modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            width: 100%;
-            max-width: 400px;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-            animation: modalSlideIn 0.3s;
-        }
-        
-        /* چارەسەرکراو: مۆدالی پارەدان بەVisa IBank Fib - باشترکردنی سکرۆل */
-        .fib-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
-            z-index: 1000;
+            justify-content: space-around;
             align-items: center;
-            justify-content: center;
-            padding: 10px;
-            overflow-y: auto;
         }
         
-        .fib-modal.show {
+        .bottom-nav-item {
             display: flex;
-        }
-        
-        .fib-modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            width: 100%;
-            max-width: 350px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-            animation: modalSlideIn 0.3s;
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .fib-logo {
-            font-size: 40px;
-            color: #0066cc;
-            margin-bottom: 10px;
-        }
-        
-        .fib-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 10px;
-        }
-        
-        .fib-description {
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 15px;
-        }
-        
-        .fib-button {
-            background: #2f03f7;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.7rem;
             transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 2px 5px rgba(0,102,204,0.3);
-            width: 100%;
-            justify-content: center;
-            margin-top: 15px;
+            padding: 5px 10px;
+            border-radius: 8px;
+            flex: 1;
+            text-align: center;
         }
         
-        .fib-button:hover {
-            background: #0052a3;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,102,204,0.4);
+        .bottom-nav-item.active {
+            color: var(--primary);
+            background: rgba(102, 126, 234, 0.1);
         }
         
-        .fib-button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 3px rgba(0,102,204,0.3);
+        .bottom-nav-item i {
+            font-size: 1.1rem;
         }
         
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateY(-100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        @keyframes slideOut {
-            from { transform: translateY(0); opacity: 1; }
-            to { transform: translateY(-100%); opacity: 0; }
+        .bottom-nav-item:hover {
+            color: var(--primary);
         }
         
         /* نوتیفیکەیشن */
@@ -1438,311 +1087,7 @@
             font-size: 0.75rem;
         }
         
-        /* وەشانتی تابلێت */
-        @media (min-width: 768px) {
-            .container {
-                width: 90%;
-            }
-            
-            .hero-title {
-                font-size: 1.8rem;
-            }
-            
-            .hero-subtitle {
-                font-size: 0.9rem;
-            }
-            
-            .form-row {
-                flex-direction: row;
-            }
-            
-            /* گۆڕاو: لەسەر تابلێت ٣ دانە لەتەنیشت یەک */
-            .products-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .product-item {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
-            
-            .product-actions {
-                width: auto;
-                justify-content: flex-end;
-            }
-            
-            .admin-header {
-                flex-direction: row;
-            }
-            
-            /* زیادکراو: باشترکردنی بانەری ڕیکلام لەسەر تابلێت */
-            .promo-banner-title {
-                font-size: 1.8rem;
-            }
-            
-            .promo-banner-subtitle {
-                font-size: 1.1rem;
-            }
-            
-            .promo-price {
-                font-size: 2rem;
-            }
-        }
-        
-        /* وەشانتی دێسکتۆپ */
-        @media (min-width: 1024px) {
-            /* گۆڕاو: لەسەر دێسکتۆپ 10 دانە لەتەنیشت یەک */
-            .products-grid {
-                grid-template-columns: repeat(10, 1fr);
-            }
-        }
-        
-        /* چارەسەرکراو: چوارچیوەی خوارەوە - چالاککردنی دوگمەی پاشەکەوت و دەرچوون */
-        .bottom-panel {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            padding: 8px 0;
-            z-index: 99;
-            border-top: 1px solid var(--border);
-        }
-        
-        .bottom-nav {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
-        
-        .bottom-nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            color: var(--gray);
-            text-decoration: none;
-            font-size: 0.7rem;
-            transition: all 0.3s;
-            padding: 5px 10px;
-            border-radius: 8px;
-            flex: 1;
-            text-align: center;
-        }
-        
-        .bottom-nav-item.active {
-            color: var(--primary);
-            background: rgba(102, 126, 234, 0.1);
-        }
-        
-        .bottom-nav-item i {
-            font-size: 1.1rem;
-        }
-        
-        .bottom-nav-item:hover {
-            color: var(--primary);
-        }
-        
-        /* پەڕەی ڕێکخستنەکان */
-        .settings-section {
-            display: none;
-            padding: 15px 0;
-        }
-        
-        .settings-card {
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-            margin-bottom: 15px;
-        }
-        
-        .settings-title {
-            font-size: 1rem;
-            margin-bottom: 12px;
-            color: var(--primary);
-            font-weight: 700;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 8px;
-        }
-        
-        .settings-options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .settings-option {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .settings-option:last-child {
-            border-bottom: none;
-        }
-        
-        .settings-label {
-            font-size: 0.8rem;
-            color: var(--dark);
-        }
-        
-        .settings-value {
-            font-size: 0.75rem;
-            color: var(--gray);
-        }
-        
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 40px;
-            height: 20px;
-        }
-        
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 20px;
-        }
-        
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 2px;
-            bottom: 2px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        
-        input:checked + .slider {
-            background-color: var(--primary);
-        }
-        
-        input:checked + .slider:before {
-            transform: translateX(20px);
-        }
-        
-        /* پەڕەی مارکێت */
-        .marketplace-section {
-            display: none;
-            padding: 15px 0;
-        }
-        
-        .marketplace-categories {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .category-card {
-            background: white;
-            border-radius: 10px;
-            padding: 15px 10px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s;
-        }
-        
-        .category-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .category-icon {
-            font-size: 1.5rem;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-        
-        .category-name {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--dark);
-        }
-        
-        /* پەڕەی شوێنەکان */
-        .locations-section {
-            display: none;
-            padding: 15px 0;
-        }
-        
-        .location-search {
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-            margin-bottom: 15px;
-        }
-        
-        .location-input {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .location-input input {
-            flex: 1;
-        }
-        
-        .locations-list {
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-        }
-        
-        .location-item {
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .location-item:last-child {
-            border-bottom: none;
-        }
-        
-        .location-icon {
-            color: var(--primary);
-            font-size: 1rem;
-        }
-        
-        .location-info h4 {
-            font-size: 0.85rem;
-            margin-bottom: 3px;
-        }
-        
-        .location-info p {
-            font-size: 0.7rem;
-            color: var(--gray);
-        }
-        
-        /* زیادکراو: شێوەی ماوەی کاڵا */
+        /* ماوەی کاڵا */
         .product-duration {
             display: flex;
             align-items: center;
@@ -1761,81 +1106,6 @@
         
         .duration-old {
             color: var(--warning);
-        }
-
-        /* زیادکراو: ستایل بۆ پشتیوانی PWA */
-        @media all and (display-mode: standalone) {
-            .header {
-                padding-top: env(safe-area-inset-top);
-            }
-            
-            .bottom-panel {
-                padding-bottom: env(safe-area-inset-bottom);
-            }
-            
-            /* زیادکراو: باشترکردنی لۆگۆ لە PWA */
-            .logo-icon {
-                width: 45px;
-                height: 45px;
-            }
-            
-            .logo-text {
-                font-size: 1.3rem;
-            }
-        }
-
-        /* زیادکراو: باشترکردنی لۆگۆ بۆ موبایل */
-        @media (max-width: 768px) {
-            .header-content {
-                padding: 5px 0;
-            }
-            
-            .logo {
-                min-width: 120px;
-            }
-            
-            .logo-icon {
-                width: 42px;
-                height: 42px;
-                min-width: 42px;
-            }
-            
-            .logo-text {
-                font-size: 1.25rem;
-            }
-            
-            .search-container {
-                order: 3;
-                flex: 1 0 100%;
-                margin-top: 8px;
-                max-width: 100%;
-            }
-        }
-
-        /* زیادکراو: ستایل بۆ دەقەی لۆگۆ لەسەر ئامێری بچووک */
-        @media (max-width: 480px) {
-            .logo-text {
-                font-size: 1.2rem;
-            }
-            
-            .logo-icon {
-                width: 40px;
-                height: 40px;
-                min-width: 40px;
-            }
-        }
-
-        /* زیادکراو: ستایل بۆ دەقەی لۆگۆ لەسەر ئامێری زۆر بچووک */
-        @media (max-width: 360px) {
-            .logo-text {
-                font-size: 1.1rem;
-            }
-            
-            .logo-icon {
-                width: 35px;
-                height: 35px;
-                min-width: 35px;
-            }
         }
     </style>
 </head>
@@ -1862,7 +1132,6 @@
                 </div>
                 
                 <div class="nav-buttons">
-                    <!-- دوگمەی کالا دابنێ - گەورەتر و جوانتر -->
                     <button class="btn btn-add-product" id="addProductBtn">
                         <i class="fas fa-plus-circle"></i> کالا دابنێ
                     </button>
@@ -1870,7 +1139,6 @@
                         <i class="fas fa-user-shield"></i> داشبۆرد
                         <span class="notification-badge" id="adminBadge" style="display: none;">0</span>
                     </button>
-                    <!-- چارەسەرکراو: دوگمەی دەرچوون دیارە -->
                     <button class="btn btn-primary" id="logoutBtn" style="display: none;">
                         <i class="fas fa-sign-out-alt"></i> دەرچوون
                     </button>
@@ -1879,55 +1147,27 @@
         </div>
     </header>
     
-    <!-- بانەر -->
-    <section class="banner-section" id="bannerSection">
+    <!-- سلایدەری تەنها (خوارەوە) -->
+    <section class="slider-section" id="sliderSection">
         <div class="container">
-            <div class="banner-slider">
-                <div class="banner-container" id="bannerContainer">
-                    <!-- بانەرەکان لێرە دەردەکەون -->
+            <h2 class="slider-title">سلایدەری سەرنجڕاکێش</h2>
+            
+            <!-- سلایدەر -->
+            <div class="slider-container" id="sliderContainer">
+                <div class="slides-wrapper" id="slidesWrapper">
+                    <!-- سڵایدەکان لێرە دەردەکەون -->
                 </div>
                 
-                <div class="banner-dots" id="bannerDots">
-                    <!-- خاڵەکان لەڕێگەی JavaScript دەردەکەون -->
-                </div>
+                <!-- دوگمەکانی پێشوو/دواتر -->
+                <button class="slider-arrow prev" onclick="prevSlide()">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <button class="slider-arrow next" onclick="nextSlide()">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
                 
-                <div class="banner-arrows">
-                    <button class="banner-arrow prev-banner-arrow" onclick="prevBannerSlide()">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                    <button class="banner-arrow next-banner-arrow" onclick="nextBannerSlide()">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- 2. جێی سلایدەر - بانەری ڕیکلامی دووێنە -->
-    <section class="promo-banner-section" id="promoBannerSection">
-        <div class="container">
-            <div class="promo-banner-section" id="promoBanner">
-                <!-- دوگمەی بەڕێوەبەر (تەنها کاتێک چوونە ژوورەوە دەردەکەوێت) -->
-                <div class="promo-admin-actions" id="promoAdminActions" style="display: none;">
-                    <button onclick="showAddPromoForm()" class="promo-admin-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                        </svg>
-                        گۆڕینی ڕیکلام
-                    </button>
-                </div>
-                
-                <!-- وێنەی ڕیکلام (ئەگەر هەبێت) -->
-                <img id="promoBannerImage" src="" alt="بانەری ڕیکلام" class="promo-banner-image" style="display: none;">
-                
-                <!-- ناوەڕۆکی ڕیکلام -->
-                <div class="promo-banner-content">
-                    <div id="promoBannerTitle" class="promo-banner-title">ڕێگایەکی سەرنجڕاکێش بۆ کڕین!</div>
-                    <div id="promoBannerSubtitle" class="promo-banner-subtitle">کاڵا جیاوازەکان بە نرخی گونجاو بەردەستن</div>
-                    <div id="promoBannerDiscount" class="discount-badge">داشکاندن هەیە!</div>
-                    <div id="promoBannerPrice" class="promo-price" style="display: none;"></div>
-                </div>
+                <!-- خاڵەکان -->
+                <div class="slider-dots" id="sliderDots"></div>
             </div>
         </div>
     </section>
@@ -1937,16 +1177,6 @@
         <div class="container">
             <h1 class="hero-title">UK BAZAR</h1>
             <p class="hero-subtitle">World Online Shopping</p>
-        </div>
-    </section>
-    
-    <!-- بەشی کاتیگۆریەکان -->
-    <section class="categories-section" id="categoriesSection">
-        <div class="container">
-            <div class="categories-title">کاتیگۆریەکان</div>
-            <div class="categories-grid" id="categoriesGrid">
-                <!-- دوگمەکانی کاتیگۆری لێرە دەردەکەون -->
-            </div>
         </div>
     </section>
     
@@ -1960,7 +1190,7 @@
         </div>
     </section>
     
-    <!-- چارەسەرکراو: بەشی فۆرمی زیادکردنی کاڵا - بە سکرۆلکردنی باشتر -->
+    <!-- فۆرمی زیادکردنی کاڵا -->
     <section class="form-section" id="productFormSection">
         <h2 class="section-title">فۆرمی زیادکردنی کاڵای نوێ</h2>
         <div class="form-container">
@@ -2049,7 +1279,6 @@
                     <textarea id="productDescription" placeholder="زانیاری زیاتر دەربارەی کاڵاکە"></textarea>
                 </div>
                 
-                <!-- چارەسەرکراو: دوگمەی پاشەکەوت و دەرچوون دیارە -->
                 <div class="form-actions">
                     <button type="button" class="btn btn-danger" id="cancelProductBtn">
                         <i class="fas fa-times"></i> دەرچوون
@@ -2071,13 +1300,12 @@
                     <button class="btn btn-primary" onclick="showHomePage()">
                         <i class="fas fa-home"></i> گەڕانەوە بۆ ماڵەوە
                     </button>
-                    <button class="btn btn-secondary" onclick="showBannerManagement()">
-                        <i class="fas fa-images"></i> بەڕێوەبردنی بانەر
+                    <button class="btn btn-secondary" onclick="showSliderManagement()">
+                        <i class="fas fa-images"></i> بەڕێوەبردنی سلایدەر
                     </button>
                     <button class="btn btn-info" onclick="printReport()">
                         <i class="fas fa-print"></i> چاپی راپۆرت
                     </button>
-                    <!-- چارەسەرکراو: دوگمەی دەرچوون دیارە -->
                     <button class="btn btn-danger" id="adminLogoutBtn">
                         <i class="fas fa-sign-out-alt"></i> دەرچوون
                     </button>
@@ -2133,224 +1361,6 @@
         </div>
     </section>
     
-    <!-- پەڕەی مارکێت -->
-    <section class="marketplace-section" id="marketplaceSection">
-        <div class="container">
-            <h2 class="section-title">مارکێتی کاڵاکان</h2>
-            
-            <div class="marketplace-categories">
-                <div class="category-card" onclick="filterProducts('مۆبایل')">
-                    <div class="category-icon">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <div class="category-name">مۆبایل</div>
-                </div>
-                
-                <div class="category-card" onclick="filterProducts('لاپتۆپ')">
-                    <div class="category-icon">
-                        <i class="fas fa-laptop"></i>
-                    </div>
-                    <div class="category-name">لاپتۆپ</div>
-                </div>
-                
-                <div class="category-card" onclick="filterProducts('وەرزش و هونەر')">
-                    <div class="category-icon">
-                        <i class="fas fa-dumbbell"></i>
-                    </div>
-                    <div class="category-name">وەرزش و هونەر</div>
-                </div>
-                <div class="category-card" onclick="filterProducts('ئوتومبێل')">
-                    <div class="category-icon">
-                        <i class="fas fa-car"></i>
-                    </div>
-                    <div class="category-name">ئوتومبێل</div>
-                </div>
-                <div class="category-card" onclick="filterProducts('کتێبخانە')">
-                    <div class="category-icon">
-                        <i class="fas fa-book"></i>
-                    </div>
-                    <div class="category-name">کتێبخانە</div>
-                </div>
-                
-                <div class="category-card" onclick="filterProducts('ناوماڵ')">
-                    <div class="category-icon">
-                        <i class="fas fa-home"></i>
-                    </div>
-                    <div class="category-name">ناوماڵ</div>
-                </div>
-                
-                <div class="category-card" onclick="filterProducts('کامێرا')">
-                    <div class="category-icon">
-                        <i class="fas fa-camera"></i>
-                    </div>
-                    <div class="category-name">کامێرا</div>
-                </div>
-                
-                <div class="category-card" onclick="filterProducts('جوانکاری')">
-                    <div class="category-icon">
-                        <i class="fas fa-paint-brush"></i>
-                    </div>
-                    <div class="category-name">جوانکاری</div>
-                </div>
-            </div>
-            
-            <div class="products-grid" id="marketplaceProducts">
-                <!-- کاڵاکانی مارکێت لێرە دەردەکەون -->
-            </div>
-        </div>
-    </section>
-    
-    <!-- پەڕەی شوێنەکان -->
-    <section class="locations-section" id="locationsSection">
-        <div class="container">
-            <h2 class="section-title">شوێنەکانی فرۆشگاکان</h2>
-            
-            <div class="location-search">
-                <div class="location-input">
-                    <input type="text" id="locationSearch" placeholder="شوێنێک بگەڕێ...">
-                    <button class="btn btn-primary">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="locations-list">
-                <div class="location-item">
-                    <div class="location-icon">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
-                    <div class="location-info">
-                        <h4>هەولێر - ناوەند</h4>
-                        <p>سەنتەری شاری هەولێر</p>
-                    </div>
-                </div>
-                
-                <div class="location-item">
-                    <div class="location-icon">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
-                    <div class="location-info">
-                        <h4>سلێمانی</h4>
-                        <p>سەنتەری شاری سلێمانی</p>
-                    </div>
-                </div>
-                
-                <div class="location-item">
-                    <div class="location-icon">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
-                    <div class="location-info">
-                        <h4>دهۆک</h4>
-                        <h4>کۆردستان</h4>
-                        <h4>عيراق</h4>
-                        <p>سەنتەری شاری دهۆک</p>
-                    </div>
-                </div>
-                
-                <div class="location-item">
-                    <div class="location-icon">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
-                    <div class="location-info">
-                        <h4>زاخۆ</h4>
-                        <p>سەنتەری شاری زاخۆ</p>
-                    </div>
-                </div>
-                
-                <!-- زیادکراو: لینکی شوێنی سەرەکی -->
-                <div class="location-item" onclick="window.open('https://maps.app.goo.gl/TDQuJ2eRiDfxUrEW8', '_blank')" style="cursor: pointer; background: #f0f4ff; border-radius: 8px; margin-top: 10px;">
-                    <div class="location-icon">
-                        <i class="fas fa-map-pin" style="color: #667eea;"></i>
-                    </div>
-                    <div class="location-info">
-                        <h4>یوکەی بازاڕ - شوێنی سەرەکی</h4>
-                        <p>بینینی شوێن لەسەر Google Maps</p>
-                    </div>
-                    <i class="fas fa-external-link-alt" style="color: var(--gray); font-size: 0.8rem;"></i>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- پەڕەی ڕێکخستنەکان -->
-    <section class="settings-section" id="settingsSection">
-        <div class="container">
-            <h2 class="section-title">ڕێکخستنەکان</h2>
-            
-            <div class="settings-card">
-                <div class="settings-title">ڕێکخستنی گشتی</div>
-                <div class="settings-options">
-                    <div class="settings-option">
-                        <div class="settings-label">زمان</div>
-                        <div class="settings-value">کوردی</div>
-                    </div>
-                    
-                    <div class="settings-option">
-                        <div class="settings-label">دراو</div>
-                        <div class="settings-value">دۆلار ($)</div>
-                    </div>
-                    
-                    <div class="settings-option">
-                        <div class="settings-label">نیشاندانی نرخ</div>
-                        <label class="switch">
-                            <input type="checkbox" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="settings-card">
-                <div class="settings-title">ڕێکخستنی نوتیفیکەیشن</div>
-                <div class="settings-options">
-                    <div class="settings-option">
-                        <div class="settings-label">ئاگاداری کاڵای نوێ</div>
-                        <label class="switch">
-                            <input type="checkbox" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    
-                    <div class="settings-option">
-                        <div class="settings-label">ئاگاداری پەسەندکردن</div>
-                        <label class="switch">
-                            <input type="checkbox" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    
-                    <div class="settings-option">
-                        <div class="settings-label">ئاگاداری پارەدان</div>
-                        <label class="switch">
-                            <input type="checkbox" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="settings-card">
-                <div class="settings-title">پەیوەندی</div>
-                <div class="settings-options">
-                    <div class="settings-option">
-                        <div class="settings-label">ئیمەیڵ</div>
-                        <div class="settings-value">Info@ukbazar.online</div>
-                    </div>
-                    
-                    <div class="settings-option">
-                        <div class="settings-label">ژمارەی WhatsApp & FIB</div>
-                        <div class="settings-value">07769654490</div>
-                    </div>
-                    
-                    <div class="settings-option">
-                        <div class="settings-label">شوێن</div>
-                        <div class="settings-value"><a href="https://maps.app.goo.gl/TDQuJ2eRiDfxUrEW8" target="_blank" style="color: var(--primary); text-decoration: none;">بینینی شوێن</a></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
     <!-- چارەسەرکراو: چوارچیوەی خوارەوە -->
     <div class="bottom-panel">
         <div class="container">
@@ -2360,24 +1370,14 @@
                     <span>ماڵەوە</span>
                 </a>
                 
-                <a href="#" class="bottom-nav-item" onclick="showMarketplace(); setActiveNav(this); return false;">
-                    <i class="fas fa-store"></i>
-                    <span>مارکێت</span>
-                </a>
-                
                 <a href="#" class="bottom-nav-item" onclick="showAddProductForm(); setActiveNav(this); return false;">
                     <i class="fas fa-plus-circle"></i>
                     <span>کاڵا</span>
                 </a>
                 
-                <a href="#" class="bottom-nav-item" onclick="showLocations(); setActiveNav(this); return false;">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>شوێنەکان</span>
-                </a>
-                
-                <a href="#" class="bottom-nav-item" onclick="showSettings(); setActiveNav(this); return false;">
-                    <i class="fas fa-cog"></i>
-                    <span>ڕێکخستن</span>
+                <a href="#" class="bottom-nav-item" onclick="showAdminDashboard(); setActiveNav(this); return false;">
+                    <i class="fas fa-user-shield"></i>
+                    <span>داشبۆرد</span>
                 </a>
             </div>
         </div>
@@ -2415,8 +1415,8 @@
     </div>
     
     <!-- مۆدالی دەستکاری کاڵا -->
-    <div class="edit-modal" id="editProductModal">
-        <div class="edit-modal-content">
+    <div class="modal" id="editProductModal">
+        <div class="modal-content">
             <button class="close-modal" onclick="closeEditModal()">
                 <i class="fas fa-times"></i>
             </button>
@@ -2511,7 +1511,6 @@
                     <textarea id="editProductDescription" placeholder="زانیاری زیاتر دەربارەی کاڵاکە"></textarea>
                 </div>
                 
-                <!-- چارەسەرکراو: دوگمەی پاشەکەوت و دەرچوون دیارە -->
                 <div class="form-actions">
                     <button type="button" class="btn btn-danger" onclick="closeEditModal()">
                         <i class="fas fa-times"></i> دەرچوون
@@ -2524,265 +1523,62 @@
         </div>
     </div>
     
-    <!-- چارەسەرکراو: مۆدالی پارەدان بە Fib - بە سکرۆلکردنی باشتر -->
-    <div class="fib-modal" id="fibModal">
-        <div class="fib-modal-content">
-            <button class="close-modal" onclick="closeFibModal()">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="modal-header">
-                <h2>پارەدان بە FIB</h2>
-                <p style="color: white; font-size: 24px; margin: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 15px; text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);">ژمارەی FIB بەڕێوەبەر: <strong style="color: white; font-size: 32px; display: block; margin-top: 10px; letter-spacing: 2px;">07769654490</strong></p>
-            </div>
-            <div id="fibPaymentContent" style="text-align: center; padding: 15px 0;">
-                <div class="fib-logo">
-                    <i class="fas fa-university"></i>
-                </div>
-                <div class="fib-title">پارەدان بە FIB</div>
-                <div class="fib-description">پارە بە FIB ناردن بۆ خاوەن ژمارە</div>
-                
-                <div class="bank-details" style="background: #eff6ff; padding: 15px; border-radius: 10px; margin: 15px 0; border-right: 4px solid #3b82f6;">
-                    <h3 style="color: #1e40af; margin-bottom: 10px; font-size: 16px;">
-                        <i class="fas fa-info-circle" style="margin-left: 8px;"></i>
-                        زانیارییەکانی پارە ناردن
-                    </h3>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <h4 style="color: #374151; margin-bottom: 5px; font-size: 14px;">ژمارەی FIB:</h4>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <input type="text" 
-                                   id="fibAccountNumber" 
-                                   value="07769654490" 
-                                   readonly 
-                                   style="flex: 1; padding: 10px; border: 2px solid #3b82f6; border-radius: 8px; background: white; font-weight: bold; color: #1e40af; text-align: center; font-size: 18px;">
-                            <button onclick="copyToClipboard('07769654490', 'ژمارەی FIB')" 
-                                    style="background: #10b981; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
-                                <i class="fas fa-copy"></i>
-                                کۆپی
-                            </button>
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #d1d5db;">
-                        <h4 style="color: #374151; margin-bottom: 10px; font-size: 14px;">
-                            <i class="fas fa-credit-card" style="margin-left: 8px;"></i>
-                            زانیاری VISA کارت (ئەلترناتیڤ)
-                        </h4>
-                        <div style="background: white; padding: 12px; border-radius: 8px; text-align: right;">
-                            <p style="margin: 5px 0; font-size: 13px;">
-                                <strong>ناوی خاوەن حساب:</strong> M H
-                            </p>
-                            <p style="margin: 5px 0; font-size: 13px;">
-                                <strong>ژمارەی حساب:</strong> 33640965
-                            </p>
-                            <p style="margin: 5px 0; font-size: 13px;">
-                                <strong>کۆدی سۆرت:</strong> 20-25-95
-                            </p>
-                            <p style="margin: 5px 0; font-size: 13px;">
-                                <strong>IBAN:</strong> GB83BUKB20259533640965
-                            </p>
-                            <p style="margin: 5px 0; font-size: 13px;">
-                                <strong>SWIFT/BIC:</strong> BUKBGB22
-                            </p>
-                            <button onclick="copyToClipboard('GB83BUKB20259533640965', 'IBAN')" 
-                                    style="background: #8b5cf6; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; margin-top: 8px; display: inline-flex; align-items: center; gap: 5px;">
-                                <i class="fas fa-copy"></i>
-                                کۆپی کردنی IBAN
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <form id="fibPaymentForm" style="margin-top: 20px;">
-                    <input type="hidden" id="fibProductId" value="">
-                    <h4 style="color: #374151; margin-bottom: 10px; font-size: 14px; text-align: right;">
-                        <i class="fas fa-user" style="margin-left: 8px;"></i>
-                        زانیاری کڕیار
-                    </h4>
-                    
-                    <div class="form-group" style="margin-bottom: 15px;">
-                        <input type="text" 
-                               class="admin-input" 
-                               id="customerName" 
-                               placeholder="ناوی کڕیار" 
-                               style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; text-align: right;"
-                               required>
-                    </div>
-
-                    <div class="form-group" style="margin-bottom: 15px;">
-                        <input type="text" 
-                               class="admin-input" 
-                               id="fibPhone" 
-                               placeholder="ژمارەی مۆبایلی کڕیار (٠٧٧٠ xxx xxxx)" 
-                               style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; text-align: right; direction: ltr;"
-                               required 
-                               pattern="[0-9]{11}">
-                        <small style="color: #6b7280; font-size: 12px; display: block; text-align: right; margin-top: 5px;">
-                            نموونە: ٠٧٧٠ xxx xxxx
-                        </small>
-                    </div>
-
-                    <div class="form-group" style="margin-bottom: 15px;">
-                        <input type="number" 
-                               class="admin-input" 
-                               id="paymentAmount" 
-                               placeholder="بڕی پارە (دینار)" 
-                               style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; text-align: right;"
-                               required 
-                               min="1" 
-                               step="100">
-                        <small style="color: #6b7280; font-size: 12px; display: block; text-align: right; margin-top: 5px;">
-                            بڕی پارە بە دینار بنووسە
-                        </small>
-                    </div>
-
-                    <div style="font-size: 12px; color: #6b7280; margin: 15px 0; padding: 12px; background: #fef3c7; border-radius: 8px; border-right: 4px solid #f59e0b; text-align: right;">
-                        <i class="fas fa-exclamation-circle" style="color: #f59e0b; margin-left: 8px;"></i>
-                        <strong>تێبینی:</strong> دوای پارە ناردن، پەیوەندی بە بەڕێوەبەرەوە بکە بۆ پشکنینی داواکاریەکەت.
-                        <br>
-                        <strong>ژمارەی پەیوەندی:</strong>UK 00447449218670-KURDISTAN-07755436275-07507472656 EMAIL: INFO@UKBAZAR.ONLINE
-                    </div>
-
-                    <!-- چارەسەرکراو: دوگمەی پاشەکەوت و داخستن دیارە -->
-                    <div class="form-actions" style="display: flex; gap: 10px; margin-top: 20px;">
-                        <button type="button" 
-                                class="btn btn-danger" 
-                                onclick="closeFibModal()" 
-                                style="flex: 1; background: #ef4444; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;">
-                            <i class="fas fa-times"></i> داخستن
-                        </button>
-                        <button type="submit" 
-                                class="btn btn-primary" 
-                                id="submitPaymentBtn"
-                                style="flex: 1; background: #3b82f6; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;">
-                            <i class="fas fa-check-circle"></i> پاشەکەوت کردنی داواکاری
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    
-    <!-- مۆدالی بەڕێوەبردنی بانەر -->
-    <div class="modal" id="bannerManagementModal">
+    <!-- مۆدالی بەڕێوەبردنی سلایدەر -->
+    <div class="modal" id="sliderManagementModal">
         <div class="modal-content">
-            <button class="close-modal" onclick="closeBannerManagementModal()">
+            <button class="close-modal" onclick="closeSliderManagementModal()">
                 <i class="fas fa-times"></i>
             </button>
             <div class="modal-header">
-                <h2>بەڕێوەبردنی بانەر</h2>
-                <p>بانەرەکان زیاد بکە یان سڕەوە</p>
+                <h2>بەڕێوەبردنی سلایدەر</h2>
+                <p>سلایدەکان زیاد بکە یان سڕەوە</p>
             </div>
             
             <div class="form-group">
                 <div class="multi-image-upload-container">
-                    <label for="bannerImages" class="multi-image-upload-label">
+                    <label for="sliderImages" class="multi-image-upload-label">
                         <i class="fas fa-images"></i>
-                        <span>وێنەی بانەر زیاد بکە (ئەوەندەی پێویست)</span>
+                        <span>وێنەی سلاید زیاد بکە (ئەوەندەی پێویست)</span>
                         <span class="btn btn-outline">فایلی هەڵبژێرە</span>
                     </label>
-                    <input type="file" id="bannerImages" class="file-input" accept="image/*" multiple>
-                    <div class="images-preview" id="bannerImagesPreview">
+                    <input type="file" id="sliderImages" class="file-input" accept="image/*" multiple>
+                    <div class="images-preview" id="sliderImagesPreview">
                         <!-- وینە پێشبینیکراوەکان لێرە دەردەکەون -->
                     </div>
                 </div>
             </div>
             
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="slideTitleInput">سەردێڕی سلاید</label>
+                    <input type="text" id="slideTitleInput" placeholder="سەردێڕ">
+                </div>
+                <div class="form-group">
+                    <label for="slideDescInput">وەسفی سلاید</label>
+                    <input type="text" id="slideDescInput" placeholder="وەسف">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="slidePriceInput">نرخ</label>
+                <input type="text" id="slidePriceInput" placeholder="نرخ">
+            </div>
+            
             <div class="form-actions">
-                <button type="button" class="btn btn-danger" onclick="closeBannerManagementModal()">
+                <button type="button" class="btn btn-danger" onclick="closeSliderManagementModal()">
                     <i class="fas fa-times"></i> دەرچوون
                 </button>
-                <button type="button" class="btn btn-primary" id="saveBannersBtn">
-                    <i class="fas fa-save"></i> پاشەکەوتکردنی بانەرەکان
+                <button type="button" class="btn btn-primary" id="addSlideBtn">
+                    <i class="fas fa-plus"></i> زیادکردنی سلاید
                 </button>
             </div>
             
             <div style="margin-top: 20px;">
-                <h3 style="font-size: 0.9rem; margin-bottom: 10px;">بانەرەکانی ئێستا</h3>
-                <div id="currentBannersList">
-                    <!-- بانەرەکانی ئێستا لێرە دەردەکەون -->
+                <h3 style="font-size: 0.9rem; margin-bottom: 10px;">سلایدەکانی ئێستا</h3>
+                <div id="currentSlidesList">
+                    <!-- سلایدەکانی ئێستا لێرە دەردەکەون -->
                 </div>
             </div>
-        </div>
-    </div>
-    
-    <!-- مۆدالی فۆرمی ڕیکلام -->
-    <div class="modal" id="promoFormModal">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closePromoFormModal()">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="modal-header">
-                <h2>گۆڕینی ڕیکلام</h2>
-                <p>زانیاری و وێنەی ڕیکلام دەستکاری بکە</p>
-            </div>
-            <form id="promoForm">
-                <div class="form-group">
-                    <label for="promoTitle">سەردێڕی ڕیکلام</label>
-                    <input type="text" id="promoTitle" placeholder="سەردێڕی ڕیکلام" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="promoSubtitle">سەردێڕی فرە</label>
-                    <input type="text" id="promoSubtitle" placeholder="سەردێڕی فرە" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="promoDiscountText">داشکاندن</label>
-                    <input type="text" id="promoDiscountText" placeholder="داشکاندن (نموونە: ٣٠٪ داشکاندن)" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="promoPrice">نرخ (هەڵبژاردەیی)</label>
-                    <input type="text" id="promoPrice" placeholder="نموونە: ٥٠٠٠٠ دینار">
-                </div>
-                
-                <div class="form-group">
-                    <label for="promoTextColor">ڕەنگی دەق</label>
-                    <input type="color" id="promoTextColor" value="#ffffff">
-                </div>
-                
-                <div class="form-group">
-                    <label for="promoBackground">پاشبنەرە</label>
-                    <select id="promoBackground">
-                        <option value="gradient-blue">گرادیانتی شین</option>
-                        <option value="gradient-red">گرادیانتی سوور</option>
-                        <option value="gradient-green">گرادیانتی سەوز</option>
-                        <option value="gradient-purple">گرادیانتی مۆر</option>
-                        <option value="custom">وێنەی تایبەت</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <div class="image-upload-container">
-                        <label for="promoImage" class="image-upload-label" id="promoFileInputLabel">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <span>وێنەی ڕیکلام هەڵبژێرە (ئەگەر پاشبنەرەکەت وێنەیە)</span>
-                            <span class="btn btn-outline">فایلی هەڵبژێرە</span>
-                        </label>
-                        <input type="file" id="promoImage" class="file-input" accept="image/*">
-                        <div id="promoFileName" style="margin-top: 8px; font-size: 0.75rem; color: var(--gray);"></div>
-                        
-                        <div class="image-preview" id="promoCurrentImage" style="display: none;">
-                            <p style="font-size: 0.75rem; margin-bottom: 5px;">وێنەی ئێستا:</p>
-                            <img id="promoCurrentImagePreview" src="" style="max-width: 120px; max-height: 120px; border-radius: 8px;">
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- چارەسەرکراو: دوگمەی پاشەکەوت و دەرچوون دیارە -->
-                <div class="form-actions">
-                    <button type="button" class="btn btn-danger" onclick="closePromoFormModal()">
-                        <i class="fas fa-times"></i> دەرچوون
-                    </button>
-                    <button type="submit" class="btn btn-primary" id="submitPromoBtn">
-                        <span id="submitPromoText">نوێکردنەوەی ڕیکلام</span>
-                        <span id="submitPromoSpinner" style="display: none; margin-right: 5px;">
-                            <i class="fas fa-spinner fa-spin"></i>
-                        </span>
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
     
@@ -2809,7 +1605,7 @@
     </footer>
 
     <script>
-        // Firebase configuration for your project
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBTXwymNyHqLHVqYL7XN6FYSOeL1V_dNwo",
             authDomain: "ukbazar-15eda.firebaseapp.com",
@@ -2829,114 +1625,172 @@
         // زانیاری کاڵاکان
         let products = [];
         
-        // زانیاری بانەرەکان
-        let banners = [];
-        let selectedBannerImages = [];
+        // زانیاری سلایدەر
+        let slides = [];
+        let selectedSlideImages = [];
         
         // زانیاری وینەکان
         let selectedImages = [];
         let currentEditImages = [];
 
-        // زانیاری کاتیگۆریەکان
-        const categories = [
-            { id: 'all', name: 'هەموو کاڵاکان', icon: 'fas fa-th-large' },
-            { id: 'مۆبایل', name: 'مۆبایل', icon: 'fas fa-mobile-alt' },
-            { id: 'لاپتۆپ', name: 'لاپتۆپ', icon: 'fas fa-laptop' },
-            { id: 'کۆمپیوتەر', name: 'کۆمپیوتەر', icon: 'fas fa-desktop' },
-            { id: 'ئایپاد', name: 'ئایپاد', icon: 'fas fa-tablet-alt' },
-            { id: 'ئوتومبێل', name: 'ئوتومبێل', icon: 'fas fa-car' },
-            { id: 'ناوماڵ', name: 'ناوماڵ', icon: 'fas fa-home' },
-            { id: 'پاسکیل', name: 'پاسکیل', icon: 'fas fa-bicycle' },
-            { id: 'سکۆتەر', name: 'سکۆتەر', icon: 'fas fa-motorcycle' },
-            { id: 'کامێرا', name: 'کامێرا', icon: 'fas fa-camera' },
-            { id: 'جوانکاری', name: 'جوانکاری', icon: 'fas fa-paint-brush' },
-            { id: 'خانوو', name: 'خانوو', icon: 'fas fa-house-user' },
-            { id: 'زەوی', name: 'زەوی', icon: 'fas fa-mountain' },
-            { id: 'باخ', name: 'باخ', icon: 'fas fa-tree' },
-            { id: 'ئاژەڵ', name: 'ئاژەڵ', icon: 'fas fa-paw' },
-            { id: 'مناڵان', name: 'مناڵان', icon: 'fas fa-baby' },
-            { id: 'کتێبخانە', name: 'کتێبخانە', icon: 'fas fa-book' },
-            { id: 'وەرزش و هونەر', name: 'وەرزش و هونەر', icon: 'fas fa-dumbbell' },
-            { id: 'جلو بەرگ', name: 'جلو بەرگ', icon: 'fas fa-tshirt' },
-            { id: 'ئامێری تر', name: 'ئامێری تر', icon: 'fas fa-microchip' },
-            { id: 'کۆمپیوتەری تر', name: 'کۆمپیوتەری تر', icon: 'fas fa-server' }
-        ];
-
-        // زانیاری ڕیکلام
-        let promoData = null;
-        let isAdminLoggedIn = false;
-        let firebaseInitialized = true;
-
-        // گۆڕاوەکان بۆ سڵایدەری بانەر
-        let bannerSliderInterval;
-        let currentBannerSlideIndex = 0;
+        // گۆڕاوەکان بۆ سلایدەر
+        let currentSlide = 0;
+        let autoPlayInterval = null;
+        const slidesWrapper = document.getElementById('slidesWrapper');
+        let totalSlides = 0;
 
         // Object to store slide intervals for product cards
         let slideIntervals = {};
 
-        // چارەسەرکراو: فەنکشنی سکرۆلکردن بۆ دوگمەی Fib لە مۆدال
-        function scrollToFibPayment() {
-            const fibModal = document.getElementById('fibModal');
-            if (fibModal.classList.contains('show')) {
-                const submitButton = document.querySelector('.fib-modal .form-actions');
-                if (submitButton) {
-                    setTimeout(() => {
-                        submitButton.scrollIntoView({ behavior: 'smooth', block: 'end' });
-                    }, 300);
+        // ============================
+        // فەنکشنەکانی سلایدەر
+        // ============================
+
+        // دروستکردنی خاڵەکان بۆ سلایدەر
+        function createDots() {
+            const dotsContainer = document.getElementById('sliderDots');
+            dotsContainer.innerHTML = '';
+            
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                if (i === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => goToSlide(i));
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        // نوێکردنەوەی سلایدەر
+        function updateSlider() {
+            slidesWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        // ڕۆشتن بۆ سڵایدی دواتی
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateSlider();
+        }
+
+        // ڕۆشتن بۆ سڵایدی پێشوو
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateSlider();
+        }
+
+        // ڕۆشتن بۆ سڵایدێکی دیاریکراو
+        function goToSlide(index) {
+            if (index >= 0 && index < totalSlides) {
+                currentSlide = index;
+                updateSlider();
+                
+                if (autoPlayInterval) {
+                    stopAutoPlay();
+                    startAutoPlay();
                 }
             }
         }
 
-        // چارەسەرکراو: فەنکشنی سکرۆلکردن بۆ دوگمەکانی فۆرمەکان
-        function scrollToFormButtons() {
-            const formActions = document.querySelector('.form-actions');
-            if (formActions) {
-                setTimeout(() => {
-                    formActions.scrollIntoView({ behavior: 'smooth', block: 'end' });
-                }, 300);
+        // دەستپێکردنی گۆڕینی ئۆتۆماتیکی
+        function startAutoPlay() {
+            stopAutoPlay();
+            
+            autoPlayInterval = setInterval(() => {
+                nextSlide();
+            }, 3000); // هەر ٣ چرکە جارێک
+        }
+
+        // وەستاندنی گۆڕینی ئۆتۆماتیکی
+        function stopAutoPlay() {
+            if (autoPlayInterval) {
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = null;
             }
         }
 
-        // فەنکشنی دروستکردنی دوگمەکانی کاتیگۆری
-        function renderCategoryButtons() {
-            const categoriesGrid = document.getElementById('categoriesGrid');
-            categoriesGrid.innerHTML = '';
+        // فەنکشن بۆ بارکردنی سلایدەر کاتێک پەڕە بارکرا
+        function initializeSlider() {
+            createDots();
+            startAutoPlay();
             
-            categories.forEach(category => {
-                const button = document.createElement('button');
-                button.className = 'category-btn';
-                button.innerHTML = `
-                    <i class="${category.icon}"></i>
-                    <span>${category.name}</span>
-                `;
-                
-                button.addEventListener('click', () => {
-                    if (category.id === 'all') {
-                        showAllProducts();
-                        document.querySelectorAll('.category-btn').forEach(btn => {
-                            btn.style.background = 'white';
-                            btn.style.color = 'var(--dark)';
-                            btn.style.borderColor = 'var(--border)';
-                        });
-                        button.style.background = 'var(--primary)';
-                        button.style.color = 'white';
-                        button.style.borderColor = 'var(--primary)';
-                    } else {
-                        filterProducts(category.id);
-                        document.querySelectorAll('.category-btn').forEach(btn => {
-                            btn.style.background = 'white';
-                            btn.style.color = 'var(--dark)';
-                            btn.style.borderColor = 'var(--border)';
-                        });
-                        button.style.background = 'var(--primary)';
-                        button.style.color = 'white';
-                        button.style.borderColor = 'var(--primary)';
-                    }
-                });
-                
-                categoriesGrid.appendChild(button);
+            document.getElementById('sliderContainer').addEventListener('mouseenter', () => {
+                stopAutoPlay();
+            });
+            
+            document.getElementById('sliderContainer').addEventListener('mouseleave', () => {
+                startAutoPlay();
             });
         }
+
+        // فەنکشن بۆ بارکردنی داتای سلایدەر لە فەیەربەیس
+        function loadSliderFromFirebase() {
+            return database.ref('slider').once('value')
+            .then((snapshot) => {
+                if (snapshot.exists()) {
+                    const slidesData = snapshot.val();
+                    updateSliderContent(slidesData);
+                } else {
+                    console.log("هیچ داتای سلایدێک نیە لە فەیەربەیس");
+                    // داتای نموونەیی
+                    const defaultSlides = [
+                        {
+                            imageUrl: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800",
+                            title: "دانە و ئاوەڕۆکانی خواردن",
+                            description: "بە تایبەتمەندی تەواو بۆ تەندروستی",
+                            price: "نرخ: ٥٠٬٠٠٠ دینار"
+                        },
+                        {
+                            imageUrl: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800",
+                            title: "داکردنەوەی فرۆشگا",
+                            description: "تا ٥٠٪ داشکاندن لەسەر هەموو کاڵاکان",
+                            price: "نرخ: ٣٠٪ داشکاندن"
+                        }
+                    ];
+                    updateSliderContent({slides: defaultSlides});
+                }
+            })
+            .catch((error) => {
+                console.log("هەڵە لە بارکردنی داتای سلایدەر: ", error);
+            });
+        }
+
+        // فەنکشن بۆ نوێکردنەوەی ناوەڕۆکی سلایدەر
+        function updateSliderContent(slidesData) {
+            slidesWrapper.innerHTML = '';
+            
+            if (!slidesData || !slidesData.slides || slidesData.slides.length === 0) {
+                console.log("هیچ داتای سلایدێک نیە");
+                return;
+            }
+            
+            slides = slidesData.slides;
+            
+            slides.forEach((slide, index) => {
+                const slideElement = document.createElement('div');
+                slideElement.className = 'slide';
+                slideElement.innerHTML = `
+                    <img src="${slide.imageUrl || 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800'}" alt="${slide.title || 'سڵاید'}">
+                    <div class="slide-content">
+                        <div class="slide-title">${slide.title || 'ناونیشان'}</div>
+                        <div class="slide-description">${slide.description || 'وەسف'}</div>
+                        ${slide.price ? `<div class="slide-price">${slide.price}</div>` : ''}
+                    </div>
+                `;
+                slidesWrapper.appendChild(slideElement);
+            });
+            
+            totalSlides = slides.length;
+            createDots();
+            updateSlider();
+        }
+
+        // ============================
+        // کۆتایی فەنکشنەکانی سلایدەر
+        // ============================
 
         // فەنکشنی پشکنینی باربوونی وینەی لۆگۆ
         function checkLogoImage() {
@@ -3021,7 +1875,7 @@
             if (product.images && product.images.length > 0) {
                 // وینەی فرە - سلایدشۆ
                 const slides = product.images.map((img, index) => `
-                    <div class="slide">
+                    <div class="product-slide">
                         <img src="${img}" alt="${product.name} - وینەی ${index + 1}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0BveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNGNEY0RjQiLz48cGF0aCBkPSJNNTAgMzVMMzAgNjBINzBMNTAgMzVaIiBmaWxsPSIjNjY3ZWVhIi8+PHBhdGggZD0iTTMwIDU1SDcwTTIwIDY1SDMwVjU1IiBmaWxsPSIjNjY3ZWVhIi8+PC9zdmc+'">
                     </div>
                 `).join('');
@@ -3031,33 +1885,28 @@
                         <div class="slideshow-container">
                             ${slides}
                         </div>
-                        <div class="slideshow-dots" id="dots-${product.firebaseId || product.id}">
-                            ${product.images.map((_, index) => `
-                                <span class="dot ${index === 0 ? 'active' : ''}" data-index="${index}"></span>
-                            `).join('')}
-                        </div>
-                        <div class="slideshow-arrows">
-                            <button class="arrow prev-arrow" onclick="prevProductSlide('${product.firebaseId || product.id}')">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
-                            <button class="arrow next-arrow" onclick="nextProductSlide('${product.firebaseId || product.id}')">
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                        </div>
                     </div>
                 `;
             } else if (product.imageUrl) {
-                // وینەی تاک (پاشگیری بۆ کاڵای کۆن)
+                // وینەی تاک
                 imageContent = `
-                    <div class="product-image">
-                        <img src="${product.imageUrl}" alt="${product.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0BveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNGNEY0RjQiLz48cGF0aCBkPSJNNTAgMzVMMzAgNjBINzBMNTAgMzVaIiBmaWxsPSIjNjY3ZWVhIi8+PHBhdGggZD0iTTMwIDU1SDcwTTIwIDY1SDMwVjU1IiBmaWxsPSIjNjY3ZWVhIi8+PC9zdmc+'">
+                    <div class="product-slideshow">
+                        <div class="slideshow-container">
+                            <div class="product-slide">
+                                <img src="${product.imageUrl}" alt="${product.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0BveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNGNEY0RjQiLz48cGF0aCBkPSJNNTAgMzVMMzAgNjBINzBMNTAgMzVaIiBmaWxsPSIjNjY3ZWVhIi8+PHBhdGggZD0iTTMwIDU۱SDcwTTIwIDY۱SDMwVjU۱IiBmaWxsPSIjNjY۳ZWVhIi۸+PC۹zdmc+'">
+                            </div>
+                        </div>
                     </div>
                 `;
             } else {
                 // بێ وینە - ئایکۆن
                 imageContent = `
-                    <div class="product-image">
-                        <i class="${icons[product.category] || 'fas fa-box'}"></i>
+                    <div class="product-slideshow">
+                        <div class="slideshow-container">
+                            <div class="product-slide">
+                                <i class="${icons[product.category] || 'fas fa-box'}" style="font-size: 3rem; color: var(--gray);"></i>
+                            </div>
+                        </div>
                     </div>
                 `;
             }
@@ -3076,13 +1925,11 @@
                         <div class="product-location">
                             <i class="fas fa-user"></i> ${product.sellerName} - ${product.sellerMobile}
                         </div>
-                        <!-- زیادکراو: ماوەی کاڵا -->
                         <div class="product-duration ${durationClass}">
                             <i class="fas fa-clock"></i> ${durationText}
                         </div>
                         <div class="product-status ${statusClass}">${statusText}</div>
-                        <!-- چارەسەرکراو: ناوی دوگمە بگۆڕین بۆ "کڕین بە Fib" -->
-                        <button class="fib-payment-btn" onclick="openFibPayment('${product.firebaseId || product.id}')">
+                        <button class="fib-payment-btn" onclick="showPaymentModal('${product.firebaseId || product.id}')">
                             <i class="fas fa-wallet"></i> کڕین بە Fib
                         </button>
                     </div>
@@ -3093,20 +1940,18 @@
         // فەنکشنی پڕکردنەوەی کاڵاکان
         function renderProducts(productsToRender = products) {
             const productsGrid = document.getElementById('productsGrid');
-            const marketplaceProducts = document.getElementById('marketplaceProducts');
             
             productsGrid.innerHTML = '';
-            marketplaceProducts.innerHTML = '';
             
             if (productsToRender.length === 0) {
                 productsGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; padding: 15px; font-size: 0.8rem; color: var(--gray);">هیچ کاڵایەک نەدۆزرایەوە!</p>';
-                marketplaceProducts.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; padding: 15px; font-size: 0.8rem; color: var(--gray);">هیچ کاڵایەک نەدۆزرایەوە!</p>';
                 return;
             }
             
-            productsToRender.forEach(product => {
+            const approvedProducts = productsToRender.filter(p => p.status === 'approved');
+            
+            approvedProducts.forEach(product => {
                 productsGrid.innerHTML += createProductCard(product);
-                marketplaceProducts.innerHTML += createProductCard(product);
             });
             
             // Start auto slideshow for all product cards
@@ -3123,7 +1968,7 @@
             slideIntervals = {};
             
             document.querySelectorAll('.product-slideshow').forEach(slideshow => {
-                const slideshowId = slideshow.id.replace('slideshow-', '');
+                const slideshowId = slideshow.id ? slideshow.id.replace('slideshow-', '') : 'temp_' + Math.random();
                 startProductSlideshow(slideshowId);
             });
         }
@@ -3134,8 +1979,7 @@
             if (!slideshowElement) return;
             
             const slideshow = slideshowElement.querySelector('.slideshow-container');
-            const slides = slideshow.querySelectorAll('.slide');
-            const dots = slideshowElement.querySelectorAll('.dot');
+            const slides = slideshow.querySelectorAll('.product-slide');
             
             if (!slideshow || slides.length <= 1) return;
             
@@ -3148,118 +1992,7 @@
             slideIntervals[productId] = setInterval(() => {
                 currentIndex = (currentIndex + 1) % slides.length;
                 slideshow.style.transform = `translateX(-${currentIndex * 100}%)`;
-                
-                dots.forEach((dot, index) => {
-                    dot.classList.toggle('active', index === currentIndex);
-                });
             }, 3000);
-        }
-
-        // فەنکشنی ڕۆشتن بۆ سڵایدی پێشووی کاڵا
-        function prevProductSlide(productId) {
-            const slideshowElement = document.getElementById(`slideshow-${productId}`);
-            if (!slideshowElement) return;
-            
-            const slideshow = slideshowElement.querySelector('.slideshow-container');
-            const slides = slideshow.querySelectorAll('.slide');
-            const dots = slideshowElement.querySelectorAll('.dot');
-            
-            if (slides.length <= 1) return;
-            
-            let currentIndex = getCurrentSlideIndex(slideshow);
-            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-            
-            slideshow.style.transform = `translateX(-${currentIndex * 100}%)`;
-            
-            dots.forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentIndex);
-            });
-            
-            resetProductSlideshowInterval(productId);
-        }
-
-        // فەنکشنی ڕۆشتن بۆ سڵایدی دوواتری کاڵا
-        function nextProductSlide(productId) {
-            const slideshowElement = document.getElementById(`slideshow-${productId}`);
-            if (!slideshowElement) return;
-            
-            const slideshow = slideshowElement.querySelector('.slideshow-container');
-            const slides = slideshow.querySelectorAll('.slide');
-            const dots = slideshowElement.querySelectorAll('.dot');
-            
-            if (slides.length <= 1) return;
-            
-            let currentIndex = getCurrentSlideIndex(slideshow);
-            currentIndex = (currentIndex + 1) % slides.length;
-            
-            slideshow.style.transform = `translateX(-${currentIndex * 100}%)`;
-            
-            dots.forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentIndex);
-            });
-            
-            resetProductSlideshowInterval(productId);
-        }
-
-        // فەنکشنی وەرگرتنی سڵایدی ئێستا
-        function getCurrentSlideIndex(slideshow) {
-            const transform = slideshow.style.transform;
-            if (!transform || transform === 'none') return 0;
-            
-            const match = transform.match(/translateX\(-(\d+)%/);
-            if (match) {
-                return parseInt(match[1]) / 100;
-            }
-            return 0;
-        }
-
-        // فەنکشنی ڕیستکردنی کاتەری سلایدشۆی کاڵا
-        function resetProductSlideshowInterval(productId) {
-            if (slideIntervals[productId]) {
-                clearInterval(slideIntervals[productId]);
-                startProductSlideshow(productId);
-            }
-        }
-
-        // فەنکشنی فلتەرکردنی کاڵاکان
-        function filterProducts(category = '') {
-            let filteredProducts = products.filter(p => p.status === 'approved');
-            
-            if (category) {
-                filteredProducts = filteredProducts.filter(product => 
-                    product.category === category
-                );
-                document.getElementById('productsTitle').textContent = `کاڵاکانی ${category}`;
-            } else {
-                document.getElementById('productsTitle').textContent = 'هەموو کاڵاکان';
-            }
-            
-            renderProducts(filteredProducts);
-        }
-
-        // فەنکشنی پیشاندانی هەموو کاڵاکان
-        function showAllProducts() {
-            const filteredProducts = products.filter(p => p.status === 'approved');
-            document.getElementById('productsTitle').textContent = 'هەموو کاڵاکان';
-            renderProducts(filteredProducts);
-        }
-
-        // فەنکشنی زیادکردنی کاڵا بە جۆری دیاریکراو
-        function addProductWithCategory(category) {
-            showAddProductForm();
-            document.getElementById('productCategory').value = category;
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                const btnText = btn.querySelector('span')?.textContent;
-                if (btnText === category) {
-                    btn.style.background = 'var(--primary)';
-                    btn.style.color = 'white';
-                    btn.style.borderColor = 'var(--primary)';
-                } else {
-                    btn.style.background = 'white';
-                    btn.style.color = 'var(--dark)';
-                    btn.style.borderColor = 'var(--border)';
-                }
-            });
         }
 
         // فەنکشنی پێشبینینی وینەی فرە
@@ -3364,7 +2097,7 @@
             return Promise.all(uploadPromises);
         }
 
-        // فەنکشنی ناردنی کاڵا بۆ Firebase Realtime Database
+        // فەنکشنی ناردنی کاڵا بۆ Firebase
         function saveProductToFirebase(product) {
             const productId = database.ref().child('products').push().key;
             
@@ -3396,7 +2129,7 @@
             });
         }
 
-        // فەنکشنی بارکردنی کاڵاکان لە فەیەربەیس Realtime Database
+        // فەنکشنی بارکردنی کاڵاکان لە فەیەربەیس
         function loadProductsFromFirebase() {
             return database.ref('products').once('value')
             .then((snapshot) => {
@@ -3419,7 +2152,7 @@
             });
         }
 
-        // چارەسەرکراو: فەنکشنی ناردنی کاڵا - بە سکرۆلکردنی ئۆتۆماتیکی
+        // فەنکشنی ناردنی کاڵا
         document.getElementById('productForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -3477,7 +2210,6 @@
                 
                 updateNotificationBadge();
                 
-                // سکرۆلکردن بۆ سەرەوەی پەڕەکە
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             })
             .catch((error) => {
@@ -3507,7 +2239,12 @@
             
             productItem.innerHTML = `
                 <div style="flex: 1;">
-                    ${createAdminProductImageContent(product)}
+                    <div style="height: 100px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 8px;">
+                        ${product.images && product.images.length > 0 ? 
+                            `<img src="${product.images[0]}" alt="${product.name}" style="max-height: 100%; max-width: 100%; border-radius: 8px;">` :
+                            `<i class="fas fa-box" style="font-size: 2rem; color: var(--gray);"></i>`
+                        }
+                    </div>
                     <div class="product-details">
                         <h4>${product.name}</h4>
                         <p><strong>فرۆشیار:</strong> ${product.sellerName} - ${product.sellerMobile}</p>
@@ -3525,60 +2262,6 @@
             `;
             
             pendingList.appendChild(productItem);
-        }
-
-        // Helper function for admin product image content
-        function createAdminProductImageContent(product) {
-            if (product.images && product.images.length > 0) {
-                const slides = product.images.map((img, index) => `
-                    <div class="slide">
-                        <img src="${img}" alt="${product.name} - وینەی ${index + 1}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0BveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNGNEY0RjQiLz48cGF0aCBkPSJNNTAgMzVMMzAgNjBINzBMNTAgMzVaIiBmaWxsPSIjNjY3ZWVhIi8+PHBhdGggZD0iTTMwIDU1SDcwTTIwIDY1SDMwVjU1IiBmaWxsPSIjNjY3ZWVhIi8+PC9zdmc+'">
-                    </div>
-                `).join('');
-                
-                return `
-                    <div class="product-slideshow" style="height: 100px; margin-bottom: 8px;" id="admin-pending-slideshow-${product.firebaseId}">
-                        <div class="slideshow-container">
-                            ${slides}
-                        </div>
-                    </div>
-                `;
-            } else if (product.imageUrl) {
-                return `
-                    <div style="height: 100px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 8px;">
-                        <img src="${product.imageUrl}" alt="${product.name}" style="max-height: 100%; max-width: 100%; border-radius: 8px;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0BveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNGNEY0RjQiLz48cGF0aCBkPSJNNTAgMzVMMzAgNjBINzBMNTAgMzVaIiBmaWxsPSIjNjY3ZWVhIi8+PHBhdGggZD0iTTMwIDU1SDcwTTIwIDY1SDMwVjU1IiBmaWxsPSIjNjY3ZWVhIi8+PC9zdmc+'">
-                    </div>
-                `;
-            } else {
-                const icons = {
-                    'مۆبایل': 'fas fa-mobile-alt',
-                    'لاپتۆپ': 'fas fa-laptop',
-                    'کۆمپیوتەر': 'fas fa-desktop',
-                    'ئایپاد': 'fas fa-tablet-alt',
-                    'ئوتومبێل': 'fas fa-car',
-                    'ناوماڵ': 'fas fa-home',
-                    'پاسکیل': 'fas fa-bicycle',
-                    'سکۆتەر': 'fas fa-motorcycle',
-                    'کامێرا': 'fas fa-camera',
-                    'جوانکاری': 'fas fa-paint-brush',
-                    'خانوو': 'fas fa-house-user',
-                    'زەوی': 'fas fa-mountain',
-                    'باخ': 'fas fa-tree',
-                    'ئاژەڵ': 'fas fa-paw',
-                    'مناڵان': 'fas fa-baby',
-                    'کتێبخانە': 'fas fa-book',
-                    'وەرزش و هونەر': 'fas fa-dumbbell',
-                    'جلو بەرگ': 'fas fa-tshirt',
-                    'ئامێری تر': 'fas fa-microchip',
-                    'کۆمپیوتەری تر': 'fas fa-server'
-                };
-                
-                return `
-                    <div style="height: 100px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 8px;">
-                        <i class="${icons[product.category] || 'fas fa-box'}" style="font-size: 2rem; color: var(--gray);"></i>
-                    </div>
-                `;
-            }
         }
 
         // فەنکشنی پڕکردنەوەی لیستی هەموو کاڵاکان بۆ دەستکاری
@@ -3612,7 +2295,12 @@
                 productItem.id = `all-${product.firebaseId}`;
                 productItem.innerHTML = `
                     <div style="flex: 1;">
-                        ${createAdminProductImageContent(product)}
+                        <div style="height: 100px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 8px;">
+                            ${product.images && product.images.length > 0 ? 
+                                `<img src="${product.images[0]}" alt="${product.name}" style="max-height: 100%; max-width: 100%; border-radius: 8px;">` :
+                                `<i class="fas fa-box" style="font-size: 2rem; color: var(--gray);"></i>`
+                            }
+                        </div>
                         <div class="product-details">
                             <h4>${product.name}</h4>
                             <p><strong>فرۆشیار:</strong> ${product.sellerName} - ${product.sellerMobile}</p>
@@ -3637,7 +2325,7 @@
             });
         }
 
-        // چارەسەرکراو: فەنکشنی کردنەوەی مۆدالی دەستکاری - بە سکرۆلکردنی ئۆتۆماتیکی
+        // فەنکشنی کردنەوەی مۆدالی دەستکاری
         function openEditModal(productId) {
             const product = products.find(p => p.firebaseId == productId);
             if (product) {
@@ -3656,22 +2344,12 @@
                     product.images.forEach(url => {
                         currentEditImages.push({ url: url, isExisting: true });
                     });
-                } else if (product.imageUrl) {
-                    currentEditImages.push({ url: product.imageUrl, isExisting: true });
                 }
                 renderEditImagesPreview();
                 
                 setupEditMultiImagePreview();
                 
                 document.getElementById('editProductModal').classList.add('show');
-                
-                // سکرۆلکردن بۆ دوگمەکان دوای ماوەیەک
-                setTimeout(() => {
-                    const formActions = document.querySelector('.edit-modal .form-actions');
-                    if (formActions) {
-                        formActions.scrollIntoView({ behavior: 'smooth', block: 'end' });
-                    }
-                }, 300);
             }
         }
 
@@ -3749,7 +2427,7 @@
             currentEditImages = [];
         }
 
-        // چارەسەرکراو: فەنکشنی پاشکەوتکردنی دەستکاری - بە سکرۆلکردنی ئۆتۆماتیکی
+        // فەنکشنی پاشکەوتکردنی دەستکاری
         document.getElementById('editProductForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -3806,7 +2484,6 @@
                 
                 showNotification('زانیاری کاڵا بە سەرکەوتوویی نوێکرایەوە!', 'success');
                 
-                // سکرۆلکردن بۆ سەرەوەی پەڕەکە
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         });
@@ -3908,7 +2585,7 @@
             }
         }
 
-        // فەنکشنی نوێکردنەوەی کاڵا لە فەیەربەیس Realtime Database
+        // فەنکشنی نوێکردنەوەی کاڵا لە فەیەربەیس
         function updateProductInFirebase(product, status) {
             if (product.firebaseId) {
                 const updateData = {
@@ -4001,29 +2678,15 @@
             document.getElementById('notification').classList.remove('show');
         });
 
-        // چارەسەرکراو: نیشاندانی فۆرمی زیادکردنی کاڵا - بە سکرۆلکردنی ئۆتۆماتیکی
+        // نیشاندانی فۆرمی زیادکردنی کاڵا
         function showAddProductForm() {
             document.getElementById('productFormSection').style.display = 'block';
             document.getElementById('productsSection').style.display = 'none';
             document.getElementById('adminSection').style.display = 'none';
             document.getElementById('heroSection').style.display = 'none';
-            document.getElementById('categoriesSection').style.display = 'none';
-            document.getElementById('promoBannerSection').style.display = 'block';
-            document.getElementById('marketplaceSection').style.display = 'none';
-            document.getElementById('locationsSection').style.display = 'none';
-            document.getElementById('settingsSection').style.display = 'none';
-            document.getElementById('bannerSection').style.display = 'block';
+            document.getElementById('sliderSection').style.display = 'block';
             
-            // سکرۆلکردن بۆ سەرەوەی فۆرم
-            setTimeout(() => {
-                const formSection = document.getElementById('productFormSection');
-                if (formSection) {
-                    formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-                
-                // سکرۆلکردن بۆ دوگمەکان دوای ماوەیەک
-                setTimeout(scrollToFormButtons, 500);
-            }, 100);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         document.getElementById('addProductBtn').addEventListener('click', showAddProductForm);
@@ -4039,93 +2702,38 @@
             document.getElementById('productsSection').style.display = 'block';
             document.getElementById('adminSection').style.display = 'none';
             document.getElementById('heroSection').style.display = 'block';
-            document.getElementById('categoriesSection').style.display = 'block';
-            document.getElementById('promoBannerSection').style.display = 'block';
-            document.getElementById('marketplaceSection').style.display = 'none';
-            document.getElementById('locationsSection').style.display = 'none';
-            document.getElementById('settingsSection').style.display = 'none';
-            document.getElementById('bannerSection').style.display = 'block';
+            document.getElementById('sliderSection').style.display = 'block';
             document.getElementById('logoutBtn').style.display = 'none';
             document.getElementById('adminLoginBtn').style.display = 'flex';
             
-            showAllProducts();
+            renderProducts();
             
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.style.background = 'white';
-                btn.style.color = 'var(--dark)';
-                btn.style.borderColor = 'var(--border)';
-            });
-            
-            const allBtn = Array.from(document.querySelectorAll('.category-btn')).find(btn => 
-                btn.querySelector('span')?.textContent === 'هەموو کاڵاکان'
-            );
-            if (allBtn) {
-                allBtn.style.background = 'var(--primary)';
-                allBtn.style.color = 'white';
-                allBtn.style.borderColor = 'var(--primary)';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // نیشاندانی داشبۆردی بەڕێوەبەر
+        function showAdminDashboard() {
+            if (!isAdminLoggedIn) {
+                document.getElementById('loginModal').classList.add('show');
+                return;
             }
             
-            renderBannerSlider();
-            
-            // سکرۆلکردن بۆ سەرەوەی پەڕەکە
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // نیشاندانی مارکێت
-        function showMarketplace() {
             document.getElementById('productFormSection').style.display = 'none';
             document.getElementById('productsSection').style.display = 'none';
-            document.getElementById('adminSection').style.display = 'none';
+            document.getElementById('adminSection').style.display = 'block';
             document.getElementById('heroSection').style.display = 'none';
-            document.getElementById('categoriesSection').style.display = 'none';
-            document.getElementById('promoBannerSection').style.display = 'block';
-            document.getElementById('marketplaceSection').style.display = 'block';
-            document.getElementById('locationsSection').style.display = 'none';
-            document.getElementById('settingsSection').style.display = 'none';
-            document.getElementById('bannerSection').style.display = 'block';
+            document.getElementById('sliderSection').style.display = 'block';
+            document.getElementById('logoutBtn').style.display = 'flex';
+            document.getElementById('adminLoginBtn').style.display = 'none';
             
-            const approvedProducts = products.filter(p => p.status === 'approved');
-            renderProducts(approvedProducts);
+            updateAdminStats();
+            renderPendingProducts();
+            renderAllProductsList();
             
-            // سکرۆلکردن بۆ سەرەوەی پەڕەکە
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // نیشاندانی شوێنەکان
-        function showLocations() {
-            document.getElementById('productFormSection').style.display = 'none';
-            document.getElementById('productsSection').style.display = 'none';
-            document.getElementById('adminSection').style.display = 'none';
-            document.getElementById('heroSection').style.display = 'none';
-            document.getElementById('categoriesSection').style.display = 'none';
-            document.getElementById('promoBannerSection').style.display = 'block';
-            document.getElementById('marketplaceSection').style.display = 'none';
-            document.getElementById('locationsSection').style.display = 'block';
-            document.getElementById('settingsSection').style.display = 'none';
-            document.getElementById('bannerSection').style.display = 'none';
-            
-            // سکرۆلکردن بۆ سەرەوەی پەڕەکە
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // نیشاندانی ڕێکخستنەکان
-        function showSettings() {
-            document.getElementById('productFormSection').style.display = 'none';
-            document.getElementById('productsSection').style.display = 'none';
-            document.getElementById('adminSection').style.display = 'none';
-            document.getElementById('heroSection').style.display = 'none';
-            document.getElementById('categoriesSection').style.display = 'none';
-            document.getElementById('promoBannerSection').style.display = 'block';
-            document.getElementById('marketplaceSection').style.display = 'none';
-            document.getElementById('locationsSection').style.display = 'none';
-            document.getElementById('settingsSection').style.display = 'block';
-            document.getElementById('bannerSection').style.display = 'none';
-            
-            // سکرۆلکردن بۆ سەرەوەی پەڕەکە
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // فەنکشنی دیاریکردنی مینیوی چالاک
+        // دیاریکردنی مینیوی چالاک
         function setActiveNav(clickedItem) {
             document.querySelectorAll('.bottom-nav-item').forEach(item => {
                 item.classList.remove('active');
@@ -4137,14 +2745,6 @@
         // نیشاندانی مۆدالی چوونەژوورەوە
         document.getElementById('adminLoginBtn').addEventListener('click', function() {
             document.getElementById('loginModal').classList.add('show');
-            
-            // سکرۆلکردن بۆ دوگمەکان
-            setTimeout(() => {
-                const formActions = document.querySelector('.modal .form-actions');
-                if (formActions) {
-                    formActions.scrollIntoView({ behavior: 'smooth', block: 'end' });
-                }
-            }, 300);
         });
 
         // داخستنی مۆدالی چوونەژوورەوە
@@ -4153,6 +2753,8 @@
         }
 
         // چوونەژوورەوەی بەڕێوەبەر
+        let isAdminLoggedIn = false;
+        
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -4161,34 +2763,9 @@
             
             if (username === 'admin' && password === 'admin123') {
                 isAdminLoggedIn = true;
-                document.getElementById('productFormSection').style.display = 'none';
-                document.getElementById('productsSection').style.display = 'none';
-                document.getElementById('adminSection').style.display = 'block';
-                document.getElementById('heroSection').style.display = 'none';
-                document.getElementById('categoriesSection').style.display = 'none';
-                document.getElementById('promoBannerSection').style.display = 'block';
-                document.getElementById('marketplaceSection').style.display = 'none';
-                document.getElementById('locationsSection').style.display = 'none';
-                document.getElementById('settingsSection').style.display = 'none';
-                document.getElementById('bannerSection').style.display = 'none';
-                document.getElementById('logoutBtn').style.display = 'flex';
-                document.getElementById('adminLoginBtn').style.display = 'none';
-                
-                // نیشاندانی دوگمەی بەڕێوەبەر بۆ بانەری ڕیکلام
-                document.getElementById('promoAdminActions').style.display = 'block';
-                
+                showAdminDashboard();
                 closeLoginModal();
-                
-                updateAdminStats();
-                
-                renderPendingProducts();
-                
-                renderAllProductsList();
-                
                 showNotification('بە سەرکەوتوویی چوویتە ژوورەوە بۆ داشبۆردی بەڕێوەبەر!', 'success');
-                
-                // سکرۆلکردن بۆ سەرەوەی پەڕەکە
-                window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
                 showNotification('ناوی بەکارهێنەر یان وشەی نهێنی هەڵەیە!', 'error');
             }
@@ -4197,7 +2774,6 @@
         // دەرچوون لە داشبۆردی بەڕێوەبەر
         document.getElementById('logoutBtn').addEventListener('click', function() {
             isAdminLoggedIn = false;
-            document.getElementById('promoAdminActions').style.display = 'none';
             showHomePage();
             showNotification('بە سەرکەوتوویی چوویتە دەرەوە!', 'success');
         });
@@ -4205,7 +2781,6 @@
         // دەرچوون لە داشبۆردی بەڕێوەبەر (دووەم دووگمە)
         document.getElementById('adminLogoutBtn').addEventListener('click', function() {
             isAdminLoggedIn = false;
-            document.getElementById('promoAdminActions').style.display = 'none';
             showHomePage();
             showNotification('بە سەرکەوتوویی چوویتە دەرەوە!', 'success');
         });
@@ -4213,8 +2788,6 @@
         // بارکردنی سەرەتایی کاڵاکان
         document.addEventListener('DOMContentLoaded', function() {
             checkLogoImage();
-            
-            renderCategoryButtons();
             
             setupMultiImagePreview();
             
@@ -4224,34 +2797,22 @@
                     products = loadedProducts;
                     
                     if (products.length === 0) {
-                        console.log("هیچ کاڵایەک لە فەیەربەیس نیە، کاڵای نموونەیی زیاد ناکرێت");
+                        console.log("هیچ کاڵایەک لە فەیەربەیس نیە");
                     }
                     
                     renderProducts();
                     updateNotificationBadge();
                     updateAdminStats();
-                    
-                    setTimeout(() => {
-                        const allBtn = Array.from(document.querySelectorAll('.category-btn')).find(btn => 
-                            btn.querySelector('span')?.textContent === 'هەموو کاڵاکان'
-                        );
-                        if (allBtn) {
-                            allBtn.style.background = 'var(--primary)';
-                            allBtn.style.color = 'white';
-                            allBtn.style.borderColor = 'var(--primary)';
-                        }
-                    }, 100);
                 })
                 .catch(error => {
                     console.error("هەڵە لە بارکردنی کاڵاکان: ", error);
                     renderProducts();
                 });
             
-            // بارکردنی بانەرەکان
-            loadBannersFromFirebase();
-            
-            // بارکردنی زانیاری ڕیکلام
-            loadPromoData();
+            // بارکردنی سلایدەر
+            loadSliderFromFirebase().then(() => {
+                initializeSlider();
+            });
             
             // تیکستی گەران
             document.getElementById('searchButton').addEventListener('click', performSearch);
@@ -4261,8 +2822,8 @@
                 }
             });
             
-            // ڕێکخستنی فۆرمی ڕیکلام
-            setupPromoForm();
+            // ڕێکخستنی بەڕێوەبردنی سلایدەر
+            setupSliderManagement();
             
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/sw.js')
@@ -4275,477 +2836,12 @@
             }
         });
 
-        // --- فەنکشنەکانی مۆدالی پارەدانی FIB ---
-
-        // فەنکشنی کۆپی کردنی ژمارە
-        function copyToClipboard(text, elementName) {
-            navigator.clipboard.writeText(text).then(function() {
-                showNotification(elementName + ' بە سەرکەوتوویی کۆپی کرا!', 'success');
-            }).catch(function(err) {
-                console.error('هەڵە لە کۆپی کردن: ', err);
-                showNotification('هەڵە لە کۆپی کردن!', 'error');
-            });
-        }
-
-        // چارەسەرکراو: فەنکشنی داخستنی مۆدالی FIB
-        function closeFibModal() {
-            document.getElementById('fibModal').classList.remove('show');
-        }
-
-        // چارەسەرکراو: فەنکشنی پارەدان بە FIB - بە سکرۆلکردنی ئۆتۆماتیکی
-        function openFibPayment(productId) {
-            const product = products.find(p => p.firebaseId == productId || p.id == productId);
-            if (product) {
-                document.getElementById('fibModal').classList.add('show');
-                
-                // دانانی زانیاری کاڵا
-                document.getElementById('paymentAmount').value = product.price;
-                document.getElementById('fibProductId').value = product.firebaseId || product.id;
-                
-                // پاککردنەوەی فۆرم
-                document.getElementById('customerName').value = '';
-                document.getElementById('fibPhone').value = '';
-                
-                // نیشاندانی ناوی کاڵا لە ناوەڕاست
-                const titleElement = document.querySelector('.fib-modal .modal-header h2');
-                if (titleElement) {
-                    titleElement.innerHTML = `پارەدان بە FIB<br><small style="font-size: 14px; opacity: 0.9;">بۆ: ${product.name}</small>`;
-                }
-                
-                // سکرۆلکردن بۆ دوگمەکان دوای ماوەیەک
-                setTimeout(scrollToFibPayment, 300);
-            }
-        }
-
-        // چارەسەرکراو: فۆرمی پارە ناردن - بە سکرۆلکردنی ئۆتۆماتیکی
-        document.getElementById('fibPaymentForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const customerName = document.getElementById('customerName').value;
-            const customerPhone = document.getElementById('fibPhone').value;
-            const paymentAmount = document.getElementById('paymentAmount').value;
-            const productId = document.getElementById('fibProductId').value;
-            
-            if (!customerName || !customerPhone || !paymentAmount) {
-                showNotification('تکایە هەموو خانەکان پڕ بکەرەوە!', 'error');
-                return;
-            }
-            
-            // دۆزینەوەی کاڵا
-            const product = products.find(p => (p.firebaseId == productId) || (p.id == productId));
-            
-            // ئامادەکردنی زانیاری بۆ ناردن
-            const paymentData = {
-                productId: productId,
-                productName: product ? product.name : 'نەزانراو',
-                productPrice: product ? product.price + ' ' + product.currency : 'نەزانراو',
-                customerName: customerName,
-                customerPhone: customerPhone.replace(/\s/g, ''),
-                paymentAmount: paymentAmount + ' دینار',
-                paymentDate: new Date().toLocaleString('ku-IR'),
-                paymentType: 'FIB',
-                status: 'pending',
-                timestamp: new Date().toISOString()
-            };
-            
-            // نیشاندانی بارگە
-            const fibContent = document.getElementById('fibPaymentContent');
-            fibContent.innerHTML = `
-                <div style="padding: 30px 15px;">
-                    <div style="width: 80px; height: 80px; margin: 0 auto 20px; background: #f0f4ff; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-spinner fa-spin" style="font-size: 40px; color: #3b82f6;"></i>
-                    </div>
-                    <div style="font-size: 18px; font-weight: 600; color: #1e40af; margin-bottom: 10px;">چاوەڕوان بە...</div>
-                    <div style="font-size: 14px; color: #6b7280;">زانیاریەکان پاشەکەوت دەکرێت</div>
-                </div>
-            `;
-            
-            // ناردنی زانیاریەکان بۆ Firebase
-            const paymentId = 'payment_' + Date.now();
-            database.ref('payments/' + paymentId).set(paymentData)
-                .then(() => {
-                    // پەیامی سەرکەوتوو
-                    setTimeout(() => {
-                        fibContent.innerHTML = `
-                            <div style="padding: 20px 15px;">
-                                <div style="width: 60px; height: 60px; background: #10b981; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fas fa-check" style="color: white; font-size: 30px;"></i>
-                                </div>
-                                <div style="font-size: 18px; font-weight: 600; color: #10b981; margin-bottom: 10px;">داواکاری بە سەرکەوتوویی نێردرا!</div>
-                                <div style="font-size: 13px; color: #6b7280; margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; text-align: right;">
-                                    <div style="margin-bottom: 8px;"><strong>ناوی کڕیار:</strong> ${paymentData.customerName}</div>
-                                    <div style="margin-bottom: 8px;"><strong>ژمارە:</strong> ${paymentData.customerPhone}</div>
-                                    <div style="margin-bottom: 8px;"><strong>بڕی پارە:</strong> ${paymentData.paymentAmount}</div>
-                                    <div style="margin-bottom: 8px;"><strong>کاڵا:</strong> ${paymentData.productName}</div>
-                                    <div><strong>کات:</strong> ${paymentData.paymentDate}</div>
-                                </div>
-                                <div style="font-size: 11px; color: #8b5cf6; padding: 10px; background: #f5f3ff; border-radius: 8px; margin-bottom: 15px; border-right: 3px solid #8b5cf6;">
-                                    <i class="fas fa-info-circle"></i> بەڕێوەبەر لە ماوەی کەمدا پەیوەندیت پێوە دەکات
-                                </div>
-                                <button class="btn btn-primary" onclick="closeFibModal()" style="width: 100%; padding: 12px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
-                                    <i class="fas fa-home"></i> گەڕانەوە بۆ پەڕەی سەرەکی
-                                </button>
-                            </div>
-                        `;
-                        
-                        showNotification('داواکاریەکەت بە سەرکەوتوویی نێردرا! بەڕێوەبەر زووترین پەیوەندیت پێوە دەکات.', 'success');
-                        
-                        // سکرۆلکردن بۆ دوگمەی گەڕانەوە
-                        setTimeout(() => {
-                            const closeButton = document.querySelector('.fib-modal .btn-primary');
-                            if (closeButton) {
-                                closeButton.scrollIntoView({ behavior: 'smooth', block: 'end' });
-                            }
-                        }, 300);
-                        
-                        // پاککردنەوەی فۆرم دوای 3 چرکە
-                        setTimeout(() => {
-                            document.getElementById('fibPaymentForm').reset();
-                        }, 3000);
-                    }, 1500);
-                })
-                .catch(error => {
-                    console.error("هەڵە لە پاشەکەوتی داواکاری: ", error);
-                    showNotification('هەڵە لە ناردنی داواکاری! تکایە دووبارە هەوڵبدەرەوە.', 'error');
-                    
-                    // گەڕانەوە بۆ فۆرم
-                    setTimeout(() => {
-                        openFibPayment(productId);
-                    }, 1000);
-                });
-        });
-
-        // --- فەنکشنەکانی بانەر ---
-
-        // فەنکشنی بارکردنی بانەرەکان لە فەیەربەیس
-        function loadBannersFromFirebase() {
-            return database.ref('banners').once('value')
-            .then((snapshot) => {
-                banners = [];
-                snapshot.forEach((childSnapshot) => {
-                    const bannerData = childSnapshot.val();
-                    banners.push({
-                        ...bannerData,
-                        firebaseId: childSnapshot.key
-                    });
-                });
-                
-                renderBannerSlider();
-                return banners;
-            })
-            .catch((error) => {
-                console.log("هەڵە لە بارکردنی بانەرەکان: ", error);
-                return [];
-            });
-        }
-
-        // فەنکشنی دروستکردنی سڵایدەری بانەر - چاککراوە
-        function renderBannerSlider() {
-            const bannerContainer = document.getElementById('bannerContainer');
-            const dotsContainer = document.getElementById('bannerDots');
-            
-            bannerContainer.innerHTML = '';
-            dotsContainer.innerHTML = '';
-            
-            if (banners.length === 0) {
-                // بانەری نموونەیی دەفاڵت
-                const defaultBanners = [
-                    'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80',
-                    'https://images.unsplash.com/photo-1557821552-17105176677c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80',
-                    'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80'
-                ];
-                
-                defaultBanners.forEach((imageUrl, index) => {
-                    const slideItem = document.createElement('div');
-                    slideItem.className = 'banner-slide';
-                    slideItem.innerHTML = `
-                        <img src="${imageUrl}" alt="بانەری ئۆنلاین شۆپینگ ${index + 1}">
-                    `;
-                    bannerContainer.appendChild(slideItem);
-                    
-                    const dot = document.createElement('div');
-                    dot.className = `banner-dot ${index === 0 ? 'active' : ''}`;
-                    dot.addEventListener('click', () => {
-                        currentBannerSlideIndex = index;
-                        updateBannerPosition();
-                        resetBannerAutoPlay();
-                    });
-                    dotsContainer.appendChild(dot);
-                });
-                
-                currentBannerSlideIndex = 0;
-                updateBannerPosition();
-                startBannerAutoPlay();
-                return;
-            }
-            
-            banners.forEach((banner, index) => {
-                const slideItem = document.createElement('div');
-                slideItem.className = 'banner-slide';
-                slideItem.innerHTML = `
-                    <img src="${banner.imageUrl}" alt="بانەر ${index + 1}" onerror="this.src='https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80'">
-                `;
-                
-                bannerContainer.appendChild(slideItem);
-                
-                const dot = document.createElement('div');
-                dot.className = `banner-dot ${index === 0 ? 'active' : ''}`;
-                dot.addEventListener('click', () => {
-                    goToBannerSlide(index);
-                });
-                dotsContainer.appendChild(dot);
-            });
-            
-            currentBannerSlideIndex = 0;
-            updateBannerPosition();
-            startBannerAutoPlay();
-        }
-
-        // فەنکشنی نوێکردنەوەی شوێنی سڵایدەری بانەر
-        function updateBannerPosition() {
-            const bannerContainer = document.getElementById('bannerContainer');
-            if (!bannerContainer) return;
-            
-            bannerContainer.style.transform = `translateX(-${currentBannerSlideIndex * 100}%)`;
-            
-            document.querySelectorAll('.banner-dot').forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentBannerSlideIndex);
-            });
-        }
-
-        // فەنکشنی ڕۆشتن بۆ سڵایدی دوواتری بانەر
-        function nextBannerSlide() {
-            const slidesCount = banners.length > 0 ? banners.length : 3;
-            currentBannerSlideIndex = (currentBannerSlideIndex + 1) % slidesCount;
-            updateBannerPosition();
-            resetBannerAutoPlay();
-        }
-
-        // فەنکشنی ڕۆشتن بۆ سڵایدی پێشووی بانەر
-        function prevBannerSlide() {
-            const slidesCount = banners.length > 0 ? banners.length : 3;
-            currentBannerSlideIndex = (currentBannerSlideIndex - 1 + slidesCount) % slidesCount;
-            updateBannerPosition();
-            resetBannerAutoPlay();
-        }
-
-        // فەنکشنی ڕۆشتن بۆ سڵایدێکی دیاریکراوی بانەر
-        function goToBannerSlide(index) {
-            const slidesCount = banners.length > 0 ? banners.length : 3;
-            if (index < 0 || index >= slidesCount) return;
-            
-            currentBannerSlideIndex = index;
-            updateBannerPosition();
-            resetBannerAutoPlay();
-        }
-
-        // فەنکشنی دەستپێکردنی سڵایدەری ئۆتۆماتیکی بانەر - چاککراوە
-        function startBannerAutoPlay() {
-            const slidesCount = banners.length > 0 ? banners.length : 3;
-            
-            if (slidesCount <= 1) {
-                if (bannerSliderInterval) {
-                    clearInterval(bannerSliderInterval);
-                }
-                return;
-            }
-            
-            if (bannerSliderInterval) {
-                clearInterval(bannerSliderInterval);
-            }
-            
-            bannerSliderInterval = setInterval(() => {
-                nextBannerSlide();
-            }, 5000); // گۆڕینی هەر ٥ چرکە جارێک
-        }
-
-        // فەنکشنی ڕیستکردنی سڵایدەری ئۆتۆماتیکی بانەر
-        function resetBannerAutoPlay() {
-            if (bannerSliderInterval) {
-                clearInterval(bannerSliderInterval);
-                startBannerAutoPlay();
-            }
-        }
-
-        // فەنکشنی نیشاندانی بەڕێوەبردنی بانەر
-        function showBannerManagement() {
-            document.getElementById('bannerManagementModal').classList.add('show');
-            loadCurrentBannersList();
-            setupBannerImageUpload();
-            
-            // سکرۆلکردن بۆ دوگمەکان
-            setTimeout(() => {
-                const formActions = document.querySelector('#bannerManagementModal .form-actions');
-                if (formActions) {
-                    formActions.scrollIntoView({ behavior: 'smooth', block: 'end' });
-                }
-            }, 300);
-        }
-
-        // فەنکشنی داخستنی بەڕێوەبردنی بانەر
-        function closeBannerManagementModal() {
-            document.getElementById('bannerManagementModal').classList.remove('show');
-            selectedBannerImages = [];
-            document.getElementById('bannerImagesPreview').innerHTML = '';
-        }
-
-        // فەنکشنی ڕێکخستنی بارکردنی وینەی بانەر
-        function setupBannerImageUpload() {
-            const input = document.getElementById('bannerImages');
-            const preview = document.getElementById('bannerImagesPreview');
-            
-            input.addEventListener('change', function() {
-                const files = Array.from(this.files);
-                
-                files.forEach(file => {
-                    if (file.type.startsWith('image/')) {
-                        const reader = new FileReader();
-                        
-                        reader.addEventListener('load', function() {
-                            const imageData = {
-                                id: Date.now() + Math.random(),
-                                url: this.result,
-                                file: file
-                            };
-                            
-                            selectedBannerImages.push(imageData);
-                            renderBannerImagesPreview();
-                        });
-                        
-                        reader.readAsDataURL(file);
-                    }
-                });
-                
-                this.value = '';
-            });
-        }
-
-        // فەنکشنی پڕکردنەوەی پێشبینینی وینەی بانەر
-        function renderBannerImagesPreview() {
-            const preview = document.getElementById('bannerImagesPreview');
-            preview.innerHTML = '';
-            
-            if (selectedBannerImages.length === 0) {
-                preview.innerHTML = '<p style="color: var(--gray); font-size: 0.7rem; text-align: center; width: 100%;">هیچ وینەی بانەرێک هەڵنەبژێردراوە</p>';
-                return;
-            }
-            
-            selectedBannerImages.forEach((image, index) => {
-                const previewItem = document.createElement('div');
-                previewItem.className = 'image-preview-item';
-                previewItem.innerHTML = `
-                    <img src="${image.url}" alt="پێشبینینی بانەر">
-                    <button type="button" class="remove-image" onclick="removeBannerImage(${index})">
-                        <i class="fas fa-times"></i>
-                    </button>
-                `;
-                preview.appendChild(previewItem);
-            });
-        }
-
-        // فەنکشنی لابردنی وینەی بانەر
-        function removeBannerImage(index) {
-            selectedBannerImages.splice(index, 1);
-            renderBannerImagesPreview();
-        }
-
-        // فەنکشنی پاشەکەوتکردنی بانەرەکان
-        document.getElementById('saveBannersBtn').addEventListener('click', async function() {
-            if (selectedBannerImages.length === 0) {
-                showNotification('تکایە وێنەی بانەرێک هەڵبژێرە!', 'error');
-                return;
-            }
-            
-            try {
-                showNotification('بانەرەکان باردەکرێن...', 'success');
-                
-                // بارکردنی هەموو وینە نوێیەکان
-                const uploadPromises = selectedBannerImages.map(imageData => {
-                    return uploadImage(imageData.file, 'banner_' + Date.now());
-                });
-                
-                const imageUrls = await Promise.all(uploadPromises);
-                
-                // ناردنی بانەرە نوێیەکان بۆ فەیەربەیس
-                const bannerPromises = imageUrls.map(url => {
-                    const bannerId = database.ref().child('banners').push().key;
-                    const bannerData = {
-                        id: bannerId,
-                        imageUrl: url,
-                        createdAt: new Date().toISOString()
-                    };
-                    
-                    return database.ref('banners/' + bannerId).set(bannerData);
-                });
-                
-                await Promise.all(bannerPromises);
-                
-                // نوێکردنەوەی لیستی بانەرەکان
-                await loadBannersFromFirebase();
-                
-                selectedBannerImages = [];
-                renderBannerImagesPreview();
-                loadCurrentBannersList();
-                
-                showNotification('بانەرەکان بە سەرکەوتوویی پاشەکەوت کرا!', 'success');
-            } catch (error) {
-                console.error("هەڵە لە پاشەکەوتی بانەرەکان: ", error);
-                showNotification('هەڵە لە پاشەکەوتی بانەرەکان!', 'error');
-            }
-        });
-
-        // فەنکشنی بارکردنی لیستی بانەرەکانی ئێستا
-        function loadCurrentBannersList() {
-            const currentBannersList = document.getElementById('currentBannersList');
-            currentBannersList.innerHTML = '';
-            
-            if (banners.length === 0) {
-                currentBannersList.innerHTML = '<p style="text-align: center; padding: 10px; color: var(--gray); font-size: 0.7rem;">هیچ بانەرێک نیە!</p>';
-                return;
-            }
-            
-            banners.forEach(banner => {
-                const bannerItem = document.createElement('div');
-                bannerItem.className = 'product-item';
-                bannerItem.style.flexDirection = 'column';
-                bannerItem.innerHTML = `
-                    <div style="width: 100%; height: 100px; margin-bottom: 8px; overflow: hidden; border-radius: 8px;">
-                        <img src="${banner.imageUrl}" alt="بانەر" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80'">
-                    </div>
-                    <div class="product-actions" style="width: 100%;">
-                        <button class="btn-delete" onclick="deleteBanner('${banner.firebaseId}')">سڕینەوە</button>
-                    </div>
-                `;
-                
-                currentBannersList.appendChild(bannerItem);
-            });
-        }
-
-        // فەنکشنی سڕینەوەی بانەر
-        function deleteBanner(bannerId) {
-            if (confirm('دڵنیای لە سڕینەوەی ئەم بانەرە؟')) {
-                database.ref('banners/' + bannerId).remove()
-                .then(() => {
-                    console.log("بانەر بە سەرکەوتوویی سڕدرایەوە");
-                    loadBannersFromFirebase();
-                    loadCurrentBannersList();
-                    showNotification('بانەر بە سەرکەوتوویی سڕدرایەوە!', 'success');
-                })
-                .catch(error => {
-                    console.error("هەڵە لە سڕینەوەی بانەر: ", error);
-                    showNotification('هەڵە لە سڕینەوەی بانەر!', 'error');
-                });
-            }
-        }
-
-        // --- فەنکشنەکانی گەڕان ---
-
         // فەنکشنی ئەنجامدانی گەڕان
         function performSearch() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             
             if (!searchTerm) {
-                showAllProducts();
+                renderProducts();
                 return;
             }
             
@@ -4764,294 +2860,229 @@
             }
             
             document.getElementById('productsTitle').textContent = `ئەنجامەکانی گەڕان بۆ: "${searchTerm}"`;
-            renderProducts(searchResults);
             
-            // نیشاندانی بەشی کاڵاکان و شاردنەوەی بەشەکانی تر
-            document.getElementById('productsSection').style.display = 'block';
-            document.getElementById('heroSection').style.display = 'none';
-            document.getElementById('categoriesSection').style.display = 'none';
-            document.getElementById('promoBannerSection').style.display = 'block';
+            const productsGrid = document.getElementById('productsGrid');
+            productsGrid.innerHTML = '';
             
-            window.scrollTo({ top: document.getElementById('productsSection').offsetTop - 80, behavior: 'smooth' });
+            searchResults.forEach(product => {
+                productsGrid.innerHTML += createProductCard(product);
+            });
             
             showNotification(`${searchResults.length} کاڵا دۆزرایەوە بە وشەی "${searchTerm}"`, 'success');
         }
 
-        // --- فەنکشنەکانی بانەری ڕیکلام ---
+        // فەنکشنی نیشاندانی مۆدالی پارەدان
+        function showPaymentModal(productId) {
+            const product = products.find(p => p.firebaseId == productId || p.id == productId);
+            if (product) {
+                alert(`ژمارەی FIB بۆ پارەدان: 07769654490\nکاڵا: ${product.name}\nنرخ: ${product.price} ${product.currency}`);
+                showNotification('ژمارەی FIB کۆپی کرا بۆ کلیپبۆرد!', 'success');
+                
+                // کۆپی کردنی ژمارە بۆ کلیپبۆرد
+                navigator.clipboard.writeText('07769654490').then(function() {
+                    console.log('ژمارەی FIB کۆپی کرا');
+                });
+            }
+        }
 
-        // فەنکشنی بارکردنی زانیاری ڕیکلام
-        function loadPromoData() {
-            return database.ref('promo').once('value')
-            .then((snapshot) => {
-                if (snapshot.exists()) {
-                    promoData = snapshot.val();
-                    updatePromoBanner(promoData);
-                } else {
-                    updatePromoBanner(null);
-                }
-            })
-            .catch((error) => {
-                console.log("هەڵە لە بارکردنی زانیاری ڕیکلام: ", error);
-                updatePromoBanner(null);
+        // ============================
+        // فەنکشنەکانی بەڕێوەبردنی سلایدەر
+        // ============================
+
+        // فەنکشنی نیشاندانی بەڕێوەبردنی سلایدەر
+        function showSliderManagement() {
+            if (!isAdminLoggedIn) {
+                showNotification('تەنها بەڕێوەبەر دەتوانێت سلایدەر بەڕێوەببات!', 'error');
+                document.getElementById('loginModal').classList.add('show');
+                return;
+            }
+            
+            document.getElementById('sliderManagementModal').classList.add('show');
+            loadCurrentSlidesList();
+            setupSliderImageUpload();
+        }
+
+        // فەنکشنی داخستنی بەڕێوەبردنی سلایدەر
+        function closeSliderManagementModal() {
+            document.getElementById('sliderManagementModal').classList.remove('show');
+            selectedSlideImages = [];
+            document.getElementById('sliderImagesPreview').innerHTML = '';
+            document.getElementById('slideTitleInput').value = '';
+            document.getElementById('slideDescInput').value = '';
+            document.getElementById('slidePriceInput').value = '';
+        }
+
+        // فەنکشنی ڕێکخستنی بارکردنی وینەی سلایدەر
+        function setupSliderImageUpload() {
+            const input = document.getElementById('sliderImages');
+            const preview = document.getElementById('sliderImagesPreview');
+            
+            input.addEventListener('change', function() {
+                const files = Array.from(this.files);
+                
+                files.forEach(file => {
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        
+                        reader.addEventListener('load', function() {
+                            const imageData = {
+                                id: Date.now() + Math.random(),
+                                url: this.result,
+                                file: file
+                            };
+                            
+                            selectedSlideImages.push(imageData);
+                            renderSliderImagesPreview();
+                        });
+                        
+                        reader.readAsDataURL(file);
+                    }
+                });
+                
+                this.value = '';
             });
         }
 
-        // فەنکشن بۆ نوێکردنەوەی بانەری ڕیکلام
-        function updatePromoBanner(promoData) {
-            const promoBanner = document.getElementById('promoBanner');
-            const promoTitle = document.getElementById('promoBannerTitle');
-            const promoSubtitle = document.getElementById('promoBannerSubtitle');
-            const promoDiscount = document.getElementById('promoBannerDiscount');
-            const promoImage = document.getElementById('promoBannerImage');
-            const promoPrice = document.getElementById('promoBannerPrice');
+        // فەنکشنی پڕکردنەوەی پێشبینینی وینەی سلایدەر
+        function renderSliderImagesPreview() {
+            const preview = document.getElementById('sliderImagesPreview');
+            preview.innerHTML = '';
             
-            if (!promoData) {
-                // بەکارهێنانی داتای بنەڕەتی
-                promoTitle.textContent = "ڕێگایەکی سەرنجڕاکێش بۆ کڕین!";
-                promoSubtitle.textContent = "کاڵا جیاوازەکان بە نرخی خۆش بەردەستن";
-                promoDiscount.textContent = "داشکاندن هەیە!";
-                promoImage.style.display = 'none';
-                promoPrice.style.display = 'none';
-                // دانانی گرادیانتی بنەڕەتی ئەگەر داتا نەبێت
-                promoBanner.style.background = 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)';
+            if (selectedSlideImages.length === 0) {
+                preview.innerHTML = '<p style="color: var(--gray); font-size: 0.7rem; text-align: center; width: 100%;">هیچ وینەی سلایدێک هەڵنەبژێردراوە</p>';
                 return;
             }
             
-            // نوێکردنەوەی دەق
-            promoTitle.textContent = promoData.title || "ڕێگایەکی سەرنجڕاکێش بۆ کڕین!";
-            promoSubtitle.textContent = promoData.subtitle || "کاڵا جیاوازەکان بە نرخی خۆش بەردەستن";
-            promoDiscount.textContent = promoData.discountText || "داشکاندن هەیە!";
-            
-            // نوێکردنەوەی نرخ
-            if (promoData.price) {
-                promoPrice.textContent = promoData.price;
-                promoPrice.style.display = 'block';
-            } else {
-                promoPrice.style.display = 'none';
-            }
-            
-            // نوێکردنەوەی ڕەنگی دەق
-            if (promoData.textColor) {
-                promoTitle.style.color = promoData.textColor;
-                promoSubtitle.style.color = promoData.textColor;
-                promoDiscount.style.color = promoData.textColor;
-                promoPrice.style.color = promoData.textColor;
-            } else {
-                promoTitle.style.color = 'white';
-                promoSubtitle.style.color = 'white';
-                promoDiscount.style.color = 'white';
-                promoPrice.style.color = 'white';
-            }
-            
-            // نوێکردنەوەی باکگراوند - تەنها یەک وێنە یان گرادیانت
-            if (promoData.imageUrl) {
-                // ئەگەر وێنە هەبێت، تەنها وێنەکە پیشان دەدەین
-                promoImage.src = promoData.imageUrl;
-                promoImage.style.display = 'block';
-                // گرادیانت ناخەینەوە
-                promoBanner.style.background = 'none';
-            } else {
-                // ئەگەر وێنە نەبێت، گرادیانت بەکاربهێنین
-                promoImage.style.display = 'none';
-                if (promoData.background === 'gradient-red') {
-                    promoBanner.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
-                } else if (promoData.background === 'gradient-green') {
-                    promoBanner.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-                } else if (promoData.background === 'gradient-purple') {
-                    promoBanner.style.background = 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)';
-                } else if (promoData.background === 'custom' && promoData.imageUrl) {
-                    // ئەگەر تایبەت هەڵبژێردرابێت و وێنە هەبێت
-                    promoBanner.style.background = `url('${promoData.imageUrl}') center/cover no-repeat`;
-                    promoImage.style.display = 'none';
-                } else {
-                    promoBanner.style.background = 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)';
-                }
-            }
+            selectedSlideImages.forEach((image, index) => {
+                const previewItem = document.createElement('div');
+                previewItem.className = 'image-preview-item';
+                previewItem.innerHTML = `
+                    <img src="${image.url}" alt="پێشبینینی سلاید">
+                    <button type="button" class="remove-image" onclick="removeSliderImage(${index})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                preview.appendChild(previewItem);
+            });
         }
 
-        // چارەسەرکراو: فەنکشنی نیشاندانی فۆرمی ڕیکلام - بە سکرۆلکردنی ئۆتۆماتیکی
-        window.showAddPromoForm = function() {
-            if (!isAdminLoggedIn) {
-                alert("تەنها بەڕێوەبەر دەتوانێت ڕیکلام بگۆڕێت!");
-                showLoginModal();
-                return;
-            }
-            
-            // پڕکردنەوەی فۆرم بە زانیارییەکانی ئێستا
-            if (promoData) {
-                document.getElementById('promoTitle').value = promoData.title || '';
-                document.getElementById('promoSubtitle').value = promoData.subtitle || '';
-                document.getElementById('promoDiscountText').value = promoData.discountText || '';
-                document.getElementById('promoPrice').value = promoData.price || '';
-                document.getElementById('promoTextColor').value = promoData.textColor || '#ffffff';
-                document.getElementById('promoBackground').value = promoData.background || 'gradient-blue';
+        // فەنکشنی لابردنی وینەی سلایدەر
+        function removeSliderImage(index) {
+            selectedSlideImages.splice(index, 1);
+            renderSliderImagesPreview();
+        }
+
+        // فەنکشنی پاشەکەوتکردنی سلایدەر
+        function setupSliderManagement() {
+            document.getElementById('addSlideBtn').addEventListener('click', async function() {
+                if (selectedSlideImages.length === 0) {
+                    showNotification('تکایە وێنەی سلایدێک هەڵبژێرە!', 'error');
+                    return;
+                }
                 
-                if (promoData.imageUrl) {
-                    document.getElementById('promoCurrentImage').style.display = 'block';
-                    document.getElementById('promoCurrentImagePreview').src = promoData.imageUrl;
-                } else {
-                    document.getElementById('promoCurrentImage').style.display = 'none';
+                const title = document.getElementById('slideTitleInput').value || 'ناونیشان';
+                const description = document.getElementById('slideDescInput').value || 'وەسف';
+                const price = document.getElementById('slidePriceInput').value || 'نرخ';
+                
+                try {
+                    showNotification('سلایدەکان باردەکرێن...', 'success');
+                    
+                    // بارکردنی هەموو وینە نوێیەکان
+                    const uploadPromises = selectedSlideImages.map(imageData => {
+                        return uploadImage(imageData.file, 'slider_' + Date.now());
+                    });
+                    
+                    const imageUrls = await Promise.all(uploadPromises);
+                    
+                    // دروستکردنی سلایدە نوێیەکان
+                    const newSlides = imageUrls.map(url => ({
+                        imageUrl: url,
+                        title: title,
+                        description: description,
+                        price: price
+                    }));
+                    
+                    // زیادکردنی سلایدە نوێیەکان بە لیستی سلایدەکان
+                    slides = [...slides, ...newSlides];
+                    
+                    // پاشەکەوتکردن لە فەیەربەیس
+                    const sliderRef = database.ref('slider');
+                    await sliderRef.set({ slides: slides });
+                    
+                    // نوێکردنەوەی سلایدەر
+                    updateSliderContent({ slides: slides });
+                    
+                    // پاککردنەوەی فۆرم
+                    selectedSlideImages = [];
+                    renderSliderImagesPreview();
+                    document.getElementById('slideTitleInput').value = '';
+                    document.getElementById('slideDescInput').value = '';
+                    document.getElementById('slidePriceInput').value = '';
+                    
+                    // نوێکردنەوەی لیستی سلایدەکان
+                    loadCurrentSlidesList();
+                    
+                    showNotification('سلایدەکان بە سەرکەوتوویی زیادکران!', 'success');
+                } catch (error) {
+                    console.error("هەڵە لە پاشەکەوتی سلایدەکان: ", error);
+                    showNotification('هەڵە لە پاشەکەوتی سلایدەکان!', 'error');
                 }
-            } else {
-                document.getElementById('promoCurrentImage').style.display = 'none';
-            }
-            
-            document.getElementById('promoFormModal').classList.add('show');
-            
-            // سکرۆلکردن بۆ دوگمەکان
-            setTimeout(() => {
-                const formActions = document.querySelector('#promoFormModal .form-actions');
-                if (formActions) {
-                    formActions.scrollIntoView({ behavior: 'smooth', block: 'end' });
-                }
-            }, 300);
+            });
         }
 
-        // فەنکشنی داخستنی فۆرمی ڕیکلام
-        function closePromoFormModal() {
-            document.getElementById('promoFormModal').classList.remove('show');
-        }
-
-        // فەنکشنی ڕێکخستنی فۆرمی ڕیکلام
-        function setupPromoForm() {
-            // فۆرمی ڕیکلام
-            const promoForm = document.getElementById('promoForm');
-            const promoFileInput = document.getElementById('promoImage');
-            const promoFileInputLabel = document.getElementById('promoFileInputLabel');
-            const promoFileName = document.getElementById('promoFileName');
-            const submitPromoBtn = document.getElementById('submitPromoBtn');
-            const submitPromoText = document.getElementById('submitPromoText');
-            const submitPromoSpinner = document.getElementById('submitPromoSpinner');
+        // فەنکشنی بارکردنی لیستی سلایدەکانی ئێستا
+        function loadCurrentSlidesList() {
+            const currentSlidesList = document.getElementById('currentSlidesList');
+            currentSlidesList.innerHTML = '';
             
-            // فایل ئینپوتی ڕیکلام
-            if (promoFileInput) {
-                promoFileInput.addEventListener('change', function(e) {
-                    const file = e.target.files[0];
-                    if (file) {
-                        promoFileName.textContent = `فایل: ${file.name}`;
-                        promoFileInputLabel.innerHTML = `
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 8px;">
-                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                            </svg>
-                            <span>فایل هەڵبژێردرا</span>
-                        `;
-                    }
-                });
+            if (slides.length === 0) {
+                currentSlidesList.innerHTML = '<p style="text-align: center; padding: 10px; color: var(--gray); font-size: 0.7rem;">هیچ سلایدێک نیە!</p>';
+                return;
             }
             
-            // فۆرمی ڕیکلام
-            if (promoForm) {
-                promoForm.addEventListener('submit', async function(e) {
-                    e.preventDefault();
-                    
-                    if (!isAdminLoggedIn) {
-                        alert("تەنها بەڕێوەبەر دەتوانێت ڕیکلام بگۆڕێت!");
-                        showLoginModal();
-                        return;
-                    }
-                    
-                    if (!firebaseInitialized) {
-                        alert("Firebase چالاک نەکراوە! تکایە چاوەڕوان بکە یان پەڕەکە ریفڕێش بکە.");
-                        return;
-                    }
-                    
-                    const title = document.getElementById('promoTitle').value;
-                    const subtitle = document.getElementById('promoSubtitle').value;
-                    const discountText = document.getElementById('promoDiscountText').value;
-                    const price = document.getElementById('promoPrice').value;
-                    const textColor = document.getElementById('promoTextColor').value;
-                    const background = document.getElementById('promoBackground').value;
-                    const imageFile = document.getElementById('promoImage').files[0];
-                    
-                    // چالاککردنی loading state
-                    submitPromoBtn.disabled = true;
-                    submitPromoText.textContent = "نوێکردنەوەی ڕیکلام...";
-                    submitPromoSpinner.style.display = 'inline-block';
-                    
-                    try {
-                        let imageUrl = promoData ? promoData.imageUrl : '';
-                        
-                        // ئەگەر وێنەی نوێ هەیە
-                        if (imageFile) {
-                            // 1. وێنە بەریتە سەر Firebase Storage
-                            const storageReference = storage.ref('promo/' + Date.now() + '_' + imageFile.name);
-                            await storageReference.put(imageFile);
-                            
-                            // 2. وەرگرتنی لینکی وێنە
-                            imageUrl = await storageReference.getDownloadURL();
-                            
-                            // ئەگەر وێنەی کۆن هەیە، وێنەی کۆن بسڕەوە
-                            if (promoData && promoData.imageUrl) {
-                                try {
-                                    const oldImageUrl = promoData.imageUrl;
-                                    const oldImagePath = decodeURIComponent(oldImageUrl.split('/o/')[1].split('?')[0]);
-                                    const oldImageRef = storage.ref(oldImagePath);
-                                    await oldImageRef.delete();
-                                } catch (deleteError) {
-                                    console.warn("نەتوانرا وێنەی کۆن بسڕدرێتەوە:", deleteError);
-                                }
-                            }
-                        }
-                        
-                        // 3. تۆمارکردنی ڕیکلام لە Firebase Database
-                        const promoRef = database.ref('promo');
-                        
-                        const promoDataToSave = {
-                            title: title,
-                            subtitle: subtitle,
-                            discountText: discountText,
-                            textColor: textColor,
-                            background: background,
-                            updatedAt: new Date().toISOString()
-                        };
-                        
-                        if (price) {
-                            promoDataToSave.price = price;
-                        }
-                        
-                        if (imageUrl) {
-                            promoDataToSave.imageUrl = imageUrl;
-                        }
-                        
-                        await promoRef.set(promoDataToSave);
-                        
-                        // 4. پاککردنەوەی فۆرم
-                        promoForm.reset();
-                        promoFileName.textContent = '';
-                        promoFileInputLabel.innerHTML = `
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 8px;">
-                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path>
-                                <line x1="16" y1="5" x2="22" y2="5"></line>
-                                <line x1="19" y1="2" x2="19" y2="8"></line>
-                                <circle cx="9" cy="9" r="2"></circle>
-                                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
-                            </svg>
-                            <span>وێنەی ڕیکلام هەڵبژێرە</span>
-                        `;
-                        
-                        // 5. داخستنی فۆرم و نوێکردنەوەی بانەر
-                        closePromoFormModal();
-                        promoData = promoDataToSave;
-                        updatePromoBanner(promoData);
-                        
-                        showNotification('بانەری ڕیکلام بە سەرکەوتوویی نوێ کرایەوە!', 'success');
-                        
-                    } catch (error) {
-                        console.error("Error updating promo:", error);
-                        alert("هەڵە لە نوێکردنەوەی ڕیکلام: " + error.message);
-                    } finally {
-                        // لادانی loading state
-                        submitPromoBtn.disabled = false;
-                        submitPromoText.textContent = "نوێکردنەوەی ڕیکلام";
-                        submitPromoSpinner.style.display = 'none';
-                    }
+            slides.forEach((slide, index) => {
+                const slideItem = document.createElement('div');
+                slideItem.className = 'product-item';
+                slideItem.style.flexDirection = 'column';
+                slideItem.innerHTML = `
+                    <div style="width: 100%; height: 100px; margin-bottom: 8px; overflow: hidden; border-radius: 8px;">
+                        <img src="${slide.imageUrl}" alt="سلاید" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80'">
+                    </div>
+                    <div style="width: 100%; margin-bottom: 8px;">
+                        <h4 style="font-size: 0.8rem;">${slide.title}</h4>
+                        <p style="font-size: 0.7rem;">${slide.description}</p>
+                        <p style="font-size: 0.7rem; color: var(--primary);">${slide.price}</p>
+                    </div>
+                    <div class="product-actions" style="width: 100%;">
+                        <button class="btn-delete" onclick="deleteSlide(${index})">سڕینەوە</button>
+                    </div>
+                `;
+                
+                currentSlidesList.appendChild(slideItem);
+            });
+        }
+
+        // فەنکشنی سڕینەوەی سلاید
+        function deleteSlide(index) {
+            if (confirm('دڵنیای لە سڕینەوەی ئەم سلایدە؟')) {
+                slides.splice(index, 1);
+                
+                // پاشەکەوتکردن لە فەیەربەیس
+                database.ref('slider').set({ slides: slides })
+                .then(() => {
+                    console.log("سلاید بە سەرکەوتوویی سڕدرایەوە");
+                    updateSliderContent({ slides: slides });
+                    loadCurrentSlidesList();
+                    showNotification('سلاید بە سەرکەوتوویی سڕدرایەوە!', 'success');
+                })
+                .catch(error => {
+                    console.error("هەڵە لە سڕینەوەی سلاید: ", error);
+                    showNotification('هەڵە لە سڕینەوەی سلاید!', 'error');
                 });
             }
         }
 
-        // --- فەنکشنی چاپکردنی راپۆرت ---
-        
+        // فەنکشنی چاپکردنی راپۆرت
         function printReport() {
             const totalProducts = products.length;
             const approvedProducts = products.filter(p => p.status === 'approved').length;
