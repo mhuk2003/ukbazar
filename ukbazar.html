@@ -1011,13 +1011,13 @@
         .social-links {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 10px;
             margin: 20px 0;
         }
 
         .social-icon {
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
             color: white;
             display: flex;
@@ -1025,7 +1025,8 @@
             justify-content: center;
             text-decoration: none;
             transition: all 0.3s;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
         }
 
         .social-icon:hover {
@@ -1034,11 +1035,11 @@
         }
 
         .social-icon.facebook {
-            background: var(--primary);
+            background: linear-gradient(45deg, #1877F2, #0A5BC4);
         }
 
         .social-icon.instagram {
-            background: linear-gradient(45deg, #E4405F, #C13584);
+            background: linear-gradient(45deg, #E4405F, #C13584, #833AB4, #5851DB, #405DE6);
         }
 
         .social-icon.whatsapp {
@@ -1048,7 +1049,11 @@
         .social-icon.telegram {
             background: linear-gradient(45deg, #0088cc, #0077b5);
         }
-
+        
+        .social-icon.tiktok {
+            background: linear-gradient(45deg, #010101, #69C9D9, #EE1D51);
+        }
+        
         .social-icon.youtube {
             background: linear-gradient(45deg, #FF0000, #FF3333);
         }
@@ -1100,6 +1105,8 @@
         .modal-header {
             text-align: center;
             margin-bottom: 15px;
+            position: relative;
+            padding-top: 10px;
         }
         
         .close-modal {
@@ -1111,6 +1118,7 @@
             font-size: 1rem;
             color: var(--gray);
             cursor: pointer;
+            z-index: 11;
         }
         
         /* ستایلەکانی مۆدالی لۆکەیشن */
@@ -1268,6 +1276,60 @@
         
         .duration-old {
             color: var(--warning);
+        }
+        
+        /* لیستی مینیۆی فۆتەر */
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .footer-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .footer-link:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        /* ستایلەکانی مۆدالی دەربارەی ئێمە و مەرجەکان */
+        .about-content, .privacy-content {
+            margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        
+        .about-content h4, .privacy-content h4 {
+            color: var(--primary);
+            margin-top: 15px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .about-content ul, .privacy-content ul {
+            margin-right: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .about-content li, .privacy-content li {
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+            line-height: 1.5;
+        }
+        
+        .about-content p, .privacy-content p {
+            margin-bottom: 15px;
+            font-size: 0.8rem;
+            line-height: 1.6;
         }
     </style>
 </head>
@@ -1613,33 +1675,24 @@
             </div>
             
             <!-- تۆری کۆمەلایەتی لە مۆدالی لۆکەیشن -->
-           <div class="social-links" style="margin: 20px 0;">
-    <a href="https://www.facebook.com/UKBazarOnline/" target="_blank" class="social-icon facebook">
-        <i class="fab fa-facebook-f"></i>
-    </a>
-    <a href="https://www.instagram.com/ukbazar.online/" target="_blank" class="social-icon instagram">
-        <i class="fab fa-instagram"></i>
-    </a>
-    <a href="https://wa.me/9647755436275" target="_blank" class="social-icon whatsapp">
-        <i class="fab fa-whatsapp"></i>
-    </a>
-    <a href="https://t.me/ukbazar" target="_blank" class="social-icon telegram">
-        <i class="fab fa-telegram"></i>
-    </a>
-    <a href="https://www.youtube.com/@UKBazar" target="_blank" class="social-icon youtube">
-        <i class="fab fa-youtube"></i>
-    </a>
-    <a href="https://www.tiktok.com/@UKBazar" target="_blank" class="social-icon tiktok">
-        <i class="fab fa-tiktok"></i>
-    </a>
-</div>
+            <div class="social-links" style="margin: 20px 0;">
+                <a href="https://www.facebook.com/share/1CMaJfoWFq/" target="_blank" class="social-icon facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.instagram.com/uk_bazar4" target="_blank" class="social-icon instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://wa.me/9647769654490" target="_blank" class="social-icon whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="https://t.me/ukbazar" target="_blank" class="social-icon telegram">
+                    <i class="fab fa-telegram"></i>
+                </a>
+                <a href="https://www.tiktok.com/@uk.bazarr" target="_blank" class="social-icon tiktok">
+                    <i class="fab fa-tiktok"></i>
+                </a>
+            </div>
 
-<div class="form-actions">
-    <button type="button" class="btn btn-danger" onclick="closeLocationModal()">
-        <i class="fas fa-times"></i> داخستن
-    </button>
-</div>
-            
             <div class="form-actions">
                 <button type="button" class="btn btn-danger" onclick="closeLocationModal()">
                     <i class="fas fa-times"></i> داخستن
@@ -1847,6 +1900,104 @@
         </div>
     </div>
     
+    <!-- مۆدالی دەربارەی ئێمە -->
+    <div class="modal" id="aboutUsModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeAboutUsModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h2>دەربارەی UK BAZAR</h2>
+                <p>فرۆشگای ئۆنلاینی جیهانی</p>
+            </div>
+            
+            <div class="about-content">
+                <p>
+                    <strong>UK BAZAR</strong> فرۆشگایەکی ئۆنلاینی سەربەخۆیە کە تایبەتە بە کڕین و فرۆشتی هەموو جۆرە کاڵایەک. 
+                    ئێمە پلانگەیەکی ئاسان و سەلامەت پێشکەش دەکەین بۆ هاوڵاتیانی کورد و عێراق کە بیانەوێت کاڵا کڕن یان بفرۆشن.
+                </p>
+                
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                    <h4>ئامانجەکانی ئێمە:</h4>
+                    <ul>
+                        <li>دروستکردنی بازاڕێکی ئۆنلاینی سەلامەت بۆ هاوڵاتیان</li>
+                        <li>یارمەتیدانی فرۆشیاران بۆ فرۆشتی کاڵاکانیان</li>
+                        <li>دابینکردنی کاڵای جۆراوجۆر بە نرخی ڕەوا</li>
+                        <li>پەیوەندیکردنی کڕیار و فرۆشیار بە شێوازێکی ئاسان</li>
+                    </ul>
+                </div>
+                
+                <div style="background: #f0f4ff; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                    <h4>خزمەتگوزارییەکانی ئێمە:</h4>
+                    <ul>
+                        <li>فرۆشتی کاڵای جۆراوجۆر</li>
+                        <li>سیستەمی پارەدانی ئاسان (FIB)</li>
+                        <li>پەیوەندی ڕاستەوخۆ لەگەڵ فرۆشیار</li>
+                        <li>چاودێری کاڵاکان لەلایەن بەڕێوەبەرەوە</li>
+                        <li>دابینکردنی شوێنی پیشاندانی کاڵاکان</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-primary" onclick="closeAboutUsModal()">
+                    <i class="fas fa-check"></i> باشە
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- مۆدالی مەرجەکانی بەکارهێنەر -->
+    <div class="modal" id="privacyModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closePrivacyModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h2>مەرج و ڕێساکانی بەکارهێنەر</h2>
+                <p>تکایە بە وردی بخوێنەرەوە</p>
+            </div>
+            
+            <div class="privacy-content">
+                <h4>١. پەیوەستکردن و بەکارهێنان:</h4>
+                <p>
+                    بە بەکارهێنانی ئەم وێبسایتە، تۆ ڕازی دەبی بە هەموو مەرج و ڕێساکانی خوارەوە. 
+                    کاڵاکانی تۆمارکراو لەلایەن بەڕێوەبەرەوە پشکنین دەکرێن پێش ئەوەی پیشاندەدرێن.
+                </p>
+                
+                <h4>٢. کاڵاکان:</h4>
+                <p>
+                    فرۆشیار خۆی بەرپرسیارە لە ڕاستی زانیاریەکانی کاڵا. 
+                    UK BAZAR بەرپرسیاریەتی لەسەر کاڵاکان قبوڵ ناکات و تەنها وەک پلانگەیەک کاردەکات.
+                </p>
+                
+                <h4>٣. پارەدان:</h4>
+                <p>
+                    پارەدان ڕاستەوخۆ لە نێوان کڕیار و فرۆشیاردایە. 
+                    ئێمە تەنها ژمارەی FIB و زانیاری پەیوەندی پێشکەش دەکەین.
+                </p>
+                
+                <h4>٤. تایبەتمەندی:</h4>
+                <p>
+                    زانیاری کەسییەکان تەنها بۆ پەیوەندی نێوان فرۆشیار و کڕیار بەکاردەهێنرێت 
+                    و بە کەسی تر نادرێت.
+                </p>
+                
+                <h4>٥. پەیوەندی:</h4>
+                <p>
+                    بۆ هەر پرسیارێک، دەتوانیت پەیوەندی بە ئیمەیڵەکەی خوارەوەوە بکەیت: 
+                    <strong>Info@ukbazar.online</strong>
+                </p>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-primary" onclick="closePrivacyModal()">
+                    <i class="fas fa-check"></i> تێگەیشتم
+                </button>
+            </div>
+        </div>
+    </div>
+    
     <!-- نوتیفیکەیشن -->
     <div class="notification" id="notification">
         <div id="notificationMessage">کاڵا بە سەرکەوتوویی نێردرا بۆ پەسەندکردن!</div>
@@ -1860,31 +2011,46 @@
         <div class="container">
             <div class="logo-text">UK BAZAR</div>
             <p class="footer-text">World Online Shopping</p>
-            <p class="footer-text">پەیوەندی:UK 00447449218670 07507472656 Info@ukbazar.online - WhatsApp & FIB:KURDISTAN  کوردستان: 7769654490</p>
+            <p class="footer-text">پەیوەندی: UK 00447449218670 | 07507472656 | کوردستان: 07755436275 | ئیمەیڵ: Info@ukbazar.online</p>
             <p class="footer-text" style="margin-top: 5px;">
                 <a href="https://maps.app.goo.gl/TDQuJ2eRiDfxUrEW8" target="_blank" style="color: var(--primary); text-decoration: none;">
                     <i class="fas fa-map-marker-alt"></i> شوێن: بینینی لە Google Maps
                 </a>
             </p>
             
+            <!-- مینیۆی فۆتەر -->
+            <div class="footer-links">
+                <a href="#" class="footer-link" onclick="showAboutUsModal(); return false;">
+                    <i class="fas fa-info-circle"></i> دەربارەی ئێمە
+                </a>
+                <a href="#" class="footer-link" onclick="showPrivacyModal(); return false;">
+                    <i class="fas fa-file-contract"></i> مەرج و ڕێساکان
+                </a>
+                <a href="#" class="footer-link" onclick="showLocationModal(); return false;">
+                    <i class="fas fa-map-marker-alt"></i> پەیوەندی
+                </a>
+            </div>
+            
             <!-- تۆری کۆمەلایەتی لە فوتەر -->
             <div class="social-links">
-                <a href="https://www.facebook.com/UKBazarOnline/" target="_blank" class="social-icon facebook">
+                <a href="https://www.facebook.com/share/1CMaJfoWFq/" target="_blank" class="social-icon facebook">
                     <i class="fab fa-facebook-f"></i>
                 </a>
-                <a href="https://www.instagram.com/ukbazar.online/" target="_blank" class="social-icon instagram">
+                <a href="https://www.instagram.com/uk_bazar4" target="_blank" class="social-icon instagram">
                     <i class="fab fa-instagram"></i>
                 </a>
-                <a href="https://wa.me/964کوردستان: 7769654490" target="_blank" class="social-icon whatsapp">
+                <a href="https://wa.me/9647769654490" target="_blank" class="social-icon whatsapp">
                     <i class="fab fa-whatsapp"></i>
                 </a>
                 <a href="https://t.me/ukbazar" target="_blank" class="social-icon telegram">
                     <i class="fab fa-telegram"></i>
                 </a>
-                <a href="https://www.youtube.com/@UKBazar" target="_blank" class="social-icon youtube">
-                    <i class="fab fa-youtube"></i>
+                <a href="https://www.tiktok.com/@uk.bazarr" target="_blank" class="social-icon tiktok">
+                    <i class="fab fa-tiktok"></i>
                 </a>
             </div>
+            
+            <p style="margin-top: 15px; font-size: 12px;">© 2024 UK BAZAR - هەموو مافەکان پارێزراون</p>
         </div>
     </footer>
 
@@ -1930,7 +2096,31 @@
         let isAdminLoggedIn = false;
 
         // ============================
-        // فەنکشنەکانی نوێ
+        // فەنکشنەکانی نوێ بۆ مۆدالەکان
+        // ============================
+
+        // فەنکشنی نیشاندانی مۆدالی دەربارەی ئێمە
+        function showAboutUsModal() {
+            document.getElementById('aboutUsModal').classList.add('show');
+        }
+
+        // فەنکشنی داخستنی مۆدالی دەربارەی ئێمە
+        function closeAboutUsModal() {
+            document.getElementById('aboutUsModal').classList.remove('show');
+        }
+
+        // فەنکشنی نیشاندانی مۆدالی مەرج و ڕێساکان
+        function showPrivacyModal() {
+            document.getElementById('privacyModal').classList.add('show');
+        }
+
+        // فەنکشنی داخستنی مۆدالی مەرج و ڕێساکان
+        function closePrivacyModal() {
+            document.getElementById('privacyModal').classList.remove('show');
+        }
+
+        // ============================
+        // فەنکشنەکانی پێشوو
         // ============================
 
         // فەنکشنی دروستکردنی دوگمەی کاتیگۆریەکان
@@ -3665,6 +3855,3 @@
     </script>
 </body>
 </html>
-
-
-
