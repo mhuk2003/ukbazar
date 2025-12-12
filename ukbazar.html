@@ -123,6 +123,29 @@
             white-space: nowrap;
         }
         
+        /* ئایکۆنی گەیاندن لە هێدەر */
+        .delivery-icon {
+            margin-right: 10px;
+            font-size: 1.5rem;
+            color: var(--primary);
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+        
+        .delivery-icon:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+            color: var(--primary-dark);
+        }
+        
         /* ستایلەکانی بەشی گەران */
         .search-section {
             padding: 15px 0;
@@ -1154,6 +1177,153 @@
             margin-bottom: 3px;
         }
         
+        /* ستایلەکانی مۆدالی گەیاندن */
+        .delivery-features {
+            margin: 20px 0;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .feature-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .feature-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+        
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .feature-item h4 {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+        
+        .feature-item p {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        .delivery-steps {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f0f4ff;
+            border-radius: 10px;
+        }
+        
+        .delivery-steps h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+        
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+        }
+        
+        .step-number {
+            min-width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, var(--secondary), #38a169);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .step-content h4 {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+        
+        .step-content p {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        .delivery-contact {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid var(--border);
+        }
+        
+        .delivery-contact h3 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .delivery-contact p {
+            margin-bottom: 15px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .whatsapp-delivery-btn {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        
+        .whatsapp-delivery-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+        }
+        
         /* چارەسەرکراو: چوارچیوەی خوارەوە */
         .bottom-panel {
             position: fixed;
@@ -1343,6 +1513,9 @@
                         <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png" alt="UkBazar Logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiByeD0iMTIiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgdmlld0BveD0iMCAwIDMwIDMwIiBZmlFsPSJub25lIj4KPHBhdGggZD0iTTE1IDVMMjAgMTBIMTBMMTUgNVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xMCAxNUgyMExNNSAyMEgxMFYxNVoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo8L3N2Zz4KPC9zdmc+Cg=='">
                     </div>
                     <div class="logo-text">UK BAZAR</div>
+                    <div class="delivery-icon" onclick="showDeliveryModal()" title="خزمەتی گەیاندن">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
                 </div>
                 
                 <div class="nav-buttons">
@@ -1617,6 +1790,106 @@
                     <i class="fas fa-user-cog"></i>
                     <span>داشبۆرد</span>
                 </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- مۆدالی گەیاندن -->
+    <div class="modal" id="deliveryModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeDeliveryModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h2>🚚 خزمەتی گەیاندنی نێودەوڵەتی</h2>
+                <p>ئەوروپا ⇄ کوردستان</p>
+            </div>
+            
+            <div class="delivery-features">
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h4>گەیاندنی خێرا</h4>
+                        <p>کەمتر لە ٧ ڕۆژ بۆ ناوچەی کوردستان</p>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>دڵنیایی تەواو</h4>
+                        <p>هەموو کاڵاکان بیمە دەکرێن</p>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h4>شوێنپێی گەیاندن</h4>
+                        <p>هەموو هەنگاوەکان لە ڕێگادا چاودێری دەکرێن</p>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-tag"></i>
+                        </div>
+                        <h4>نرخی گونجاو</h4>
+                        <p>نرخەکان پێشکەوتوو و ڕێکخراوە</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="delivery-steps">
+                <h3>📦 ڕێگای گەیاندن</h3>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">١</div>
+                        <div class="step-content">
+                            <h4>هەڵبژاردنی کاڵا</h4>
+                            <p>کاڵای خۆت هەڵبژێرە لە کۆمپانیای پەیوەندیدار</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">٢</div>
+                        <div class="step-content">
+                            <h4>پەیوەندیکردن</h4>
+                            <p>پەیوەندیمان پێوە بکە بە واتساپ</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">٣</div>
+                        <div class="step-content">
+                            <h4>دانی زانیاری</h4>
+                            <p>ناونیشان و زانیاری گەیاندن پێمان بدە</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">٤</div>
+                        <div class="step-content">
+                            <h4>وەرگرتنی کاڵا</h4>
+                            <p>کاڵاکە بە سەلامەتی بگەرێتە دەستت</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="delivery-contact">
+                <h3>💬 پرسیارەکانت هەیە؟</h3>
+                <p>راڤەکاری زیاتر دەربارەی خزمەتەکە</p>
+                <button class="btn btn-primary whatsapp-delivery-btn" onclick="contactDeliveryWhatsApp()">
+                    <i class="fab fa-whatsapp"></i> پەیوەندی بە واتساپ
+                </button>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-danger" onclick="closeDeliveryModal()">
+                    <i class="fas fa-times"></i> داخستن
+                </button>
             </div>
         </div>
     </div>
@@ -2096,27 +2369,28 @@
         let isAdminLoggedIn = false;
 
         // ============================
-        // فەنکشنەکانی نوێ بۆ مۆدالەکان
+        // فەنکشنەکانی نوێ بۆ گەیاندن
         // ============================
 
-        // فەنکشنی نیشاندانی مۆدالی دەربارەی ئێمە
-        function showAboutUsModal() {
-            document.getElementById('aboutUsModal').classList.add('show');
+        // فەنکشنی نیشاندانی مۆدالی گەیاندن
+        function showDeliveryModal() {
+            document.getElementById('deliveryModal').classList.add('show');
         }
-
-        // فەنکشنی داخستنی مۆدالی دەربارەی ئێمە
-        function closeAboutUsModal() {
-            document.getElementById('aboutUsModal').classList.remove('show');
+        
+        // فەنکشنی داخستنی مۆدالی گەیاندن
+        function closeDeliveryModal() {
+            document.getElementById('deliveryModal').classList.remove('show');
         }
-
-        // فەنکشنی نیشاندانی مۆدالی مەرج و ڕێساکان
-        function showPrivacyModal() {
-            document.getElementById('privacyModal').classList.add('show');
-        }
-
-        // فەنکشنی داخستنی مۆدالی مەرج و ڕێساکان
-        function closePrivacyModal() {
-            document.getElementById('privacyModal').classList.remove('show');
+        
+        // فەنکشنی پەیوەندیکردن بە واتساپ بۆ پرسیاری گەیاندن
+        function contactDeliveryWhatsApp() {
+            const message = `سڵاو! من لە UK BAZARەوە پەیوەندیم پێوە کردووە. 
+دەمەوێت زانیاری دەربارەی خزمەتی گەیاندنی نێودەوڵەتی 
+(ئەوروپا ⇄ کوردستان) بزانم.`;
+            
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/9647769654490?text=${encodedMessage}`;
+            window.open(whatsappUrl, '_blank');
         }
 
         // ============================
@@ -3851,6 +4125,30 @@
                 printWindow.print();
                 printWindow.close();
             }, 500);
+        }
+        
+        // ============================
+        // فەنکشنەکانی پێشوو بۆ مۆدالەکان
+        // ============================
+
+        // فەنکشنی نیشاندانی مۆدالی دەربارەی ئێمە
+        function showAboutUsModal() {
+            document.getElementById('aboutUsModal').classList.add('show');
+        }
+
+        // فەنکشنی داخستنی مۆدالی دەربارەی ئێمە
+        function closeAboutUsModal() {
+            document.getElementById('aboutUsModal').classList.remove('show');
+        }
+
+        // فەنکشنی نیشاندانی مۆدالی مەرج و ڕێساکان
+        function showPrivacyModal() {
+            document.getElementById('privacyModal').classList.add('show');
+        }
+
+        // فەنکشنی داخستنی مۆدالی مەرج و ڕێساکان
+        function closePrivacyModal() {
+            document.getElementById('privacyModal').classList.remove('show');
         }
     </script>
 </body>
