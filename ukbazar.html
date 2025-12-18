@@ -123,29 +123,6 @@
             white-space: nowrap;
         }
         
-        /* ئایکۆنی گەیاندن لە هێدەر */
-        .delivery-icon {
-            margin-right: 10px;
-            font-size: 1.5rem;
-            color: var(--primary);
-            cursor: pointer;
-            transition: all 0.3s;
-            background: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-        }
-        
-        .delivery-icon:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
-            color: var(--primary-dark);
-        }
-        
         /* ستایلەکانی بەشی گەران */
         .search-section {
             padding: 15px 0;
@@ -235,6 +212,47 @@
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
         
+        /* ستایلەکانی سەبەتە */
+        .cart-btn {
+            position: relative;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            margin-left: 8px;
+        }
+
+        .cart-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            animation: pulse 2s infinite;
+            border: 2px solid white;
+        }
+        
         .nav-buttons {
             display: flex;
             gap: 5px;
@@ -255,6 +273,24 @@
             gap: 4px;
             font-size: 0.75rem;
             white-space: nowrap;
+        }
+        
+        .btn-request {
+            background: linear-gradient(135deg, var(--warning), #dd6b20);
+            color: white;
+            box-shadow: 0 4px 12px rgba(237, 137, 54, 0.5);
+            padding: 12px 18px;
+            font-size: 0.9rem;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            font-weight: 700;
+        }
+        
+        .btn-request:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(237, 137, 54, 0.7);
         }
         
         .btn-add-product {
@@ -586,7 +622,7 @@
             overflow: hidden;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
             transition: all 0.3s;
-            height: 350px;
+            height: 400px;
             display: flex;
             flex-direction: column;
         }
@@ -744,6 +780,28 @@
             box-shadow: 0 2px 5px rgba(37,211,102,0.3);
             flex: 1;
             justify-content: center;
+        }
+
+        .add-to-cart-btn {
+            background: linear-gradient(135deg, var(--secondary), #38a169);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 5px rgba(72,187,120,0.3);
+            flex: 1;
+            justify-content: center;
+            margin-top: 5px;
+        }
+
+        .add-to-cart-btn.in-cart {
+            background: linear-gradient(135deg, var(--primary), #764ba2);
         }
 
         .fib-payment-btn:hover, .whatsapp-btn:hover {
@@ -965,6 +1023,10 @@
             background: linear-gradient(135deg, var(--primary), #764ba2);
         }
         
+        .stat-icon.requests {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+        
         .product-item {
             padding: 10px;
             border: 1px solid var(--border);
@@ -1080,7 +1142,27 @@
         .social-icon.youtube {
             background: linear-gradient(45deg, #FF0000, #FF3333);
         }
-        
+        .footer-qr {
+    width: 80px; /* قەبارەی وێنەکە */
+    height: 80px;
+    border-radius: 8px;
+    border: 2px solid #667eea; /* ڕەنگێکی شین بۆ چوارچێوەکەی */
+    padding: 5px;
+    background: white;
+    transition: transform 0.3s ease;
+}
+
+.footer-qr:hover {
+    transform: scale(1.1); /* کاتێک ماوس دەچێتە سەری کەمێک گەورە دەبێت */
+}
+
+/* بۆ ئەوەی لە مۆبایلدا بکەوێتە خوارەوەی لینکەکان ئەگەر جێگەی نەبووەوە */
+@media (max-width: 600px) {
+    .social-footer-wrapper {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
         /* مۆدالەکان */
         .modal {
             display: none;
@@ -1177,153 +1259,6 @@
             margin-bottom: 3px;
         }
         
-        /* ستایلەکانی مۆدالی گەیاندن */
-        .delivery-features {
-            margin: 20px 0;
-        }
-        
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 15px 0;
-        }
-        
-        @media (max-width: 768px) {
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        .feature-item {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-        }
-        
-        .feature-item:hover {
-            border-color: var(--primary);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
-        }
-        
-        .feature-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--primary), #764ba2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 10px;
-            color: white;
-            font-size: 1.5rem;
-        }
-        
-        .feature-item h4 {
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-            color: var(--dark);
-        }
-        
-        .feature-item p {
-            font-size: 0.8rem;
-            color: var(--gray);
-        }
-        
-        .delivery-steps {
-            margin: 30px 0;
-            padding: 20px;
-            background: #f0f4ff;
-            border-radius: 10px;
-        }
-        
-        .delivery-steps h3 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 1.1rem;
-            color: var(--primary);
-        }
-        
-        .steps {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .step {
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-            padding: 10px;
-            background: white;
-            border-radius: 8px;
-        }
-        
-        .step-number {
-            min-width: 30px;
-            height: 30px;
-            background: linear-gradient(135deg, var(--secondary), #38a169);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-        
-        .step-content h4 {
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-            color: var(--dark);
-        }
-        
-        .step-content p {
-            font-size: 0.8rem;
-            color: var(--gray);
-        }
-        
-        .delivery-contact {
-            text-align: center;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            margin: 20px 0;
-            border: 2px solid var(--border);
-        }
-        
-        .delivery-contact h3 {
-            margin-bottom: 10px;
-            color: var(--primary);
-        }
-        
-        .delivery-contact p {
-            margin-bottom: 15px;
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-        
-        .whatsapp-delivery-btn {
-            background: linear-gradient(135deg, #25D366, #128C7E);
-            border: none;
-            padding: 12px 25px;
-            font-size: 1rem;
-            border-radius: 25px;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s;
-        }
-        
-        .whatsapp-delivery-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
-        }
-        
         /* چارەسەرکراو: چوارچیوەی خوارەوە */
         .bottom-panel {
             position: fixed;
@@ -1408,6 +1343,138 @@
             color: var(--gray);
             font-size: 0.9rem;
             cursor: pointer;
+        }
+        
+        /* ستایلەکانی سەبەتە */
+        .cart-items {
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 15px 0;
+        }
+        
+        .cart-item {
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+        
+        .cart-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+        }
+        
+        .cart-item-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #f8f9fa;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        
+        .cart-item-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .cart-item-price {
+            font-size: 0.75rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 5px;
+        }
+        
+        .cart-item-btn {
+            width: 24px;
+            height: 24px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            transition: all 0.3s;
+        }
+        
+        .cart-item-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .cart-item-quantity {
+            font-size: 0.75rem;
+            font-weight: 600;
+            min-width: 20px;
+            text-align: center;
+        }
+        
+        .cart-remove-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .cart-remove-btn:hover {
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
+        
+        .cart-summary {
+            border-top: 2px solid var(--border);
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+        
+        .cart-total-value {
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+        
+        .empty-cart {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+        
+        .empty-cart i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
         }
         
         /* فۇتەر */
@@ -1501,6 +1568,134 @@
             font-size: 0.8rem;
             line-height: 1.6;
         }
+        
+        /* ستایلەکانی داواکاری */
+        .request-item {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+        
+        .request-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+        }
+        
+        .request-item.completed {
+            opacity: 0.7;
+            background: #f8f9fa;
+        }
+        
+        .request-status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .status-pending {
+            background: #fff5e1;
+            color: var(--warning);
+        }
+        
+        .status-completed {
+            background: #e6f9f0;
+            color: var(--secondary);
+        }
+        
+        .request-details {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed var(--border);
+        }
+        
+        .request-details p {
+            margin-bottom: 4px;
+            font-size: 0.7rem;
+            color: var(--gray);
+        }
+        
+        .request-actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+            justify-content: flex-end;
+        }
+        
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 0.6rem;
+        }
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    z-index: 1001; /* دڵنیابوون لەوەی لەسەر هەموو شتێکە */
+    padding: 5px;
+    line-height: 1;
+}
+
+.modal {
+    display: none; /* لە سەرەتادا شاراوەیە */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5); /* ڕەنگی ڕەشی کاڵ بۆ پشتەوە */
+}
+
+.modal.show {
+    display: flex; /* کاتێک کلاسەکەی دەبێتە show دەردەکەوێت */
+    align-items: center;
+    justify-content: center;
+}
+/* ستایلی ناوەوەی فۆرمەکە */
+.modal-content {
+    position: relative; /* ئەمە وادەکات دوگمەی داخستنەکە لەناو ئەمەدا بمێنێتەوە */
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* ستایلی دوگمەی داخستن (X) */
+.close-modal {
+    position: absolute;
+    top: 10px;    /* دووری لە سەرەوەی فۆرمەکە */
+    right: 15px;  /* دووری لە لای ڕاستی فۆرمەکە */
+    background: #f1f1f1; /* ڕەنگێکی خۆڵەمێشی کاڵ بۆ پشتەکەی */
+    border: none;
+    border-radius: 50%; /* دەیکاتە بازنە */
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #333;
+    z-index: 10;
+    transition: 0.3s;
+}
+
+.close-modal:hover {
+    background: #ff4d4d; /* کاتێک ماوسی دەچێتە سەر سوور دەبێت */
+    color: white;
+}
     </style>
 </head>
 <body>
@@ -1513,12 +1708,17 @@
                         <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png" alt="UkBazar Logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiByeD0iMTIiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgdmlld0BveD0iMCAwIDMwIDMwIiBZmlFsPSJub25lIj4KPHBhdGggZD0iTTE1IDVMMjAgMTBIMTBMMTUgNVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xMCAxNUgyMExNNSAyMEgxMFYxNVoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo8L3N2Zz4KPC9zdmc+Cg=='">
                     </div>
                     <div class="logo-text">UK BAZAR</div>
-                    <div class="delivery-icon" onclick="showDeliveryModal()" title="خزمەتی گەیاندن">
-                        <i class="fas fa-shipping-fast"></i>
-                    </div>
+                </div>
+                
+                <div class="cart-btn" onclick="showCartModal()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge" id="cartBadge">0</span>
                 </div>
                 
                 <div class="nav-buttons">
+                    <button class="btn btn-request" id="requestItemBtn">
+                        <i class="fas fa-clipboard-list"></i> داواکاری کاڵا
+                    </button>
                     <button class="btn btn-add-product" id="addProductBtn">
                         <i class="fas fa-plus-circle"></i> کالا دابنێ
                     </button>
@@ -1748,12 +1948,35 @@
                         <p>کاڵای چاوەڕوان</p>
                     </div>
                 </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon requests">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalRequests">0</h3>
+                        <p>داواکاریەکان</p>
+                    </div>
+                </div>
             </div>
             
             <div class="pending-products">
                 <h3 style="margin-bottom: 8px; font-size: 0.9rem;">کاڵای چاوەڕوانی پەسەندکردن</h3>
                 <div id="pendingProductsList">
                     <!-- کاڵای چاوەڕوان لێرە دەردەکەون -->
+                </div>
+            </div>
+            
+            <!-- بەشی داواکاریەکان -->
+            <div class="pending-products" style="margin-top: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <h3 style="font-size: 0.9rem;">داواکاریەکانی کڕیاران</h3>
+                    <button class="btn btn-info" onclick="refreshRequests()" style="padding: 4px 8px; font-size: 0.7rem;">
+                        <i class="fas fa-sync-alt"></i> نوێکردنەوە
+                    </button>
+                </div>
+                <div id="requestsList">
+                    <!-- داواکاریەکان لێرە دەردەکەون -->
                 </div>
             </div>
             
@@ -1781,6 +2004,11 @@
                     <span>کاڵا</span>
                 </a>
                 
+                <a href="#" class="bottom-nav-item" onclick="showRequestModal(); setActiveNav(this); return false;">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>داواکاری</span>
+                </a>
+                
                 <a href="#" class="bottom-nav-item" onclick="showLocationModal(); setActiveNav(this); return false;">
                     <i class="fas fa-map-marker-alt"></i>
                     <span>لۆکەیشن</span>
@@ -1794,103 +2022,98 @@
         </div>
     </div>
     
-    <!-- مۆدالی گەیاندن -->
-    <div class="modal" id="deliveryModal">
+    <!-- مۆدالی سەبەتە -->
+    <div class="modal" id="cartModal">
         <div class="modal-content">
-            <button class="close-modal" onclick="closeDeliveryModal()">
+            <button class="close-modal" onclick="closeCartModal()">
                 <i class="fas fa-times"></i>
             </button>
             <div class="modal-header">
-                <h2>🚚 خزمەتی گەیاندنی نێودەوڵەتی</h2>
-                <p>ئەوروپا ⇄ کوردستان</p>
+                <h2><i class="fas fa-shopping-cart"></i> سەبەتەی کڕین</h2>
+                <p>کاڵاکانی هەڵبژاردراو</p>
             </div>
             
-            <div class="delivery-features">
-                <div class="feature-grid">
-                    <div class="feature-item">
-                        <div class="feature-icon">
-                            <i class="fas fa-bolt"></i>
-                        </div>
-                        <h4>گەیاندنی خێرا</h4>
-                        <p>کەمتر لە ٧ ڕۆژ بۆ ناوچەی کوردستان</p>
-                    </div>
-                    
-                    <div class="feature-item">
-                        <div class="feature-icon">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <h4>دڵنیایی تەواو</h4>
-                        <p>هەموو کاڵاکان بیمە دەکرێن</p>
-                    </div>
-                    
-                    <div class="feature-item">
-                        <div class="feature-icon">
-                            <i class="fas fa-map-marker-alt"></i>
-                        </div>
-                        <h4>شوێنپێی گەیاندن</h4>
-                        <p>هەموو هەنگاوەکان لە ڕێگادا چاودێری دەکرێن</p>
-                    </div>
-                    
-                    <div class="feature-item">
-                        <div class="feature-icon">
-                            <i class="fas fa-tag"></i>
-                        </div>
-                        <h4>نرخی گونجاو</h4>
-                        <p>نرخەکان پێشکەوتوو و ڕێکخراوە</p>
-                    </div>
+            <div class="cart-items" id="cartItems">
+                <!-- کاڵاکانی سەبەتە لێرە دەردەکەون -->
+            </div>
+            
+            <div class="cart-summary" id="cartSummary" style="display: none;">
+                <div class="cart-total">
+                    <span>کۆی گشتی:</span>
+                    <span class="cart-total-value" id="cartTotalValue">0</span>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-danger" onclick="clearCart()">
+                        <i class="fas fa-trash"></i> پاککردنەوەی سەبەتە
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="checkoutCart()">
+                        <i class="fas fa-check-circle"></i> تەواوکردنی کڕین
+                    </button>
                 </div>
             </div>
             
-            <div class="delivery-steps">
-                <h3>📦 ڕێگای گەیاندن</h3>
-                <div class="steps">
-                    <div class="step">
-                        <div class="step-number">١</div>
-                        <div class="step-content">
-                            <h4>هەڵبژاردنی کاڵا</h4>
-                            <p>کاڵای خۆت هەڵبژێرە لە کۆمپانیای پەیوەندیدار</p>
-                        </div>
+            <div class="empty-cart" id="emptyCart">
+                <i class="fas fa-shopping-cart"></i>
+                <p>سەبەتەکەت بەتاڵە!</p>
+                <p style="font-size: 0.8rem; margin-top: 10px;">کاڵا زیاد بکە بۆ دەستپێکردنی کڕین</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- مۆدالی داواکاری کاڵا -->
+    <div class="modal" id="requestModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeRequestModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h2><i class="fas fa-clipboard-list"></i> داواکاری کاڵا بۆ بەڕێوەبەر</h2>
+                <p>کالایەک دەتەوێت بەم نرخە بکڕیت؟ پەیوەندیمان پێوەبکە</p>
+            </div>
+            
+            <form id="requestForm">
+                <div class="form-group">
+                    <label for="requestItemName">ناوی کاڵا *</label>
+                    <input type="text" id="requestItemName" placeholder="ناوی کالا" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="requestType">جۆر و ڕەنگ</label>
+                        <input type="text" id="requestType" placeholder="جۆر و ڕەنگ">
                     </div>
-                    
-                    <div class="step">
-                        <div class="step-number">٢</div>
-                        <div class="step-content">
-                            <h4>پەیوەندیکردن</h4>
-                            <p>پەیوەندیمان پێوە بکە بە واتساپ</p>
-                        </div>
-                    </div>
-                    
-                    <div class="step">
-                        <div class="step-number">٣</div>
-                        <div class="step-content">
-                            <h4>دانی زانیاری</h4>
-                            <p>ناونیشان و زانیاری گەیاندن پێمان بدە</p>
-                        </div>
-                    </div>
-                    
-                    <div class="step">
-                        <div class="step-number">٤</div>
-                        <div class="step-content">
-                            <h4>وەرگرتنی کاڵا</h4>
-                            <p>کاڵاکە بە سەلامەتی بگەرێتە دەستت</p>
-                        </div>
+                    <div class="form-group">
+                        <label for="requestQuantity">دانە</label>
+                        <input type="number" id="requestQuantity" placeholder="دانە" min="1" value="1">
                     </div>
                 </div>
-            </div>
-            
-            <div class="delivery-contact">
-                <h3>💬 پرسیارەکانت هەیە؟</h3>
-                <p>راڤەکاری زیاتر دەربارەی خزمەتەکە</p>
-                <button class="btn btn-primary whatsapp-delivery-btn" onclick="contactDeliveryWhatsApp()">
-                    <i class="fab fa-whatsapp"></i> پەیوەندی بە واتساپ
-                </button>
-            </div>
-            
-            <div class="form-actions">
-                <button type="button" class="btn btn-danger" onclick="closeDeliveryModal()">
-                    <i class="fas fa-times"></i> داخستن
-                </button>
-            </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="requestMobile">ژمارەی مۆبایل *</label>
+                        <input type="tel" id="requestMobile" placeholder="٠٧٧٠ XXX XXXX" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="requestLocation">شوین *</label>
+                        <input type="text" id="requestLocation" placeholder="شوین" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="requestNotes">تێبینی زیاتر</label>
+                    <textarea id="requestNotes" placeholder="تێبینی دیکە..." rows="3"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-danger" onclick="closeRequestModal()">
+                        <i class="fas fa-times"></i> دەرچوون
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> ناردن بۆ بەڕێوەبەر
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
     
@@ -1921,9 +2144,9 @@
                     <i class="fas fa-phone"></i>
                     <div>
                         <h4>ژمارەی پەیوەندی:</h4>
-                        <p>UK: 9647755436275</p>
+                        <p>UK: 00447449218670</p>
                         <p>UK: 07507472656</p>
-                        <p>کوردستان: 9647755436275</p>
+                        <p>کوردستان: 07755436275</p>
                     </div>
                 </div>
                 
@@ -1948,26 +2171,34 @@
             </div>
             
             <!-- تۆری کۆمەلایەتی لە مۆدالی لۆکەیشن -->
-            <div class="social-links" style="margin: 20px 0;">
-                <a href="https://www.facebook.com/share/1CMaJfoWFq/" target="_blank" class="social-icon facebook">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="https://www.instagram.com/uk_bazar4" target="_blank" class="social-icon instagram">
-                    <i class="fab fa-instagram"></i>
-             <a href="https://wa.me/9647755436275?text=Slaw%20tikaya%20pem%20peywendi%20bike" 
-   target="_blank" 
-   class="social-icon whatsapp">
-    <i class="fab fa-whatsapp"></i>
-</a>
+          <div class="social-footer-wrapper" style="display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    
+   <div class="social-links" style="display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
+    <a href="https://www.facebook.com/share/1CMaJfoWFq/" target="_blank" class="social-icon facebook">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+    <a href="https://www.instagram.com/uk_bazar4" target="_blank" class="social-icon instagram">
+        <i class="fab fa-instagram"></i>
+    </a>
+    <a href="https://wa.me/9647769654490" target="_blank" class="social-icon whatsapp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    <a href="https://t.me/ukbazar" target="_blank" class="social-icon telegram">
+        <i class="fab fa-telegram"></i>
+    </a>
+    <a href="https://www.tiktok.com/@uk.bazarr" target="_blank" class="social-icon tiktok">
+        <i class="fab fa-tiktok"></i>
+    </a>
+    
+    <a href="https://ibb.co/rK4tdPYC" target="_blank" class="social-icon qr-code" style="background: #fff; display: flex; align-items: center; justify-content: center; padding: 0; overflow: hidden;">
+        <img src="https://i.ibb.co/rK4tdPYC/qr-code.png" alt="QR" style="width: 100%; height: 100%; object-fit: cover; transform: scale(0.8);">
+    </a>
+</div>
+    <div class="qr-code-section">
+        <img src="https://i.ibb.co/rK4tdPYC/qr-code.png" alt="QR Code" class="footer-qr">
+    </div>
 
-
-                <a href="https://t.me/ukbazar" target="_blank" class="social-icon telegram">
-                    <i class="fab fa-telegram"></i>
-                </a>
-                <a href="https://www.tiktok.com/@uk.bazarr" target="_blank" class="social-icon tiktok">
-                    <i class="fab fa-tiktok"></i>
-                </a>
-            </div>
+</div>
 
             <div class="form-actions">
                 <button type="button" class="btn btn-danger" onclick="closeLocationModal()">
@@ -2211,6 +2442,7 @@
                         <li>پەیوەندی ڕاستەوخۆ لەگەڵ فرۆشیار</li>
                         <li>چاودێری کاڵاکان لەلایەن بەڕێوەبەرەوە</li>
                         <li>دابینکردنی شوێنی پیشاندانی کاڵاکان</li>
+                        <li>سیستەمی داواکاری کاڵا بۆ کڕیاران</li>
                     </ul>
                 </div>
             </div>
@@ -2253,13 +2485,19 @@
                     ئێمە تەنها ژمارەی FIB و زانیاری پەیوەندی پێشکەش دەکەین.
                 </p>
                 
-                <h4>٤. تایبەتمەندی:</h4>
+                <h4>٤. داواکاری کاڵا:</h4>
+                <p>
+                    کڕیاران دەتوانن کالای پێویست داوا بکەن. بەڕێوەبەر پەیوەندی دەکات 
+                    و هەوڵی دەدات کاڵاکە بدۆزێتەوە. نرخەکان ڕێکدەخرێن و پارەدان ڕاستەوخۆ دەبێت.
+                </p>
+                
+                <h4>٥. تایبەتمەندی:</h4>
                 <p>
                     زانیاری کەسییەکان تەنها بۆ پەیوەندی نێوان فرۆشیار و کڕیار بەکاردەهێنرێت 
                     و بە کەسی تر نادرێت.
                 </p>
                 
-                <h4>٥. پەیوەندی:</h4>
+                <h4>٦. پەیوەندی:</h4>
                 <p>
                     بۆ هەر پرسیارێک، دەتوانیت پەیوەندی بە ئیمەیڵەکەی خوارەوەوە بکەیت: 
                     <strong>Info@ukbazar.online</strong>
@@ -2287,7 +2525,7 @@
         <div class="container">
             <div class="logo-text">UK BAZAR</div>
             <p class="footer-text">World Online Shopping</p>
-            <p class="footer-text">پەیوەندی: UK 447449218670 | 9647507472656 | کوردستان: 9647755436275 | ئیمەیڵ: Info@ukbazar.online</p>
+            <p class="footer-text">پەیوەندی: UK 00447449218670 | 07507472656 | کوردستان: 07755436275 | ئیمەیڵ: Info@ukbazar.online</p>
             <p class="footer-text" style="margin-top: 5px;">
                 <a href="https://maps.app.goo.gl/TDQuJ2eRiDfxUrEW8" target="_blank" style="color: var(--primary); text-decoration: none;">
                     <i class="fas fa-map-marker-alt"></i> شوێن: بینینی لە Google Maps
@@ -2305,6 +2543,9 @@
                 <a href="#" class="footer-link" onclick="showLocationModal(); return false;">
                     <i class="fas fa-map-marker-alt"></i> پەیوەندی
                 </a>
+                <a href="#" class="footer-link" onclick="showRequestModal(); return false;">
+                    <i class="fas fa-clipboard-list"></i> داواکاری کاڵا
+                </a>
             </div>
             
             <!-- تۆری کۆمەلایەتی لە فوتەر -->
@@ -2315,10 +2556,10 @@
                 <a href="https://www.instagram.com/uk_bazar4" target="_blank" class="social-icon instagram">
                     <i class="fab fa-instagram"></i>
                 </a>
-                <a href="https://wa.me/ 9647755436275" target="_blank" class="social-icon whatsapp">
+                <a href="https://wa.me/9647769654490" target="_blank" class="social-icon whatsapp">
                     <i class="fab fa-whatsapp"></i>
                 </a>
-                <a href="https://t.me/Ukbazarkurdistan" target="_blank" class="social-icon telegram">
+                <a href="https://t.me/ukbazar" target="_blank" class="social-icon telegram">
                     <i class="fab fa-telegram"></i>
                 </a>
                 <a href="https://www.tiktok.com/@uk.bazarr" target="_blank" class="social-icon tiktok">
@@ -2326,7 +2567,7 @@
                 </a>
             </div>
             
-            <p style="margin-top: 15px; font-size: 12px;">© 2025 UK BAZAR - هەموو مافەکان پارێزراون</p>
+            <p style="margin-top: 15px; font-size: 12px;">© 2024 UK BAZAR - هەموو مافەکان پارێزراون</p>
         </div>
     </footer>
 
@@ -2351,6 +2592,9 @@
         // زانیاری کاڵاکان
         let products = [];
         
+        // زانیاری داواکاریەکان
+        let requests = [];
+        
         // زانیاری سلایدەر
         let slides = [];
         let selectedSlideImages = [];
@@ -2370,31 +2614,615 @@
         
         // نیشاندانی ئەوەی ئایا بەڕێوەبەر چووەتە ژوورەوە
         let isAdminLoggedIn = false;
-
+        
         // ============================
-        // فەنکشنەکانی نوێ بۆ گەیاندن
+        // چارەسەرە نوێیەکان
         // ============================
-
-        // فەنکشنی نیشاندانی مۆدالی گەیاندن
-        function showDeliveryModal() {
-            document.getElementById('deliveryModal').classList.add('show');
+        
+        // 1. فەنکشنەکانی سەبەتە
+        function showCartModal() {
+            document.getElementById('cartModal').classList.add('show');
+            renderCartItems();
         }
         
-        // فەنکشنی داخستنی مۆدالی گەیاندن
-        function closeDeliveryModal() {
-            document.getElementById('deliveryModal').classList.remove('show');
+        function closeCartModal() {
+            document.getElementById('cartModal').classList.remove('show');
         }
         
-        // فەنکشنی پەیوەندیکردن بە واتساپ بۆ پرسیاری گەیاندن
-        function contactDeliveryWhatsApp() {
-            const message = `سڵاو! من لە UK BAZARەوە پەیوەندیم پێوە کردووە. 
-دەمەوێت زانیاری دەربارەی خزمەتی گەیاندنی نێودەوڵەتی 
-(ئەوروپا ⇄ کوردستان) بزانم.`;
+        // 2. فەنکشنەکانی داواکاری
+        function showRequestModal() {
+            document.getElementById('requestModal').classList.add('show');
+        }
+        
+        function closeRequestModal() {
+            document.getElementById('requestModal').classList.remove('show');
+        }
+        
+        // 3. فەنکشنی داخستنی مۆدالەکان
+        function closeLocationModal() {
+            document.getElementById('locationModal').classList.remove('show');
+        }
+        
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('show');
+        }
+        
+        function closeAboutUsModal() {
+            document.getElementById('aboutUsModal').classList.remove('show');
+        }
+        
+        function closePrivacyModal() {
+            document.getElementById('privacyModal').classList.remove('show');
+        }
+        
+        // 4. فەنکشنی پارەدانی نوێ
+        function showPaymentModal(productId, productName, price, currency) {
+            const modalHtml = `
+                <div class="modal show" id="fibPaymentModal">
+                    <div class="modal-content">
+                        <button class="close-modal" onclick="closePaymentModal()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <div class="modal-header">
+                            <h2>ڕێگەکانی پارەدان</h2>
+                            <p>زانیاری پارەدان بۆ کاڵا: ${productName}</p>
+                        </div>
+                        
+                        <div class="payment-details">
+                            <div class="payment-item">
+                                <i class="fas fa-shopping-cart"></i>
+                                <div>
+                                    <h4>کاڵا:</h4>
+                                    <p>${productName}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-item">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <div>
+                                    <h4>نرخ:</h4>
+                                    <p>${price} ${currency}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-item">
+                                <i class="fas fa-credit-card"></i>
+                                <div>
+                                    <h4>ژمارەی FIB (کوردستان):</h4>
+                                    <p style="font-size: 1.2rem; font-weight: bold; color: var(--primary);">7769654490</p>
+                                    <p style="font-size: 0.8rem; color: var(--gray);">ناوی خاوەن کارت: UK BAZAR</p>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-item">
+                                <i class="fas fa-university"></i>
+                                <div>
+                                    <h4>حسابی نێونەتەوەیی (UK):</h4>
+                                    <p><strong>Account number:</strong> 33640965</p>
+                                    <p><strong>Sort code:</strong> 20-25-95</p>
+                                    <p><strong>IBAN:</strong> GB83BUKB20259533640965</p>
+                                    <p><strong>SWIFT/BIC:</strong> BUKBGB22</p>
+                                    <p style="font-size: 0.8rem; color: var(--gray);">ناوی خاوەن حساب: UK BAZAR</p>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-instructions">
+                                <h4>ڕێنمایی پارەدان:</h4>
+                                <ol style="margin-right: 20px; font-size: 0.85rem;">
+                                    <li>ژمارەی کارت یان زانیاریەکانی حساب کۆپی بکە</li>
+                                    <li>بچۆرە نێو ئەپلیکەیشنی بانکەکەت</li>
+                                    <li>بەشەکەی پارەدان هەڵبژێرە</li>
+                                    <li>زانیاریەکانی حساب پەیست بکە</li>
+                                    <li>بڕی پارەی ${price} ${currency} بنووسە</li>
+                                    <li>پارەکە بنێرە</li>
+                                    <li>بڕوانامەی پارەدانەکە پێشکەش بە فرۆشیار بکە</li>
+                                </ol>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-danger" onclick="closePaymentModal()">
+                                <i class="fas fa-times"></i> داخستن
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="copyFibNumberForPayment()">
+                                <i class="fas fa-copy"></i> کۆپی کردنی ژمارە
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
             
+            // دروستکردنی مۆدال و زیادکردنی بە بۆدی
+            const modalContainer = document.createElement('div');
+            modalContainer.innerHTML = modalHtml;
+            document.body.appendChild(modalContainer.firstElementChild);
+        }
+
+        // فەنکشنی داخستنی مۆدالی پارەدان
+        function closePaymentModal() {
+            const modal = document.getElementById('fibPaymentModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // فەنکشنی کۆپی کردنی ژمارەی FIB بۆ پارەدان
+        function copyFibNumberForPayment() {
+            const textToCopy = "حسابی نێونەتەوەیی:\nAccount number: 33640965\nSort code: 20-25-95\nIBAN: GB83BUKB20259533640965\nSWIFT/BIC: BUKBGB22\n\nFIB کوردستان: 7769654490";
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showNotification('زانیاریەکانی حساب کۆپی کرا بۆ کلیپبۆرد!', 'success');
+            });
+        }
+        
+        // ============================
+        // فەنکشنەکانی سەبەتە
+        // ============================
+        
+        let cart = JSON.parse(localStorage.getItem('ukbazar_cart')) || [];
+        
+        // فەنکشنی زیادکردنی کاڵا بۆ سەبەتە
+        function addToCart(productId) {
+            const product = products.find(p => p.firebaseId === productId || p.id === productId);
+            
+            if (!product) {
+                showNotification('کاڵا نەدۆزرایەوە!', 'error');
+                return;
+            }
+            
+            // پشکنین بۆ ئەوەی کاڵاکە لە سەبەتەدایە یان نا
+            const existingItemIndex = cart.findIndex(item => item.productId === productId);
+            
+            if (existingItemIndex > -1) {
+                // کاڵاکە لە سەبەتەدایە، ژمارەکەی زیاد دەکەین
+                cart[existingItemIndex].quantity += 1;
+            } else {
+                // کاڵای نوێ زیاد دەکەین
+                const cartItem = {
+                    productId: productId,
+                    name: product.name,
+                    price: product.price,
+                    currency: product.currency,
+                    image: product.images ? product.images[0] : null,
+                    sellerMobile: product.sellerMobile,
+                    quantity: 1
+                };
+                cart.push(cartItem);
+            }
+            
+            // پاشەکەوتکردن لە localStorage
+            saveCartToLocalStorage();
+            
+            // نوێکردنەوەی زەنگۆلە و نیشاندان
+            updateCartBadge();
+            showNotification('کاڵا بە سەرکەوتوویی زیادکرا بۆ سەبەتە!', 'success');
+        }
+        
+        // فەنکشنی پاشەکەوتکردنی سەبەتە لە localStorage
+        function saveCartToLocalStorage() {
+            localStorage.setItem('ukbazar_cart', JSON.stringify(cart));
+        }
+        
+        // فەنکشنی نوێکردنەوەی زەنگۆلەی سەبەتە
+        function updateCartBadge() {
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            document.getElementById('cartBadge').textContent = totalItems;
+        }
+        
+        // فەنکشنی پڕکردنەوەی کاڵاکانی سەبەتە
+        function renderCartItems() {
+            const cartItemsContainer = document.getElementById('cartItems');
+            const cartSummary = document.getElementById('cartSummary');
+            const emptyCart = document.getElementById('emptyCart');
+            
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '';
+                cartSummary.style.display = 'none';
+                emptyCart.style.display = 'block';
+                return;
+            }
+            
+            emptyCart.style.display = 'none';
+            cartSummary.style.display = 'block';
+            
+            let cartHTML = '';
+            
+            // ئەمە بۆ کۆکردنەوەی نرخی کۆی گشتی بە هەموو دراوەکان
+            const totalsByCurrency = {};
+            
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                
+                // کۆکردنەوەی نرخەکان بەپێی دراو
+                if (!totalsByCurrency[item.currency]) {
+                    totalsByCurrency[item.currency] = 0;
+                }
+                totalsByCurrency[item.currency] += itemTotal;
+                
+                cartHTML += `
+                    <div class="cart-item">
+                        <img src="${item.image || 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=200'}" 
+                             alt="${item.name}" 
+                             class="cart-item-image"
+                             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIGZpbGw9IiNGNEY0RjQiLz48cGF0aCBkPSJNMzAgMjVMMjAgNDBINDBMMzAgMjVaIiBmaWxsPSIjNjY3ZWVhIi8+PHBhdGggZD0iTTIwIDM1SDQwTTE1IDQ1SDIwVjM1IiBmaWxsPSIjNjY۳ZWVhIi۸+PC۹zdmc+'">
+                        <div class="cart-item-details">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-price">${item.price} ${item.currency} × ${item.quantity} = ${itemTotal} ${item.currency}</div>
+                            <div class="cart-item-controls">
+                                <button class="cart-item-btn" onclick="updateCartQuantity(${index}, ${item.quantity - 1})">-</button>
+                                <span class="cart-item-quantity">${item.quantity}</span>
+                                <button class="cart-item-btn" onclick="updateCartQuantity(${index}, ${item.quantity + 1})">+</button>
+                                <button class="cart-remove-btn" onclick="removeFromCart(${index})">
+                                    <i class="fas fa-trash"></i> سڕینەوە
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            cartItemsContainer.innerHTML = cartHTML;
+            
+            // دروستکردنی نیشاندانی کۆی گشتی بە هەموو دراوەکان
+            let totalDisplay = '';
+            for (const [currency, amount] of Object.entries(totalsByCurrency)) {
+                if (totalDisplay) totalDisplay += ' + ';
+                totalDisplay += `${amount.toLocaleString()} ${currency}`;
+            }
+            
+            document.getElementById('cartTotalValue').textContent = totalDisplay;
+        }
+        
+        // فەنکشنی گۆڕینی ژمارەی کاڵا لە سەبەتە
+        function updateCartQuantity(index, newQuantity) {
+            if (newQuantity < 1) {
+                removeFromCart(index);
+                return;
+            }
+            
+            cart[index].quantity = newQuantity;
+            saveCartToLocalStorage();
+            updateCartBadge();
+            renderCartItems();
+        }
+        
+        // فەنکشنی سڕینەوەی کاڵا لە سەبەتە
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            saveCartToLocalStorage();
+            updateCartBadge();
+            renderCartItems();
+            
+            if (cart.length === 0) {
+                showNotification('سەبەتەکەت بەتاڵ کرا!', 'success');
+            } else {
+                showNotification('کاڵا سڕدرایەوە لە سەبەتە!', 'success');
+            }
+        }
+        
+        // فەنکشنی پاککردنەوەی هەموو سەبەتە
+        function clearCart() {
+            if (cart.length === 0) return;
+            
+            if (confirm('دڵنیای لە پاککردنەوەی هەموو سەبەتەکە؟')) {
+                cart = [];
+                saveCartToLocalStorage();
+                updateCartBadge();
+                renderCartItems();
+                showNotification('سەبەتە بە سەرکەوتوویی پاککرایەوە!', 'success');
+            }
+        }
+        
+        // فەنکشنی تەواوکردنی کڕین
+        function checkoutCart() {
+            if (cart.length === 0) {
+                showNotification('سەبەتەکەت بەتاڵە!', 'error');
+                return;
+            }
+            
+            // دروستکردنی پەیامی واتساپ
+            let message = "سڵاو، من ئارەزووم لە کڕینی ئەم کاڵایانەیە:\n\n";
+            
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                message += `${index + 1}. ${item.name}\n`;
+                message += `   نرخ: ${item.price} ${item.currency} × ${item.quantity} = ${itemTotal} ${item.currency}\n`;
+                message += `   ژمارەی فرۆشیار: ${item.sellerMobile}\n\n`;
+            });
+            
+            // زیادکردنی کۆی گشتی
+            const totalsByCurrency = {};
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                if (!totalsByCurrency[item.currency]) {
+                    totalsByCurrency[item.currency] = 0;
+                }
+                totalsByCurrency[item.currency] += itemTotal;
+            });
+            
+            message += "کۆی گشتی:\n";
+            for (const [currency, amount] of Object.entries(totalsByCurrency)) {
+                message += `   ${amount.toLocaleString()} ${currency}\n`;
+            }
+            
+            message += "\nتکایە پەیوەندی پێوە بکە بۆ تەواوکردنی کڕین.\n\nسەپاس!";
+            
+            // کۆدی واتساپ
             const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://wa.me/9647755436275?text=${encodedMessage}`;
+            const whatsappNumber = "9647769654490"; // ژمارەی واتساپ
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+            
+            // کردنەوەی واتساپ لە تبێکی نوێ
+            window.open(whatsappUrl, '_blank');
+            
+            // پاککردنەوەی سەبەتە دوای ناردن
+            clearCart();
+            closeCartModal();
+        }
+        
+        // فەنکشنی دەستپێکردنی سەبەتە
+        function initializeCart() {
+            updateCartBadge();
+        }
+        
+        // ============================
+        // کۆتایی فەنکشنەکانی سەبەتە
+        // ============================
+
+        // ============================
+        // فەنکشنەکانی داواکاری
+        // ============================
+        
+        // فەنکشنی پاشەکەوتکردنی داواکاریەکان لە localStorage
+        function saveRequestsToLocalStorage() {
+            localStorage.setItem('ukbazar_requests', JSON.stringify(requests));
+        }
+        
+        // فەنکشنی ناردنی داواکاری بۆ فەیەربەیس
+        function saveRequestToFirebase(request) {
+            const requestId = database.ref().child('requests').push().key;
+            
+            const requestToSave = {
+                ...request,
+                firebaseId: requestId,
+                createdAt: new Date().toISOString(),
+                status: 'pending'
+            };
+            
+            return database.ref('requests/' + requestId).set(requestToSave)
+            .then(() => {
+                console.log("داواکاری بە سەرکەوتوویی تۆمارکرا لە فەیەربەیس");
+                request.firebaseId = requestId;
+                return requestId;
+            })
+            .catch((error) => {
+                console.error("هەڵە لە تۆمارکردنی داواکاری: ", error);
+                showNotification('هەڵە لە ناردنی داواکاری! تکایە دووبارە هەوڵبدەرەوە', 'error');
+                throw error;
+            });
+        }
+        
+        // فەنکشنی بارکردنی داواکاریەکان لە فەیەربەیس
+        function loadRequestsFromFirebase() {
+            return database.ref('requests').once('value')
+            .then((snapshot) => {
+                const firebaseRequests = [];
+                snapshot.forEach((childSnapshot) => {
+                    const requestData = childSnapshot.val();
+                    firebaseRequests.push({
+                        ...requestData,
+                        firebaseId: childSnapshot.key
+                    });
+                });
+                
+                requests = firebaseRequests;
+                saveRequestsToLocalStorage();
+                updateRequestsStats();
+                
+                return requests;
+            })
+            .catch((error) => {
+                console.log("هەڵە لە بارکردنی داواکاریەکان: ", error);
+                return requests;
+            });
+        }
+        
+        // فەنکشنی گوێگرتن لە گۆڕانکاریەکانی داواکاریەکان لە فەیەربەیس
+        function updateRequestsFromFirebase() {
+            database.ref('requests').on('value', (snapshot) => {
+                const firebaseRequests = [];
+                snapshot.forEach((childSnapshot) => {
+                    const requestData = childSnapshot.val();
+                    firebaseRequests.push({
+                        ...requestData,
+                        firebaseId: childSnapshot.key
+                    });
+                });
+                
+                requests = firebaseRequests;
+                saveRequestsToLocalStorage();
+                updateRequestsStats();
+                
+                if (isAdminLoggedIn && document.getElementById('requestsList')) {
+                    renderRequestsList();
+                }
+            });
+        }
+        
+        // فەنکشنی نوێکردنەوەی ئامارەکانی داواکاریەکان
+        function updateRequestsStats() {
+            const totalRequests = requests.length;
+            const pendingRequests = requests.filter(r => r.status === 'pending').length;
+            
+            document.getElementById('totalRequests').textContent = totalRequests;
+        }
+        
+        // فەنکشنی پڕکردنەوەی لیستی داواکاریەکان
+        function renderRequestsList() {
+            const requestsList = document.getElementById('requestsList');
+            if (!requestsList) return;
+            
+            requestsList.innerHTML = '';
+            
+            if (requests.length === 0) {
+                requestsList.innerHTML = '<p style="text-align: center; padding: 15px; color: var(--gray);">هیچ داواکاریەک نیە!</p>';
+                return;
+            }
+            
+            // ڕیزکردن بەپێی کاتی دروستکردن (نوێترین لەسەرەوە)
+            const sortedRequests = [...requests].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            
+            sortedRequests.forEach((request) => {
+                const requestDate = new Date(request.createdAt).toLocaleDateString('ku-IR');
+                const requestTime = new Date(request.createdAt).toLocaleTimeString('ku-IR', { hour: '2-digit', minute: '2-digit' });
+                
+                const statusClass = request.status === 'completed' ? 'status-completed' : 'status-pending';
+                const statusText = request.status === 'completed' ? 'تەواو' : 'چاوەڕوان';
+                const itemClass = request.status === 'completed' ? 'request-item completed' : 'request-item';
+                
+                const requestItem = document.createElement('div');
+                requestItem.className = itemClass;
+                requestItem.innerHTML = `
+                    <div class="request-status ${statusClass}">${statusText}</div>
+                    <h4 style="margin-bottom: 5px; font-size: 0.8rem;">${request.itemName}</h4>
+                    
+                    <div class="request-details">
+                        <p><strong>جۆر/ڕەنگ:</strong> ${request.type || 'دیاری نەکراوە'}</p>
+                        <p><strong>دانە:</strong> ${request.quantity}</p>
+                        <p><strong>ژمارەی مۆبایل:</strong> ${request.mobile}</p>
+                        <p><strong>شوین:</strong> ${request.location}</p>
+                        <p><strong>کاتی داواکاری:</strong> ${requestDate} - ${requestTime}</p>
+                        ${request.notes ? `<p><strong>تێبینی:</strong> ${request.notes}</p>` : ''}
+                    </div>
+                    
+                    ${request.status !== 'completed' ? `
+                    <div class="request-actions">
+                        <button class="btn-sm btn-primary" onclick="contactRequester('${request.mobile}', '${request.itemName}')">
+                            <i class="fas fa-phone"></i> پەیوەندی
+                        </button>
+                        <button class="btn-sm btn-secondary" onclick="markRequestAsCompleted('${request.firebaseId}')">
+                            <i class="fas fa-check"></i> تەواو
+                        </button>
+                        <button class="btn-sm btn-danger" onclick="deleteRequest('${request.firebaseId}')">
+                            <i class="fas fa-trash"></i> سڕینەوە
+                        </button>
+                    </div>
+                    ` : `
+                    <div class="request-actions">
+                        <button class="btn-sm btn-primary" onclick="contactRequester('${request.mobile}', '${request.itemName}')">
+                            <i class="fas fa-phone"></i> پەیوەندی
+                        </button>
+                        <button class="btn-sm btn-danger" onclick="deleteRequest('${request.firebaseId}')">
+                            <i class="fas fa-trash"></i> سڕینەوە
+                        </button>
+                    </div>
+                    `}
+                `;
+                
+                requestsList.appendChild(requestItem);
+            });
+        }
+        
+        // فەنکشنی پەیوەندی بە داواکار
+        function contactRequester(mobile, itemName) {
+            const message = `سڵاو، من لە UK BAZARەوەم. دەربارەی داواکاریەکەت بۆ "${itemName}".`;
+            const whatsappUrl = `https://wa.me/${mobile.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
         }
+        
+        // فەنکشنی تەواوکردنی داواکاری
+        function markRequestAsCompleted(requestId) {
+            const requestIndex = requests.findIndex(r => r.firebaseId === requestId);
+            if (requestIndex !== -1) {
+                requests[requestIndex].status = 'completed';
+                requests[requestIndex].completedAt = new Date().toISOString();
+                
+                // نوێکردنەوەی لە فەیەربەیس
+                database.ref('requests/' + requestId).update({
+                    status: 'completed',
+                    completedAt: new Date().toISOString()
+                });
+                
+                saveRequestsToLocalStorage();
+                renderRequestsList();
+                updateRequestsStats();
+                
+                showNotification('داواکاری وەک تەواو نیشاندرا!', 'success');
+            }
+        }
+        
+        // فەنکشنی سڕینەوەی داواکاری
+        function deleteRequest(requestId) {
+            if (confirm('دڵنیای لە سڕینەوەی ئەم داواکاریە؟')) {
+                const requestIndex = requests.findIndex(r => r.firebaseId === requestId);
+                if (requestIndex !== -1) {
+                    // سڕینەوە لە فەیەربەیس
+                    database.ref('requests/' + requestId).remove();
+                    
+                    requests.splice(requestIndex, 1);
+                    saveRequestsToLocalStorage();
+                    renderRequestsList();
+                    updateRequestsStats();
+                    
+                    showNotification('داواکاری بە سەرکەوتوویی سڕدرایەوە!', 'success');
+                }
+            }
+        }
+        
+        // فەنکشنی نوێکردنەوەی لیستی داواکاریەکان
+        function refreshRequests() {
+            loadRequestsFromFirebase().then(() => {
+                renderRequestsList();
+                showNotification('لیستی داواکاریەکان نوێکرایەوە!', 'success');
+            });
+        }
+        
+        // فەنکشنی ناردنی داواکاری
+        document.getElementById('requestForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const itemName = document.getElementById('requestItemName').value;
+            const type = document.getElementById('requestType').value;
+            const quantity = document.getElementById('requestQuantity').value || 1;
+            const mobile = document.getElementById('requestMobile').value;
+            const location = document.getElementById('requestLocation').value;
+            const notes = document.getElementById('requestNotes').value;
+            
+            const newRequest = {
+                itemName: itemName,
+                type: type,
+                quantity: quantity,
+                mobile: mobile,
+                location: location,
+                notes: notes
+            };
+            
+            saveRequestToFirebase(newRequest)
+            .then((requestId) => {
+                showNotification('داواکاریەکەت بە سەرکەوتوویی نێردرا! پەیوەندیمان پێوە دەکەین', 'success');
+                
+                // پاککردنەوەی فۆرم
+                document.getElementById('requestForm').reset();
+                document.getElementById('requestQuantity').value = 1;
+                
+                // داخستنی مۆدال
+                closeRequestModal();
+                
+                // نوێکردنەوەی لیستەکە ئەگەر بەڕێوەبەر چووەتە ژوورەوە
+                if (isAdminLoggedIn) {
+                    loadRequestsFromFirebase().then(() => {
+                        renderRequestsList();
+                        updateRequestsStats();
+                    });
+                }
+            })
+            .catch((error) => {
+                showNotification('هەڵە لە ناردنی داواکاری!', 'error');
+            });
+        });
+        
+        // ============================
+        // کۆتایی فەنکشنەکانی داواکاری
+        // ============================
 
         // ============================
         // فەنکشنەکانی پێشوو
@@ -2474,19 +3302,9 @@
             }
         }
 
-        // فەنکشنی نیشاندانی مۆدالی لۆکەیشن
-        function showLocationModal() {
-            document.getElementById('locationModal').classList.add('show');
-        }
-
-        // فەنکشنی داخستنی مۆدالی لۆکەیشن
-        function closeLocationModal() {
-            document.getElementById('locationModal').classList.remove('show');
-        }
-
         // فەنکشنی کۆپی کردنی ژمارەی FIB
         function copyFibNumber() {
-            navigator.clipboard.writeText('9647755436275').then(() => {
+            navigator.clipboard.writeText('07755436275').then(() => {
                 showNotification('ژمارەی FIB کۆپی کرا بۆ کلیپبۆرد!', 'success');
             });
         }
@@ -2497,92 +3315,6 @@
             const encodedMessage = encodeURIComponent(message);
             const whatsappUrl = `https://wa.me/${mobile.replace(/\D/g, '')}?text=${encodedMessage}`;
             window.open(whatsappUrl, '_blank');
-        }
-
-        // فەنکشنی نیشاندانی مۆدالی پارەدان بە FIB
-        function showPaymentModal(productId, productName, price, currency) {
-            const modalHtml = `
-                <div class="modal show" id="fibPaymentModal">
-                    <div class="modal-content">
-                        <button class="close-modal" onclick="closePaymentModal()">
-                            <i class="fas fa-times"></i>
-                        </button>
-                        <div class="modal-header">
-                            <h2>پارەدان بە FIB</h2>
-                            <p>زانیاری پارەدان بۆ کاڵا: ${productName}</p>
-                        </div>
-                        
-                        <div class="payment-details">
-                            <div class="payment-item">
-                                <i class="fas fa-shopping-cart"></i>
-                                <div>
-                                    <h4>کاڵا:</h4>
-                                    <p>${productName}</p>
-                                </div>
-                            </div>
-                            
-                            <div class="payment-item">
-                                <i class="fas fa-money-bill-wave"></i>
-                                <div>
-                                    <h4>نرخ:</h4>
-                                    <p>${price} ${currency}</p>
-                                </div>
-                            </div>
-                            
-                            <div class="payment-item">
-                                <i class="fas fa-credit-card"></i>
-                                <div>
-                                    <h4>ژمارەی FIB:</h4>
-                                    <p style="font-size: 1.2rem; font-weight: bold; color: var(--primary);">کوردستان: 7769654490</p>
-                                    <p style="font-size: 0.8rem; color: var(--gray);">ناوی خاوەن کارت: UK BAZAR</p>
-                                </div>
-                            </div>
-                            
-                            <div class="payment-instructions">
-                                <h4>ڕێنمایی پارەدان:</h4>
-                                <ol style="margin-right: 20px; font-size: 0.85rem;">
-                                    <li>ژمارەی کارتی FIB کۆپی بکە</li>
-                                    <li>بچۆرە نێو ئەپلیکەیشنی FIB</li>
-                                    <li>بەشەکەی پارەدان هەڵبژێرە</li>
-                                    <li>ژمارەی کارتەکە پەیست بکە</li>
-                                    <li>بڕی پارەی ${price} ${currency} بنووسە</li>
-                                    <li>پارەکە بنێرە</li>
-                                    <li>بڕوانامەی پارەدانەکە پێشکەش بە فرۆشیار بکە</li>
-                                </ol>
-                            </div>
-                        </div>
-                        
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-danger" onclick="closePaymentModal()">
-                                <i class="fas fa-times"></i> داخستن
-                            </button>
-                            <button type="button" class="btn btn-primary" onclick="copyFibNumberForPayment()">
-                                <i class="fas fa-copy"></i> کۆپی کردنی ژمارە
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            // دروستکردنی مۆدال و زیادکردنی بە بۆدی
-            const modalContainer = document.createElement('div');
-            modalContainer.innerHTML = modalHtml;
-            document.body.appendChild(modalContainer.firstElementChild);
-        }
-
-        // فەنکشنی داخستنی مۆدالی پارەدان
-        function closePaymentModal() {
-            const modal = document.getElementById('fibPaymentModal');
-            if (modal) {
-                modal.remove();
-            }
-        }
-
-        // فەنکشنی کۆپی کردنی ژمارەی FIB بۆ پارەدان
-        function copyFibNumberForPayment() {
-            navigator.clipboard.writeText('کوردستان: کوردستان:9647755436275').then(() => {
-                showNotification('ژمارەی FIB کۆپی کرا بۆ کلیپبۆرد!', 'success');
-            });
         }
 
         // فەنکشنی ڕێکخستنی ناوەڕۆکی سەرەکی
@@ -2597,6 +3329,9 @@
                     performSearch();
                 }
             });
+            
+            // زیادکردنی گوێگر لە دوگمەی داواکاری
+            document.getElementById('requestItemBtn').addEventListener('click', showRequestModal);
         }
 
         // ============================
@@ -2826,6 +3561,12 @@
                 }
             }
             
+            // پشکنینی ئەوەی کاڵا لە سەبەتەدایە یان نا
+            const isInCart = cart.some(item => item.productId === (product.firebaseId || product.id));
+            const cartBtnClass = isInCart ? 'add-to-cart-btn in-cart' : 'add-to-cart-btn';
+            const cartBtnText = isInCart ? 'لە سەبەتەدایە' : 'زیادکردن بۆ سەبەتە';
+            const cartBtnIcon = isInCart ? 'fas fa-check' : 'fas fa-cart-plus';
+            
             // دروستکردنی سلایدشۆ بۆ وینەکان
             let imageContent = '';
             
@@ -2887,18 +3628,18 @@
                         </div>
                         <div class="product-status ${statusClass}">${statusText}</div>
                         
-                        <!-- دوگمەی پارەدان FIB -->
+                        <!-- دوگمەکانی پارەدان و سەبەتە -->
                         <div class="payment-buttons">
                             <button class="fib-payment-btn" onclick="showPaymentModal('${product.firebaseId || product.id}', '${product.name}', '${product.price}', '${product.currency}')">
                                 <i class="fas fa-wallet"></i> کڕین بە FIB
                             </button>
-                           <a href="https://wa.me/9647755436275"
-   target="_blank"
-   class="whatsapp-btn">
-    <i class="fab fa-whatsapp"></i> واتساپ
-</a>
-
+                            <button class="whatsapp-btn" onclick="contactSellerWhatsApp('${product.sellerMobile}', '${product.name}')">
+                                <i class="fab fa-whatsapp"></i> واتساپ
+                            </button>
                         </div>
+                        <button class="${cartBtnClass}" onclick="addToCart('${product.firebaseId || product.id}')">
+                            <i class="${cartBtnIcon}"></i> ${cartBtnText}
+                        </button>
                     </div>
                 </div>
             `;
@@ -3174,8 +3915,6 @@
                 showHomePage();
                 
                 updateAdminStats();
-                
-                updateNotificationBadge();
                 
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             })
@@ -3586,13 +4325,6 @@
             document.getElementById('totalProducts').textContent = totalProducts;
             document.getElementById('approvedProducts').textContent = approvedProducts;
             document.getElementById('pendingProducts').textContent = pendingProducts;
-            
-            updateNotificationBadge();
-        }
-
-        // فەنکشنی نوێکردنەوەی زەنگۆلەی ئاگاداری
-        function updateNotificationBadge() {
-            // ئێستا زەنگۆلەی ئاگاداری نیە لە هێدەردا
         }
 
         // فەنکشنی پڕکردنەوەی لیستی کاڵای چاوەڕوان
@@ -3690,7 +4422,9 @@
             document.getElementById('logoutBtn').style.display = 'flex';
             
             updateAdminStats();
+            updateRequestsStats();
             renderPendingProducts();
+            renderRequestsList();
             renderAllProductsList();
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -3699,11 +4433,6 @@
         // فەنکشنی پیشاندانی مۆدالی چوونەژوورەوە
         function showLoginModal() {
             document.getElementById('loginModal').classList.add('show');
-        }
-
-        // فەنکشنی داخستنی مۆدالی چوونەژوورەوە
-        function closeLoginModal() {
-            document.getElementById('loginModal').classList.remove('show');
         }
 
         // چوونەژوورەوەی بەڕێوەبەر
@@ -3778,8 +4507,19 @@
                 initializeSlider();
             });
             
+            // بارکردنی داواکاریەکان
+            loadRequestsFromFirebase().then(() => {
+                updateRequestsStats();
+            });
+            
+            // گوێگرتن لە گۆڕانکاریەکانی داواکاریەکان
+            updateRequestsFromFirebase();
+            
             // ڕێکخستنی بەڕێوەبردنی سلایدەر
             setupSliderManagement();
+            
+            // دەستپێکردنی سەبەتە
+            initializeCart();
             
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/sw.js')
@@ -4030,6 +4770,8 @@
             const totalProducts = products.length;
             const approvedProducts = products.filter(p => p.status === 'approved').length;
             const pendingProducts = products.filter(p => p.status === 'pending').length;
+            const totalRequests = requests.length;
+            const pendingRequests = requests.filter(r => r.status === 'pending').length;
             const recentProducts = products.filter(p => {
                 if (!p.createdAt) return false;
                 const daysSince = calculateDaysSince(p.createdAt);
@@ -4076,6 +4818,14 @@
                                 <div class="stat-label">کاڵای چاوەڕوان</div>
                             </div>
                             <div class="stat-card">
+                                <div class="stat-value">${totalRequests}</div>
+                                <div class="stat-label">داواکاریەکان</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${pendingRequests}</div>
+                                <div class="stat-label">داواکاری چاوەڕوان</div>
+                            </div>
+                            <div class="stat-card">
                                 <div class="stat-value">${recentProducts}</div>
                                 <div class="stat-label">کاڵای ٧ ڕۆژی ڕابردوو</div>
                             </div>
@@ -4115,6 +4865,40 @@
                             </tbody>
                         </table>
                         
+                        <div class="section-title">داواکاریەکانی چاوەڕوان</div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ناوی کاڵا</th>
+                                    <th>جۆر/ڕەنگ</th>
+                                    <th>دانە</th>
+                                    <th>ژمارەی مۆبایل</th>
+                                    <th>ماوە لە دانان</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${requests.filter(r => r.status === 'pending').slice(0, 10).map(request => {
+                                    let durationText = '';
+                                    if (request.createdAt) {
+                                        const daysSince = calculateDaysSince(request.createdAt);
+                                        if (daysSince === 0) durationText = 'ئەمڕۆ';
+                                        else if (daysSince === 1) durationText = 'دوێنێ';
+                                        else durationText = `${daysSince} رۆژ لەمەوپێش`;
+                                    }
+                                    
+                                    return `
+                                        <tr>
+                                            <td>${request.itemName}</td>
+                                            <td>${request.type || '-'}</td>
+                                            <td>${request.quantity}</td>
+                                            <td>${request.mobile}</td>
+                                            <td>${durationText}</td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                        
                         <div class="date">
                             چاپ کراو لە: ${new Date().toLocaleString('ku-IR')}
                         </div>
@@ -4133,36 +4917,20 @@
             }, 500);
         }
         
-        // ============================
-        // فەنکشنەکانی پێشوو بۆ مۆدالەکان
-        // ============================
-
         // فەنکشنی نیشاندانی مۆدالی دەربارەی ئێمە
         function showAboutUsModal() {
             document.getElementById('aboutUsModal').classList.add('show');
-        }
-
-        // فەنکشنی داخستنی مۆدالی دەربارەی ئێمە
-        function closeAboutUsModal() {
-            document.getElementById('aboutUsModal').classList.remove('show');
         }
 
         // فەنکشنی نیشاندانی مۆدالی مەرج و ڕێساکان
         function showPrivacyModal() {
             document.getElementById('privacyModal').classList.add('show');
         }
-
-        // فەنکشنی داخستنی مۆدالی مەرج و ڕێساکان
-        function closePrivacyModal() {
-            document.getElementById('privacyModal').classList.remove('show');
+        
+        // فەنکشنی نیشاندانی مۆدالی لۆکەیشن
+        function showLocationModal() {
+            document.getElementById('locationModal').classList.add('show');
         }
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
