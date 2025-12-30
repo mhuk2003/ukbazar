@@ -1762,6 +1762,33 @@
                 width: 95%;
             }
         }
+.flags {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.flags img {
+    width: 24px;   /* گەورەتر */
+    height: 16px;
+    object-fit: cover;
+    border-radius: 3px;
+    cursor: pointer;
+    border: 1px solid #e5e7eb;
+    transition: transform 0.2s ease;
+}
+
+.flags img:hover {
+    transform: scale(1.1);
+}
+.flags img {
+    width: 44px;
+    height: 30px;
+}
+
+
+
     </style>
 </head>
 <body>
@@ -1775,7 +1802,11 @@
                     </div>
                     <div class="logo-text">UK BAZAR</div>
                 </div>
-                
+                <div class="flags">
+    <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/uk-flag.webp" alt="UK Flag" title="English">
+    <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/images.png" alt="Kurdish Flag" title="Kurdish">
+</div>
+
                 <div class="cart-btn" onclick="showCartModal()">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-badge" id="cartBadge">0</span>
@@ -4699,7 +4730,7 @@
             const username = document.getElementById('adminUsername').value;
             const password = document.getElementById('adminPassword').value;
             
-            if (username === 'admin' && password === 'admin123') {
+            if (username === 'admin' && password === 'admin?123uk@') {
                 isAdminLoggedIn = true;
                 showAdminDashboard();
                 closeLoginModal();
@@ -5411,5 +5442,6 @@
     </script>
 </body>
 </html>
+
 
 
