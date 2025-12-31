@@ -2067,9 +2067,7 @@
             <div class="pending-products" style="margin-top: 20px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                     <h3 style="font-size: 0.9rem;">داواکاریەکانی کڕیاران</h3>
-                    <button class="btn btn-info" onclick="refreshRequests()" style="padding: 4px 8px; font-size: 0.7rem;">
-                        <i class="fas fa-sync-alt"></i> نوێکردنەوە
-                    </button>
+                 
                 </div>
                 <div id="requestsList">
                     <!-- داواکاریەکان لێرە دەردەکەون -->
@@ -4591,135 +4589,126 @@
             });
         }
 
-        // فەنکشنی پەسەندکردنی کاڵا
-        // فەنکشنی پەسەندکردنی کاڵا
-window.approveProduct = function(productId) {
-    console.log('پەسەندکردنی کاڵا:', productId);
-    const productIndex = products.findIndex(p => p.firebaseId == productId);
-    if (productIndex !== -1) {
-        products[productIndex].status = 'approved';
-        
-        updateProductInFirebase(products[productIndex], 'approved')
-        .then(() => {
-            console.log('کاڵا بە سەرکەوتوویی پەسەند کرا لە فەیەربەیس');
-            
-            const pendingItem = document.getElementById(`pending-${productId}`);
-            if (pendingItem) {
-                pendingItem.remove();
+      // فەنکشنی پەسەندکردنی کاڵا (گلۆباڵ)
+ // فەنکشنی پەسەندکردنی کاڵا (گلۆباڵ)
+        window.approveProduct = function(productId) {
+            const productIndex = products.findIndex(p => p.firebaseId == productId);
+            if (productIndex !== -1) {
+                products[productIndex].status = 'approved';
+                
+                updateProductInFirebase(products[productIndex], 'approved')
+                .then(() => {
+                    // سڕینەوەی کارتەکە لە لیستی چاوەڕوان
+                    const pendingItem = document.getElementById(`pending-${productId}`);
+                    if (pendingItem) {
+                        pendingItem.remove();
+                    }
+                    
+                    // پشکنین ئەگەر هیچ کاڵایەکی چاوەڕوان نەمابوو
+                    const pendingList = document.getElementById('pendingProductsList');
+                    if (pendingList && pendingList.children.length === 0) {
+                        pendingList.innerHTML = '<p style="text-align: center; padding: 10px; color: var(--gray); font-size: 0.7rem;">هیچ کاڵایەکی چاوەڕوان نیە!</p>';
+                    }
+                    
+                    renderProducts();
+                    renderAllProductsList();
+                    updateAdminStats();
+                    
+                    showNotification('کاڵا بە سەرکەوتوویی پەسەند کرا!', 'success');
+                })
+                .catch(error => {
+                    console.error('هەڵە لە پەسەندکردنی کاڵا:', error);
+                    showNotification('هەڵە لە پەسەندکردنی کاڵا!', 'error');
+                });
             }
-            
-            renderProducts();
-            renderAllProductsList();
-            updateAdminStats();
-            
-            showNotification('کاڵا بە سەرکەوتوویی پەسەند کرا!', 'success');
-        })
-        .catch(error => {
-            console.error('هەڵە لە پەسەندکردنی کاڵا:', error);
-            showNotification('هەڵە لە پەسەندکردنی کاڵا!', 'error');
-        });
-    } else {
-        console.error('کاڵا نەدۆزرایەوە:', productId);
-    }
-};
+        };
 
-// فەنکشنی ڕەتکردنەوەی کاڵا
-window.rejectProduct = function(productId) {
-    console.log('ڕەتکردنەوەی کاڵا:', productId);
-    const productIndex = products.findIndex(p => p.firebaseId == productId);
-    if (productIndex !== -1) {
-        if (products[productIndex].status === 'approved') {
-            products[productIndex].status = 'pending';
-            
-            updateProductInFirebase(products[productIndex], 'pending')
-            .then(() => {
-                console.log('کاڵا گەڕێندرایەوە بۆ دۆخی چاوەڕوان');
-                
-                renderProducts();
-                renderAllProductsList();
-                updateAdminStats();
-                updatePendingProductsList();
-                
-                showNotification('کاڵا گەڕێندرایەوە بۆ دۆخی چاوەڕوان!', 'success');
-            })
-            .catch(error => {
-                console.error('هەڵە لە گەڕاندنەوەی کاڵا:', error);
-                showNotification('هەڵە لە گەڕاندنەوەی کاڵا!', 'error');
-            });
-        } else {
-            showNotification('کاڵا ئێستا لە دۆخی چاوەڕواندایە!', 'error');
-        }
-    } else {
-        console.error('کاڵا نەدۆزرایەوە:', productId);
-    }
-};
-
-// فەنکشنی سڕینەوەی کاڵا
-window.deleteProduct = function(productId) {
-    console.log('سڕینەوەی کاڵا:', productId);
-    if (confirm('دڵنیای لە سڕینەوەی ئەم کاڵایە؟')) {
-        const productIndex = products.findIndex(p => p.firebaseId == productId);
-        if (productIndex !== -1) {
-            database.ref('products/' + productId).remove()
-            .then(() => {
-                console.log("کاڵا بە سەرکەوتوویی سڕدرایەوە لە فەیەربەیس");
-                
-                products.splice(productIndex, 1);
-                
-                const pendingItem = document.getElementById(`pending-${productId}`);
-                if (pendingItem) {
-                    pendingItem.remove();
+        // فەنکشنی ڕەتکردنەوەی کاڵا (گلۆباڵ)
+        window.rejectProduct = function(productId) {
+            const productIndex = products.findIndex(p => p.firebaseId == productId);
+            if (productIndex !== -1) {
+                if (products[productIndex].status === 'approved') {
+                    products[productIndex].status = 'pending';
+                    
+                    updateProductInFirebase(products[productIndex], 'pending')
+                    .then(() => {
+                        renderProducts();
+                        renderAllProductsList();
+                        updateAdminStats();
+                        updatePendingProductsList();
+                        
+                        showNotification('کاڵا گەڕێندرایەوە بۆ دۆخی چاوەڕوان!', 'success');
+                    })
+                    .catch(error => {
+                        console.error('هەڵە لە گەڕاندنەوەی کاڵا:', error);
+                        showNotification('هەڵە لە گەڕاندنەوەی کاڵا!', 'error');
+                    });
+                } else {
+                    showNotification('کاڵا ئێستا لە دۆخی چاوەڕواندایە!', 'error');
                 }
-                
-                const allItem = document.getElementById(`all-${productId}`);
-                if (allItem) {
-                    allItem.remove();
+            }
+        };
+
+        // فەنکشنی سڕینەوەی کاڵا (گلۆباڵ)
+        window.deleteProduct = function(productId) {
+            if (confirm('دڵنیای لە سڕینەوەی ئەم کاڵایە؟')) {
+                const productIndex = products.findIndex(p => p.firebaseId == productId);
+                if (productIndex !== -1) {
+                    database.ref('products/' + productId).remove()
+                    .then(() => {
+                        products.splice(productIndex, 1);
+                        
+                        const pendingItem = document.getElementById(`pending-${productId}`);
+                        if (pendingItem) {
+                            pendingItem.remove();
+                        }
+                        
+                        const allItem = document.getElementById(`all-${productId}`);
+                        if (allItem) {
+                            allItem.remove();
+                        }
+                        
+                        renderProducts();
+                        updateAdminStats();
+                        updatePendingProductsList();
+                        
+                        showNotification('کاڵا بە سەرکەوتوویی سڕدرایەوە!', 'success');
+                    })
+                    .catch(error => {
+                        console.error("هەڵە لە سڕینەوەی کاڵا: ", error);
+                        showNotification('هەڵە لە سڕینەوەی کاڵا!', 'error');
+                    });
                 }
-                
-                renderProducts();
-                updateAdminStats();
-                
-                showNotification('کاڵا بە سەرکەوتوویی سڕدرایەوە!', 'success');
-            })
-            .catch(error => {
-                console.error("هەڵە لە سڕینەوەی کاڵا لە فەیەربەیس: ", error);
-                showNotification('هەڵە لە سڕینەوەی کاڵا!', 'error');
-            });
-        }
-    }
-};
+            }
+        };
 
-// فەنکشنی کردنەوەی مۆدالی دەستکاری
-window.openEditModal = function(productId) {
-    console.log('کردنەوەی مۆدالی دەستکاری بۆ کاڵا:', productId);
-    const product = products.find(p => p.firebaseId == productId);
-    if (product) {
-        document.getElementById('editProductId').value = product.firebaseId;
-        document.getElementById('editProductName').value = product.name;
-        document.getElementById('editProductPrice').value = product.price;
-        document.getElementById('editProductCurrency').value = product.currency;
-        document.getElementById('editSellerName').value = product.sellerName;
-        document.getElementById('editSellerMobile').value = product.sellerMobile;
-        document.getElementById('editProductLocation').value = product.location;
-        document.getElementById('editProductCategory').value = product.category;
-        document.getElementById('editProductDescription').value = product.description;
-        
-        currentEditImages = [];
-        if (product.images && product.images.length > 0) {
-            product.images.forEach(url => {
-                currentEditImages.push({ url: url, isExisting: true });
-            });
-        }
-        renderEditImagesPreview();
-        
-        setupEditMultiImagePreview();
-        
-        document.getElementById('editProductModal').style.display = 'flex';
-    } else {
-        console.error('کاڵا نەدۆزرایەوە:', productId);
-    }
-};
-
+        // فەنکشنی کردنەوەی مۆدالی دەستکاری (گلۆباڵ)
+        window.openEditModal = function(productId) {
+            const product = products.find(p => p.firebaseId == productId);
+            if (product) {
+                document.getElementById('editProductId').value = product.firebaseId;
+                document.getElementById('editProductName').value = product.name;
+                document.getElementById('editProductPrice').value = product.price;
+                document.getElementById('editProductCurrency').value = product.currency;
+                document.getElementById('editSellerName').value = product.sellerName;
+                document.getElementById('editSellerMobile').value = product.sellerMobile;
+                document.getElementById('editProductLocation').value = product.location;
+                document.getElementById('editProductCategory').value = product.category;
+                document.getElementById('editProductDescription').value = product.description;
+                
+                currentEditImages = [];
+                if (product.images && product.images.length > 0) {
+                    product.images.forEach(url => {
+                        currentEditImages.push({ url: url, isExisting: true });
+                    });
+                }
+                renderEditImagesPreview();
+                
+                setupEditMultiImagePreview();
+                
+                document.getElementById('editProductModal').style.display = 'flex';
+            }
+        };
 // فەنکشنی نوێکردنەوەی کاڵا لە فەیەربەیس
 function updateProductInFirebase(product, status) {
     if (!product.firebaseId) {
