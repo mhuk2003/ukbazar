@@ -2,83 +2,26 @@
 <html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>UK BAZAR</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- PWA -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#667eea">
+
+    <title>UkBazar</title>
+
     <link rel="icon" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png">
-
-    <style>
-        /* شاشەی بارکردن بۆ ئەوەی بەکارهێنەر هەست بە خاوی نەکات */
-        #app-loader {
-            position: fixed; inset: 0; background: #667eea;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 10000; transition: opacity 0.5s;
-        }
-        .loader-logo { width: 100px; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { transform: scale(0.9); } 50% { transform: scale(1.1); } 100% { transform: scale(0.9); } }
-        
-        /* شاردنەوەی بەشەکان تا بار دەبن */
-        .hidden { display: none; }
-    </style>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Kufam:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png">
 </head>
 
-<body>
-    <div id="app-loader">
-        <img src="https://raw.githubusercontent.com/mhuk2003/ukbazar/main/logo-ukbazar/logo-ukbazar.png" class="loader-logo">
-        <p style="color: white; font-family: 'Kufam'; margin-top: 20px;">تکایە چاوەڕێ بکە...</p>
-    </div>
+<body style="background:#667eea;">
 
-    <div id="main-wrapper" style="display:none;">
-        <nav style="background: #667eea; padding: 15px; color: white; text-align: center;">
-            <h2 style="margin:0;">UK BAZAR</h2>
-        </nav>
-        
-        <div id="products-container" style="padding: 10px;">
-            </div>
-    </div>
+<script>
+    // یەکسەر گواستنەوە بۆ داشبۆرد
+    window.location.replace("ukbazar.html");
+</script>
 
-    <script>
-        // 3. ڕێکخستنی فایەربەیس
-        const firebaseConfig = {
-            // *** لێرە کۆدی Firebase-ی خۆت دانێوە ***
-            databaseURL: "https://ukbazar-xxxx.firebaseio.com" 
-        };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        // 4. خێراکردنی هێنانی داتا (تەنها ٢٠ دانەی کۆتا دەهێنێت)
-        function fetchFastData() {
-            database.ref('products').limitToLast(20).once('value')
-            .then((snapshot) => {
-                const data = snapshot.val();
-                // لێرەدا فەنکشنی پیشاندانی بەرهەمەکان (Render) بانگ دەکەیت
-                
-                // لادانی شاشەی چاوەڕێکردن
-                document.getElementById('app-loader').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('app-loader').style.display = 'none';
-                    document.getElementById('main-wrapper').style.display = 'block';
-                }, 500);
-            })
-            .catch(err => {
-                console.error("هەڵە لە بارکردن:", err);
-                document.getElementById('app-loader').style.display = 'none';
-            });
-        }
-
-        // دەستپێکردنی کارەکان
-        window.onload = fetchFastData;
-    </script>
 </body>
 </html>
+
