@@ -1940,7 +1940,7 @@
     <!-- بەشی کاڵاکان -->
 <section class="products-section" id="productsSection">
     <div class="container">
-        <h2 class="section-title">نوێترین کاڵاکان</h2>
+      <h2 id="productsTitle" class="section-title">هەموو کاڵاکان</h2>
         <div class="products-grid" id="productsGrid">
             
             <div class="product-card static-placeholder">
@@ -3816,40 +3816,61 @@ if (window.navigator && navigator.serviceWorker) {
             document.querySelector('.category-btn[data-category="all"]').classList.add('active');
         }
 
-        // فەنکشنی فیلتەرکردنی کاڵاکان بەپێی کاتیگۆری
-        function filterProductsByCategory(category) {
-            if (category === 'all') {
-                renderProducts();
-                document.getElementById('productsTitle').textContent = 'هەموو کاڵاکان';
+     // فەنکشنی فیلتەرکردنی کاڵاکان بەپێی کاتیگۆری (وەشانە چاککراوەکە)
+function filterProductsByCategory(category) {
+    // ١. سکرۆڵ کردن بۆ بەشی کاڵاکان بە پشکنینەوە
+    const productsSection = document.getElementById('productsSection') || document.getElementById('productsTitle');
+    if (productsSection) {
+        productsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    
+    // دۆزینەوەی توخمە پێویستەکان
+    const titleElement = document.getElementById('productsTitle');
+    const gridElement = document.getElementById('productsGrid');
+
+    if (category === 'all') {
+        if (typeof renderProducts === 'function') {
+            renderProducts();
+        }
+        if (titleElement) titleElement.textContent = 'هەموو کاڵاکان';
+    } else {
+        // فلتەرکردنی کاڵاکان
+        const filteredProducts = (typeof products !== 'undefined' ? products : []).filter(p => 
+            p.category === category && p.status === 'approved'
+        );
+        
+        // گۆڕینی تایتڵ ئەگەر بوونی هەبێت
+        if (titleElement) {
+            titleElement.textContent = `کاڵاکانی ${category}`;
+        }
+        
+        // نیشاندانی کاڵاکان یان پەیامی بەتاڵ بوون
+        if (gridElement) {
+            if (filteredProducts.length === 0) {
+                gridElement.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 30px; color: var(--gray);">
+                        <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                        <p>هیچ کاڵایەک نییە لەم کاتیگۆریەدا!</p>
+                    </div>
+                `;
             } else {
-                const filteredProducts = products.filter(p => 
-                    p.category === category && p.status === 'approved'
-                );
+                gridElement.innerHTML = '';
+                filteredProducts.forEach(product => {
+                    if (typeof createProductCard === 'function') {
+                        gridElement.innerHTML += createProductCard(product);
+                    }
+                });
                 
-                document.getElementById('productsTitle').textContent = `کاڵاکانی ${category}`;
-                
-                if (filteredProducts.length === 0) {
-                    document.getElementById('productsGrid').innerHTML = `
-                        <div style="grid-column: 1 / -1; text-align: center; padding: 30px; color: var(--gray);">
-                            <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 15px;"></i>
-                            <p>هیچ کاڵایەک نیە لەم کاتیگۆریەدا!</p>
-                        </div>
-                    `;
-                } else {
-                    const productsGrid = document.getElementById('productsGrid');
-                    productsGrid.innerHTML = '';
-                    
-                    filteredProducts.forEach(product => {
-                        productsGrid.innerHTML += createProductCard(product);
-                    });
-                    
-                    // دەستپێکردنی سلایدشۆکان
+                // دەستپێکردنی سلایدشۆکان
+                if (typeof startAllProductSlideshows === 'function') {
                     setTimeout(() => {
                         startAllProductSlideshows();
                     }, 100);
                 }
             }
         }
+    }
+}
 
         // فەنکشنی کۆپی کردنی ژمارەی FIB
         function copyFibNumber() {
@@ -5800,10 +5821,22 @@ function updateRequestsFromFirebase() {
         });
     }
 }
+function filterAndScroll(categoryName) {
+    // ١. سکرۆڵ کردن بۆ بەشی کاڵاکان
+    const productsSection = document.getElementById('products-section');
+    if (productsSection) {
+        productsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ٢. فلتەرکردنی کاڵاکان (ئەگەر فەنکشنی فلتەرت هەبێت)
+    // ئەگەر فەنکشنی filterByCategory ت هەبێت بانگی دەکەین
+    if (typeof filterByCategory === 'function') {
+        filterByCategory(categoryName);
+    }
+}
     </script>
 </body>
 </html>
-
 
 
 
