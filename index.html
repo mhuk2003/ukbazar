@@ -2958,19 +2958,13 @@
 // ڕێگری لە بلۆککردنی براوزەر
 // ئەمە ڕاستەکەیە
 window.onload = function() {
-    // ١. یەکسەر نیشاندانی شتەکان و لابردنی چاوەڕوانی
-    if (typeof loadSliderData === 'function') loadSliderData();
-    if (typeof loadProducts === 'function') loadProducts();
-    
-    // ٢. ئەگەر شاشەکە سپی بوو، فەرمان بدە بە ئەپەکە کە بە زۆر شتەکان بار بکات
-    setTimeout(function() {
-        const wrapper = document.getElementById('slidesWrapper');
-        if (wrapper && wrapper.innerHTML === "") {
-            console.log("دووبارە هەوڵدان بۆ بارکردنی داتا...");
-            loadSliderData();
-            loadProducts();
-        }
-    }, 2000); // دوای ٢ چرکە ئەگەر سپی بوو، دووبارە هەوڵ دەداتەوە
+    // سڕینەوەی هەر شتێکی کۆن کە لە میمۆری مۆبایلدا مابێتەوە
+    localStorage.clear();
+    sessionStorage.clear();
+
+    // بانگکردنی فەنکشنەکان بە جیا
+    loadSliderData();
+    loadProducts();
 };
 
     // ٢. بارکردنی داتاکانی تر لە پشتەوە بێ ئەوەی شاشە سپی بکات
@@ -3753,7 +3747,14 @@ function updateRequestsStats() {
                 printWindow.close();
             }, 500);
         }
- 
+ // ئەگەر دوای ٤ چرکە هیچ وێنەیەک بار نەبوو، لاپەڕەکە نوێ بکەرەوە
+setTimeout(function() {
+    const checkContent = document.getElementById('slidesWrapper');
+    if (!checkContent || checkContent.innerHTML.trim() === "") {
+        console.log("ئەپەکە گیربووە، دووبارە دەستپێدەکاتەوە...");
+        window.location.reload();
+    }
+}, 4000);
 if (window.navigator && navigator.serviceWorker) {
   navigator.serviceWorker.getRegistrations().then(function(registrations) {
     for (let registration of registrations) {
