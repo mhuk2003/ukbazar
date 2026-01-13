@@ -2958,9 +2958,19 @@
 // ڕێگری لە بلۆککردنی براوزەر
 // ئەمە ڕاستەکەیە
 window.onload = function() {
-    checkLogoImage(); // چیتر چاوەڕێی ئەمە ناکات ئەگەر 404 بوو
-    loadSliderData(); 
-    loadProducts();
+    // ١. یەکسەر نیشاندانی شتەکان و لابردنی چاوەڕوانی
+    if (typeof loadSliderData === 'function') loadSliderData();
+    if (typeof loadProducts === 'function') loadProducts();
+    
+    // ٢. ئەگەر شاشەکە سپی بوو، فەرمان بدە بە ئەپەکە کە بە زۆر شتەکان بار بکات
+    setTimeout(function() {
+        const wrapper = document.getElementById('slidesWrapper');
+        if (wrapper && wrapper.innerHTML === "") {
+            console.log("دووبارە هەوڵدان بۆ بارکردنی داتا...");
+            loadSliderData();
+            loadProducts();
+        }
+    }, 2000); // دوای ٢ چرکە ئەگەر سپی بوو، دووبارە هەوڵ دەداتەوە
 };
 
     // ٢. بارکردنی داتاکانی تر لە پشتەوە بێ ئەوەی شاشە سپی بکات
@@ -3005,9 +3015,7 @@ window.onload = function() {
                 });
 
             }
-
             
-
             // دوگمەی چاپ
 
             const printBtn = document.querySelector('.btn-print');
@@ -3025,10 +3033,7 @@ window.onload = function() {
             }
 
         });
-
-        
-
-        // فەنکشنی دەستپێکردنی سەبەتە
+          // فەنکشنی دەستپێکردنی سەبەتە
 
         function initializeCart() {
 
@@ -3605,7 +3610,27 @@ function updateRequestsStats() {
                 showNotification('لیستی داواکاریەکان نوێکرایەوە!', 'success');
             });
         }
-        
+        function loadRequestsFromFirebase() {
+    return new Promise((resolve, reject) => {
+        // گۆڕینی 'requests' بۆ ئەو ناوەی کە لە داتابەیسەکەتدا هەیە
+        database.ref('requests').once('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                // گۆڕینی داتا بۆ لیست (Array) ئەگەر پێویست بکات
+                requests = Object.keys(data).map(key => ({
+                    id: key,
+                    ...data[key]
+                }));
+            } else {
+                requests = [];
+            }
+            resolve(requests);
+        }, (error) => {
+            console.error("هەڵە لە وەرگرتنی داتا:", error);
+            reject(error);
+        });
+    });
+}
         // فەنکشنی ناردنی داواکاری بۆ واتساپ
         function sendRequestToWhatsApp() {
             const customerName = document.getElementById('customerName').value;
@@ -3728,7 +3753,21 @@ function updateRequestsStats() {
                 printWindow.close();
             }, 500);
         }
-        
+ 
+if (window.navigator && navigator.serviceWorker) {
+  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+    for (let registration of registrations) {
+      registration.unregister();
+    }
+  });
+}
+    // ئەگەر دوای ٣ چرکە شاشەکە هەر سپی بوو، یەکسەر لاپەڕەکە نوێ بکەرەوە
+    setTimeout(function() {
+        if (document.body.innerHTML.trim() === "" || document.getElementById('slidesWrapper').innerHTML === "") {
+            window.location.reload();
+        }
+    }, 3000);
+
         // ============================
         // کۆتایی فەنکشنەکانی داواکاری
         // ============================
@@ -5740,6 +5779,25 @@ async function compressImage(file) {
             };
         };
     });
+}
+window.onerror = function(message, source, lineno, colno, error) {
+    alert("هەڵە لە ناو ئەپ ڕوویدا: " + message + " لە هێڵی: " + lineno);
+    return true;
+};
+function updateRequestsFromFirebase() {
+    console.log("خەریکی نوێکردنەوەی داواکارییەکانم لە فایەربەیسەوە...");
+    // ئەم فەنکشنە هەمان کاری loadRequestsFromFirebase دەکات
+    if (typeof loadRequestsFromFirebase === 'function') {
+        return loadRequestsFromFirebase();
+    } else {
+        return new Promise((resolve) => {
+            database.ref('requests').once('value', (snapshot) => {
+                const data = snapshot.val();
+                requests = data ? Object.values(data) : [];
+                resolve(requests);
+            });
+        });
+    }
 }
     </script>
 </body>
