@@ -1512,8 +1512,17 @@
         }
 
 function showAdminTab(tab) {
+    // سڕینەوەی active لە هەموو تابەکان
     document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
+    
+    // زیادکردنی active بۆ تابی کلیککراو
+    const clickedTab = Array.from(document.querySelectorAll('.admin-tab')).find(t => {
+        const onclick = t.getAttribute('onclick');
+        return onclick && onclick.includes(`'${tab}'`);
+    });
+    if (clickedTab) {
+        clickedTab.classList.add('active');
+    }
     
     const content = document.getElementById('adminContent');
     
@@ -1531,43 +1540,60 @@ function showAdminTab(tab) {
         showAdminAddProductForm();
     }
 }
-        function loadPendingProducts() {
-            database.ref('products').orderByChild('status').equalTo('pending').once('value')
-                .then((snapshot) => {
-                    const content = document.getElementById('adminContent');
-                    let html = '<div class="pending-items">';
+       function loadPendingProducts() {
+    const content = document.getElementById('adminContent');
+    content.innerHTML = '<p style="text-align: center; color: var(--gray);">چاوەڕێ بکە...</p>';
+    
+    database.ref('products').once('value')
+        .then((snapshot) => {
+            let html = '<div class="pending-items">';
+            let hasPendingProducts = false;
+            
+            snapshot.forEach((child) => {
+                const product = child.val();
+                const id = child.key;
+                
+                // تەنها کاڵای pending پیشان بدە
+                if (product.status === 'pending') {
+                    hasPendingProducts = true;
+                    const firstImage = product.images && product.images[0] ? product.images[0] : '';
                     
-                    snapshot.forEach((child) => {
-                        const product = child.val();
-                        const id = child.key;
-                        html += `
-                            <div class="pending-item">
-                                <h4>📦 ${product.name}</h4>
-                                <p><strong>جۆر:</strong> ${product.category}</p>
-                                <p><strong>نرخ:</strong> ${product.price} ${product.currency}</p>
-                                <p><strong>فرۆشیار:</strong> ${product.sellerName} - ${product.sellerMobile}</p>
-                                <p><strong>شوێن:</strong> ${product.location}</p>
-                                <p><strong>وردەکاری:</strong> ${product.description || 'بەبەتاڵ'}</p>
-                                <div class="actions">
-                                    <button class="btn btn-secondary btn-small" onclick="approveProduct('${id}')">
-                                        <i class="fas fa-check"></i> پەسەندکردن
-                                    </button>
-                                    <button class="btn btn-danger btn-small" onclick="rejectProduct('${id}')">
-                                        <i class="fas fa-times"></i> ڕەتکردنەوە
-                                    </button>
-                                </div>
+                    html += `
+                        <div class="pending-item">
+                            ${firstImage ? `<img src="${firstImage}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;">` : ''}
+                            <h4>📦 ${product.name}</h4>
+                            <p><strong>جۆر:</strong> ${product.category}</p>
+                            <p><strong>نرخ:</strong> ${product.price} ${product.currency}</p>
+                            <p><strong>فرۆشیار:</strong> ${product.sellerName} - ${product.sellerMobile}</p>
+                            <p><strong>شوێن:</strong> ${product.location}</p>
+                            <p><strong>وردەکاری:</strong> ${product.description || 'بەبەتاڵ'}</p>
+                            <p><strong>بەروار:</strong> ${product.timestamp || 'نەنووسراوە'}</p>
+                            <div class="actions">
+                                <button class="btn btn-secondary btn-small" onclick="approveProduct('${id}')">
+                                    <i class="fas fa-check"></i> پەسەندکردن
+                                </button>
+                                <button class="btn btn-danger btn-small" onclick="rejectProduct('${id}')">
+                                    <i class="fas fa-times"></i> ڕەتکردنەوە
+                                </button>
                             </div>
-                        `;
-                    });
-                    
-                    if (!snapshot.exists()) {
-                        html = '<p style="text-align: center; color: var(--gray);">هیچ کاڵایەکی چاوەڕوانی پەسەندکردن نییە</p>';
-                    }
-                    
-                    html += '</div>';
-                    content.innerHTML = html;
-                });
-        }
+                        </div>
+                    `;
+                }
+            });
+            
+            if (!hasPendingProducts) {
+                html = '<p style="text-align: center; color: var(--gray); padding: 40px;">هیچ کاڵایەکی چاوەڕوانی پەسەندکردن نییە ✓</p>';
+            } else {
+                html += '</div>';
+            }
+            
+            content.innerHTML = html;
+        })
+        .catch((error) => {
+            console.error("Error loading pending products:", error);
+            content.innerHTML = '<p style="text-align: center; color: var(--danger);">هەڵە لە بارکردن!</p>';
+        });
+}
 
         function loadRequests() {
             database.ref('requests').once('value')
