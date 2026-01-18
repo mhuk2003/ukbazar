@@ -1272,26 +1272,23 @@
                 </div>
                 <div class="form-group">
                     <label>جۆری کاڵا:</label>
-                  <select id="productCategory" required>
-    <option value="">هەڵبژێرە...</option>
-    <option value="موبایل">موبایل</option>
-    <option value="لاپتۆپ">لاپتۆپ</option>
-    <option value="کۆمپیوتەر">کۆمپیوتەر</option>
-    <option value="ئایپاد">ئایپاد</option>
-    <option value="ئوتومبێل">ئوتومبێل</option>
-    <option value="ناوماڵ">ناوماڵ</option>
-    <option value="پاسکیل">پاسکیل</option>
-    <option value="سکوتەر">سکوتەر</option>
-    <option value="کامێرا">کامێرا</option>
-    <option value="جوانکاری">جوانکاری</option>
-    <option value="خانوو">خانوو</option>
-    <option value="زەوی">زەوی</option>
-    <option value="باخ">باخ</option>
-    <option value="ئاژەڵ">ئاژەڵ</option>
-    <option value="جل وبەرگ">جل وبەرگ</option>
-    <option value="کەل وپەل">کەل وپەل</option>
-    <option value="جیاوز">جیاواز</option>
-</select>
+                    <select id="productCategory" required>
+                        <option value="">هەڵبژێرە...</option>
+                        <option value="مۆبایل">مۆبایل</option>
+                        <option value="لاپتۆپ">لاپتۆپ</option>
+                        <option value="کۆمپیوتەر">کۆمپیوتەر</option>
+                        <option value="ئایپاد">ئایپاد</option>
+                        <option value="ئوتومبێل">ئوتومبێل</option>
+                        <option value="ناوماڵ">ناوماڵ</option>
+                        <option value="پاسکیل">پاسکیل</option>
+                        <option value="سکۆتەر">سکۆتەر</option>
+                        <option value="کامێرا">کامێرا</option>
+                        <option value="جوانکاری">جوانکاری</option>
+                        <option value="خانوو">خانوو</option>
+                        <option value="زەوی">زەوی</option>
+                        <option value="باخ">باخ</option>
+                        <option value="ئاژەڵ">ئاژەڵ</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>وردەکاری:</label>
@@ -1515,17 +1512,8 @@
         }
 
 function showAdminTab(tab) {
-    // سڕینەوەی active لە هەموو تابەکان
     document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-    
-    // زیادکردنی active بۆ تابی کلیککراو
-    const clickedTab = Array.from(document.querySelectorAll('.admin-tab')).find(t => {
-        const onclick = t.getAttribute('onclick');
-        return onclick && onclick.includes(`'${tab}'`);
-    });
-    if (clickedTab) {
-        clickedTab.classList.add('active');
-    }
+    event.target.classList.add('active');
     
     const content = document.getElementById('adminContent');
     
@@ -1543,60 +1531,43 @@ function showAdminTab(tab) {
         showAdminAddProductForm();
     }
 }
-       function loadPendingProducts() {
-    const content = document.getElementById('adminContent');
-    content.innerHTML = '<p style="text-align: center; color: var(--gray);">چاوەڕێ بکە...</p>';
-    
-    database.ref('products').once('value')
-        .then((snapshot) => {
-            let html = '<div class="pending-items">';
-            let hasPendingProducts = false;
-            
-            snapshot.forEach((child) => {
-                const product = child.val();
-                const id = child.key;
-                
-                // تەنها کاڵای pending پیشان بدە
-                if (product.status === 'pending') {
-                    hasPendingProducts = true;
-                    const firstImage = product.images && product.images[0] ? product.images[0] : '';
+        function loadPendingProducts() {
+            database.ref('products').orderByChild('status').equalTo('pending').once('value')
+                .then((snapshot) => {
+                    const content = document.getElementById('adminContent');
+                    let html = '<div class="pending-items">';
                     
-                    html += `
-                        <div class="pending-item">
-                            ${firstImage ? `<img src="${firstImage}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;">` : ''}
-                            <h4>📦 ${product.name}</h4>
-                            <p><strong>جۆر:</strong> ${product.category}</p>
-                            <p><strong>نرخ:</strong> ${product.price} ${product.currency}</p>
-                            <p><strong>فرۆشیار:</strong> ${product.sellerName} - ${product.sellerMobile}</p>
-                            <p><strong>شوێن:</strong> ${product.location}</p>
-                            <p><strong>وردەکاری:</strong> ${product.description || 'بەبەتاڵ'}</p>
-                            <p><strong>بەروار:</strong> ${product.timestamp || 'نەنووسراوە'}</p>
-                            <div class="actions">
-                                <button class="btn btn-secondary btn-small" onclick="approveProduct('${id}')">
-                                    <i class="fas fa-check"></i> پەسەندکردن
-                                </button>
-                                <button class="btn btn-danger btn-small" onclick="rejectProduct('${id}')">
-                                    <i class="fas fa-times"></i> ڕەتکردنەوە
-                                </button>
+                    snapshot.forEach((child) => {
+                        const product = child.val();
+                        const id = child.key;
+                        html += `
+                            <div class="pending-item">
+                                <h4>📦 ${product.name}</h4>
+                                <p><strong>جۆر:</strong> ${product.category}</p>
+                                <p><strong>نرخ:</strong> ${product.price} ${product.currency}</p>
+                                <p><strong>فرۆشیار:</strong> ${product.sellerName} - ${product.sellerMobile}</p>
+                                <p><strong>شوێن:</strong> ${product.location}</p>
+                                <p><strong>وردەکاری:</strong> ${product.description || 'بەبەتاڵ'}</p>
+                                <div class="actions">
+                                    <button class="btn btn-secondary btn-small" onclick="approveProduct('${id}')">
+                                        <i class="fas fa-check"></i> پەسەندکردن
+                                    </button>
+                                    <button class="btn btn-danger btn-small" onclick="rejectProduct('${id}')">
+                                        <i class="fas fa-times"></i> ڕەتکردنەوە
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    `;
-                }
-            });
-            
-            if (!hasPendingProducts) {
-                html = '<p style="text-align: center; color: var(--gray); padding: 40px;">هیچ کاڵایەکی چاوەڕوانی پەسەندکردن نییە ✓</p>';
-            } else {
-                html += '</div>';
-            }
-            
-            content.innerHTML = html;
-        })
-        .catch((error) => {
-            console.error("Error loading pending products:", error);
-            content.innerHTML = '<p style="text-align: center; color: var(--danger);">هەڵە لە بارکردن!</p>';
-        });
-}
+                        `;
+                    });
+                    
+                    if (!snapshot.exists()) {
+                        html = '<p style="text-align: center; color: var(--gray);">هیچ کاڵایەکی چاوەڕوانی پەسەندکردن نییە</p>';
+                    }
+                    
+                    html += '</div>';
+                    content.innerHTML = html;
+                });
+        }
 
         function loadRequests() {
             database.ref('requests').once('value')
@@ -1655,8 +1626,8 @@ function showAdminTab(tab) {
 function showAddSliderForm() {
             const content = document.getElementById('adminContent');
             content.innerHTML = `
-                <div style="background: white; padding: 20px; border-radius: 12px;">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">🖼️ زیادکردنی وێنە بۆ سلایدەر</h3>
+                <div style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">🖼️ زیادکردنی وێنە بە سلایدەر</h3>
                     <form id="adminSliderForm">
                         <div class="form-group">
                             <label>وێنەکان (دەتوانیت چەندین وێنە هەڵبژێریت):</label>
@@ -1668,9 +1639,16 @@ function showAddSliderForm() {
                             <input type="text" id="sliderTitle" placeholder="ناونیشانی وێنە...">
                         </div>
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-upload"></i> زیادکردنی وێنە بۆ سلایدەر
+                            <i class="fas fa-upload"></i> زیادکردنی وێنە بە سلایدەر
                         </button>
                     </form>
+                </div>
+                
+                <div style="background: white; padding: 20px; border-radius: 12px;">
+                    <h3 style="margin-bottom: 20px; color: var(--danger);">🗑️ بەڕێوەبردنی وێنەکانی سلایدەر</h3>
+                    <div id="sliderImagesList" style="display: grid; gap: 15px;">
+                        <p style="text-align: center; color: var(--gray);">چاوەڕوانی بکە...</p>
+                    </div>
                 </div>
             `;
 
@@ -1714,9 +1692,12 @@ function showAddSliderForm() {
                 showNotification('وێنەکان بە سەرکەوتوویی زیادکران! 🎉');
                 document.getElementById('adminSliderForm').reset();
                 document.getElementById('sliderPreview').innerHTML = '';
+                loadSliderManagement();
             });
+            
+            // Load existing slider images
+            loadSliderManagement();
         }
-
         function showAdminAddProductForm() {
             const content = document.getElementById('adminContent');
             content.innerHTML = `
@@ -1729,26 +1710,23 @@ function showAddSliderForm() {
                         </div>
                         <div class="form-group">
                             <label>جۆری کاڵا:</label>
-                            <<select id="adminProductCategory" required>
-    <option value="">هەڵبژێرە...</option>
-    <option value="موبایل">موبایل</option>
-    <option value="لاپتۆپ">لاپتۆپ</option>
-    <option value="کۆمپیوتەر">کۆمپیوتەر</option>
-    <option value="ئایپاد">ئایپاد</option>
-    <option value="ئوتومبێل">ئوتومبێل</option>
-    <option value="ناوماڵ">ناوماڵ</option>
-    <option value="پاسکیل">پاسکیل</option>
-    <option value="سکوتەر">سکوتەر</option>
-    <option value="کامێرا">کامێرا</option>
-    <option value="جوانکاری">جوانکاری</option>
-    <option value="خانوو">خانوو</option>
-    <option value="زەوی">زەوی</option>
-    <option value="باخ">باخ</option>
-    <option value="ئاژەڵ">ئاژەڵ</option>
-    <option value="جل وبەرگ">جل وبەرگ</option>
-    <option value="کەل وپەل">کەل وپەل</option>
-    <option value="جیاوز">جیاواز</option>
-</select>
+                            <select id="adminProductCategory" required>
+                                <option value="">هەڵبژێرە...</option>
+                                <option value="مۆبایل">مۆبایل</option>
+                                <option value="لاپتۆپ">لاپتۆپ</option>
+                                <option value="کۆمپیوتەر">کۆمپیوتەر</option>
+                                <option value="ئایپاد">ئایپاد</option>
+                                <option value="ئوتومبێل">ئوتومبێل</option>
+                                <option value="ناوماڵ">ناوماڵ</option>
+                                <option value="پاسکیل">پاسکیل</option>
+                                <option value="سکۆتەر">سکۆتەر</option>
+                                <option value="کامێرا">کامێرا</option>
+                                <option value="جوانکاری">جوانکاری</option>
+                                <option value="خانوو">خانوو</option>
+                                <option value="زەوی">زەوی</option>
+                                <option value="باخ">باخ</option>
+                                <option value="ئاژەڵ">ئاژەڵ</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label>وردەکاری:</label>
@@ -2007,13 +1985,12 @@ function showAddSliderForm() {
             showNotification('هەڵە لە بارکردن!', 'error');
         });
 }
-      function createCategoryButtons() {
-    const categories = [
-        'هەموو کاڵاکان', 'موبایل', 'لاپتۆپ', 'کۆمپیوتەر', 'ئایپاد',
-        'ئوتومبێل', 'ناوماڵ', 'پاسکیل', 'سکوتەر', 'کامێرا',
-        'جوانکاری', 'خانوو', 'زەوی', 'باخ', 'ئاژەڵ',
-        'جل وبەرگ', 'کەل وپەل', 'جیاواز'
-    ];
+        function createCategoryButtons() {
+            const categories = [
+                'هەموو کاڵاکان', 'مۆبایل', 'لاپتۆپ', 'کۆمپیوتەر', 'ئایپاد',
+                'ئوتومبێل', 'ناوماڵ', 'پاسکیل', 'سکۆتەر', 'کامێرا',
+                'جوانکاری', 'خانوو', 'زەوی', 'باخ', 'ئاژەڵ'
+            ];
             
             const container = document.getElementById('categoryButtons');
             container.innerHTML = categories.map(cat => 
@@ -2111,30 +2088,68 @@ function showAddSliderForm() {
         }
 
         function loadSliderImages() {
-            const slidesWrapper = document.getElementById('slidesWrapper');
-            const sliderDots = document.getElementById('sliderDots');
+    const slidesWrapper = document.getElementById('slidesWrapper');
+    const sliderDots = document.getElementById('sliderDots');
+    
+    // بارکردنی وێنەکانی سلایدەر لە Firebase
+    database.ref('slider').once('value')
+        .then((snapshot) => {
+            if (!snapshot.exists()) {
+                // ئەگەر هیچ وێنەیەکی سلایدەر نەبوو، وێنەی کاڵاکان بەکاربهێنە
+                if (products.length === 0) return;
+                
+                const sliderProducts = products.slice().reverse().slice(0, 8);
+                totalSlides = sliderProducts.length;
+
+                slidesWrapper.innerHTML = sliderProducts.map(product => {
+                    const img = product.images && product.images[0] ? product.images[0] : 'https://via.placeholder.com/1200x400';
+                    return `
+                        <div class="slide">
+                            <img src="${img}" alt="${product.name}" loading="lazy">
+                        </div>
+                    `;
+                }).join('');
+
+                sliderDots.innerHTML = sliderProducts.map((_, index) => 
+                    `<div class="dot ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></div>`
+                ).join('');
+                
+                startAutoPlay();
+                return;
+            }
             
-            if (products.length === 0) return;
+            // وەرگرتنی وێنەکانی سلایدەر
+            const sliderImages = [];
+            snapshot.forEach((child) => {
+                sliderImages.push({
+                    imageUrl: child.val().imageUrl,
+                    title: child.val().title || 'سلایدەر'
+                });
+            });
+            
+            // پێچەوانەکردن بۆ پیشاندانی تازەکان لە یەکەم
+            sliderImages.reverse();
+            
+            totalSlides = sliderImages.length;
 
-            // وەرگرتنی ٨ کاڵای تازەترین (بە پێچەوانەی)
-const sliderProducts = products.slice().reverse().slice(0, 8);
-            totalSlides = sliderProducts.length;
-
-            slidesWrapper.innerHTML = sliderProducts.map(product => {
-                const img = product.images && product.images[0] ? product.images[0] : 'https://via.placeholder.com/1200x400';
+            slidesWrapper.innerHTML = sliderImages.map(slider => {
                 return `
                     <div class="slide">
-                        <img src="${img}" alt="${product.name}" loading="lazy">
+                        <img src="${slider.imageUrl}" alt="${slider.title}" loading="lazy">
                     </div>
                 `;
             }).join('');
 
-            sliderDots.innerHTML = sliderProducts.map((_, index) => 
+            sliderDots.innerHTML = sliderImages.map((_, index) => 
                 `<div class="dot ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></div>`
             ).join('');
 
             startAutoPlay();
-        }
+        })
+        .catch((error) => {
+            console.error('Error loading slider:', error);
+        });
+}
 function updateSlider() {
             const slidesWrapper = document.getElementById('slidesWrapper');
             slidesWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
@@ -2287,7 +2302,65 @@ function loadAllProducts() {
             content.innerHTML = html;
         });
 }
+function loadSliderManagement() {
+    database.ref('slider').once('value')
+        .then((snapshot) => {
+            const listContainer = document.getElementById('sliderImagesList');
+            
+            if (!snapshot.exists()) {
+                listContainer.innerHTML = '<p style="text-align: center; color: var(--gray);">هیچ وێنەیەکی سلایدەر نییە</p>';
+                return;
+            }
+            
+            const sliderImages = [];
+            snapshot.forEach((child) => {
+                sliderImages.push({
+                    data: child.val(),
+                    id: child.key
+                });
+            });
+            
+            // پێچەوانەکردن بۆ پیشاندانی تازەکان لە سەرەوە
+            sliderImages.reverse();
+            
+            let html = '';
+            sliderImages.forEach((item) => {
+                const slider = item.data;
+                const id = item.id;
+                
+                html += '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; display: flex; gap: 15px; align-items: center;">';
+                html += '<img src="' + slider.imageUrl + '" style="width: 150px; height: 100px; object-fit: cover; border-radius: 8px; flex-shrink: 0;">';
+                html += '<div style="flex: 1;">';
+                html += '<h4 style="margin: 0 0 5px 0; color: var(--dark);">' + (slider.title || 'سلایدەر') + '</h4>';
+                html += '<p style="margin: 0; color: var(--gray); font-size: 0.85rem;">بەرواری زیادکردن: ' + (slider.timestamp || 'نادیار') + '</p>';
+                html += '</div>';
+                html += '<button class="btn btn-danger btn-small" onclick="deleteSliderImage(\'' + id + '\')" style="flex-shrink: 0;">';
+                html += '<i class="fas fa-trash"></i> سڕینەوە';
+                html += '</button>';
+                html += '</div>';
+            });
+            
+            listContainer.innerHTML = html;
+        })
+        .catch((error) => {
+            console.error('Error loading slider images:', error);
+            document.getElementById('sliderImagesList').innerHTML = '<p style="text-align: center; color: var(--danger);">هەڵە لە بارکردنی وێنەکان!</p>';
+        });
+}
 
+function deleteSliderImage(sliderId) {
+    if (confirm('دڵنیایت لە سڕینەوەی ئەم وێنەیە؟')) {
+        database.ref('slider/' + sliderId).remove()
+            .then(() => {
+                showNotification('وێنە بە سەرکەوتوویی سڕایەوە! 🗑️');
+                loadSliderManagement();
+                loadSliderImages(); // نوێکردنەوەی سلایدەر لە پەیجی سەرەکی
+            })
+            .catch(() => {
+                showNotification('هەڵە لە سڕینەوە!', 'error');
+            });
+    }
+}
 
 function deleteProduct(productId) {
     if (confirm('دڵنیایت لە سڕینەوەی ئەم کاڵایە؟')) {
