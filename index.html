@@ -12,7 +12,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     
     <style>
-        :root {
+          :root {
             --primary: #667eea;
             --primary-dark: #5a67d8;
             --secondary: #48bb78;
@@ -350,7 +350,8 @@
 
         .products-section {
             padding: 20px 0;
-            margin-bottom: 80px;
+            margin-bottom: 80px;firebase
+
         }
 
         .section-title {
@@ -442,11 +443,7 @@
             margin-bottom: 15px;
         }
 
-        /
-
-/* لە ناو تاگی <style> ئەم کۆدە بدۆزەرەوە و نوێی بکەرەوە: */
-
-/* لە ناو تاگی <style> ئەم کۆدە دۆزەرەوە و بەم شێوەیە بیگۆڕە: */
+        
 
 .product-actions {
     display: grid;
@@ -461,18 +458,16 @@
     width: 100%;
     min-width: unset;
     justify-content: center;
-    height: 36px; /* بەرزی فیکسکراو */
+    height: 36px;
     display: flex;
     align-items: center;
     gap: 4px;
 }
 
-/* بۆ ئایکۆنەکان لە دوگمەدا */
 .btn-small i {
     font-size: 0.8rem;
 }
 
-/* بۆ شاشەی گەورەتر */
 @media (min-width: 769px) {
     .product-actions {
         display: flex;
@@ -491,7 +486,22 @@
     }
 }
 
-/* بۆ مۆبایل */
+/* بەڕێوەبردنی وێنەکانی سلایدەر لە موبایل */
+        #sliderImagesList > div {
+            flex-direction: column !important;
+            align-items: stretch !important;
+        }
+
+        #sliderImagesList img {
+            width: 100% !important;
+            height: auto !important;
+            max-height: 200px !important;
+        }
+
+        #sliderImagesList button {
+            width: 100% !important;
+        }
+
 @media (max-width: 768px) {
     .products-grid {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -499,7 +509,7 @@
     }
 
     .product-image {
-        height: 150px; /* کەمتر */
+        height: 150px;
     }
     
     .product-info {
@@ -523,10 +533,9 @@
     }
     
     .product-description {
-        display: none; /* لە مۆبایل نیشان نەدرێت */
+        display: none;
     }
     
-    /* دوگمەکانی کاڵا لە مۆبایل */
     .product-actions {
         grid-template-columns: 1fr 1fr;
         gap: 5px;
@@ -544,18 +553,16 @@
         font-size: 0.75rem;
     }
     
-    /* دوگمەی FIB تەنها ئایکۆن لە مۆبایل */
     .btn-fib .btn-text {
-        display: none; /* ناو نیشان نەدرێت لە مۆبایل */
+        display: none;
     }
     
     .btn-fib {
-        grid-column: span 2; /* دوو ستون داگیر بکات */
+        grid-column: span 2;
     }
     
-    /* ناوی کەمکراو بۆ دوگمەکان */
     .btn-primary .btn-text::after {
-        content: "سبەتە";
+        content: "سەبەتە";
         font-size: 0.65rem;
     }
     
@@ -563,9 +570,31 @@
         content: "واتساپ";
         font-size: 0.65rem;
     }
+
+    .nav-buttons {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .btn {
+        font-size: 0.8rem;
+        padding: 8px 12px;
+    }
+    
+    /* بەڕێوەبردنی سلایدەر لە موبایل */
+    #sliderImagesList > div {
+        padding: 10px !important;
+    }
+    
+    #sliderImagesList h4 {
+        font-size: 0.9rem !important;
+    }
+    
+    #sliderImagesList p {
+        font-size: 0.75rem !important;
+    }
 }
 
-/* بۆ شاشە زۆر بچووکەکان (زۆر بچووک) */
 @media (max-width: 480px) {
     .products-grid {
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -578,11 +607,11 @@
     
     .product-name {
         font-size: 0.85rem;
-        height: 2.4em; /* بەرزی فیکسکراو */
+        height: 2.4em;
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
-        -webkit-line-clamp: 2; /* دوو هێڵ */
+        -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
     }
     
@@ -601,6 +630,7 @@
         font-size: 0.7rem;
     }
 }
+
         .modal {
             display: none;
             position: fixed;
@@ -888,26 +918,6 @@
             margin-top: 10px;
         }
 
-        @media (max-width: 768px) {
-            .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                gap: 12px;
-            }
-
-            .product-image {
-                height: 180px;
-            }
-
-            .nav-buttons {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .btn {
-                font-size: 0.8rem;
-                padding: 8px 12px;
-            }
-        }
 .flags {
     display: flex;
     gap: 6px;
@@ -916,7 +926,7 @@
 }
 
 .flags img {
-    width: 24px;   /* گەورەتر */
+    width: 24px;
     height: 16px;
     object-fit: cover;
     border-radius: 3px;
@@ -933,7 +943,7 @@
     height: 30px;
 }
 .btn-fib {
-    background: linear-gradient(135deg, #1e3a8a, #1e40af); /* شینی کاڵتر */
+    background: linear-gradient(135deg, #1e3a8a, #1e40af);
     color: white;
 }
 
@@ -942,7 +952,7 @@
     background: linear-gradient(135deg, #1e40af, #2563eb);
 }
 .btn-fib {
-    background: linear-gradient(135deg, #1e3a8a, #1e40af); /* شینی کاڵتر */
+    background: linear-gradient(135deg, #1e3a8a, #1e40af);
     color: white;
 }
 
@@ -951,24 +961,22 @@
     background: linear-gradient(135deg, #1e40af, #2563eb);
 }
 
-/* هێڵی زیادکراو بۆ دوگمەکانی FIB لە مۆبایل */
 @media (max-width: 768px) {
     .btn-fib .btn-text {
-        display: inline; /* نیشان دەدات لە مۆبایل */
+        display: inline;
     }
 }
 
-/* بۆ شاشە بچووکتر (زۆر بچووک) */
 @media (max-width: 480px) {
     .product-actions {
-        grid-template-columns: 1fr; /* یەک دوگمە لە هەر ڕیزێک */
+        grid-template-columns: 1fr;
     }
     
     .btn-text {
-        font-size: 0.7rem; /* قەبارەی فۆنت بچووکتر */
+        font-size: 0.7rem;
     }
 }
-/* Image Zoom Modal */
+
 .image-modal {
     display: none;
     position: fixed;
