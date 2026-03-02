@@ -24,17 +24,6 @@ let autoPlayInterval = null;
 function showNotification(message, type = 'success') {
     let notification = document.getElementById('notification');
     let notificationMessage = document.getElementById('notificationMessage');
-    if (!notification) {
-        notification = document.createElement('div');
-        notification.id = 'notification';
-        document.body.appendChild(notification);
-    }
-    if (!notificationMessage) {
-        notificationMessage = document.createElement('span');
-        notificationMessage.id = 'notificationMessage';
-        notification.appendChild(notificationMessage);
-    }
-
     
     notificationMessage.textContent = message;
     notification.className = `notification ${type} show`;
@@ -50,15 +39,24 @@ function hideLoading() {
 }
 
 function showModal(modalId) {
-    document.getElementById(modalId).classList.add('show');
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.add('show');
+    }
 }
 
 function closeModal(modalId) {
-    document.getElementById(modalId).classList.remove('show');
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('show');
+    }
 }
 
 function showHomePage() {
     document.getElementById('adminPanel').style.display = 'none';
+    document.querySelector('.products-section').style.display = 'block';
+    document.querySelector('.slider-section').style.display = 'block';
+    document.querySelector('.category-filter-section').style.display = 'block';
     document.getElementById('productsTitle').textContent = 'هەموو کاڵاکان';
     loadApprovedProducts();
 }
@@ -143,6 +141,7 @@ function loadApprovedProducts() {
         hideLoading();
     });
 }
+
 function loadPendingProducts() {
     database.ref('products').orderByChild('status').equalTo('pending').once('value')
         .then((snapshot) => {
@@ -290,6 +289,7 @@ function approveProduct(productId) {
             .then(() => {
                 showNotification('کاڵا بە سەرکەوتوویی پەسەند کرا! ✅');
                 loadPendingProducts();
+                loadApprovedProducts();
             });
     }
 }
@@ -362,7 +362,6 @@ function showAddSliderForm() {
         </div>
     `;
 
-    // Image preview
     document.getElementById('sliderImages').addEventListener('change', function(e) {
         const preview = document.getElementById('sliderPreview');
         preview.innerHTML = '';
@@ -378,7 +377,6 @@ function showAddSliderForm() {
         });
     });
 
-    // Form submission
     document.getElementById('adminSliderForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         
@@ -487,17 +485,19 @@ function showAdminAddProductForm() {
                     <label>وردەکاری:</label>
                     <textarea id="adminProductDescription"></textarea>
                 </div>
-                <div class="form-group">
-                    <label>نرخ:</label>
-                    <input type="number" id="adminProductPrice" required>
-                </div>
-                <div class="form-group">
-                    <label>دراو:</label>
-                    <select id="adminProductCurrency" required>
-                        <option value="IQD">دینار</option>
-                        <option value="USD">دۆلار</option>
-                        <option value="GBP">پاوەند</option>
-                    </select>
+                <div class="form-group" style="display:flex; gap:10px;">
+                    <div style="flex:1;">
+                        <label>نرخ:</label>
+                        <input type="number" id="adminProductPrice" required>
+                    </div>
+                    <div style="flex:1;">
+                        <label>دراو:</label>
+                        <select id="adminProductCurrency" required>
+                            <option value="IQD">دینار</option>
+                            <option value="USD">دۆلار</option>
+                            <option value="GBP">پاوەند</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>وێنەکان:</label>
@@ -516,14 +516,18 @@ function showAdminAddProductForm() {
                     <label>شوێن:</label>
                     <input type="text" id="adminProductLocation" required>
                 </div>
-                <button type="submit" class="btn btn-secondary">
-                    <i class="fas fa-check-circle"></i> زیادکردنی کاڵا (پەسەندکراو)
-                </button>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-secondary">
+                        <i class="fas fa-check-circle"></i> زیادکردنی کاڵا (پەسەندکراو)
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="showAdminTab('products')">
+                        <i class="fas fa-times"></i> پاشگەزبوونەوە
+                    </button>
+                </div>
             </form>
         </div>
     `;
 
-    // Image preview
     document.getElementById('adminProductImages').addEventListener('change', function(e) {
         const preview = document.getElementById('adminProductPreview');
         preview.innerHTML = '';
@@ -539,7 +543,6 @@ function showAdminAddProductForm() {
         });
     });
 
-    // Form submission
     document.getElementById('adminProductForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         
@@ -575,13 +578,13 @@ function showAdminAddProductForm() {
         document.getElementById('adminProductForm').reset();
         document.getElementById('adminProductPreview').innerHTML = '';
         
+        showAdminTab('allProducts');
         loadApprovedProducts();
     });
 }
 
-// ==================== Form Submissions (Event Delegation) ====================
+// ==================== Form Submissions ====================
 document.addEventListener('submit', async function(e) {
-
     // Request Form
     if (e.target && e.target.id === 'requestForm') {
         e.preventDefault();
@@ -605,14 +608,17 @@ document.addEventListener('submit', async function(e) {
     if (e.target && e.target.id === 'addProductForm') {
         e.preventDefault();
         showNotification('تکایە چاوەڕێ بکە، کاڵا دەنێردرێت...');
+        
         const images = document.getElementById('productImages').files;
         const imageUrls = [];
+        
         for (let i = 0; i < images.length; i++) {
             const imageRef = storage.ref(`products/${Date.now()}_${i}`);
             const snapshot = await imageRef.put(images[i]);
             const url = await snapshot.ref.getDownloadURL();
             imageUrls.push(url);
         }
+        
         const productData = {
             name: document.getElementById('productName').value,
             category: document.getElementById('productCategory').value,
@@ -626,6 +632,7 @@ document.addEventListener('submit', async function(e) {
             status: 'pending',
             timestamp: new Date().toLocaleString('ku')
         };
+        
         database.ref('products').push(productData)
             .then(() => {
                 showNotification('کاڵاکەت نێردرا! چاوەڕوانی پەسەندکردنی بەڕێوەبەر بکە 📦');
@@ -656,7 +663,7 @@ document.addEventListener('submit', async function(e) {
     }
 });
 
-// Image Preview (Event Delegation)
+// Image Preview
 document.addEventListener('change', function(e) {
     if (e.target && e.target.id === 'productImages') {
         const preview = document.getElementById('imagePreview');
@@ -666,6 +673,10 @@ document.addEventListener('change', function(e) {
             reader.onload = function(event) {
                 const img = document.createElement('img');
                 img.src = event.target.result;
+                img.style.width = '100px';
+                img.style.height = '100px';
+                img.style.objectFit = 'cover';
+                img.style.borderRadius = '8px';
                 preview.appendChild(img);
             };
             reader.readAsDataURL(file);
@@ -708,6 +719,7 @@ function performSearch() {
     
     if (!searchTerm) {
         renderProducts(products);
+        document.getElementById('productsTitle').textContent = 'هەموو کاڵاکان';
         return;
     }
 
@@ -764,7 +776,7 @@ function createProductCard(product) {
         '<i class="fab fa-whatsapp"></i> <span class="btn-text">واتساپ</span>' +
         '</button>' +
         '<button class="btn btn-fib btn-small" onclick="showFibModal()">' +
-        '<i class="fas fa-copy"></i> <span class="btn-text">FIB کوردستان</span>' +
+        '<i class="fas fa-credit-card"></i> <span class="btn-text">FIB</span>' +
         '</button>' +
         '</div>' +
         '</div>' +
@@ -872,14 +884,18 @@ function renderSliderDirect(snapshot) {
             title: p.name
         }));
     }
+    
     if (images.length === 0) return;
+    
     totalSlides = images.length;
     slidesWrapper.innerHTML = images.map(img => 
         '<div class="slide"><img src="' + img.url + '" alt="' + img.title + '" loading="lazy"></div>'
     ).join('');
+    
     sliderDots.innerHTML = images.map((_, i) => 
         '<div class="dot ' + (i === 0 ? 'active' : '') + '" onclick="goToSlide(' + i + ')"></div>'
     ).join('');
+    
     startAutoPlay();
 }
 
@@ -945,7 +961,9 @@ function loadSliderImages() {
 
 function updateSlider() {
     const slidesWrapper = document.getElementById('slidesWrapper');
-    slidesWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+    if (slidesWrapper) {
+        slidesWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }
     
     document.querySelectorAll('.dot').forEach((dot, index) => {
         dot.classList.toggle('active', index === currentSlide);
@@ -987,27 +1005,43 @@ function closeImageModal() {
     document.body.style.overflow = 'auto';
 }
 
-// ==================== Initialize on page load ====================
-document.addEventListener('DOMContentLoaded', function() {
-    loadApprovedProducts();
-    updateCartBadge();
+// ==================== Close Modal Functions ====================
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('show');
+        if (modalId === 'imageModal') {
+            document.body.style.overflow = 'auto';
+        }
+    }
+}
 
-    window.onclick = function(event) {
-        const modals = ['requestModal', 'addProductModal', 'deliveryModal', 'fibModal'];
-        modals.forEach(modalId => {
-            const modal = document.getElementById(modalId);
-            if (event.target === modal) {
-                closeModal(modalId);
-            }
-        });
-    };
-});
+// Close modal when clicking outside
 window.onclick = function(event) {
     const modals = ['requestModal', 'addProductModal', 'deliveryModal', 'fibModal', 'imageModal'];
     modals.forEach(id => {
         const modal = document.getElementById(id);
-        if (event.target == modal) {
+        if (event.target === modal) {
             closeModal(id);
         }
     });
 }
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const modals = ['requestModal', 'addProductModal', 'deliveryModal', 'fibModal', 'imageModal'];
+        modals.forEach(id => {
+            const modal = document.getElementById(id);
+            if (modal && modal.classList.contains('show')) {
+                closeModal(id);
+            }
+        });
+    }
+});
+
+// ==================== Initialize ====================
+document.addEventListener('DOMContentLoaded', function() {
+    loadApprovedProducts();
+    updateCartBadge();
+});
