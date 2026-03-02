@@ -22,15 +22,17 @@ let autoPlayInterval = null;
 
 // ==================== Helper Functions ====================
 function showNotification(message, type = 'success') {
-    let notification = document.getElementById('notification');
-    let notificationMessage = document.getElementById('notificationMessage');
+    const notification = document.getElementById('notification');
+    const notificationMessage = document.getElementById('notificationMessage');
     
-    notificationMessage.textContent = message;
-    notification.className = `notification ${type} show`;
-    
-    setTimeout(() => {
-        notification.classList.remove('show');
-    }, 3000);
+    if (notification && notificationMessage) {
+        notificationMessage.textContent = message;
+        notification.className = `notification ${type} show`;
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 3000);
+    }
 }
 
 function hideLoading() {
@@ -49,15 +51,25 @@ function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
         modal.classList.remove('show');
+        if (modalId === 'imageModal') {
+            document.body.style.overflow = 'auto';
+        }
     }
 }
 
 function showHomePage() {
-    document.getElementById('adminPanel').style.display = 'none';
-    document.querySelector('.products-section').style.display = 'block';
-    document.querySelector('.slider-section').style.display = 'block';
-    document.querySelector('.category-filter-section').style.display = 'block';
-    document.getElementById('productsTitle').textContent = 'هەموو کاڵاکان';
+    const adminPanel = document.getElementById('adminPanel');
+    const productsSection = document.querySelector('.products-section');
+    const sliderSection = document.querySelector('.slider-section');
+    const categorySection = document.querySelector('.category-filter-section');
+    const productsTitle = document.getElementById('productsTitle');
+    
+    if (adminPanel) adminPanel.style.display = 'none';
+    if (productsSection) productsSection.style.display = 'block';
+    if (sliderSection) sliderSection.style.display = 'block';
+    if (categorySection) categorySection.style.display = 'block';
+    if (productsTitle) productsTitle.textContent = 'هەموو کاڵاکان';
+    
     loadApprovedProducts();
 }
 
@@ -74,10 +86,16 @@ function showAdminLogin() {
     
     if (username === 'admin' && password === 'admin112233') {
         isAdmin = true;
-        document.getElementById('adminPanel').style.display = 'block';
-        document.querySelector('.products-section').style.display = 'none';
-        document.querySelector('.slider-section').style.display = 'none';
-        document.querySelector('.category-filter-section').style.display = 'none';
+        const adminPanel = document.getElementById('adminPanel');
+        const productsSection = document.querySelector('.products-section');
+        const sliderSection = document.querySelector('.slider-section');
+        const categorySection = document.querySelector('.category-filter-section');
+        
+        if (adminPanel) adminPanel.style.display = 'block';
+        if (productsSection) productsSection.style.display = 'none';
+        if (sliderSection) sliderSection.style.display = 'none';
+        if (categorySection) categorySection.style.display = 'none';
+        
         showNotification('بەخێربێیت بەڕێوەبەر! 🔐');
         showAdminTab('products');
     } else {
@@ -87,19 +105,30 @@ function showAdminLogin() {
 
 function logout() {
     isAdmin = false;
-    document.getElementById('adminPanel').style.display = 'none';
-    document.querySelector('.products-section').style.display = 'block';
-    document.querySelector('.slider-section').style.display = 'block';
-    document.querySelector('.category-filter-section').style.display = 'block';
+    const adminPanel = document.getElementById('adminPanel');
+    const productsSection = document.querySelector('.products-section');
+    const sliderSection = document.querySelector('.slider-section');
+    const categorySection = document.querySelector('.category-filter-section');
+    
+    if (adminPanel) adminPanel.style.display = 'none';
+    if (productsSection) productsSection.style.display = 'block';
+    if (sliderSection) sliderSection.style.display = 'block';
+    if (categorySection) categorySection.style.display = 'block';
+    
     showNotification('بە سەرکەوتوویی دەرچوویت');
     showHomePage();
 }
 
 function showAdminTab(tab) {
-    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
+    const tabs = document.querySelectorAll('.admin-tab');
+    tabs.forEach(t => t.classList.remove('active'));
+    
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
     
     const content = document.getElementById('adminContent');
+    if (!content) return;
     
     if (tab === 'products') {
         loadPendingProducts();
@@ -114,6 +143,34 @@ function showAdminTab(tab) {
     } else if (tab === 'addProduct') {
         showAdminAddProductForm();
     }
+}
+
+// ==================== About Us Function ====================
+function showAboutUs() {
+    const aboutMessage = `🏢 *دەربارەی UK BAZAR*
+
+UK BAZAR پلاتفۆرمێکی بازرگانی ئۆنلاینە کە بازاڕێکی ئاسان و متمانەپێکراو دابین دەکات بۆ کڕین و فرۆشتنی کاڵا لە نێوان کوردستان و شانشینی یەکگرتوو.
+
+✨ *تایبەتمەندیەکان:*
+• کڕین و فرۆشتنی ئاسان
+• داواکاری کاڵا
+• گەیاندنی کاڵا
+• پارەدان لە ڕێگەی FIB
+• پەیوەندی ڕاستەوخۆ لەگەڵ فرۆشیار
+
+📞 *پەیوەندی:*
+• کوردستان: 07755436275 | 07507472656
+• UK: 00447449218670
+• ئیمەیل: Info@ukbazar.online
+
+🌐 وێبسایت: www.ukbazar.online
+
+سوپاس بۆ متمانە پێدان! 🙏`;
+
+    showNotification('دەربارەی UK BAZAR - تکایە سەیری واتساپ بکە', 'info');
+    
+    const whatsappUrl = `https://wa.me/9647700000000?text=${encodeURIComponent(aboutMessage)}`;
+    window.open(whatsappUrl, '_blank');
 }
 
 // ==================== Firebase Data Loaders ====================
@@ -146,6 +203,8 @@ function loadPendingProducts() {
     database.ref('products').orderByChild('status').equalTo('pending').once('value')
         .then((snapshot) => {
             const content = document.getElementById('adminContent');
+            if (!content) return;
+            
             let html = '<div class="pending-items">';
             
             snapshot.forEach((child) => {
@@ -157,7 +216,7 @@ function loadPendingProducts() {
                         <p><strong>جۆر:</strong> ${product.category}</p>
                         <p><strong>نرخ:</strong> ${product.price} ${product.currency}</p>
                         <p><strong>فرۆشیار:</strong> ${product.sellerName} - ${product.sellerMobile}</p>
-                        <p><strong>شوێن:</strong> ${product.location}</p>
+                        <p><strong>شوێن:</strong> ${product.location || 'نادیار'}</p>
                         <p><strong>وردەکاری:</strong> ${product.description || 'بەبەتاڵ'}</p>
                         <div class="actions">
                             <button class="btn btn-secondary btn-small" onclick="approveProduct('${id}')">
@@ -184,6 +243,7 @@ function loadAllProducts() {
     database.ref('products').orderByChild('status').equalTo('approved').once('value')
         .then((snapshot) => {
             const content = document.getElementById('adminContent');
+            if (!content) return;
             
             if (!snapshot.exists()) {
                 content.innerHTML = '<p style="text-align: center; color: var(--gray);">هیچ کاڵایەک نییە</p>';
@@ -215,7 +275,7 @@ function loadAllProducts() {
                 html += '<p><strong>جۆر:</strong> ' + product.category + '</p>';
                 html += '<p><strong>نرخ:</strong> ' + product.price + ' ' + product.currency + '</p>';
                 html += '<p><strong>فرۆشیار:</strong> ' + product.sellerName + ' - ' + product.sellerMobile + '</p>';
-                html += '<p><strong>شوێن:</strong> ' + product.location + '</p>';
+                html += '<p><strong>شوێن:</strong> ' + (product.location || 'نادیار') + '</p>';
                 html += '<p><strong>وردەکاری:</strong> ' + (product.description || 'بەبەتاڵ') + '</p>';
                 html += '<div class="actions">';
                 html += '<button class="btn btn-danger btn-small" onclick="deleteProduct(\'' + id + '\')"><i class="fas fa-trash"></i> سڕینەوە</button>';
@@ -231,6 +291,8 @@ function loadRequests() {
     database.ref('requests').once('value')
         .then((snapshot) => {
             const content = document.getElementById('adminContent');
+            if (!content) return;
+            
             let html = '<div class="pending-items">';
             
             snapshot.forEach((child) => {
@@ -258,6 +320,8 @@ function loadDeliveryRequests() {
     database.ref('delivery').once('value')
         .then((snapshot) => {
             const content = document.getElementById('adminContent');
+            if (!content) return;
+            
             let html = '<div class="pending-items">';
             
             snapshot.forEach((child) => {
@@ -335,6 +399,8 @@ function deleteSliderImage(sliderId) {
 // ==================== Admin Forms ====================
 function showAddSliderForm() {
     const content = document.getElementById('adminContent');
+    if (!content) return;
+    
     content.innerHTML = `
         <div style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
             <h3 style="margin-bottom: 20px; color: var(--primary);">🖼️ زیادکردنی وێنە بە سلایدەر</h3>
@@ -362,46 +428,54 @@ function showAddSliderForm() {
         </div>
     `;
 
-    document.getElementById('sliderImages').addEventListener('change', function(e) {
-        const preview = document.getElementById('sliderPreview');
-        preview.innerHTML = '';
-        
-        Array.from(e.target.files).forEach(file => {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = document.createElement('img');
-                img.src = event.target.result;
-                preview.appendChild(img);
-            };
-            reader.readAsDataURL(file);
-        });
-    });
-
-    document.getElementById('adminSliderForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        showNotification('تکایە چاوەڕێ بکە، وێنەکان بارکراوە...');
-        
-        const images = document.getElementById('sliderImages').files;
-        const title = document.getElementById('sliderTitle').value;
-        
-        for (let i = 0; i < images.length; i++) {
-            const imageRef = storage.ref(`slider/${Date.now()}_${i}`);
-            const snapshot = await imageRef.put(images[i]);
-            const url = await snapshot.ref.getDownloadURL();
+    const sliderImages = document.getElementById('sliderImages');
+    if (sliderImages) {
+        sliderImages.addEventListener('change', function(e) {
+            const preview = document.getElementById('sliderPreview');
+            if (!preview) return;
+            preview.innerHTML = '';
             
-            await database.ref('slider').push({
-                imageUrl: url,
-                title: title || 'سلایدەر',
-                timestamp: new Date().toLocaleString('ku')
+            Array.from(e.target.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    preview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
             });
-        }
-        
-        showNotification('وێنەکان بە سەرکەوتوویی زیادکران! 🎉');
-        document.getElementById('adminSliderForm').reset();
-        document.getElementById('sliderPreview').innerHTML = '';
-        loadSliderManagement();
-    });
+        });
+    }
+
+    const adminSliderForm = document.getElementById('adminSliderForm');
+    if (adminSliderForm) {
+        adminSliderForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            showNotification('تکایە چاوەڕێ بکە، وێنەکان بارکراوە...');
+            
+            const images = document.getElementById('sliderImages').files;
+            const title = document.getElementById('sliderTitle').value;
+            
+            for (let i = 0; i < images.length; i++) {
+                const imageRef = storage.ref(`slider/${Date.now()}_${i}`);
+                const snapshot = await imageRef.put(images[i]);
+                const url = await snapshot.ref.getDownloadURL();
+                
+                await database.ref('slider').push({
+                    imageUrl: url,
+                    title: title || 'سلایدەر',
+                    timestamp: new Date().toLocaleString('ku')
+                });
+            }
+            
+            showNotification('وێنەکان بە سەرکەوتوویی زیادکران! 🎉');
+            adminSliderForm.reset();
+            const preview = document.getElementById('sliderPreview');
+            if (preview) preview.innerHTML = '';
+            loadSliderManagement();
+        });
+    }
     
     loadSliderManagement();
 }
@@ -410,6 +484,7 @@ function loadSliderManagement() {
     database.ref('slider').once('value')
         .then((snapshot) => {
             const listContainer = document.getElementById('sliderImagesList');
+            if (!listContainer) return;
             
             if (!snapshot.exists()) {
                 listContainer.innerHTML = '<p style="text-align: center; color: var(--gray);">هیچ وێنەیەکی سلایدەر نییە</p>';
@@ -447,12 +522,17 @@ function loadSliderManagement() {
         })
         .catch((error) => {
             console.error('Error loading slider images:', error);
-            document.getElementById('sliderImagesList').innerHTML = '<p style="text-align: center; color: var(--danger);">هەڵە لە بارکردنی وێنەکان!</p>';
+            const listContainer = document.getElementById('sliderImagesList');
+            if (listContainer) {
+                listContainer.innerHTML = '<p style="text-align: center; color: var(--danger);">هەڵە لە بارکردنی وێنەکان!</p>';
+            }
         });
 }
 
 function showAdminAddProductForm() {
     const content = document.getElementById('adminContent');
+    if (!content) return;
+    
     content.innerHTML = `
         <div style="background: white; padding: 20px; border-radius: 12px;">
             <h3 style="margin-bottom: 20px; color: var(--primary);">📦 زیادکردنی کاڵا (بە ڕاستەوخۆ)</h3>
@@ -479,6 +559,9 @@ function showAdminAddProductForm() {
                         <option value="زەوی">زەوی</option>
                         <option value="باخ">باخ</option>
                         <option value="ئاژەڵ">ئاژەڵ</option>
+                        <option value="جلوبەرگی پیاوان">جلوبەرگی پیاوان</option>
+                        <option value="جلوبەرگی ئافرەتان">جلوبەرگی ئافرەتان</option>
+                        <option value="جلوبەرگی منداڵان">جلوبەرگی منداڵان</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -528,59 +611,67 @@ function showAdminAddProductForm() {
         </div>
     `;
 
-    document.getElementById('adminProductImages').addEventListener('change', function(e) {
-        const preview = document.getElementById('adminProductPreview');
-        preview.innerHTML = '';
-        
-        Array.from(e.target.files).forEach(file => {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = document.createElement('img');
-                img.src = event.target.result;
-                preview.appendChild(img);
-            };
-            reader.readAsDataURL(file);
+    const adminProductImages = document.getElementById('adminProductImages');
+    if (adminProductImages) {
+        adminProductImages.addEventListener('change', function(e) {
+            const preview = document.getElementById('adminProductPreview');
+            if (!preview) return;
+            preview.innerHTML = '';
+            
+            Array.from(e.target.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    preview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
         });
-    });
+    }
 
-    document.getElementById('adminProductForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        showNotification('تکایە چاوەڕێ بکە، کاڵا دەنێردرێت...');
-        
-        const images = document.getElementById('adminProductImages').files;
-        const imageUrls = [];
-        
-        for (let i = 0; i < images.length; i++) {
-            const imageRef = storage.ref(`products/${Date.now()}_${i}`);
-            const snapshot = await imageRef.put(images[i]);
-            const url = await snapshot.ref.getDownloadURL();
-            imageUrls.push(url);
-        }
-        
-        const productData = {
-            name: document.getElementById('adminProductName').value,
-            category: document.getElementById('adminProductCategory').value,
-            description: document.getElementById('adminProductDescription').value,
-            price: document.getElementById('adminProductPrice').value,
-            currency: document.getElementById('adminProductCurrency').value,
-            images: imageUrls,
-            sellerName: document.getElementById('adminSellerName').value,
-            sellerMobile: document.getElementById('adminSellerMobile').value,
-            location: document.getElementById('adminProductLocation').value,
-            status: 'approved',
-            timestamp: new Date().toLocaleString('ku')
-        };
-        
-        await database.ref('products').push(productData);
-        
-        showNotification('کاڵا بە سەرکەوتوویی زیادکرا! ✅');
-        document.getElementById('adminProductForm').reset();
-        document.getElementById('adminProductPreview').innerHTML = '';
-        
-        showAdminTab('allProducts');
-        loadApprovedProducts();
-    });
+    const adminProductForm = document.getElementById('adminProductForm');
+    if (adminProductForm) {
+        adminProductForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            showNotification('تکایە چاوەڕێ بکە، کاڵا دەنێردرێت...');
+            
+            const images = document.getElementById('adminProductImages').files;
+            const imageUrls = [];
+            
+            for (let i = 0; i < images.length; i++) {
+                const imageRef = storage.ref(`products/${Date.now()}_${i}`);
+                const snapshot = await imageRef.put(images[i]);
+                const url = await snapshot.ref.getDownloadURL();
+                imageUrls.push(url);
+            }
+            
+            const productData = {
+                name: document.getElementById('adminProductName').value,
+                category: document.getElementById('adminProductCategory').value,
+                description: document.getElementById('adminProductDescription').value,
+                price: document.getElementById('adminProductPrice').value,
+                currency: document.getElementById('adminProductCurrency').value,
+                images: imageUrls,
+                sellerName: document.getElementById('adminSellerName').value,
+                sellerMobile: document.getElementById('adminSellerMobile').value,
+                location: document.getElementById('adminProductLocation').value,
+                status: 'approved',
+                timestamp: new Date().toLocaleString('ku')
+            };
+            
+            await database.ref('products').push(productData);
+            
+            showNotification('کاڵا بە سەرکەوتوویی زیادکرا! ✅');
+            adminProductForm.reset();
+            const preview = document.getElementById('adminProductPreview');
+            if (preview) preview.innerHTML = '';
+            
+            showAdminTab('allProducts');
+            loadApprovedProducts();
+        });
+    }
 }
 
 // ==================== Form Submissions ====================
@@ -667,6 +758,7 @@ document.addEventListener('submit', async function(e) {
 document.addEventListener('change', function(e) {
     if (e.target && e.target.id === 'productImages') {
         const preview = document.getElementById('imagePreview');
+        if (!preview) return;
         preview.innerHTML = '';
         Array.from(e.target.files).forEach(file => {
             const reader = new FileReader();
@@ -677,6 +769,7 @@ document.addEventListener('change', function(e) {
                 img.style.height = '100px';
                 img.style.objectFit = 'cover';
                 img.style.borderRadius = '8px';
+                img.style.margin = '5px';
                 preview.appendChild(img);
             };
             reader.readAsDataURL(file);
@@ -687,12 +780,29 @@ document.addEventListener('change', function(e) {
 // ==================== Category & Search ====================
 function createCategoryButtons() {
     const categories = [
-        'هەموو کاڵاکان', 'مۆبایل', 'لاپتۆپ', 'کۆمپیوتەر', 'ئایپاد',
-        'ئوتومبێل', 'ناوماڵ', 'پاسکیل', 'سکۆتەر', 'کامێرا',
-        'جوانکاری', 'خانوو', 'زەوی', 'باخ', 'ئاژەڵ'
+        'هەموو کاڵاکان',
+        'مۆبایل',
+        'لاپتۆپ',
+        'کۆمپیوتەر',
+        'ئایپاد',
+        'ئوتومبێل',
+        'ناوماڵ',
+        'پاسکیل',
+        'سکۆتەر',
+        'کامێرا',
+        'جوانکاری',
+        'خانوو',
+        'زەوی',
+        'باخ',
+        'ئاژەڵ',
+        'جلوبەرگی پیاوان',
+        'جلوبەرگی ئافرەتان',
+        'جلوبەرگی منداڵان'
     ];
     
     const container = document.getElementById('categoryButtons');
+    if (!container) return;
+    
     container.innerHTML = categories.map(cat => 
         `<button class="category-btn ${cat === 'هەموو کاڵاکان' ? 'active' : ''}" 
                  onclick="filterByCategory('${cat}')">${cat}</button>`
@@ -704,22 +814,28 @@ function filterByCategory(category) {
         btn.classList.toggle('active', btn.textContent === category);
     });
 
+    const productsTitle = document.getElementById('productsTitle');
+    
     if (category === 'هەموو کاڵاکان') {
         renderProducts(products);
-        document.getElementById('productsTitle').textContent = 'هەموو کاڵاکان';
+        if (productsTitle) productsTitle.textContent = 'هەموو کاڵاکان';
     } else {
         const filtered = products.filter(p => p.category === category);
         renderProducts(filtered);
-        document.getElementById('productsTitle').textContent = `کاڵاکانی ${category}`;
+        if (productsTitle) productsTitle.textContent = `کاڵاکانی ${category}`;
     }
 }
 
 function performSearch() {
-    const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+    const searchInput = document.getElementById('searchInput');
+    if (!searchInput) return;
+    
+    const searchTerm = searchInput.value.toLowerCase().trim();
     
     if (!searchTerm) {
         renderProducts(products);
-        document.getElementById('productsTitle').textContent = 'هەموو کاڵاکان';
+        const productsTitle = document.getElementById('productsTitle');
+        if (productsTitle) productsTitle.textContent = 'هەموو کاڵاکان';
         return;
     }
 
@@ -735,7 +851,8 @@ function performSearch() {
     }
 
     renderProducts(results);
-    document.getElementById('productsTitle').textContent = `ئەنجامەکانی گەڕان: "${searchTerm}"`;
+    const productsTitle = document.getElementById('productsTitle');
+    if (productsTitle) productsTitle.textContent = `ئەنجامەکانی گەڕان: "${searchTerm}"`;
     showNotification(`${results.length} کاڵا دۆزرایەوە`);
 }
 
@@ -745,14 +862,22 @@ function createProductCard(product) {
         ? product.images[0] 
         : 'https://via.placeholder.com/300x300?text=No+Image';
 
-    const productName = product.name.length > 30 
+    const productName = product.name && product.name.length > 30 
         ? product.name.substring(0, 27) + '...' 
-        : product.name;
+        : product.name || 'بێ ناو';
+
+    const sellerName = product.sellerName && product.sellerName.length > 15 
+        ? product.sellerName.substring(0, 12) + '...' 
+        : product.sellerName || 'نادیار';
+        
+    const location = product.location && product.location.length > 20 
+        ? product.location.substring(0, 17) + '...' 
+        : product.location || 'نادیار';
 
     return '<div class="product-card">' +
         '<div class="product-image">' +
         '<img src="' + firstImage + '" ' +
-        'alt="' + product.name + '" ' +
+        'alt="' + (product.name || 'product') + '" ' +
         'loading="lazy" ' +
         'onclick="openImageModal(\'' + firstImage + '\')" ' +
         'style="cursor: zoom-in;" ' +
@@ -760,19 +885,19 @@ function createProductCard(product) {
         '</div>' +
         '<div class="product-info">' +
         '<div class="product-category">' + (product.category || 'هەموویی') + '</div>' +
-        '<h3 class="product-name" title="' + product.name + '">' + productName + '</h3>' +
-        '<div class="product-price">' + product.price + ' ' + product.currency + '</div>' +
+        '<h3 class="product-name" title="' + (product.name || '') + '">' + productName + '</h3>' +
+        '<div class="product-price">' + (product.price || '0') + ' ' + (product.currency || 'IQD') + '</div>' +
         '<div class="product-seller">' +
-        '<i class="fas fa-user"></i> ' + (product.sellerName.length > 15 ? product.sellerName.substring(0, 12) + '...' : product.sellerName) +
+        '<i class="fas fa-user"></i> ' + sellerName +
         '</div>' +
-        '<div class="product-location" title="' + product.location + '">' +
-        '<i class="fas fa-map-marker-alt"></i> ' + (product.location.length > 20 ? product.location.substring(0, 17) + '...' : product.location) +
+        '<div class="product-location" title="' + (product.location || '') + '">' +
+        '<i class="fas fa-map-marker-alt"></i> ' + location +
         '</div>' +
         '<div class="product-actions">' +
         '<button class="btn btn-primary btn-small" onclick="addToCart(\'' + product.firebaseId + '\')">' +
         '<i class="fas fa-cart-plus"></i> <span class="btn-text">سەبەتە</span>' +
         '</button>' +
-        '<button class="btn btn-secondary btn-small" onclick="contactSellerWhatsApp(\'' + product.sellerMobile + '\', \'' + product.name + '\')">' +
+        '<button class="btn btn-secondary btn-small" onclick="contactSellerWhatsApp(\'' + (product.sellerMobile || '') + '\', \'' + (product.name || '') + '\')">' +
         '<i class="fab fa-whatsapp"></i> <span class="btn-text">واتساپ</span>' +
         '</button>' +
         '<button class="btn btn-fib btn-small" onclick="showFibModal()">' +
@@ -785,6 +910,8 @@ function createProductCard(product) {
 
 function renderProducts(productsList) {
     const grid = document.getElementById('productsGrid');
+    if (!grid) return;
+    
     if (productsList.length === 0) {
         grid.innerHTML = '<p style="text-align: center; color: var(--gray); grid-column: 1/-1;">هیچ کاڵایەک نییە</p>';
         return;
@@ -819,7 +946,8 @@ function addToCart(productId) {
 
 function updateCartBadge() {
     const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-    document.getElementById('cartBadge').textContent = totalItems;
+    const cartBadge = document.getElementById('cartBadge');
+    if (cartBadge) cartBadge.textContent = totalItems;
 }
 
 function showCartModal() {
@@ -839,6 +967,10 @@ function showCartModal() {
 
 // ==================== WhatsApp Contact ====================
 function contactSellerWhatsApp(mobile, productName) {
+    if (!mobile) {
+        showNotification('ژمارەی مۆبایل بوونی نییە!', 'error');
+        return;
+    }
     const message = `سڵاو، من ئارەزووم لە کڕینی: ${productName}`;
     const whatsappUrl = `https://wa.me/${mobile.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
@@ -870,7 +1002,7 @@ function copyFibNumber() {
 function renderSliderDirect(snapshot) {
     const slidesWrapper = document.getElementById('slidesWrapper');
     const sliderDots = document.getElementById('sliderDots');
-    if (!slidesWrapper) return;
+    if (!slidesWrapper || !sliderDots) return;
     
     let images = [];
     if (snapshot && snapshot.exists()) {
@@ -902,6 +1034,7 @@ function renderSliderDirect(snapshot) {
 function loadSliderImages() {
     const slidesWrapper = document.getElementById('slidesWrapper');
     const sliderDots = document.getElementById('sliderDots');
+    if (!slidesWrapper || !sliderDots) return;
     
     database.ref('slider').once('value')
         .then((snapshot) => {
@@ -994,6 +1127,8 @@ function startAutoPlay() {
 function openImageModal(imageSrc) {
     const modal = document.getElementById('imageModal');
     const img = document.getElementById('zoomedImage');
+    if (!modal || !img) return;
+    
     img.src = imageSrc;
     modal.classList.add('show');
     document.body.style.overflow = 'hidden';
@@ -1001,18 +1136,9 @@ function openImageModal(imageSrc) {
 
 function closeImageModal() {
     const modal = document.getElementById('imageModal');
-    modal.classList.remove('show');
-    document.body.style.overflow = 'auto';
-}
-
-// ==================== Close Modal Functions ====================
-function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
     if (modal) {
         modal.classList.remove('show');
-        if (modalId === 'imageModal') {
-            document.body.style.overflow = 'auto';
-        }
+        document.body.style.overflow = 'auto';
     }
 }
 
