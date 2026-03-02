@@ -21,12 +21,11 @@ body {
     min-height: 100vh;
     color: var(--dark);
     direction: rtl;
-    font-size: 16px; /* زیادکردنی قەبارەی فۆنت */
+    font-size: 16px;
     font-family: 'Noto Sans Arabic', 'Tahoma', 'Arial', sans-serif;
     line-height: 1.6;
 }
 
-/* چاککردنی فۆنت */
 h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     font-family: 'Noto Sans Arabic', 'Tahoma', 'Arial', sans-serif;
 }
@@ -60,7 +59,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     100% { transform: rotate(360deg); }
 }
 
-/* Header - باشترکردن */
+/* Header */
 .header {
     background: white;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
@@ -85,7 +84,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     flex-wrap: wrap;
 }
 
-/* Logo - باشترکردن */
+/* Logo */
 .logo {
     display: flex;
     align-items: center;
@@ -144,31 +143,36 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
 }
 
-/* Navigation Buttons */
+/* Navigation Buttons - Optimized */
 .nav-buttons {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
     justify-content: flex-end;
+    align-items: center;
 }
 
 .btn {
-    padding: 12px 20px;
+    padding: 10px 16px;
     border: none;
-    border-radius: 10px;
+    border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     white-space: nowrap;
     border: 2px solid transparent;
 }
 
 .btn i {
     font-size: 1.1rem;
+}
+
+.btn .btn-text {
+    display: inline-block;
 }
 
 .btn-primary {
@@ -273,58 +277,46 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
 }
 
-/* Category Filter */
+/* Category Filter - Optimized for Mobile */
 .category-filter-section {
-    padding: 15px 0;
+    padding: 10px 0;
     background: white;
-    margin: 20px 0;
-    border-radius: 16px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    margin: 15px 0;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .category-buttons {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
     justify-content: center;
     padding: 5px;
     direction: rtl;
 }
 
 .category-btn {
-    padding: 10px 18px;
-    border: 2px solid var(--primary);
-    border-radius: 30px;
+    padding: 6px 12px;
+    border: 1.5px solid var(--primary);
+    border-radius: 20px;
     background: white;
     color: var(--primary);
-    font-size: 0.95rem;
+    font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s;
     white-space: nowrap;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    flex: 0 1 auto;
+    min-width: fit-content;
 }
 
 .category-btn:hover, .category-btn.active {
     background: linear-gradient(135deg, var(--primary), #764ba2);
     color: white;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
     border-color: transparent;
-}
-
-@media (max-width: 768px) {
-    .category-btn {
-        padding: 8px 14px;
-        font-size: 0.85rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .category-btn {
-        padding: 6px 12px;
-        font-size: 0.8rem;
-    }
 }
 
 /* Slider */
@@ -633,8 +625,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     background: rgba(102, 126, 234, 0.05);
 }
 
-/* Footer */
-/* Footer Styles - باشترکراو */
+/* Footer Styles - Improved */
 .footer {
     background: linear-gradient(135deg, #1a2634, #0f172a);
     color: #fff;
@@ -744,7 +735,6 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     width: 70px;
 }
 
-/* ستایلی پەیوەندی */
 .contact-info {
     display: flex;
     flex-direction: column;
@@ -795,7 +785,6 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     display: block;
 }
 
-/* ستایلی بەستەرەکان */
 .footer-links {
     list-style: none;
     padding: 0;
@@ -834,7 +823,6 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     color: white;
 }
 
-/* ستایلی تۆڕە کۆمەڵایەتیەکان */
 .social-links {
     display: flex;
     gap: 12px;
@@ -883,7 +871,6 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 .instagram { background: linear-gradient(45deg, #f09433, #d62976, #962fbf, #4f5bd5); }
 .telegram { background: #0088cc; }
 
-/* بەشی خوارەوە */
 .footer-bottom {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding: 20px 0;
@@ -906,93 +893,6 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 .separator {
     color: var(--primary);
     font-weight: bold;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .footer {
-        padding: 40px 0 0;
-    }
-    
-    .footer-grid {
-        grid-template-columns: 1fr;
-        gap: 30px;
-        text-align: center;
-    }
-    
-    .footer-col h4::after {
-        right: 50%;
-        transform: translateX(50%);
-    }
-    
-    .contact-row {
-        justify-content: center;
-    }
-    
-    .footer-links li a {
-        justify-content: center;
-    }
-    
-    .social-links {
-        justify-content: center;
-    }
-    
-    .bottom-content {
-        flex-direction: column;
-        gap: 5px;
-    }
-    
-    .separator {
-        display: none;
-    }
-}
-
-@media (max-width: 480px) {
-    .footer-logo h3 {
-        font-size: 1.5rem;
-    }
-    
-    .footer-logo img {
-        width: 50px;
-        height: 50px;
-    }
-    
-    .contact-row {
-        font-size: 0.9rem;
-    }
-    
-    .social-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
-    }
-}
-
-/* Notification */
-.notification {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%) translateY(-100px);
-    background: white;
-    padding: 16px 30px;
-    border-radius: 50px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    z-index: 10000;
-    transition: transform 0.4s;
-    border-right: 4px solid var(--secondary);
-    font-size: 1rem;
-    font-weight: 500;
-    min-width: 300px;
-    text-align: center;
-}
-
-.notification.show {
-    transform: translateX(-50%) translateY(0);
-}
-
-.notification.error {
-    border-right-color: var(--danger);
 }
 
 /* Modal Styles */
@@ -1109,10 +1009,10 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .image-preview img {
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
     object-fit: cover;
-    border-radius: 12px;
+    border-radius: 8px;
     border: 3px solid var(--border);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
@@ -1201,7 +1101,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     margin-top: 15px;
 }
 
-/* Image Modal (Zoom) */
+/* Image Modal */
 .image-modal {
     display: none;
     position: fixed;
@@ -1253,135 +1153,106 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     transform: rotate(180deg) scale(1.1);
 }
 
-/* Responsive Design - باشترکردن */
-@media (max-width: 1024px) {
-    .header-content {
-        justify-content: center;
+/* Notification */
+.notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: white;
+    padding: 16px 30px;
+    border-radius: 50px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    z-index: 10000;
+    transition: transform 0.4s;
+    border-right: 4px solid var(--secondary);
+    font-size: 1rem;
+    font-weight: 500;
+    min-width: 300px;
+    text-align: center;
+}
+
+.notification.show {
+    transform: translateX(-50%) translateY(0);
+}
+
+.notification.error {
+    border-right-color: var(--danger);
+}
+
+/* Responsive Design - Comprehensive */
+@media (min-width: 1200px) {
+    .category-btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
     }
-    
-    .logo {
-        min-width: auto;
-    }
-    
-    .nav-buttons {
-        justify-content: center;
-        width: 100%;
+}
+
+@media (max-width: 992px) {
+    .category-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
     }
 }
 
 @media (max-width: 768px) {
-    body {
-        font-size: 14px;
-    }
-    
     .container {
-        padding: 0 10px;
-    }
-    
-    .header {
-        padding: 8px 0;
+        padding: 0 15px;
     }
     
     .header-content {
-        gap: 8px;
-    }
-    
-    .logo-text {
-        font-size: 1.3rem;
-    }
-    
-    .logo-icon {
-        width: 38px;
-        height: 38px;
+        justify-content: center;
+        gap: 15px;
     }
     
     .logo {
-        gap: 6px;
         min-width: auto;
     }
     
+    .logo-text {
+        font-size: 1.5rem;
+    }
+    
+    .logo-icon {
+        width: 45px;
+        height: 45px;
+    }
+    
     .flags img {
-        width: 30px;
-        height: 20px;
+        width: 35px;
+        height: 25px;
     }
     
-    .flags {
-        gap: 4px;
-    }
-    
-    /* دوگمەکان لە یەک ریز - بچوک */
     .nav-buttons {
-        display: flex;
-        flex-wrap: nowrap;
-        gap: 6px;
-        justify-content: center;
         width: 100%;
+        justify-content: center;
+        gap: 8px;
     }
     
     .btn {
-        padding: 8px 10px;
-        font-size: 0.75rem;
-        gap: 4px;
-        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 0.8rem;
     }
     
     .btn i {
-        font-size: 0.9rem;
+        font-size: 1rem;
     }
     
-    /* تێکستی دوگمەکان شاردنەوە - تەنها ئایکۆن */
-    .btn-warning span,
-    .btn-secondary span,
-    .btn-primary span {
-        display: none;
+    .btn .btn-text {
+        display: inline-block;
     }
     
-    .nav-buttons .btn-warning,
-    .nav-buttons .btn-secondary,
-    .nav-buttons .btn-primary {
-        padding: 9px 12px;
-        font-size: 0;
+    .category-buttons {
+        gap: 5px;
     }
     
-    .nav-buttons .btn-warning i,
-    .nav-buttons .btn-secondary i,
-    .nav-buttons .btn-primary i {
-        font-size: 1.1rem;
-    }
-    
-    .cart-btn {
-        padding: 8px 12px;
-    }
-    
-    .product-actions {
-        gap: 6px;
-    }
-    
-    .btn-small {
-        padding: 10px 6px;
-        font-size: 0;
-        height: 42px;
-        gap: 0;
-        border-radius: 8px;
-    }
-    
-    .btn-small i {
-        font-size: 1.2rem;
-    }
-    
-    .search-box {
-        flex-direction: column;
-        border-radius: 16px;
-        padding: 10px;
-    }
-    
-    .search-box button {
-        width: 100%;
-        justify-content: center;
+    .category-btn {
+        padding: 5px 10px;
+        font-size: 0.75rem;
     }
     
     .slider-container {
-        height: 300px;
+        height: 350px;
     }
     
     .products-grid {
@@ -1390,7 +1261,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     }
     
     .product-image {
-        height: 200px;
+        height: 220px;
     }
     
     .product-info {
@@ -1401,53 +1272,137 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
         font-size: 1.1rem;
     }
     
-    .product-price {
-        font-size: 1.2rem;
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
     }
     
-    .btn-small-old {
-        width: 100%;
+    .footer-col h4::after {
+        right: 50%;
+        transform: translateX(50%);
     }
     
-    .category-btn {
-        padding: 8px 16px;
-        font-size: 0.9rem;
+    .contact-row {
+        justify-content: center;
     }
     
-    .bottom-nav-item span {
-        font-size: 0.75rem;
+    .footer-links li a {
+        justify-content: center;
     }
     
-    .bottom-nav-item i {
-        font-size: 1.2rem;
-    }
-    
-    .footer-text {
-        font-size: 0.95rem;
-    }
-    
-    .social-icon {
-        width: 45px;
-        height: 45px;
-        font-size: 1.3rem;
-    }
-    
-    .modal-content {
-        padding: 20px;
-    }
-    
-    .modal-header h2 {
-        font-size: 1.4rem;
+    .social-links {
+        justify-content: center;
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
+    .btn {
+        padding: 6px 10px;
+        font-size: 0.75rem;
+    }
+    
+    .btn i {
+        font-size: 0.9rem;
+    }
+    
+    .category-btn {
+        padding: 4px 8px;
+        font-size: 0.7rem;
+    }
+    
+    .slider-container {
+        height: 250px;
+    }
+    
+    .slider-arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+    
     .products-grid {
         grid-template-columns: 1fr;
     }
     
+    .product-image {
+        height: 250px;
+    }
+    
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        text-align: center;
+    }
+    
+    .bottom-content {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .separator {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 10px 0;
+    }
+    
+    .logo-text {
+        font-size: 1.3rem;
+    }
+    
+    .logo-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .flags img {
+        width: 30px;
+        height: 20px;
+    }
+    
+    .nav-buttons {
+        gap: 5px;
+    }
+    
+    .btn {
+        padding: 5px 8px;
+        font-size: 0.7rem;
+    }
+    
+    .btn i {
+        font-size: 0.85rem;
+    }
+    
+    .btn .btn-text {
+        max-width: 60px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    .cart-btn {
+        padding: 5px 10px;
+    }
+    
+    .cart-badge {
+        width: 18px;
+        height: 18px;
+        font-size: 0.65rem;
+        top: -4px;
+        right: -4px;
+    }
+    
+    .category-btn {
+        padding: 4px 7px;
+        font-size: 0.65rem;
+    }
+    
     .slider-container {
         height: 200px;
+        border-radius: 12px;
     }
     
     .slider-arrow {
@@ -1465,12 +1420,16 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     }
     
     .dot {
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
     }
     
     .product-image {
-        height: 250px;
+        height: 220px;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
     }
     
     .admin-tab {
@@ -1488,115 +1447,42 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
         padding: 12px 20px;
     }
     
-    .flags {
-        gap: 5px;
+    .footer-logo h3 {
+        font-size: 1.5rem;
     }
     
-    .flags img {
-        width: 30px;
-        height: 20px;
-    }
-}
-/* باشترکردنی دوگمەکان */
-.nav-buttons {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-}
-
-.btn {
-    padding: 10px 16px;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.9rem;
-    white-space: nowrap;
-    border: 2px solid transparent;
-}
-
-.btn i {
-    font-size: 1.1rem;
-}
-
-.btn .btn-text {
-    display: inline-block;
-}
-
-@media (max-width: 768px) {
-    .nav-buttons {
-        gap: 5px;
-        justify-content: center;
-        width: 100%;
+    .footer-logo img {
+        width: 50px;
+        height: 50px;
     }
     
+    .social-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 360px) {
     .btn {
-        padding: 8px 12px;
+        padding: 4px 6px;
+        font-size: 0.65rem;
+    }
+    
+    .btn i {
         font-size: 0.8rem;
     }
     
     .btn .btn-text {
-        display: none; /* لە مۆبایلدا تەنها ئایکۆن نیشان بدە */
+        max-width: 50px;
     }
     
-    .btn i {
-        font-size: 1.2rem;
-        margin: 0;
+    .category-btn {
+        padding: 3px 6px;
+        font-size: 0.6rem;
     }
     
-    .cart-btn {
-        padding: 8px 12px;
+    .product-image {
+        height: 200px;
     }
-    
-    .cart-btn .cart-badge {
-        font-size: 0.7rem;
-        width: 18px;
-        height: 18px;
-        top: -5px;
-        right: -5px;
-    }
-}
-
-@media (max-width: 480px) {
-    .btn {
-        padding: 8px 10px;
-    }
-    
-    .btn i {
-        font-size: 1.1rem;
-    }
-}
-// ==================== About Us Function ====================
-function showAboutUs() {
-    const aboutMessage = `🏢 *دەربارەی UK BAZAR*
-
-UK BAZAR پلاتفۆرمێکی بازرگانی ئۆنلاینە کە بازاڕێکی ئاسان و متمانەپێکراو دابین دەکات بۆ کڕین و فرۆشتنی کاڵا لە نێوان کوردستان و شانشینی یەکگرتوو.
-
-✨ *تایبەتمەندیەکان:*
-• کڕین و فرۆشتنی ئاسان
-• داواکاری کاڵا
-• گەیاندنی کاڵا
-• پارەدان لە ڕێگەی FIB
-• پەیوەندی ڕاستەوخۆ لەگەڵ فرۆشیار
-
-📞 *پەیوەندی:*
-• کوردستان: 07755436275 | 07507472656
-• UK: 00447449218670
-• ئیمەیل: Info@ukbazar.online
-
-🌐 وێبسایت: www.ukbazar.online
-
-سوپاس بۆ متمانە پێدان! 🙏`;
-
-    // نیشاندان وەک مۆدال یان نوتیفیکەیشن
-    showNotification('دەربارەی UK BAZAR - تکایە سەیری واتساپ بکە', 'info');
-    
-    // ناردن بۆ واتساپ
-    const whatsappUrl = `https://wa.me/9647700000000?text=${encodeURIComponent(aboutMessage)}`;
-    window.open(whatsappUrl, '_blank');
 }
