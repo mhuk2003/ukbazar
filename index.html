@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UK BAZAR - تەواو</title>
+    <title>UK BAZAR - بازاڕی ئۆنلاین</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -33,13 +33,13 @@
 
                 <div class="nav-buttons">
                     <button class="btn btn-warning" onclick="showRequestModal()">
-                        <i class="fas fa-clipboard-list"></i> داواکاری کاڵا
+                        <i class="fas fa-clipboard-list"></i> <span>داواکاری کاڵا</span>
                     </button>
                     <button class="btn btn-secondary" onclick="showAddProductModal()">
-                        <i class="fas fa-plus-circle"></i> کاڵا دابنێ
+                        <i class="fas fa-plus-circle"></i> <span>کاڵا دابنێ</span>
                     </button>
                     <button class="btn btn-primary" onclick="showDeliveryModal()">
-                        <i class="fas fa-shipping-fast"></i> گەیاندنی کاڵا
+                        <i class="fas fa-shipping-fast"></i> <span>گەیاندنی کاڵا</span>
                     </button>
                     <button class="cart-btn btn" onclick="showCartModal()">
                         <i class="fas fa-shopping-cart"></i>
@@ -55,7 +55,7 @@
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="گەڕان بە کاڵا...">
                 <button onclick="performSearch()">
-                    <i class="fas fa-search"></i>
+                    <i class="fas fa-search"></i> <span>گەڕان</span>
                 </button>
             </div>
         </div>
@@ -98,6 +98,7 @@
                 <button class="admin-tab" onclick="showAdminTab('requests')"><i class="fas fa-clipboard-list"></i> داواکاری</button>
                 <button class="admin-tab" onclick="showAdminTab('delivery')"><i class="fas fa-shipping-fast"></i> گەیاندن</button>
                 <button class="admin-tab" onclick="showAdminTab('addSlider')"><i class="fas fa-images"></i> سلایدەر</button>
+                <button class="admin-tab" onclick="showAdminTab('addProduct')"><i class="fas fa-plus"></i> زیادکردن</button>
                 <button class="admin-tab" onclick="logout()"><i class="fas fa-sign-out-alt"></i> دەرچوون</button>
             </div>
             <div id="adminContent"></div>
@@ -123,26 +124,12 @@
         </div>
     </div>
 
-    <div class="image-modal" id="imageModal" onclick="closeImageModal()">
-        <button class="image-modal-close" onclick="closeImageModal()"><i class="fas fa-times"></i></button>
+    <!-- Image Modal -->
+    <div class="image-modal" id="imageModal">
+        <button class="image-modal-close" onclick="closeModal('imageModal')"><i class="fas fa-times"></i></button>
         <img id="zoomedImage" src="" alt="Zoomed Image">
     </div>
-    <div class="modal" id="fibModal">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeModal('fibModal')"><i class="fas fa-times"></i></button>
-            <div class="modal-header"><h2>💳 پارەدان بە FIB کوردستان</h2></div>
-            <div class="fib-card" style="background: linear-gradient(135deg, #1e3a8a, #1e40af); padding: 30px; border-radius: 12px; text-align: center; color: white;">
-                <p>ژمارەی حیساب</p>
-                <h3 style="font-size: 2rem; letter-spacing: 2px;">7769654490</h3>
-            </div>
-            <div class="form-actions" style="margin-top: 20px; display: flex; gap: 10px;">
-                <button class="btn btn-primary" onclick="copyFibNumber()" style="flex: 1;">کۆپی ژمارە</button>
-                <button class="btn btn-secondary" onclick="contactFibWhatsApp()" style="flex: 1;">واتساپ</button>
-            </div>
-        </div>
-    </div>
 
-    
     <!-- Notification -->
     <div class="notification" id="notification">
         <span id="notificationMessage"></span>
@@ -151,8 +138,12 @@
     <!-- Request Modal -->
     <div class="modal" id="requestModal">
         <div class="modal-content">
-            <button class="close-modal" onclick="closeModal('requestModal')"><i class="fas fa-times"></i></button>
-            <div class="modal-header"><h2><i class="fas fa-clipboard-list"></i> داواکاری کاڵا</h2></div>
+            <div class="modal-header">
+                <button class="close-modal" onclick="closeModal('requestModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2><i class="fas fa-clipboard-list"></i> داواکاری کاڵا</h2>
+            </div>
             <form id="requestForm">
                 <div class="form-group">
                     <label>ناوی کاڵا</label>
@@ -181,8 +172,12 @@
     <!-- Add Product Modal -->
     <div class="modal" id="addProductModal">
         <div class="modal-content">
-            <button class="close-modal" onclick="closeModal('addProductModal')"><i class="fas fa-times"></i></button>
-            <div class="modal-header"><h2><i class="fas fa-plus-circle"></i> کاڵا دابنێ</h2></div>
+            <div class="modal-header">
+                <button class="close-modal" onclick="closeModal('addProductModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2><i class="fas fa-plus-circle"></i> کاڵا دابنێ</h2>
+            </div>
             <form id="addProductForm">
                 <div class="form-group">
                     <label>ناوی کاڵا</label>
@@ -254,8 +249,12 @@
     <!-- Delivery Modal -->
     <div class="modal" id="deliveryModal">
         <div class="modal-content">
-            <button class="close-modal" onclick="closeModal('deliveryModal')"><i class="fas fa-times"></i></button>
-            <div class="modal-header"><h2><i class="fas fa-shipping-fast"></i> داواکاری گەیاندن</h2></div>
+            <div class="modal-header">
+                <button class="close-modal" onclick="closeModal('deliveryModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2><i class="fas fa-shipping-fast"></i> داواکاری گەیاندن</h2>
+            </div>
             <form id="deliveryForm">
                 <div class="form-group">
                     <label>ناوت</label>
@@ -278,6 +277,26 @@
                     <button type="button" class="btn btn-secondary" onclick="closeModal('deliveryModal')">داخستن</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- FIB Modal -->
+    <div class="modal" id="fibModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close-modal" onclick="closeModal('fibModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2>💳 پارەدان بە FIB کوردستان</h2>
+            </div>
+            <div class="fib-card" style="background: linear-gradient(135deg, #1e3a8a, #1e40af); padding: 30px; border-radius: 12px; text-align: center; color: white; margin-bottom: 20px;">
+                <p>ژمارەی حیساب</p>
+                <h3 style="font-size: 2rem; letter-spacing: 2px;">7769654490</h3>
+            </div>
+            <div class="form-actions" style="display: flex; gap: 10px;">
+                <button class="btn btn-primary" onclick="copyFibNumber()" style="flex: 1;">کۆپی ژمارە</button>
+                <button class="btn btn-secondary" onclick="contactFibWhatsApp()" style="flex: 1;">واتساپ</button>
+            </div>
         </div>
     </div>
 
