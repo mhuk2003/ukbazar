@@ -778,6 +778,7 @@ document.addEventListener('change', function(e) {
 });
 
 // ==================== Category & Search ====================
+// ==================== Category & Search ====================
 function createCategoryButtons() {
     const categories = [
         'هەموو کاڵاکان',
@@ -803,9 +804,11 @@ function createCategoryButtons() {
     const container = document.getElementById('categoryButtons');
     if (!container) return;
     
+    // کاتیگۆریەکان بە شێوەیەکی ڕێکخراو نیشان بدە
     container.innerHTML = categories.map(cat => 
         `<button class="category-btn ${cat === 'هەموو کاڵاکان' ? 'active' : ''}" 
-                 onclick="filterByCategory('${cat}')">${cat}</button>`
+                 onclick="filterByCategory('${cat}')"
+                 title="${cat}">${cat}</button>`
     ).join('');
 }
 
