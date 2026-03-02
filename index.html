@@ -32,20 +32,23 @@
                 </div>
 
                 <div class="nav-buttons">
-                    <button class="btn btn-warning" onclick="showRequestModal()">
-                        <i class="fas fa-clipboard-list"></i> <span>داواکاری کاڵا</span>
-                    </button>
-                    <button class="btn btn-secondary" onclick="showAddProductModal()">
-                        <i class="fas fa-plus-circle"></i> <span>کاڵا دابنێ</span>
-                    </button>
-                    <button class="btn btn-primary" onclick="showDeliveryModal()">
-                        <i class="fas fa-shipping-fast"></i> <span>گەیاندنی کاڵا</span>
-                    </button>
-                    <button class="cart-btn btn" onclick="showCartModal()">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-badge" id="cartBadge">0</span>
-                    </button>
-                </div>
+    <button class="btn btn-warning" onclick="showRequestModal()">
+        <i class="fas fa-clipboard-list"></i>
+        <span class="btn-text">داواکاری کاڵا</span>
+    </button>
+    <button class="btn btn-secondary" onclick="showAddProductModal()">
+        <i class="fas fa-plus-circle"></i>
+        <span class="btn-text">کاڵا دابنێ</span>
+    </button>
+    <button class="btn btn-primary" onclick="showDeliveryModal()">
+        <i class="fas fa-shipping-fast"></i>
+        <span class="btn-text">گەیاندنی کاڵا</span>
+    </button>
+    <button class="cart-btn btn" onclick="showCartModal()">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-badge" id="cartBadge">0</span>
+    </button>
+</div>
             </div>
         </div>
     </header>
@@ -123,6 +126,93 @@
             </div>
         </div>
     </div>
+    </div> <!-- Closing bottom-panel div -->
+
+    <!-- Footer Section -->
+    <!-- Footer Section - باشترکراو -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <!-- بەشی یەکەم: لۆگۆ و ناونیشان -->
+                <div class="footer-col footer-brand">
+                    <div class="footer-logo">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/ukbazar-15eda.firebasestorage.app/o/logo-ukbazar.png?alt=media&token=c1b2a45a-fbe0-4ac8-bc8f-26ae4fd7966c" alt="UK BAZAR">
+                        <h3>UK BAZAR</h3>
+                    </div>
+                    <p class="footer-slogan">World Online Shopping</p>
+                    <div class="footer-flags">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/ukbazar-15eda.firebasestorage.app/o/uk-flag.webp?alt=media&token=83b7ce7b-db70-4d3a-9a32-f262c4773b1a" alt="UK">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/ukbazar-15eda.firebasestorage.app/o/images.png?alt=media&token=79847612-3eed-48ef-9413-a3ae76df758b" alt="Kurdistan">
+                    </div>
+                </div>
+
+                <!-- بەشی دووەم: پەیوەندی -->
+                <div class="footer-col">
+                    <h4>پەیوەندی:</h4>
+                    <div class="contact-info">
+                        <div class="contact-row">
+                            <i class="fas fa-phone-alt"></i>
+                            <div class="contact-numbers">
+                                <span>07755436275</span>
+                                <span>07507472656</span>
+                            </div>
+                        </div>
+                        <div class="contact-row">
+                            <i class="fas fa-phone-alt"></i>
+                            <span>00447449218670 (UK)</span>
+                        </div>
+                        <div class="contact-row">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>کوردستان - UK</span>
+                        </div>
+                        <div class="contact-row">
+                            <i class="fas fa-envelope"></i>
+                            <span>Info@ukbazar.online</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- بەشی سێیەم: بەستەرەکان -->
+                <div class="footer-col">
+                    <h4>بەستەرەکان:</h4>
+                    <ul class="footer-links">
+                        <li><a href="javascript:void(0)" onclick="showHomePage()"><i class="fas fa-home"></i> ماڵەوە</a></li>
+                        <li><a href="javascript:void(0)" onclick="showRequestModal()"><i class="fas fa-clipboard-list"></i> داواکاری کاڵا</a></li>
+                        <li><a href="javascript:void(0)" onclick="showAboutUs()"><i class="fas fa-info-circle"></i> دەربارەی ئێمە</a></li>
+                        <li><a href="javascript:void(0)" onclick="showAdminLogin()"><i class="fas fa-user-shield"></i> بەڕێوەبەر</a></li>
+                    </ul>
+                </div>
+
+                <!-- بەشی چوارەم: شەبەکە کۆمەڵایەتیەکان -->
+                <div class="footer-col">
+                    <h4>شەبەکە کۆمەڵایەتیەکان:</h4>
+                    <div class="social-links">
+                        <a href="https://facebook.com/ukbazar" target="_blank" class="social-btn facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://wa.me/9647700000000" target="_blank" class="social-btn whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="https://instagram.com/ukbazar" target="_blank" class="social-btn instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://telegram.me/ukbazar" target="_blank" class="social-btn telegram">
+                            <i class="fab fa-telegram-plane"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- بەشی خوارەوەی فوتر -->
+            <div class="footer-bottom">
+                <div class="bottom-content">
+                    <p>© 2026 UK BAZAR - هەموو مافەکان پارێزراون</p>
+                    <p class="separator">|</p>
+                    <p>ڕێکخراوێکی بازرگانی نێودەوڵەتی</p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <!-- Image Modal -->
     <div class="image-modal" id="imageModal">
@@ -183,26 +273,29 @@
                     <label>ناوی کاڵا</label>
                     <input type="text" id="productName" placeholder="ناوی کاڵا" required>
                 </div>
-                <div class="form-group">
-                    <label>جۆری کاڵا</label>
-                    <select id="productCategory" required>
-                        <option value="">هەڵبژاردن...</option>
-                        <option value="مۆبایل">مۆبایل</option>
-                        <option value="لاپتۆپ">لاپتۆپ</option>
-                        <option value="کۆمپیوتەر">کۆمپیوتەر</option>
-                        <option value="ئایپاد">ئایپاد</option>
-                        <option value="ئوتومبێل">ئوتومبێل</option>
-                        <option value="ناوماڵ">ناوماڵ</option>
-                        <option value="پاسکیل">پاسکیل</option>
-                        <option value="سکۆتەر">سکۆتەر</option>
-                        <option value="کامێرا">کامێرا</option>
-                        <option value="جوانکاری">جوانکاری</option>
-                        <option value="خانوو">خانوو</option>
-                        <option value="زەوی">زەوی</option>
-                        <option value="باخ">باخ</option>
-                        <option value="ئاژەڵ">ئاژەڵ</option>
-                    </select>
-                </div>
+               <div class="form-group">
+    <label>جۆری کاڵا:</label>
+    <select id="adminProductCategory" required>
+        <option value="">هەڵبژێرە...</option>
+        <option value="مۆبایل">مۆبایل</option>
+        <option value="لاپتۆپ">لاپتۆپ</option>
+        <option value="کۆمپیوتەر">کۆمپیوتەر</option>
+        <option value="ئایپاد">ئایپاد</option>
+        <option value="ئوتومبێل">ئوتومبێل</option>
+        <option value="ناوماڵ">ناوماڵ</option>
+        <option value="پاسکیل">پاسکیل</option>
+        <option value="سکۆتەر">سکۆتەر</option>
+        <option value="کامێرا">کامێرا</option>
+        <option value="جوانکاری">جوانکاری</option>
+        <option value="خانوو">خانوو</option>
+        <option value="زەوی">زەوی</option>
+        <option value="باخ">باخ</option>
+        <option value="ئاژەڵ">ئاژەڵ</option>
+        <option value="جلوبەرگی پیاوان">جلوبەرگی پیاوان</option>
+        <option value="جلوبەرگی ئافرەتان">جلوبەرگی ئافرەتان</option>
+        <option value="جلوبەرگی منداڵان">جلوبەرگی منداڵان</option>
+    </select>
+</div>
                 <div class="form-group">
                     <label>وصف</label>
                     <textarea id="productDescription" placeholder="وردەکاری کاڵاکە..."></textarea>
