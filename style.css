@@ -531,16 +531,16 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 
 .product-actions {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     margin-top: 15px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 }
 
 .btn-small {
     padding: 12px 15px;
     font-size: 0.95rem;
     flex: 1;
-    min-width: 120px;
+    min-width: 0;
     height: 45px;
     display: flex;
     align-items: center;
@@ -551,10 +551,13 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .btn-small i {
     font-size: 1.1rem;
+    flex-shrink: 0;
 }
 
 .btn-fib {
@@ -1057,6 +1060,22 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
         padding: 8px 12px;
     }
     
+    .product-actions {
+        gap: 6px;
+    }
+    
+    .btn-small {
+        padding: 10px 6px;
+        font-size: 0;
+        height: 42px;
+        gap: 0;
+        border-radius: 8px;
+    }
+    
+    .btn-small i {
+        font-size: 1.2rem;
+    }
+    
     .search-box {
         flex-direction: column;
         border-radius: 16px;
@@ -1093,11 +1112,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
         font-size: 1.2rem;
     }
     
-    .product-actions {
-        flex-direction: column;
-    }
-    
-    .btn-small {
+    .btn-small-old {
         width: 100%;
     }
     
