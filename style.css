@@ -415,7 +415,6 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     border-color: var(--primary);
 }
 
-/* Products Section */
 /* Products Section - Modified for better mobile display */
 .products-section {
     padding: 30px 0;
@@ -702,7 +701,6 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
         font-size: 0.8rem;
         height: 2.2em;
         margin-bottom: 4px;
-        -webkit-line-clamp: 2;
     }
     
     .product-price {
@@ -744,11 +742,6 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
         font-size: 0.75rem;
     }
     
-    .btn-small .btn-text {
-        font-size: 0.55rem;
-    }
-    
-    /* Show only icons on very small screens */
     .btn-small .btn-text {
         display: none;
     }
@@ -795,10 +788,6 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     .btn-small i {
         font-size: 0.8rem;
     }
-}
-
-.btn-fib:hover {
-    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
 }
 
 /* Bottom Panel */
@@ -1479,23 +1468,6 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
         height: 350px;
     }
     
-    .products-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 15px;
-    }
-    
-    .product-image {
-        height: 220px;
-    }
-    
-    .product-info {
-        padding: 15px;
-    }
-    
-    .product-name {
-        font-size: 1.1rem;
-    }
-    
     .footer-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 25px;
@@ -1542,14 +1514,6 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
         width: 40px;
         height: 40px;
         font-size: 18px;
-    }
-    
-    .products-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .product-image {
-        height: 250px;
     }
     
     .footer-grid {
@@ -1648,10 +1612,6 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
         height: 8px;
     }
     
-    .product-image {
-        height: 220px;
-    }
-    
     .section-title {
         font-size: 1.5rem;
     }
@@ -1704,9 +1664,5 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     .category-btn {
         padding: 3px 6px;
         font-size: 0.6rem;
-    }
-    
-    .product-image {
-        height: 200px;
     }
 }
