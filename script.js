@@ -457,22 +457,65 @@ function loadDeliveryRequests() {
                 content.innerHTML = '<p style="text-align: center; color: var(--gray);">هیچ داواکاری گەیاندنێک نییە</p>';
                 return;
             }
-            
-            let html = '<div class="pending-items">';
-            
+
+            // کۆکردنەوە و ڕیزکردن — نوێترین سەرەوە
+            const items = [];
             snapshot.forEach((child) => {
-                const delivery = child.val();
-                html += `
-                    <div class="pending-item">
-                        <h4>🚚 ${escapeHtml(delivery.name)}</h4>
-                        <p><strong>ژمارە:</strong> ${escapeHtml(delivery.mobile)}</p>
-                        <p><strong>ناونیشان:</strong> ${escapeHtml(delivery.address)}</p>
-                        <p><strong>وردەکاری:</strong> ${escapeHtml(delivery.details) || 'بەبەتاڵ'}</p>
-                        <p><strong>بەروار:</strong> ${escapeHtml(delivery.timestamp)}</p>
-                    </div>
-                `;
+                items.push({ key: child.key, ...child.val() });
             });
-            
+            items.sort((a, b) => (b.sortKey || 0) - (a.sortKey || 0));
+
+            let html = '<div class="pending-items">';
+
+            items.forEach((d) => {
+                const key = d.key;
+                const orderNum = d.orderNumber || '—';
+                // QR ناوەڕۆک
+                const qrText = encodeURIComponent(
+                    `پسولە: ${orderNum} | نێردەر: ${d.senderName||d.name||''} ${d.senderMobile||d.mobile||''} (${d.senderLocation||d.address||''}) | وەرگر: ${d.receiverName||''} ${d.receiverMobile||''} (${d.receiverLocation||''}) | کەلوپەل: ${d.packageName||d.details||''} x${d.packageQty||''} - ${d.packageKg||''}کگ`
+                );
+                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${qrText}`;
+
+                html += `
+                <div class="pending-item delivery-label-card" id="label-${key}">
+                    <div class="label-header">
+                        <span class="label-order-num"># ${orderNum}</span>
+                        <span class="label-title-center"><i class="fas fa-shipping-fast"></i> لەیبلی گەیاندن</span>
+                        <button class="btn btn-sm btn-primary" onclick="printLabel('${key}')">
+                            <i class="fas fa-print"></i> چاپ
+                        </button>
+                    </div>
+                    <div class="label-body-wrap">
+                        <div class="label-grid">
+                            <div class="label-section sender-section">
+                                <div class="label-section-title">📤 نێردەر</div>
+                                <div class="label-row"><span>ناو:</span><strong>${escapeHtml(d.senderName||d.name||'—')}</strong></div>
+                                <div class="label-row"><span>ژمارە:</span><strong>${escapeHtml(d.senderMobile||d.mobile||'—')}</strong></div>
+                                <div class="label-row"><span>شوێن:</span><strong>${escapeHtml(d.senderLocation||d.address||'—')}</strong></div>
+                            </div>
+                            <div class="label-section receiver-section">
+                                <div class="label-section-title">📥 وەرگر</div>
+                                <div class="label-row"><span>ناو:</span><strong>${escapeHtml(d.receiverName||'—')}</strong></div>
+                                <div class="label-row"><span>ژمارە:</span><strong>${escapeHtml(d.receiverMobile||'—')}</strong></div>
+                                <div class="label-row"><span>شوێن:</span><strong>${escapeHtml(d.receiverLocation||'—')}</strong></div>
+                            </div>
+                        </div>
+                        <div class="label-package">
+                            <div class="label-row"><span>📦 کەلوپەل:</span><strong>${escapeHtml(d.packageName||d.details||'—')}</strong></div>
+                            <div class="label-row"><span>🔢 پارچە:</span><strong>${escapeHtml(String(d.packageQty||'—'))}</strong></div>
+                            <div class="label-row"><span>⚖️ کیلۆ:</span><strong>${escapeHtml(String(d.packageKg||'—'))} کگ</strong></div>
+                        </div>
+                        <div class="label-qr-wrap">
+                            <img src="${qrUrl}" alt="QR" class="label-qr-img" loading="lazy">
+                            <div class="label-qr-hint">QR کۆد</div>
+                        </div>
+                    </div>
+                    <div class="label-footer">
+                        <span>📅 ${escapeHtml(d.timestamp||'')}</span>
+                    </div>
+                </div>`;
+            });
+
             html += '</div>';
             content.innerHTML = html;
         })
@@ -488,6 +531,80 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+// ==================== Print Delivery Label ====================
+function printLabel(key) {
+    const card = document.getElementById('label-' + key);
+    if (!card) return;
+    const orderNum = card.querySelector('.label-order-num') ? card.querySelector('.label-order-num').textContent.trim() : '';
+    const qrImg = card.querySelector('.label-qr-img');
+    const qrSrc = qrImg ? qrImg.src : '';
+    const rows = (selector) => Array.from(card.querySelectorAll(selector))
+        .map(r => `<div class="row"><span>${r.querySelector('span').textContent}</span><strong>${r.querySelector('strong').textContent}</strong></div>`)
+        .join('');
+    const dateText = card.querySelector('.label-footer span') ? card.querySelector('.label-footer span').textContent : '';
+
+    const printWin = window.open('', '_blank', 'width=640,height=560');
+    printWin.document.write(`<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>لەیبلی گەیاندن ${orderNum}</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Tahoma','Arial',sans-serif;direction:rtl;padding:16px;background:#fff;color:#1a202c}
+.wrap{border:3px solid #2d3748;border-radius:12px;padding:16px;max-width:560px;margin:auto}
+.top{display:flex;justify-content:space-between;align-items:center;border-bottom:2px dashed #667eea;padding-bottom:10px;margin-bottom:12px}
+.top-title{font-size:16px;font-weight:bold;color:#667eea}
+.top-num{font-size:22px;font-weight:bold;color:#2d3748;background:#eef2ff;padding:4px 14px;border-radius:8px;border:2px solid #667eea}
+.top-date{font-size:11px;color:#718096;text-align:center;margin-top:3px}
+.body-wrap{display:flex;gap:10px;align-items:flex-start}
+.body-main{flex:1}
+.cols{display:flex;gap:8px;margin-bottom:10px}
+.col{flex:1;border:1.5px solid #e2e8f0;border-radius:8px;padding:9px;background:#f7fafc}
+.col.sender{border-right:3px solid #667eea}
+.col.receiver{border-right:3px solid #48bb78}
+.col-title{font-size:12px;font-weight:bold;color:#667eea;border-bottom:1px solid #e2e8f0;padding-bottom:4px;margin-bottom:7px}
+.col.receiver .col-title{color:#48bb78}
+.row{display:flex;justify-content:space-between;font-size:12px;padding:2px 0;border-bottom:1px dotted #e2e8f0;gap:5px}
+.row span{color:#718096;white-space:nowrap}.row strong{color:#2d3748}
+.pkg{background:#edf2ff;border-radius:8px;padding:9px;margin-bottom:0}
+.qr-box{display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px;border:1.5px solid #e2e8f0;border-radius:8px;background:#f7fafc;min-width:130px}
+.qr-box img{width:120px;height:120px}
+.qr-box small{font-size:11px;color:#718096}
+.foot{text-align:center;font-size:11px;color:#a0aec0;margin-top:10px;border-top:1px dashed #e2e8f0;padding-top:7px}
+@media print{body{padding:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <div class="top-title">🚚 UK BAZAR — لەیبلی گەیاندن</div>
+      <div class="top-date">${dateText}</div>
+    </div>
+    <div class="top-num">${orderNum}</div>
+  </div>
+  <div class="body-wrap">
+    <div class="body-main">
+      <div class="cols">
+        <div class="col sender"><div class="col-title">📤 نێردەر</div>${rows('.sender-section .label-row')}</div>
+        <div class="col receiver"><div class="col-title">📥 وەرگر</div>${rows('.receiver-section .label-row')}</div>
+      </div>
+      <div class="pkg">${rows('.label-package .label-row')}</div>
+    </div>
+    <div class="qr-box">
+      <img src="${qrSrc}" alt="QR">
+      <small>QR کۆد</small>
+    </div>
+  </div>
+  <div class="foot">UK BAZAR — World Online Shopping</div>
+</div>
+</body></html>`);
+    printWin.document.close();
+    printWin.focus();
+    setTimeout(() => printWin.print(), 600);
 }
 
 // ==================== Admin Actions ====================
@@ -857,7 +974,7 @@ document.addEventListener('submit', async function(e) {
         
         const productData = {
             name: document.getElementById('productName').value,
-            category: document.getElementById('adminProductCategory').value,
+            category: document.getElementById('productCategory').value,
             description: document.getElementById('productDescription').value,
             price: document.getElementById('productPrice').value,
             currency: document.getElementById('productCurrency').value,
@@ -882,20 +999,33 @@ document.addEventListener('submit', async function(e) {
     // Delivery Form
     if (e.target && e.target.id === 'deliveryForm') {
         e.preventDefault();
-        const deliveryData = {
-            name: document.getElementById('deliveryName').value,
-            mobile: document.getElementById('deliveryMobile').value,
-            address: document.getElementById('deliveryAddress').value,
-            details: document.getElementById('deliveryDetails').value,
-            timestamp: new Date().toLocaleString('ku')
-        };
-        database.ref('delivery').push(deliveryData)
-            .then(() => {
-                showNotification('داواکاری گەیاندن نێردرا! ✅');
-                closeModal('deliveryModal');
-                document.getElementById('deliveryForm').reset();
-            })
-            .catch(() => { showNotification('هەڵە لە ناردن!', 'error'); });
+        showNotification('تکایە چاوەڕێ بکە...');
+
+        // ژمارەی پسولە بەرزبکەوە
+        database.ref('deliveryCounter').transaction((current) => {
+            return (current || 0) + 1;
+        }).then((result) => {
+            const orderNum = String(result.snapshot.val()).padStart(2, '0');
+            const deliveryData = {
+                orderNumber:      orderNum,
+                senderName:       document.getElementById('senderName').value,
+                senderMobile:     document.getElementById('senderMobile').value,
+                senderLocation:   document.getElementById('senderLocation').value,
+                receiverName:     document.getElementById('receiverName').value,
+                receiverMobile:   document.getElementById('receiverMobile').value,
+                receiverLocation: document.getElementById('receiverLocation').value,
+                packageName:      document.getElementById('packageName').value,
+                packageQty:       document.getElementById('packageQty').value,
+                packageKg:        document.getElementById('packageKg').value,
+                timestamp:        new Date().toLocaleString('ku'),
+                sortKey:          Date.now()
+            };
+            return database.ref('delivery').push(deliveryData);
+        }).then(() => {
+            showNotification('داواکاری گەیاندن نێردرا! ✅');
+            closeModal('deliveryModal');
+            document.getElementById('deliveryForm').reset();
+        }).catch(() => { showNotification('هەڵە لە ناردن!', 'error'); });
     }
 });
 
