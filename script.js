@@ -37,7 +37,20 @@ function showNotification(message, type = 'success') {
 
 function hideLoading() {
     const spinner = document.getElementById('loadingSpinner');
-    if (spinner) spinner.style.display = 'none';
+    if (spinner) {
+        spinner.style.opacity = '0';
+        setTimeout(() => {
+            spinner.style.display = 'none';
+        }, 300);
+    }
+}
+
+function showLoading() {
+    const spinner = document.getElementById('loadingSpinner');
+    if (spinner) {
+        spinner.style.display = 'flex';
+        spinner.style.opacity = '1';
+    }
 }
 
 function showModal(modalId) {
@@ -173,51 +186,250 @@ UK BAZAR پلاتفۆرمێکی بازرگانی ئۆنلاینە کە بازا�
     window.open(whatsappUrl, '_blank');
 }
 
-// ==================== Firebase Data Loaders ====================
+// ==================== Load Products with Cache ====================
 function loadApprovedProducts() {
+    showLoading();
+    
+    const cachedProducts = localStorage.getItem('ukbazar_products');
+    const cachedSlider = localStorage.getItem('ukbazar_slider');
+    const cacheTime = localStorage.getItem('ukbazar_cache_time');
+    
+    if (cachedProducts && cachedSlider && cacheTime) {
+        const now = Date.now();
+        const timeDiff = now - parseInt(cacheTime);
+        
+        if (timeDiff < 10 * 60 * 1000) {
+            try {
+                products = JSON.parse(cachedProducts);
+                const sliderData = JSON.parse(cachedSlider);
+                
+                renderProducts(products);
+                createCategoryButtons();
+                
+                // دروستکردنی سلایدەر لە کاش
+                const slidesWrapper = document.getElementById('slidesWrapper');
+                const sliderDots = document.getElementById('sliderDots');
+                
+                if (slidesWrapper && sliderDots && sliderData.length > 0) {
+                    createSliderFromData(sliderData);
+                }
+                
+                setTimeout(() => {
+                    hideLoading();
+                }, 300);
+                
+                refreshProductsFromFirebase();
+                return;
+                
+            } catch (e) {
+                console.log('Cache error, loading from Firebase');
+            }
+        }
+    }
+    
+    loadProductsFromFirebase();
+}
+
+function loadProductsFromFirebase() {
     Promise.all([
         database.ref('products').once('value'),
         database.ref('slider').once('value')
     ]).then(([productSnapshot, sliderSnapshot]) => {
         products = [];
+        const sliderData = [];
+        
         productSnapshot.forEach((child) => {
             const val = child.val();
             if (val.status === 'approved') {
                 products.push({ ...val, firebaseId: child.key });
             }
         });
+        
+        sliderSnapshot.forEach((child) => {
+            const imageUrl = child.val().imageUrl;
+            if (imageUrl && imageUrl.trim() !== '') {
+                sliderData.push({
+                    url: imageUrl,
+                    title: child.val().title || 'سلایدەر'
+                });
+            }
+        });
+        
+        try {
+            localStorage.setItem('ukbazar_products', JSON.stringify(products));
+            localStorage.setItem('ukbazar_slider', JSON.stringify(sliderData));
+            localStorage.setItem('ukbazar_cache_time', Date.now().toString());
+        } catch (e) {
+            console.log('Cache save failed');
+        }
+        
         renderProducts(products);
-        hideLoading();
         createCategoryButtons();
-        renderSliderDirect(sliderSnapshot);
+        
+        // دروستکردنی سلایدەر لە داتای تازە
+        if (sliderData.length > 0) {
+            createSliderFromData(sliderData);
+        } else {
+            createSliderFromProducts();
+        }
+        
+        setTimeout(() => {
+            hideLoading();
+        }, 500);
+        
         if (products.length > 0) {
             showNotification(products.length + ' کاڵا بارکرا!');
         }
+        
     }).catch((error) => {
         console.error("Error:", error);
-        hideLoading();
+        
+        const cachedProducts = localStorage.getItem('ukbazar_products');
+        if (cachedProducts) {
+            try {
+                products = JSON.parse(cachedProducts);
+                renderProducts(products);
+                createCategoryButtons();
+                showNotification('پیشاندانی داتای کاشکراو', 'info');
+            } catch (e) {}
+        }
+        
+        setTimeout(() => {
+            hideLoading();
+        }, 500);
     });
 }
 
+// ==================== Create Slider from Data ====================
+function createSliderFromData(sliderData) {
+    const slidesWrapper = document.getElementById('slidesWrapper');
+    const sliderDots = document.getElementById('sliderDots');
+    
+    if (!slidesWrapper || !sliderDots) return;
+    
+    const defaultImage = 'https://via.placeholder.com/1200x400/667eea/ffffff?text=UK+BAZAR';
+    
+    if (sliderData.length === 0) {
+        sliderData.push({ url: defaultImage, title: 'UK BAZAR' });
+    }
+    
+    totalSlides = sliderData.length;
+    currentSlide = 0;
+    
+    slidesWrapper.innerHTML = sliderData.map(img => 
+        '<div class="slide">' +
+        '<img src="' + img.url + '" ' +
+        'alt="' + img.title + '" ' +
+        'loading="lazy" ' +
+        'onerror="this.onerror=null; this.src=\'' + defaultImage + '\'">' +
+        '</div>'
+    ).join('');
+    
+    sliderDots.innerHTML = sliderData.map((_, i) => 
+        '<div class="dot ' + (i === 0 ? 'active' : '') + '" onclick="goToSlide(' + i + ')"></div>'
+    ).join('');
+    
+    startAutoPlay();
+}
+
+function createSliderFromProducts() {
+    const slidesWrapper = document.getElementById('slidesWrapper');
+    const sliderDots = document.getElementById('sliderDots');
+    
+    if (!slidesWrapper || !sliderDots) return;
+    
+    const defaultImage = 'https://via.placeholder.com/1200x400/667eea/ffffff?text=UK+BAZAR';
+    
+    let images = [];
+    
+    if (products.length > 0) {
+        images = products.slice().reverse().slice(0, 8).map(p => ({
+            url: p.images && p.images[0] ? p.images[0] : defaultImage,
+            title: p.name || 'کاڵا'
+        }));
+    }
+    
+    if (images.length === 0) {
+        images = [
+            { url: defaultImage, title: 'UK BAZAR' },
+            { url: defaultImage, title: 'UK BAZAR' },
+            { url: defaultImage, title: 'UK BAZAR' }
+        ];
+    }
+    
+    totalSlides = images.length;
+    currentSlide = 0;
+    
+    slidesWrapper.innerHTML = images.map(img => 
+        '<div class="slide">' +
+        '<img src="' + img.url + '" ' +
+        'alt="' + img.title + '" ' +
+        'loading="lazy" ' +
+        'onerror="this.onerror=null; this.src=\'' + defaultImage + '\'">' +
+        '</div>'
+    ).join('');
+    
+    sliderDots.innerHTML = images.map((_, i) => 
+        '<div class="dot ' + (i === 0 ? 'active' : '') + '" onclick="goToSlide(' + i + ')"></div>'
+    ).join('');
+    
+    startAutoPlay();
+}
+
+function refreshProductsFromFirebase() {
+    setTimeout(() => {
+        database.ref('products').once('value').then((snapshot) => {
+            const newProducts = [];
+            snapshot.forEach((child) => {
+                const val = child.val();
+                if (val.status === 'approved') {
+                    newProducts.push({ ...val, firebaseId: child.key });
+                }
+            });
+            
+            if (JSON.stringify(newProducts) !== JSON.stringify(products)) {
+                products = newProducts;
+                try {
+                    localStorage.setItem('ukbazar_products', JSON.stringify(products));
+                } catch (e) {}
+                renderProducts(products);
+                showNotification('کاڵا نوێ کرانەوە!');
+            }
+        }).catch(() => {});
+    }, 5000);
+}
+
+// ==================== Admin Functions with Error Handling ====================
 function loadPendingProducts() {
+    const content = document.getElementById('adminContent');
+    if (!content) return;
+    
+    content.innerHTML = '<p style="text-align: center;">چاوەڕوانی بکە...</p>';
+    
     database.ref('products').orderByChild('status').equalTo('pending').once('value')
         .then((snapshot) => {
-            const content = document.getElementById('adminContent');
-            if (!content) return;
-            
             let html = '<div class="pending-items">';
+            
+            if (!snapshot.exists()) {
+                html = '<p style="text-align: center; color: var(--gray);">هیچ کاڵایەکی چاوەڕوانی پەسەندکردن نییە</p>';
+                content.innerHTML = html;
+                return;
+            }
             
             snapshot.forEach((child) => {
                 const product = child.val();
                 const id = child.key;
+                const firstImage = product.images && product.images[0] ? product.images[0] : '';
+                
                 html += `
                     <div class="pending-item">
-                        <h4>📦 ${product.name}</h4>
-                        <p><strong>جۆر:</strong> ${product.category}</p>
-                        <p><strong>نرخ:</strong> ${product.price} ${product.currency}</p>
-                        <p><strong>فرۆشیار:</strong> ${product.sellerName} - ${product.sellerMobile}</p>
-                        <p><strong>شوێن:</strong> ${product.location || 'نادیار'}</p>
-                        <p><strong>وردەکاری:</strong> ${product.description || 'بەبەتاڵ'}</p>
+                        ${firstImage ? '<img src="' + firstImage + '" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;" onerror="this.style.display=\'none\'">' : ''}
+                        <h4>📦 ${escapeHtml(product.name)}</h4>
+                        <p><strong>جۆر:</strong> ${escapeHtml(product.category)}</p>
+                        <p><strong>نرخ:</strong> ${escapeHtml(product.price)} ${escapeHtml(product.currency)}</p>
+                        <p><strong>فرۆشیار:</strong> ${escapeHtml(product.sellerName)} - ${escapeHtml(product.sellerMobile)}</p>
+                        <p><strong>شوێن:</strong> ${escapeHtml(product.location) || 'نادیار'}</p>
+                        <p><strong>وردەکاری:</strong> ${escapeHtml(product.description) || 'بەبەتاڵ'}</p>
                         <div class="actions">
                             <button class="btn btn-secondary btn-small" onclick="approveProduct('${id}')">
                                 <i class="fas fa-check"></i> پەسەندکردن
@@ -230,21 +442,23 @@ function loadPendingProducts() {
                 `;
             });
             
-            if (!snapshot.exists()) {
-                html = '<p style="text-align: center; color: var(--gray);">هیچ کاڵایەکی چاوەڕوانی پەسەندکردن نییە</p>';
-            }
-            
             html += '</div>';
             content.innerHTML = html;
+        })
+        .catch((error) => {
+            console.error("Error loading pending products:", error);
+            content.innerHTML = '<p style="text-align: center; color: var(--danger);">هەڵە لە بارکردن!</p>';
         });
 }
 
 function loadAllProducts() {
+    const content = document.getElementById('adminContent');
+    if (!content) return;
+    
+    content.innerHTML = '<p style="text-align: center;">چاوەڕوانی بکە...</p>';
+    
     database.ref('products').orderByChild('status').equalTo('approved').once('value')
         .then((snapshot) => {
-            const content = document.getElementById('adminContent');
-            if (!content) return;
-            
             if (!snapshot.exists()) {
                 content.innerHTML = '<p style="text-align: center; color: var(--gray);">هیچ کاڵایەک نییە</p>';
                 return;
@@ -269,14 +483,14 @@ function loadAllProducts() {
                 
                 html += '<div class="pending-item">';
                 if (firstImage) {
-                    html += '<img src="' + firstImage + '" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;">';
+                    html += '<img src="' + firstImage + '" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;" onerror="this.style.display=\'none\'">';
                 }
-                html += '<h4>📦 ' + product.name + '</h4>';
-                html += '<p><strong>جۆر:</strong> ' + product.category + '</p>';
-                html += '<p><strong>نرخ:</strong> ' + product.price + ' ' + product.currency + '</p>';
-                html += '<p><strong>فرۆشیار:</strong> ' + product.sellerName + ' - ' + product.sellerMobile + '</p>';
-                html += '<p><strong>شوێن:</strong> ' + (product.location || 'نادیار') + '</p>';
-                html += '<p><strong>وردەکاری:</strong> ' + (product.description || 'بەبەتاڵ') + '</p>';
+                html += '<h4>📦 ' + escapeHtml(product.name) + '</h4>';
+                html += '<p><strong>جۆر:</strong> ' + escapeHtml(product.category) + '</p>';
+                html += '<p><strong>نرخ:</strong> ' + escapeHtml(product.price) + ' ' + escapeHtml(product.currency) + '</p>';
+                html += '<p><strong>فرۆشیار:</strong> ' + escapeHtml(product.sellerName) + ' - ' + escapeHtml(product.sellerMobile) + '</p>';
+                html += '<p><strong>شوێن:</strong> ' + escapeHtml(product.location || 'نادیار') + '</p>';
+                html += '<p><strong>وردەکاری:</strong> ' + escapeHtml(product.description || 'بەبەتاڵ') + '</p>';
                 html += '<div class="actions">';
                 html += '<button class="btn btn-danger btn-small" onclick="deleteProduct(\'' + id + '\')"><i class="fas fa-trash"></i> سڕینەوە</button>';
                 html += '</div></div>';
@@ -284,14 +498,25 @@ function loadAllProducts() {
             
             html += '</div>';
             content.innerHTML = html;
+        })
+        .catch((error) => {
+            console.error("Error loading all products:", error);
+            content.innerHTML = '<p style="text-align: center; color: var(--danger);">هەڵە لە بارکردن!</p>';
         });
 }
 
 function loadRequests() {
+    const content = document.getElementById('adminContent');
+    if (!content) return;
+    
+    content.innerHTML = '<p style="text-align: center;">چاوەڕوانی بکە...</p>';
+    
     database.ref('requests').once('value')
         .then((snapshot) => {
-            const content = document.getElementById('adminContent');
-            if (!content) return;
+            if (!snapshot.exists()) {
+                content.innerHTML = '<p style="text-align: center; color: var(--gray);">هیچ داواکارییەک نییە</p>';
+                return;
+            }
             
             let html = '<div class="pending-items">';
             
@@ -299,28 +524,35 @@ function loadRequests() {
                 const request = child.val();
                 html += `
                     <div class="pending-item">
-                        <h4>📋 ${request.itemName}</h4>
-                        <p><strong>کەس:</strong> ${request.name} - ${request.mobile}</p>
-                        <p><strong>وردەکاری:</strong> ${request.details || 'بەبەتاڵ'}</p>
-                        <p><strong>بەروار:</strong> ${request.timestamp}</p>
+                        <h4>📋 ${escapeHtml(request.itemName)}</h4>
+                        <p><strong>کەس:</strong> ${escapeHtml(request.name)} - ${escapeHtml(request.mobile)}</p>
+                        <p><strong>وردەکاری:</strong> ${escapeHtml(request.details) || 'بەبەتاڵ'}</p>
+                        <p><strong>بەروار:</strong> ${escapeHtml(request.timestamp)}</p>
                     </div>
                 `;
             });
             
-            if (!snapshot.exists()) {
-                html = '<p style="text-align: center; color: var(--gray);">هیچ داواکارییەک نییە</p>';
-            }
-            
             html += '</div>';
             content.innerHTML = html;
+        })
+        .catch((error) => {
+            console.error("Error loading requests:", error);
+            content.innerHTML = '<p style="text-align: center; color: var(--danger);">هەڵە لە بارکردن!</p>';
         });
 }
 
 function loadDeliveryRequests() {
+    const content = document.getElementById('adminContent');
+    if (!content) return;
+    
+    content.innerHTML = '<p style="text-align: center;">چاوەڕوانی بکە...</p>';
+    
     database.ref('delivery').once('value')
         .then((snapshot) => {
-            const content = document.getElementById('adminContent');
-            if (!content) return;
+            if (!snapshot.exists()) {
+                content.innerHTML = '<p style="text-align: center; color: var(--gray);">هیچ داواکاری گەیاندنێک نییە</p>';
+                return;
+            }
             
             let html = '<div class="pending-items">';
             
@@ -328,22 +560,30 @@ function loadDeliveryRequests() {
                 const delivery = child.val();
                 html += `
                     <div class="pending-item">
-                        <h4>🚚 ${delivery.name}</h4>
-                        <p><strong>ژمارە:</strong> ${delivery.mobile}</p>
-                        <p><strong>ناونیشان:</strong> ${delivery.address}</p>
-                        <p><strong>وردەکاری:</strong> ${delivery.details || 'بەبەتاڵ'}</p>
-                        <p><strong>بەروار:</strong> ${delivery.timestamp}</p>
+                        <h4>🚚 ${escapeHtml(delivery.name)}</h4>
+                        <p><strong>ژمارە:</strong> ${escapeHtml(delivery.mobile)}</p>
+                        <p><strong>ناونیشان:</strong> ${escapeHtml(delivery.address)}</p>
+                        <p><strong>وردەکاری:</strong> ${escapeHtml(delivery.details) || 'بەبەتاڵ'}</p>
+                        <p><strong>بەروار:</strong> ${escapeHtml(delivery.timestamp)}</p>
                     </div>
                 `;
             });
             
-            if (!snapshot.exists()) {
-                html = '<p style="text-align: center; color: var(--gray);">هیچ داواکاری گەیاندنێک نییە</p>';
-            }
-            
             html += '</div>';
             content.innerHTML = html;
+        })
+        .catch((error) => {
+            console.error("Error loading delivery requests:", error);
+            content.innerHTML = '<p style="text-align: center; color: var(--danger);">هەڵە لە بارکردن!</p>';
         });
+}
+
+// ==================== Helper Function for Security ====================
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
 
 // ==================== Admin Actions ====================
@@ -388,7 +628,7 @@ function deleteSliderImage(sliderId) {
             .then(() => {
                 showNotification('وێنە بە سەرکەوتوویی سڕایەوە! 🗑️');
                 loadSliderManagement();
-                loadSliderImages();
+                loadProductsFromFirebase(); // بارکردنەوەی سلایدەر
             })
             .catch(() => {
                 showNotification('هەڵە لە سڕینەوە!', 'error');
@@ -474,6 +714,7 @@ function showAddSliderForm() {
             const preview = document.getElementById('sliderPreview');
             if (preview) preview.innerHTML = '';
             loadSliderManagement();
+            loadProductsFromFirebase(); // بارکردنەوەی سلایدەر
         });
     }
     
@@ -507,7 +748,7 @@ function loadSliderManagement() {
                 const id = item.id;
                 
                 html += '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; display: flex; gap: 15px; align-items: center;">';
-                html += '<img src="' + slider.imageUrl + '" style="width: 150px; height: 100px; object-fit: cover; border-radius: 8px; flex-shrink: 0;">';
+                html += '<img src="' + slider.imageUrl + '" style="width: 150px; height: 100px; object-fit: cover; border-radius: 8px; flex-shrink: 0;" onerror="this.src=\'https://via.placeholder.com/150x100/667eea/ffffff?text=Error\'">';
                 html += '<div style="flex: 1;">';
                 html += '<h4 style="margin: 0 0 5px 0; color: var(--dark);">' + (slider.title || 'سلایدەر') + '</h4>';
                 html += '<p style="margin: 0; color: var(--gray); font-size: 0.85rem;">بەرواری زیادکردن: ' + (slider.timestamp || 'نادیار') + '</p>';
@@ -778,7 +1019,6 @@ document.addEventListener('change', function(e) {
 });
 
 // ==================== Category & Search ====================
-// ==================== Category & Search ====================
 function createCategoryButtons() {
     const categories = [
         'هەموو کاڵاکان',
@@ -804,7 +1044,6 @@ function createCategoryButtons() {
     const container = document.getElementById('categoryButtons');
     if (!container) return;
     
-    // کاتیگۆریەکان بە شێوەیەکی ڕێکخراو نیشان بدە
     container.innerHTML = categories.map(cat => 
         `<button class="category-btn ${cat === 'هەموو کاڵاکان' ? 'active' : ''}" 
                  onclick="filterByCategory('${cat}')"
@@ -861,9 +1100,12 @@ function performSearch() {
 
 // ==================== Product Card & Rendering ====================
 function createProductCard(product) {
-    const firstImage = product.images && product.images[0] 
-        ? product.images[0] 
-        : 'https://via.placeholder.com/300x300?text=No+Image';
+    const defaultImage = 'https://via.placeholder.com/300x300/667eea/ffffff?text=UK+BAZAR';
+    
+    let firstImage = defaultImage;
+    if (product.images && product.images.length > 0 && product.images[0]) {
+        firstImage = product.images[0];
+    }
 
     const productName = product.name && product.name.length > 30 
         ? product.name.substring(0, 27) + '...' 
@@ -872,7 +1114,7 @@ function createProductCard(product) {
     const sellerName = product.sellerName && product.sellerName.length > 15 
         ? product.sellerName.substring(0, 12) + '...' 
         : product.sellerName || 'نادیار';
-        
+    
     const location = product.location && product.location.length > 20 
         ? product.location.substring(0, 17) + '...' 
         : product.location || 'نادیار';
@@ -882,9 +1124,9 @@ function createProductCard(product) {
         '<img src="' + firstImage + '" ' +
         'alt="' + (product.name || 'product') + '" ' +
         'loading="lazy" ' +
-        'onclick="openImageModal(\'' + firstImage + '\')" ' +
+        'onclick="openImageModal(\'' + firstImage.replace(/'/g, "\\'") + '\')" ' +
         'style="cursor: zoom-in;" ' +
-        'onerror="this.src=\'https://via.placeholder.com/300x300?text=Error\'">' +
+        'onerror="this.onerror=null; this.src=\'' + defaultImage + '\'">' +
         '</div>' +
         '<div class="product-info">' +
         '<div class="product-category">' + (product.category || 'هەموویی') + '</div>' +
@@ -900,7 +1142,7 @@ function createProductCard(product) {
         '<button class="btn btn-primary btn-small" onclick="addToCart(\'' + product.firebaseId + '\')">' +
         '<i class="fas fa-cart-plus"></i> <span class="btn-text">سەبەتە</span>' +
         '</button>' +
-        '<button class="btn btn-secondary btn-small" onclick="contactSellerWhatsApp(\'' + (product.sellerMobile || '') + '\', \'' + (product.name || '') + '\')">' +
+        '<button class="btn btn-secondary btn-small" onclick="contactSellerWhatsApp(\'' + (product.sellerMobile || '') + '\', \'' + (product.name || '').replace(/'/g, "\\'") + '\')">' +
         '<i class="fab fa-whatsapp"></i> <span class="btn-text">واتساپ</span>' +
         '</button>' +
         '<button class="btn btn-fib btn-small" onclick="showFibModal()">' +
@@ -1002,99 +1244,6 @@ function copyFibNumber() {
 }
 
 // ==================== Slider Functions ====================
-function renderSliderDirect(snapshot) {
-    const slidesWrapper = document.getElementById('slidesWrapper');
-    const sliderDots = document.getElementById('sliderDots');
-    if (!slidesWrapper || !sliderDots) return;
-    
-    let images = [];
-    if (snapshot && snapshot.exists()) {
-        snapshot.forEach((child) => {
-            images.push({ url: child.val().imageUrl, title: child.val().title || '' });
-        });
-        images.reverse();
-    } else if (products.length > 0) {
-        images = products.slice().reverse().slice(0, 8).map(p => ({
-            url: p.images && p.images[0] ? p.images[0] : 'https://via.placeholder.com/1200x400',
-            title: p.name
-        }));
-    }
-    
-    if (images.length === 0) return;
-    
-    totalSlides = images.length;
-    slidesWrapper.innerHTML = images.map(img => 
-        '<div class="slide"><img src="' + img.url + '" alt="' + img.title + '" loading="lazy"></div>'
-    ).join('');
-    
-    sliderDots.innerHTML = images.map((_, i) => 
-        '<div class="dot ' + (i === 0 ? 'active' : '') + '" onclick="goToSlide(' + i + ')"></div>'
-    ).join('');
-    
-    startAutoPlay();
-}
-
-function loadSliderImages() {
-    const slidesWrapper = document.getElementById('slidesWrapper');
-    const sliderDots = document.getElementById('sliderDots');
-    if (!slidesWrapper || !sliderDots) return;
-    
-    database.ref('slider').once('value')
-        .then((snapshot) => {
-            if (!snapshot.exists()) {
-                if (products.length === 0) return;
-                
-                const sliderProducts = products.slice().reverse().slice(0, 8);
-                totalSlides = sliderProducts.length;
-
-                slidesWrapper.innerHTML = sliderProducts.map(product => {
-                    const img = product.images && product.images[0] ? product.images[0] : 'https://via.placeholder.com/1200x400';
-                    return `
-                        <div class="slide">
-                            <img src="${img}" alt="${product.name}" loading="lazy">
-                        </div>
-                    `;
-                }).join('');
-
-                sliderDots.innerHTML = sliderProducts.map((_, index) => 
-                    `<div class="dot ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></div>`
-                ).join('');
-                
-                startAutoPlay();
-                return;
-            }
-            
-            const sliderImages = [];
-            snapshot.forEach((child) => {
-                sliderImages.push({
-                    imageUrl: child.val().imageUrl,
-                    title: child.val().title || 'سلایدەر'
-                });
-            });
-            
-            sliderImages.reverse();
-            
-            totalSlides = sliderImages.length;
-
-            slidesWrapper.innerHTML = sliderImages.map(slider => {
-                return `
-                    <div class="slide">
-                        <img src="${slider.imageUrl}" alt="${slider.title}" loading="lazy">
-                    </div>
-                `;
-            }).join('');
-
-            sliderDots.innerHTML = sliderImages.map((_, index) => 
-                `<div class="dot ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></div>`
-            ).join('');
-
-            startAutoPlay();
-        })
-        .catch((error) => {
-            console.error('Error loading slider:', error);
-        });
-}
-
 function updateSlider() {
     const slidesWrapper = document.getElementById('slidesWrapper');
     if (slidesWrapper) {
@@ -1107,23 +1256,31 @@ function updateSlider() {
 }
 
 function nextSlide() {
-    currentSlide = (currentSlide + 1) % totalSlides;
-    updateSlider();
+    if (totalSlides > 0) {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        updateSlider();
+    }
 }
 
 function prevSlide() {
-    currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-    updateSlider();
+    if (totalSlides > 0) {
+        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+        updateSlider();
+    }
 }
 
 function goToSlide(index) {
-    currentSlide = index;
-    updateSlider();
+    if (index >= 0 && index < totalSlides) {
+        currentSlide = index;
+        updateSlider();
+    }
 }
 
 function startAutoPlay() {
-    if (autoPlayInterval) clearInterval(autoPlayInterval);
-    autoPlayInterval = setInterval(nextSlide, 3000);
+    if (autoPlayInterval) {
+        clearInterval(autoPlayInterval);
+    }
+    autoPlayInterval = setInterval(nextSlide, 4000);
 }
 
 // ==================== Image Modal ====================
