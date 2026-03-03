@@ -184,7 +184,7 @@
                         </div>
                         <div class="contact-row">
                             <i class="fas fa-envelope"></i>
-                            <span>Info@ukbazar.online</span>
+                            <span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="672e09010827120c05061d06154908090b0e0902">[email&#160;protected]</a></span>
                         </div>
                     </div>
                 </div>
@@ -366,21 +366,46 @@
                 <h2><i class="fas fa-shipping-fast"></i> داواکاری گەیاندن</h2>
             </div>
             <form id="deliveryForm">
+                <div class="delivery-section-title"><i class="fas fa-user-circle"></i> زانیاری نێردەر</div>
                 <div class="form-group">
-                    <label>ناوت</label>
-                    <input type="text" id="deliveryName" placeholder="ناوی تەواو" required>
+                    <label>ناوی نێردەر <span class="required-star">*</span></label>
+                    <input type="text" id="senderName" placeholder="ناوی تەواوی نێردەر" required>
                 </div>
                 <div class="form-group">
-                    <label>ژمارەی مۆبایل</label>
-                    <input type="tel" id="deliveryMobile" placeholder="07xxxxxxxxx" required>
+                    <label>ژمارەی نێردەر <span class="required-star">*</span></label>
+                    <input type="tel" id="senderMobile" placeholder="07xxxxxxxxx" required>
                 </div>
                 <div class="form-group">
-                    <label>ناونیشان</label>
-                    <input type="text" id="deliveryAddress" placeholder="ناونیشانی گەیاندن" required>
+                    <label>شوێنی نێردەر <span class="required-star">*</span></label>
+                    <input type="text" id="senderLocation" placeholder="شار / شوێنی نێردەر" required>
+                </div>
+                <div class="delivery-section-title"><i class="fas fa-user-check"></i> زانیاری وەرگر</div>
+                <div class="form-group">
+                    <label>ناوی وەرگر <span class="required-star">*</span></label>
+                    <input type="text" id="receiverName" placeholder="ناوی تەواوی وەرگر" required>
                 </div>
                 <div class="form-group">
-                    <label>وردەکاری</label>
-                    <textarea id="deliveryDetails" placeholder="هەر زانیاریەکی زیاتر..."></textarea>
+                    <label>ژمارەی وەرگر <span class="required-star">*</span></label>
+                    <input type="tel" id="receiverMobile" placeholder="07xxxxxxxxx" required>
+                </div>
+                <div class="form-group">
+                    <label>شوێنی وەرگر <span class="required-star">*</span></label>
+                    <input type="text" id="receiverLocation" placeholder="شار / شوێنی وەرگر" required>
+                </div>
+                <div class="delivery-section-title"><i class="fas fa-box"></i> زانیاری کەلوپەل</div>
+                <div class="form-group">
+                    <label>ناوی کەلوپەل <span class="required-star">*</span></label>
+                    <input type="text" id="packageName" placeholder="ناوی کاڵا / کەلوپەل" required>
+                </div>
+                <div class="form-group" style="display:flex; gap:10px;">
+                    <div style="flex:1;">
+                        <label>ژمارەی پارچە <span class="required-star">*</span></label>
+                        <input type="number" id="packageQty" placeholder="1" min="1" required>
+                    </div>
+                    <div style="flex:1;">
+                        <label>کیلۆ <span class="required-star">*</span></label>
+                        <input type="number" id="packageKg" placeholder="0.0" min="0" step="0.1" required>
+                    </div>
                 </div>
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">ناردن <i class="fas fa-paper-plane"></i></button>
@@ -413,7 +438,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
-    
     <script src="script.js"></script>
 </body>
 </html>
