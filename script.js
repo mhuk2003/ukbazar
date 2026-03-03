@@ -857,7 +857,7 @@ document.addEventListener('submit', async function(e) {
         
         const productData = {
             name: document.getElementById('productName').value,
-            category: document.getElementById('productCategory').value,
+            category: document.getElementById('adminProductCategory').value,
             description: document.getElementById('productDescription').value,
             price: document.getElementById('productPrice').value,
             currency: document.getElementById('productCurrency').value,
