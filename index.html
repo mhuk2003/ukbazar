@@ -125,95 +125,111 @@
         </div>
     </section>
 
-
-
- 
-    <!-- Footer Section - باشترکراو -->
-    <!-- Footer Section - باشترکراو -->
-<footer class="footer">
-    <div class="container">
-        <!-- دوگمەی گەڕانەوە بۆ سەرەوە -->
-        <div class="back-to-top-container">
-            <button id="backToTopBtn" class="back-to-top-btn" aria-label="گەڕانەوە بۆ سەرەوە">
-                <i class="fas fa-arrow-up"></i>
-                <span>گەڕانەوە بۆ سەرەوە</span>
-            </button>
-        </div>
-        
-        <div class="footer-grid">
-            <!-- بەشی یەکەم: لۆگۆ و ناونیشان -->
-            <div class="footer-col footer-brand">
-                <div class="footer-logo">
-                    <img src="https://firebasestorage.googleapis.com/v0/b/ukbazar-15eda.firebasestorage.app/o/logo-ukbazar.png?alt=media&token=c1b2a45a-fbe0-4ac8-bc8f-26ae4fd7966c" alt="UK BAZAR">
-                    <h3>UK BAZAR</h3>
-                </div>
-                <p class="footer-slogan">World Online Shopping</p>
-                <div class="footer-flags">
-                    <img src="https://firebasestorage.googleapis.com/v0/b/ukbazar-15eda.firebasestorage.app/o/uk-flag.webp?alt=media&token=83b7ce7b-db70-4d3a-9a32-f262c4773b1a" alt="UK">
-                    <img src="https://firebasestorage.googleapis.com/v0/b/ukbazar-15eda.firebasestorage.app/o/images.png?alt=media&token=79847612-3eed-48ef-9413-a3ae76df758b" alt="Kurdistan">
-                </div>
-            </div>
-
-            <!-- بەشی دووەم: پەیوەندی -->
-            <div class="footer-col">
-                <h4>پەیوەندی:</h4>
-                <div class="contact-info">
-                    <div class="contact-row">
-                        <i class="fas fa-phone-alt"></i>
-                        <div class="contact-numbers">
-                            <span>07755436275</span>
-                            <span>07507472656</span>
-                        </div>
-                    </div>
-                    <div class="contact-row">
-                        <i class="fas fa-phone-alt"></i>
-                        <span>00447449218670 (UK)</span>
-                    </div>
-                    <div class="contact-row">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>کوردستان - UK</span>
-                    </div>
-                    <div class="contact-row">
-                        <i class="fas fa-envelope"></i>
-                        <span>
-                           <a href="mailto:Info@ukbazar.online" style="color: #ffffff; text-decoration: none;">
-                   Info@ukbazar.online
-               </a>
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- بەشی چوارەم: شەبەکە کۆمەڵایەتیەکان -->
-            <div class="footer-col">
-                <h4>شەبەکە کۆمەڵایەتیەکان:</h4>
-                <div class="social-links">
-                    <a href="https://facebook.com/ukbazar" target="_blank" class="social-btn facebook">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="https://wa.me/9647700000000" target="_blank" class="social-btn whatsapp">
-                        <i class="fab fa-whatsapp"></i>
-                    </a>
-                    <a href="https://instagram.com/ukbazar" target="_blank" class="social-btn instagram">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a href="https://telegram.me/ukbazar" target="_blank" class="social-btn telegram">
-                        <i class="fab fa-telegram-plane"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- بەشی خوارەوەی فوتر -->
-        <div class="footer-bottom">
-            <div class="bottom-content">
-                <p>© 2026 UK BAZAR - هەموو مافەکان پارێزراون</p>
-                <p class="separator">|</p>
-                <p>ڕێکخراوێکی بازرگانی نێودەوڵەتی</p>
+    <div class="bottom-panel">
+        <div class="container">
+            <div class="bottom-nav">
+                <a href="javascript:void(0)" class="bottom-nav-item active" onclick="showHomePage()">
+                    <i class="fas fa-home"></i><span>ماڵەوە</span>
+                </a>
+                <a href="javascript:void(0)" class="bottom-nav-item" onclick="showRequestModal()">
+                    <i class="fas fa-clipboard-list"></i><span>داواکاری</span>
+                </a>
+                <a href="javascript:void(0)" class="bottom-nav-item" onclick="showCartModal()">
+                    <i class="fas fa-shopping-cart"></i><span>سەبەتە</span>
+                </a>
+                <a href="javascript:void(0)" class="bottom-nav-item" onclick="showAdminLogin()">
+                    <i class="fas fa-user-shield"></i><span>بەڕێوەبەر</span>
+                </a>
             </div>
         </div>
     </div>
-</footer>
+    </div> <!-- Closing bottom-panel div -->
+
+    <!-- Footer Section -->
+    <!-- Footer Section - باشترکراو -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <!-- بەشی یەکەم: لۆگۆ و ناونیشان -->
+                <div class="footer-col footer-brand">
+                    <div class="footer-logo">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/ukbazar-15eda.firebasestorage.app/o/logo-ukbazar.png?alt=media&token=c1b2a45a-fbe0-4ac8-bc8f-26ae4fd7966c" alt="UK BAZAR">
+                        <h3>UK BAZAR</h3>
+                    </div>
+                    <p class="footer-slogan">World Online Shopping</p>
+                    <div class="footer-flags">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/ukbazar-15eda.firebasestorage.app/o/uk-flag.webp?alt=media&token=83b7ce7b-db70-4d3a-9a32-f262c4773b1a" alt="UK">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/ukbazar-15eda.firebasestorage.app/o/images.png?alt=media&token=79847612-3eed-48ef-9413-a3ae76df758b" alt="Kurdistan">
+                    </div>
+                </div>
+
+                <!-- بەشی دووەم: پەیوەندی -->
+                <div class="footer-col">
+                    <h4>پەیوەندی:</h4>
+                    <div class="contact-info">
+                        <div class="contact-row">
+                            <i class="fas fa-phone-alt"></i>
+                            <div class="contact-numbers">
+                                <span>07755436275</span>
+                                <span>07507472656</span>
+                            </div>
+                        </div>
+                        <div class="contact-row">
+                            <i class="fas fa-phone-alt"></i>
+                            <span>00447449218670 (UK)</span>
+                        </div>
+                        <div class="contact-row">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>کوردستان - UK</span>
+                        </div>
+                        <div class="contact-row">
+                            <i class="fas fa-envelope"></i>
+                            <span><a href="/cdn-cgi/l/email-protection#eea7808881ae9b858c8f948f9cc081808287808b"><span class="__cf_email__" data-cfemail="6f260109002f1a040d0e150e1d4100010306010a">[email&#160;protected]</span></a></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- بەشی سێیەم: بەستەرەکان -->
+                <div class="footer-col">
+                    <h4>بەستەرەکان:</h4>
+                    <ul class="footer-links">
+                        <li><a href="javascript:void(0)" onclick="showHomePage()"><i class="fas fa-home"></i> ماڵەوە</a></li>
+                        <li><a href="javascript:void(0)" onclick="showRequestModal()"><i class="fas fa-clipboard-list"></i> داواکاری کاڵا</a></li>
+                        <li><a href="javascript:void(0)" onclick="showAboutUs()"><i class="fas fa-info-circle"></i> دەربارەی ئێمە</a></li>
+                        <li><a href="javascript:void(0)" onclick="showAdminLogin()"><i class="fas fa-user-shield"></i> بەڕێوەبەر</a></li>
+                    </ul>
+                </div>
+
+                <!-- بەشی چوارەم: شەبەکە کۆمەڵایەتیەکان -->
+                <div class="footer-col">
+                    <h4>شەبەکە کۆمەڵایەتیەکان:</h4>
+                    <div class="social-links">
+                        <a href="https://facebook.com/ukbazar" target="_blank" class="social-btn facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://wa.me/9647700000000" target="_blank" class="social-btn whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="https://instagram.com/ukbazar" target="_blank" class="social-btn instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://telegram.me/ukbazar" target="_blank" class="social-btn telegram">
+                            <i class="fab fa-telegram-plane"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- بەشی خوارەوەی فوتر -->
+            <div class="footer-bottom">
+                <div class="bottom-content">
+                    <p>© 2026 UK BAZAR - هەموو مافەکان پارێزراون</p>
+                    <p class="separator">|</p>
+                    <p>ڕێکخراوێکی بازرگانی نێودەوڵەتی</p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <!-- Image Modal -->
     <div class="image-modal" id="imageModal">
@@ -347,61 +363,61 @@
                 <button class="close-modal" onclick="closeModal('deliveryModal')">
                     <i class="fas fa-times"></i>
                 </button>
-                <h2><i class="fas fa-shipping-fast"></i> داواکاری گەیاندن</h2>
+                <h2><i class="fas fa-shipping-fast"></i> داواکاری گەیاندن / Delivery Request</h2>
             </div>
             <form id="deliveryForm">
-                <div class="delivery-section-title"><i class="fas fa-user-circle"></i> زانیاری نێردەر</div>
+                <div class="delivery-section-title"><i class="fas fa-user-circle"></i> زانیاری نێردەر / Sender Info</div>
                 <div class="form-group">
-                    <label>ناوی نێردەر <span class="required-star">*</span></label>
-                    <input type="text" id="senderName" placeholder="ناوی تەواوی نێردەر" required>
+                    <label>ناوی نێردەر / Sender Name <span class="required-star">*</span></label>
+                    <input type="text" id="senderName" placeholder="ناوی تەواو / Full Name" required>
                 </div>
                 <div class="form-group">
-                    <label>ژمارەی نێردەر <span class="required-star">*</span></label>
+                    <label>ژمارەی نێردەر / Sender Phone <span class="required-star">*</span></label>
                     <input type="tel" id="senderMobile" placeholder="07xxxxxxxxx" required>
                 </div>
                 <div class="form-group">
-                    <label>ژمارەی نێردەر ٢ <span style="font-size:11px;color:#999">(ئەگەر هەبوو)</span></label>
+                    <label>ژمارەی نێردەر ٢ / Sender Phone 2 <span style="font-size:11px;color:#999">(ئەگەر هەبوو / Optional)</span></label>
                     <input type="tel" id="senderMobile2" placeholder="07xxxxxxxxx">
                 </div>
                 <div class="form-group">
-                    <label>شوێنی نێردەر <span class="required-star">*</span></label>
-                    <input type="text" id="senderLocation" placeholder="شار / شوێنی نێردەر" required>
+                    <label>شوێنی نێردەر / Sender Location <span class="required-star">*</span></label>
+                    <input type="text" id="senderLocation" placeholder="شار / City" required>
                 </div>
-                <div class="delivery-section-title"><i class="fas fa-user-check"></i> زانیاری وەرگر</div>
+                <div class="delivery-section-title"><i class="fas fa-user-check"></i> زانیاری وەرگر / Receiver Info</div>
                 <div class="form-group">
-                    <label>ناوی وەرگر <span class="required-star">*</span></label>
-                    <input type="text" id="receiverName" placeholder="ناوی تەواوی وەرگر" required>
+                    <label>ناوی وەرگر / Receiver Name <span class="required-star">*</span></label>
+                    <input type="text" id="receiverName" placeholder="ناوی تەواو / Full Name" required>
                 </div>
                 <div class="form-group">
-                    <label>ژمارەی وەرگر <span class="required-star">*</span></label>
+                    <label>ژمارەی وەرگر / Receiver Phone <span class="required-star">*</span></label>
                     <input type="tel" id="receiverMobile" placeholder="07xxxxxxxxx" required>
                 </div>
                 <div class="form-group">
-                    <label>ژمارەی وەرگر ٢ <span style="font-size:11px;color:#999">(ئەگەر هەبوو)</span></label>
+                    <label>ژمارەی وەرگر ٢ / Receiver Phone 2 <span style="font-size:11px;color:#999">(ئەگەر هەبوو / Optional)</span></label>
                     <input type="tel" id="receiverMobile2" placeholder="07xxxxxxxxx">
                 </div>
                 <div class="form-group">
-                    <label>شوێنی وەرگر <span class="required-star">*</span></label>
-                    <input type="text" id="receiverLocation" placeholder="شار / شوێنی وەرگر" required>
+                    <label>شوێنی وەرگر / Receiver Location <span class="required-star">*</span></label>
+                    <input type="text" id="receiverLocation" placeholder="شار / City" required>
                 </div>
-                <div class="delivery-section-title"><i class="fas fa-box"></i> زانیاری کەلوپەل</div>
+                <div class="delivery-section-title"><i class="fas fa-box"></i> زانیاری کەلوپەل / Package Info</div>
                 <div class="form-group">
-                    <label>ناوی کەلوپەل <span class="required-star">*</span></label>
-                    <input type="text" id="packageName" placeholder="ناوی کاڵا / کەلوپەل" required>
+                    <label>ناوی کەلوپەل / Package Name <span class="required-star">*</span></label>
+                    <input type="text" id="packageName" placeholder="ناوی کاڵا / Item Name" required>
                 </div>
                 <div class="form-group" style="display:flex; gap:10px;">
                     <div style="flex:1;">
-                        <label>ژمارەی پارچە <span class="required-star">*</span></label>
+                        <label>پارچە / Qty <span class="required-star">*</span></label>
                         <input type="number" id="packageQty" placeholder="1" min="1" required>
                     </div>
                     <div style="flex:1;">
-                        <label>کیلۆ <span class="required-star">*</span></label>
+                        <label>کیلۆ / KG <span class="required-star">*</span></label>
                         <input type="number" id="packageKg" placeholder="0.0" min="0" step="0.1" required>
                     </div>
                 </div>
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">ناردن <i class="fas fa-paper-plane"></i></button>
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('deliveryModal')">داخستن</button>
+                    <button type="submit" class="btn btn-primary">ناردن / Send <i class="fas fa-paper-plane"></i></button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('deliveryModal')">داخستن / Close</button>
                 </div>
             </form>
         </div>
@@ -427,9 +443,13 @@
         </div>
     </div>
 
+    <!-- Back to Top Button -->
+    <button id="backToTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="گەڕانەوە بۆ سەرەتا">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     <script src="script.js"></script>
-</body>
-</html>
+    <
