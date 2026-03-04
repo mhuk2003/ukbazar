@@ -491,12 +491,14 @@ function loadDeliveryRequests() {
                                 <div class="label-section-title">📤 نێردەر</div>
                                 <div class="label-row"><span>ناو:</span><strong>${escapeHtml(d.senderName||d.name||'—')}</strong></div>
                                 <div class="label-row"><span>ژمارە:</span><strong>${escapeHtml(d.senderMobile||d.mobile||'—')}</strong></div>
+                                ${d.senderMobile2 ? `<div class="label-row"><span>ژمارە ٢:</span><strong>${escapeHtml(d.senderMobile2)}</strong></div>` : ''}
                                 <div class="label-row"><span>شوێن:</span><strong>${escapeHtml(d.senderLocation||d.address||'—')}</strong></div>
                             </div>
                             <div class="label-section receiver-section">
                                 <div class="label-section-title">📥 وەرگر</div>
                                 <div class="label-row"><span>ناو:</span><strong>${escapeHtml(d.receiverName||'—')}</strong></div>
                                 <div class="label-row"><span>ژمارە:</span><strong>${escapeHtml(d.receiverMobile||'—')}</strong></div>
+                                ${d.receiverMobile2 ? `<div class="label-row"><span>ژمارە ٢:</span><strong>${escapeHtml(d.receiverMobile2)}</strong></div>` : ''}
                                 <div class="label-row"><span>شوێن:</span><strong>${escapeHtml(d.receiverLocation||'—')}</strong></div>
                             </div>
                         </div>
@@ -1046,9 +1048,11 @@ document.addEventListener('submit', async function(e) {
                 orderNumber:      orderNum,
                 senderName:       document.getElementById('senderName').value,
                 senderMobile:     document.getElementById('senderMobile').value,
+                senderMobile2:    document.getElementById('senderMobile2').value,
                 senderLocation:   document.getElementById('senderLocation').value,
                 receiverName:     document.getElementById('receiverName').value,
                 receiverMobile:   document.getElementById('receiverMobile').value,
+                receiverMobile2:  document.getElementById('receiverMobile2').value,
                 receiverLocation: document.getElementById('receiverLocation').value,
                 packageName:      document.getElementById('packageName').value,
                 packageQty:       document.getElementById('packageQty').value,
