@@ -1511,3 +1511,31 @@ document.addEventListener('DOMContentLoaded', function() {
     loadApprovedProducts();
     updateCartBadge();
 });
+// Back to Top Button Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const backToTopBtn = document.getElementById('backToTopBtn');
+    
+    if (backToTopBtn) {
+        backToTopBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Smooth scroll to top
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // ئەم بەشە هەڵبژاردەیە - دەتوانیت دوگمەکە نیشان بدەیت یان بشاریتەوە
+        // کاتێک بەکارهێنەر دەگەڕێتەوە سەرەوە (بەڵام لەبەر ئەوەی لە فووتەردایە، هەمیشە دیارە)
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 500) {
+                backToTopBtn.style.opacity = '1';
+                backToTopBtn.style.visibility = 'visible';
+            } else {
+                backToTopBtn.style.opacity = '0.8';
+                backToTopBtn.style.visibility = 'visible'; // هەمیشە دیارە چونکە لە فووتەرە
+            }
+        });
+    }
+});
