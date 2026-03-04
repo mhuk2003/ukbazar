@@ -1894,41 +1894,51 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     border-radius: 10px;
 }
 .admin-edit-title {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: bold;
     color: #667eea;
-    margin-bottom: 8px;
+    margin-bottom: 7px;
+    letter-spacing: 0.2px;
 }
-.admin-edit-row {
+/* ناو و ژمارە تەنیشت یەک — تیبینی لەخوارەوە */
+.admin-edit-fields {
     display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 6px;
     margin-bottom: 7px;
 }
-.admin-edit-row input {
+.admin-edit-fields .admin-edit-inputs {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+}
+.admin-edit-fields input {
     flex: 1;
-    min-width: 120px;
-    padding: 6px 9px;
+    min-width: 0;
+    padding: 6px 8px;
     border: 1px solid #c3cfe2;
     border-radius: 7px;
     font-family: 'Noto Sans Arabic', Tahoma, sans-serif;
-    font-size: 13px;
-    background: #fff;
-}
-.label-admin-edit textarea {
-    width: 100%;
-    padding: 6px 9px;
-    border: 1px solid #c3cfe2;
-    border-radius: 7px;
-    font-family: 'Noto Sans Arabic', Tahoma, sans-serif;
-    font-size: 13px;
-    resize: vertical;
-    margin-bottom: 7px;
+    font-size: 12px;
     background: #fff;
     box-sizing: border-box;
 }
+.admin-edit-fields textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #c3cfe2;
+    border-radius: 7px;
+    font-family: 'Noto Sans Arabic', Tahoma, sans-serif;
+    font-size: 13px;
+    background: #fff;
+    box-sizing: border-box;
+    resize: vertical;
+    min-height: 60px;
+    line-height: 1.6;
+}
 .admin-save-btn {
     width: 100%;
+    font-size: 13px;
 }
 
 @media print {
