@@ -504,6 +504,19 @@ function loadDeliveryRequests() {
                             <div class="label-row"><span>📦 کەلوپەل:</span><strong>${escapeHtml(d.packageName||d.details||'—')}</strong></div>
                             <div class="label-row"><span>🔢 پارچە:</span><strong>${escapeHtml(String(d.packageQty||'—'))}</strong></div>
                             <div class="label-row"><span>⚖️ کیلۆ:</span><strong>${escapeHtml(String(d.packageKg||'—'))} کگ</strong></div>
+                            ${d.driverName||d.driverMobile ? `<div class="label-row label-driver-row"><span>🚗 شۆفیر:</span><strong>${escapeHtml(d.driverName||'—')} — ${escapeHtml(d.driverMobile||'')}</strong></div>` : ''}
+                            ${d.deliveryNote ? `<div class="label-row label-note-row"><span>📝 تیبینی:</span><strong>${escapeHtml(d.deliveryNote)}</strong></div>` : ''}
+                        </div>
+                        <div class="label-admin-edit">
+                            <div class="admin-edit-title"><i class="fas fa-pen"></i> زانیاری شۆفیر و تیبینی</div>
+                            <div class="admin-edit-row">
+                                <input type="text" id="driver-name-${key}" placeholder="ناوی شۆفیر" value="${escapeHtml(d.driverName||'')}">
+                                <input type="tel" id="driver-mobile-${key}" placeholder="ژمارەی شۆفیر" value="${escapeHtml(d.driverMobile||'')}">
+                            </div>
+                            <textarea id="delivery-note-${key}" placeholder="تیبینی..." rows="2">${escapeHtml(d.deliveryNote||'')}</textarea>
+                            <button class="btn btn-sm btn-primary admin-save-btn" onclick="saveDriverInfo('${key}')">
+                                <i class="fas fa-save"></i> پاشەکەوتکردن
+                            </button>
                         </div>
                         <div class="label-qr-wrap">
                             <img src="${qrUrl}" alt="QR" class="label-qr-img" loading="lazy">
@@ -531,6 +544,20 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+// ==================== Save Driver Info ====================
+function saveDriverInfo(key) {
+    const driverName   = (document.getElementById('driver-name-' + key) || {value:''}).value.trim();
+    const driverMobile = (document.getElementById('driver-mobile-' + key) || {value:''}).value.trim();
+    const deliveryNote = (document.getElementById('delivery-note-' + key) || {value:''}).value.trim();
+
+    database.ref('delivery/' + key).update({ driverName, driverMobile, deliveryNote })
+        .then(() => {
+            showNotification('زانیاری شۆفیر پاشەکەوت کرا ✅');
+            loadDeliveryRequests();
+        })
+        .catch(() => showNotification('هەڵە لە پاشەکەوتکردن!', 'error'));
 }
 
 // ==================== Print Delivery Label ====================
@@ -574,6 +601,11 @@ body{font-family:'Tahoma','Arial',sans-serif;direction:rtl;padding:16px;backgrou
 .qr-box img{width:120px;height:120px}
 .qr-box small{font-size:11px;color:#718096}
 .foot{text-align:center;font-size:11px;color:#a0aec0;margin-top:10px;border-top:1px dashed #e2e8f0;padding-top:7px}
+.info-box{display:flex;justify-content:space-between;font-size:12px;padding:5px 9px;margin-top:5px;border-radius:6px;gap:5px}
+.driver-box{background:#ebf8ff;border:1px solid #bee3f8}
+.note-box{background:#fefce8;border:1px solid #fde68a}
+.info-box span{color:#718096;white-space:nowrap}
+.info-box strong{color:#1a202c}
 @media print{body{padding:0}}
 </style>
 </head>
@@ -592,7 +624,9 @@ body{font-family:'Tahoma','Arial',sans-serif;direction:rtl;padding:16px;backgrou
         <div class="col sender"><div class="col-title">📤 نێردەر</div>${rows('.sender-section .label-row')}</div>
         <div class="col receiver"><div class="col-title">📥 وەرگر</div>${rows('.receiver-section .label-row')}</div>
       </div>
-      <div class="pkg">${rows('.label-package .label-row')}</div>
+      <div class="pkg">${rows('.label-package .label-row:not(.label-driver-row):not(.label-note-row)')}</div>
+      ${(() => { const dr = card.querySelector('.label-driver-row'); return dr ? `<div class="info-box driver-box"><span>🚗 شۆفیر:</span><strong>${dr.querySelector('strong').textContent}</strong></div>` : ''; })()}
+      ${(() => { const nr = card.querySelector('.label-note-row'); return nr ? `<div class="info-box note-box"><span>📝 تیبینی:</span><strong>${nr.querySelector('strong').textContent}</strong></div>` : ''; })()}
     </div>
     <div class="qr-box">
       <img src="${qrSrc}" alt="QR">
@@ -974,7 +1008,7 @@ document.addEventListener('submit', async function(e) {
         
         const productData = {
             name: document.getElementById('productName').value,
-            category: document.getElementById('productCategory').value,
+            category: (document.getElementById('adminProductCategory') || document.getElementById('productCategory') || {value:''}).value,
             description: document.getElementById('productDescription').value,
             price: document.getElementById('productPrice').value,
             currency: document.getElementById('productCurrency').value,
