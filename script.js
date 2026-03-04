@@ -488,26 +488,26 @@ function loadDeliveryRequests() {
                     <div class="label-body-wrap">
                         <div class="label-grid">
                             <div class="label-section sender-section">
-                                <div class="label-section-title">📤 نێردەر / Sender</div>
-                                <div class="label-row"><span>ناو / Name:</span><strong>${escapeHtml(d.senderName||d.name||'—')}</strong></div>
-                                <div class="label-row"><span>ژمارە / Phone:</span><strong>${escapeHtml(d.senderMobile||d.mobile||'—')}</strong></div>
-                                ${d.senderMobile2 ? `<div class="label-row"><span>ژمارە ٢ / Phone 2:</span><strong>${escapeHtml(d.senderMobile2)}</strong></div>` : ''}
-                                <div class="label-row"><span>شوێن / Location:</span><strong>${escapeHtml(d.senderLocation||d.address||'—')}</strong></div>
+                                <div class="label-section-title">📤 نێردەر</div>
+                                <div class="label-row"><span>ناو:</span><strong>${escapeHtml(d.senderName||d.name||'—')}</strong></div>
+                                <div class="label-row"><span>ژمارە:</span><strong>${escapeHtml(d.senderMobile||d.mobile||'—')}</strong></div>
+                                ${d.senderMobile2 ? `<div class="label-row"><span>ژمارە ٢:</span><strong>${escapeHtml(d.senderMobile2)}</strong></div>` : ''}
+                                <div class="label-row"><span>شوێن:</span><strong>${escapeHtml(d.senderLocation||d.address||'—')}</strong></div>
                             </div>
                             <div class="label-section receiver-section">
-                                <div class="label-section-title">📥 وەرگر / Receiver</div>
-                                <div class="label-row"><span>ناو / Name:</span><strong>${escapeHtml(d.receiverName||'—')}</strong></div>
-                                <div class="label-row"><span>ژمارە / Phone:</span><strong>${escapeHtml(d.receiverMobile||'—')}</strong></div>
-                                ${d.receiverMobile2 ? `<div class="label-row"><span>ژمارە ٢ / Phone 2:</span><strong>${escapeHtml(d.receiverMobile2)}</strong></div>` : ''}
-                                <div class="label-row"><span>شوێن / Location:</span><strong>${escapeHtml(d.receiverLocation||'—')}</strong></div>
+                                <div class="label-section-title">📥 وەرگر</div>
+                                <div class="label-row"><span>ناو:</span><strong>${escapeHtml(d.receiverName||'—')}</strong></div>
+                                <div class="label-row"><span>ژمارە:</span><strong>${escapeHtml(d.receiverMobile||'—')}</strong></div>
+                                ${d.receiverMobile2 ? `<div class="label-row"><span>ژمارە ٢:</span><strong>${escapeHtml(d.receiverMobile2)}</strong></div>` : ''}
+                                <div class="label-row"><span>شوێن:</span><strong>${escapeHtml(d.receiverLocation||'—')}</strong></div>
                             </div>
                         </div>
                         <div class="label-package">
-                            <div class="label-row"><span>📦 کەلوپەل / Package:</span><strong>${escapeHtml(d.packageName||d.details||'—')}</strong></div>
-                            <div class="label-row"><span>🔢 پارچە / Qty:</span><strong>${escapeHtml(String(d.packageQty||'—'))}</strong></div>
-                            <div class="label-row"><span>⚖️ کیلۆ / KG:</span><strong>${escapeHtml(String(d.packageKg||'—'))} کگ</strong></div>
-                            ${d.driverName||d.driverMobile ? `<div class="label-row label-driver-row"><span>🚗 شۆفیر / Driver:</span><strong>${escapeHtml(d.driverName||'—')} — ${escapeHtml(d.driverMobile||'')}</strong></div>` : ''}
-                            ${d.deliveryNote ? `<div class="label-row label-note-row"><span>📝 تیبینی / Note:</span><strong>${escapeHtml(d.deliveryNote)}</strong></div>` : ''}
+                            <div class="label-row"><span>📦 کەلوپەل:</span><strong>${escapeHtml(d.packageName||d.details||'—')}</strong></div>
+                            <div class="label-row"><span>🔢 پارچە:</span><strong>${escapeHtml(String(d.packageQty||'—'))}</strong></div>
+                            <div class="label-row"><span>⚖️ کیلۆ:</span><strong>${escapeHtml(String(d.packageKg||'—'))} کگ</strong></div>
+                            ${d.driverName||d.driverMobile ? `<div class="label-row label-driver-row"><span>🚗 شۆفیر:</span><strong>${escapeHtml(d.driverName||'—')} — ${escapeHtml(d.driverMobile||'')}</strong></div>` : ''}
+                            ${d.deliveryNote ? `<div class="label-row label-note-row"><span>📝 تیبینی:</span><strong>${escapeHtml(d.deliveryNote)}</strong></div>` : ''}
                         </div>
                         <div class="label-admin-edit">
                             <div class="admin-edit-title"><i class="fas fa-pen"></i> شۆفیر و تیبینی</div>
@@ -617,7 +617,7 @@ body{font-family:'Tahoma','Arial',sans-serif;direction:rtl;padding:16px;backgrou
 <div class="wrap">
   <div class="top">
     <div>
-      <div class="top-title">🚚 UK BAZAR — لەیبلی گەیاندن / Delivery Label</div>
+      <div class="top-title">🚚 UK BAZAR — لەیبلی گەیاندن</div>
       <div class="top-date">${dateText}</div>
     </div>
     <div class="top-num">${orderNum}</div>
@@ -625,19 +625,19 @@ body{font-family:'Tahoma','Arial',sans-serif;direction:rtl;padding:16px;backgrou
   <div class="body-wrap">
     <div class="body-main">
       <div class="cols">
-        <div class="col sender"><div class="col-title">📤 نێردەر / Sender</div>${rows('.sender-section .label-row')}</div>
-        <div class="col receiver"><div class="col-title">📥 وەرگر / Receiver</div>${rows('.receiver-section .label-row')}</div>
+        <div class="col sender"><div class="col-title">📤 نێردەر</div>${rows('.sender-section .label-row')}</div>
+        <div class="col receiver"><div class="col-title">📥 وەرگر</div>${rows('.receiver-section .label-row')}</div>
       </div>
       <div class="pkg">${rows('.label-package .label-row:not(.label-driver-row):not(.label-note-row)')}</div>
-      ${(() => { const dr = card.querySelector('.label-driver-row'); return dr ? `<div class="info-box driver-box"><span>🚗 شۆفیر / Driver:</span><strong>${dr.querySelector('strong').textContent}</strong></div>` : ''; })()}
-      ${(() => { const nr = card.querySelector('.label-note-row'); return nr ? `<div class="info-box note-box"><span>📝 تیبینی / Note:</span><strong>${nr.querySelector('strong').textContent}</strong></div>` : ''; })()}
+      ${(() => { const dr = card.querySelector('.label-driver-row'); return dr ? `<div class="info-box driver-box"><span>🚗 شۆفیر:</span><strong>${dr.querySelector('strong').textContent}</strong></div>` : ''; })()}
+      ${(() => { const nr = card.querySelector('.label-note-row'); return nr ? `<div class="info-box note-box"><span>📝 تیبینی:</span><strong>${nr.querySelector('strong').textContent}</strong></div>` : ''; })()}
     </div>
     <div class="qr-box">
       <img src="${qrSrc}" alt="QR">
-      <small>QR کۆد / Code</small>
+      <small>QR کۆد</small>
     </div>
   </div>
-  <div class="foot">UK BAZAR — World Online Shopping | گەیاندن / Delivery Service</div>
+  <div class="foot">UK BAZAR — World Online Shopping</div>
 </div>
 </body></html>`);
     printWin.document.close();
@@ -701,7 +701,7 @@ function showAddSliderForm() {
     if (!content) return;
     
     content.innerHTML = `
-        <div style="background: white; padding: 10px 12px; border-radius: 10px; margin-bottom: 10px;">
+        <div style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
             <h3 style="margin-bottom: 20px; color: var(--primary);">🖼️ زیادکردنی وێنە بە سلایدەر</h3>
             <form id="adminSliderForm">
                 <div class="form-group">
@@ -719,7 +719,7 @@ function showAddSliderForm() {
             </form>
         </div>
         
-        <div style="background: white; padding: 10px 12px; border-radius: 10px;">
+        <div style="background: white; padding: 20px; border-radius: 12px;">
             <h3 style="margin-bottom: 20px; color: var(--danger);">🗑️ بەڕێوەبردنی وێنەکانی سلایدەر</h3>
             <div id="sliderImagesList" style="display: grid; gap: 15px;">
                 <p style="text-align: center; color: var(--gray);">چاوەڕوانی بکە...</p>
@@ -834,7 +834,7 @@ function showAdminAddProductForm() {
     if (!content) return;
     
     content.innerHTML = `
-        <div style="background: white; padding: 10px 12px; border-radius: 10px;">
+        <div style="background: white; padding: 20px; border-radius: 12px;">
             <h3 style="margin-bottom: 20px; color: var(--primary);">📦 زیادکردنی کاڵا (بە ڕاستەوخۆ)</h3>
             <form id="adminProductForm">
                 <div class="form-group">
@@ -1484,7 +1484,7 @@ function closeImageModal() {
 
 // Close modal when clicking outside
 window.onclick = function(event) {
-    const modals = ['requestModal', 'addProductModal', 'deliveryModal', 'fibModal', 'imageModal'];
+    const modals = ['requestModal', 'addProductModal', 'deliveryModal', 'fibModal', 'imageModal', 'ukDeliveryModal'];
     modals.forEach(id => {
         const modal = document.getElementById(id);
         if (event.target === modal) {
@@ -1496,7 +1496,7 @@ window.onclick = function(event) {
 // Close modal with Escape key
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
-        const modals = ['requestModal', 'addProductModal', 'deliveryModal', 'fibModal', 'imageModal'];
+        const modals = ['requestModal', 'addProductModal', 'deliveryModal', 'fibModal', 'imageModal', 'ukDeliveryModal'];
         modals.forEach(id => {
             const modal = document.getElementById(id);
             if (modal && modal.classList.contains('show')) {
@@ -1506,19 +1506,123 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
+function showUkDeliveryModal() { showModal('ukDeliveryModal'); }
+
+// ==================== UK Delivery Form Submission ====================
+document.addEventListener('DOMContentLoaded', function() {
+    const ukForm = document.getElementById('ukDeliveryForm');
+    if (ukForm) {
+        ukForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const fullName    = document.getElementById('ukFullName').value.trim();
+            const phone       = document.getElementById('ukPhone').value.trim();
+            const company     = document.getElementById('ukCompany').value.trim();
+            const postcode    = document.getElementById('ukPostcode').value.trim().toUpperCase();
+            const address1    = document.getElementById('ukAddress1').value.trim();
+            const address2    = document.getElementById('ukAddress2').value.trim();
+            const city        = document.getElementById('ukCity').value.trim();
+            const county      = document.getElementById('ukCounty').value.trim();
+            const note        = document.getElementById('ukDeliveryNote').value.trim();
+            const packageName = document.getElementById('ukPackageName').value.trim();
+
+            const orderNumber = 'UK-' + Date.now().toString().slice(-6);
+            const timestamp   = new Date().toLocaleString('en-GB');
+
+            const deliveryData = {
+                type: 'uk',
+                orderNumber,
+                fullName,
+                phone,
+                company,
+                postcode,
+                address1,
+                address2,
+                city,
+                county,
+                deliveryNote: note,
+                packageName,
+                country: 'United Kingdom',
+                timestamp,
+                sortKey: Date.now()
+            };
+
+            showLoading();
+
+            database.ref('delivery').push(deliveryData)
+                .then(() => {
+                    hideLoading();
+                    closeModal('ukDeliveryModal');
+                    ukForm.reset();
+                    showNotification(`✅ UK delivery request submitted! Order: ${orderNumber}`);
+                })
+                .catch((err) => {
+                    hideLoading();
+                    console.error('UK delivery error:', err);
+                    showNotification('❌ Error submitting request. Please try again.', 'error');
+                });
+        });
+    }
+});
+
 // ==================== Initialize ====================
 document.addEventListener('DOMContentLoaded', function() {
     loadApprovedProducts();
     updateCartBadge();
 });
-
-// ==================== Back To Top Button ====================
-window.addEventListener('scroll', function() {
-    const btn = document.getElementById('backToTopBtn');
-    if (!btn) return;
-    if (window.scrollY > 300) {
-        btn.classList.add('show');
-    } else {
-        btn.classList.remove('show');
+// Back to Top Button Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const backToTopBtn = document.getElementById('backToTopBtn');
+    
+    if (backToTopBtn) {
+        backToTopBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Smooth scroll to top
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // ئەم بەشە هەڵبژاردەیە - دەتوانیت دوگمەکە نیشان بدەیت یان بشاریتەوە
+        // کاتێک بەکارهێنەر دەگەڕێتەوە سەرەوە (بەڵام لەبەر ئەوەی لە فووتەردایە، هەمیشە دیارە)
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 500) {
+                backToTopBtn.style.opacity = '1';
+                backToTopBtn.style.visibility = 'visible';
+            } else {
+                backToTopBtn.style.opacity = '0.8';
+                backToTopBtn.style.visibility = 'visible'; // هەمیشە دیارە چونکە لە فووتەرە
+            }
+        });
+    }
+});
+// چارەسەری Viber بۆ مۆبایل و دێکتاپ
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // پشکنینی سیستەمی کارپێکردن
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    
+    // چارەسەری لینکی Viber
+    const viberLinks = document.querySelectorAll('.social-btn.viber, .viber-direct-link');
+    
+    viberLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            if (isMobile) {
+                // لە مۆبایل، ڕاستەوخۆ Viber دەکاتەوە
+                return true;
+            } else {
+                // لە کۆمپیوتەر، کۆدی QR یان پەیامی یەدەگ نیشان بدە
+                e.preventDefault();
+                showViberQR();
+            }
+        });
+    });
+    
+    // نیشاندانی کۆدی QR بۆ Viber (بۆ کۆمپیوتەر)
+    function showViberQR() {
+        // ئەگەر بیەوێت کۆدی QR نیشان بدات
+        alert('تکایە لە مۆبایلدا Viber بکەرەوە یان پەیوەندی بکە بە ژمارە: 00447449862170');
     }
 });
