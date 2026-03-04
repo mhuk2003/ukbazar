@@ -1186,7 +1186,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     z-index: 1000;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 10px;
     backdrop-filter: blur(5px);
 }
 
@@ -1196,25 +1196,25 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 
 .modal-content {
     background: white;
-    padding: 30px;
-    border-radius: 24px;
-    max-width: 550px;
+    padding: 16px 18px;
+    border-radius: 16px;
+    max-width: 480px;
     width: 100%;
-    max-height: 90vh;
+    max-height: 92vh;
     overflow-y: auto;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
 }
 
 .modal-header {
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 14px;
     position: relative;
 }
 
 .modal-header h2 {
-    font-size: 1.8rem;
+    font-size: 1.15rem;
     color: var(--dark);
-    margin-bottom: 10px;
+    margin-bottom: 4px;
 }
 
 .close-modal {
@@ -1243,25 +1243,25 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 
 /* Form Groups */
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     font-weight: 600;
     color: var(--dark);
-    font-size: 1rem;
+    font-size: 0.82rem;
 }
 
 .form-group input,
 .form-group textarea,
 .form-group select {
     width: 100%;
-    padding: 14px;
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    font-size: 1rem;
+    padding: 8px 10px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.88rem;
     transition: all 0.3s;
     background: white;
     direction: rtl;
@@ -1276,7 +1276,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .form-group textarea {
-    min-height: 120px;
+    min-height: 70px;
     resize: vertical;
 }
 
@@ -1298,14 +1298,14 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 
 .form-actions {
     display: flex;
-    gap: 15px;
-    margin-top: 30px;
+    gap: 8px;
+    margin-top: 14px;
 }
 
 .form-actions .btn {
     flex: 1;
-    padding: 15px;
-    font-size: 1.1rem;
+    padding: 9px 10px;
+    font-size: 0.88rem;
 }
 
 /* Admin Section */
@@ -1825,9 +1825,9 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 /* ==================== Delivery Section Titles ==================== */
 .delivery-section-title {
-    font-size: 14px; font-weight: bold; color: var(--primary);
-    background: #eef2ff; border-right: 4px solid var(--primary);
-    padding: 7px 12px; border-radius: 6px; margin: 14px 0 8px;
+    font-size: 12px; font-weight: bold; color: var(--primary);
+    background: #eef2ff; border-right: 3px solid var(--primary);
+    padding: 5px 10px; border-radius: 6px; margin: 8px 0 6px;
 }
 .required-star { color: var(--danger); margin-right: 2px; }
 
