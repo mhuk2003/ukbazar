@@ -701,7 +701,7 @@ function showAddSliderForm() {
     if (!content) return;
     
     content.innerHTML = `
-        <div style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+        <div style="background: white; padding: 10px 12px; border-radius: 10px; margin-bottom: 10px;">
             <h3 style="margin-bottom: 20px; color: var(--primary);">🖼️ زیادکردنی وێنە بە سلایدەر</h3>
             <form id="adminSliderForm">
                 <div class="form-group">
@@ -719,7 +719,7 @@ function showAddSliderForm() {
             </form>
         </div>
         
-        <div style="background: white; padding: 20px; border-radius: 12px;">
+        <div style="background: white; padding: 10px 12px; border-radius: 10px;">
             <h3 style="margin-bottom: 20px; color: var(--danger);">🗑️ بەڕێوەبردنی وێنەکانی سلایدەر</h3>
             <div id="sliderImagesList" style="display: grid; gap: 15px;">
                 <p style="text-align: center; color: var(--gray);">چاوەڕوانی بکە...</p>
@@ -834,7 +834,7 @@ function showAdminAddProductForm() {
     if (!content) return;
     
     content.innerHTML = `
-        <div style="background: white; padding: 20px; border-radius: 12px;">
+        <div style="background: white; padding: 10px 12px; border-radius: 10px;">
             <h3 style="margin-bottom: 20px; color: var(--primary);">📦 زیادکردنی کاڵا (بە ڕاستەوخۆ)</h3>
             <form id="adminProductForm">
                 <div class="form-group">
