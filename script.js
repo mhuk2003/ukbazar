@@ -488,26 +488,26 @@ function loadDeliveryRequests() {
                     <div class="label-body-wrap">
                         <div class="label-grid">
                             <div class="label-section sender-section">
-                                <div class="label-section-title">📤 نێردەر</div>
-                                <div class="label-row"><span>ناو:</span><strong>${escapeHtml(d.senderName||d.name||'—')}</strong></div>
-                                <div class="label-row"><span>ژمارە:</span><strong>${escapeHtml(d.senderMobile||d.mobile||'—')}</strong></div>
-                                ${d.senderMobile2 ? `<div class="label-row"><span>ژمارە ٢:</span><strong>${escapeHtml(d.senderMobile2)}</strong></div>` : ''}
-                                <div class="label-row"><span>شوێن:</span><strong>${escapeHtml(d.senderLocation||d.address||'—')}</strong></div>
+                                <div class="label-section-title">📤 نێردەر / Sender</div>
+                                <div class="label-row"><span>ناو / Name:</span><strong>${escapeHtml(d.senderName||d.name||'—')}</strong></div>
+                                <div class="label-row"><span>ژمارە / Phone:</span><strong>${escapeHtml(d.senderMobile||d.mobile||'—')}</strong></div>
+                                ${d.senderMobile2 ? `<div class="label-row"><span>ژمارە ٢ / Phone 2:</span><strong>${escapeHtml(d.senderMobile2)}</strong></div>` : ''}
+                                <div class="label-row"><span>شوێن / Location:</span><strong>${escapeHtml(d.senderLocation||d.address||'—')}</strong></div>
                             </div>
                             <div class="label-section receiver-section">
-                                <div class="label-section-title">📥 وەرگر</div>
-                                <div class="label-row"><span>ناو:</span><strong>${escapeHtml(d.receiverName||'—')}</strong></div>
-                                <div class="label-row"><span>ژمارە:</span><strong>${escapeHtml(d.receiverMobile||'—')}</strong></div>
-                                ${d.receiverMobile2 ? `<div class="label-row"><span>ژمارە ٢:</span><strong>${escapeHtml(d.receiverMobile2)}</strong></div>` : ''}
-                                <div class="label-row"><span>شوێن:</span><strong>${escapeHtml(d.receiverLocation||'—')}</strong></div>
+                                <div class="label-section-title">📥 وەرگر / Receiver</div>
+                                <div class="label-row"><span>ناو / Name:</span><strong>${escapeHtml(d.receiverName||'—')}</strong></div>
+                                <div class="label-row"><span>ژمارە / Phone:</span><strong>${escapeHtml(d.receiverMobile||'—')}</strong></div>
+                                ${d.receiverMobile2 ? `<div class="label-row"><span>ژمارە ٢ / Phone 2:</span><strong>${escapeHtml(d.receiverMobile2)}</strong></div>` : ''}
+                                <div class="label-row"><span>شوێن / Location:</span><strong>${escapeHtml(d.receiverLocation||'—')}</strong></div>
                             </div>
                         </div>
                         <div class="label-package">
-                            <div class="label-row"><span>📦 کەلوپەل:</span><strong>${escapeHtml(d.packageName||d.details||'—')}</strong></div>
-                            <div class="label-row"><span>🔢 پارچە:</span><strong>${escapeHtml(String(d.packageQty||'—'))}</strong></div>
-                            <div class="label-row"><span>⚖️ کیلۆ:</span><strong>${escapeHtml(String(d.packageKg||'—'))} کگ</strong></div>
-                            ${d.driverName||d.driverMobile ? `<div class="label-row label-driver-row"><span>🚗 شۆفیر:</span><strong>${escapeHtml(d.driverName||'—')} — ${escapeHtml(d.driverMobile||'')}</strong></div>` : ''}
-                            ${d.deliveryNote ? `<div class="label-row label-note-row"><span>📝 تیبینی:</span><strong>${escapeHtml(d.deliveryNote)}</strong></div>` : ''}
+                            <div class="label-row"><span>📦 کەلوپەل / Package:</span><strong>${escapeHtml(d.packageName||d.details||'—')}</strong></div>
+                            <div class="label-row"><span>🔢 پارچە / Qty:</span><strong>${escapeHtml(String(d.packageQty||'—'))}</strong></div>
+                            <div class="label-row"><span>⚖️ کیلۆ / KG:</span><strong>${escapeHtml(String(d.packageKg||'—'))} کگ</strong></div>
+                            ${d.driverName||d.driverMobile ? `<div class="label-row label-driver-row"><span>🚗 شۆفیر / Driver:</span><strong>${escapeHtml(d.driverName||'—')} — ${escapeHtml(d.driverMobile||'')}</strong></div>` : ''}
+                            ${d.deliveryNote ? `<div class="label-row label-note-row"><span>📝 تیبینی / Note:</span><strong>${escapeHtml(d.deliveryNote)}</strong></div>` : ''}
                         </div>
                         <div class="label-admin-edit">
                             <div class="admin-edit-title"><i class="fas fa-pen"></i> شۆفیر و تیبینی</div>
@@ -617,7 +617,7 @@ body{font-family:'Tahoma','Arial',sans-serif;direction:rtl;padding:16px;backgrou
 <div class="wrap">
   <div class="top">
     <div>
-      <div class="top-title">🚚 UK BAZAR — لەیبلی گەیاندن</div>
+      <div class="top-title">🚚 UK BAZAR — لەیبلی گەیاندن / Delivery Label</div>
       <div class="top-date">${dateText}</div>
     </div>
     <div class="top-num">${orderNum}</div>
@@ -625,19 +625,19 @@ body{font-family:'Tahoma','Arial',sans-serif;direction:rtl;padding:16px;backgrou
   <div class="body-wrap">
     <div class="body-main">
       <div class="cols">
-        <div class="col sender"><div class="col-title">📤 نێردەر</div>${rows('.sender-section .label-row')}</div>
-        <div class="col receiver"><div class="col-title">📥 وەرگر</div>${rows('.receiver-section .label-row')}</div>
+        <div class="col sender"><div class="col-title">📤 نێردەر / Sender</div>${rows('.sender-section .label-row')}</div>
+        <div class="col receiver"><div class="col-title">📥 وەرگر / Receiver</div>${rows('.receiver-section .label-row')}</div>
       </div>
       <div class="pkg">${rows('.label-package .label-row:not(.label-driver-row):not(.label-note-row)')}</div>
-      ${(() => { const dr = card.querySelector('.label-driver-row'); return dr ? `<div class="info-box driver-box"><span>🚗 شۆفیر:</span><strong>${dr.querySelector('strong').textContent}</strong></div>` : ''; })()}
-      ${(() => { const nr = card.querySelector('.label-note-row'); return nr ? `<div class="info-box note-box"><span>📝 تیبینی:</span><strong>${nr.querySelector('strong').textContent}</strong></div>` : ''; })()}
+      ${(() => { const dr = card.querySelector('.label-driver-row'); return dr ? `<div class="info-box driver-box"><span>🚗 شۆفیر / Driver:</span><strong>${dr.querySelector('strong').textContent}</strong></div>` : ''; })()}
+      ${(() => { const nr = card.querySelector('.label-note-row'); return nr ? `<div class="info-box note-box"><span>📝 تیبینی / Note:</span><strong>${nr.querySelector('strong').textContent}</strong></div>` : ''; })()}
     </div>
     <div class="qr-box">
       <img src="${qrSrc}" alt="QR">
-      <small>QR کۆد</small>
+      <small>QR کۆد / Code</small>
     </div>
   </div>
-  <div class="foot">UK BAZAR — World Online Shopping</div>
+  <div class="foot">UK BAZAR — World Online Shopping | گەیاندن / Delivery Service</div>
 </div>
 </body></html>`);
     printWin.document.close();
@@ -1511,31 +1511,14 @@ document.addEventListener('DOMContentLoaded', function() {
     loadApprovedProducts();
     updateCartBadge();
 });
-// Back to Top Button Functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const backToTopBtn = document.getElementById('backToTopBtn');
-    
-    if (backToTopBtn) {
-        backToTopBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Smooth scroll to top
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-        
-        // ئەم بەشە هەڵبژاردەیە - دەتوانیت دوگمەکە نیشان بدەیت یان بشاریتەوە
-        // کاتێک بەکارهێنەر دەگەڕێتەوە سەرەوە (بەڵام لەبەر ئەوەی لە فووتەردایە، هەمیشە دیارە)
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > 500) {
-                backToTopBtn.style.opacity = '1';
-                backToTopBtn.style.visibility = 'visible';
-            } else {
-                backToTopBtn.style.opacity = '0.8';
-                backToTopBtn.style.visibility = 'visible'; // هەمیشە دیارە چونکە لە فووتەرە
-            }
-        });
+
+// ==================== Back To Top Button ====================
+window.addEventListener('scroll', function() {
+    const btn = document.getElementById('backToTopBtn');
+    if (!btn) return;
+    if (window.scrollY > 300) {
+        btn.classList.add('show');
+    } else {
+        btn.classList.remove('show');
     }
 });
