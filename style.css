@@ -2013,3 +2013,37 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 @media print {
     .label-admin-edit { display: none !important; }
 }
+/* چارەسەری کێشەی شاڵاوی بوون */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+    overflow-x: hidden;
+}
+
+/* ڕێگری لە دەرچوونی وێنەکان */
+img, iframe, video {
+    max-width: 100%;
+    height: auto;
+}
+
+/* چارەسەری فۆنت لە مۆبایل */
+@media screen and (max-width: 320px) {
+    body {
+        font-size: 14px;
+    }
+    
+    .footer-logo h3 {
+        font-size: 1.3rem;
+    }
+    
+    .back-to-top-btn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .back-to-top-btn i {
+        font-size: 0.9rem;
+    }
+}
