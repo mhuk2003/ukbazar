@@ -1884,3 +1884,53 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     .label-body-wrap { flex-direction: column; }
     .label-qr-wrap { flex-direction: row; min-width: unset; }
 }
+
+/* ==================== Admin Edit Box — Driver & Note ==================== */
+.label-admin-edit {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: #f0f4ff;
+    border: 1.5px dashed #667eea;
+    border-radius: 10px;
+}
+.admin-edit-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: #667eea;
+    margin-bottom: 8px;
+}
+.admin-edit-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 7px;
+}
+.admin-edit-row input {
+    flex: 1;
+    min-width: 120px;
+    padding: 6px 9px;
+    border: 1px solid #c3cfe2;
+    border-radius: 7px;
+    font-family: 'Noto Sans Arabic', Tahoma, sans-serif;
+    font-size: 13px;
+    background: #fff;
+}
+.label-admin-edit textarea {
+    width: 100%;
+    padding: 6px 9px;
+    border: 1px solid #c3cfe2;
+    border-radius: 7px;
+    font-family: 'Noto Sans Arabic', Tahoma, sans-serif;
+    font-size: 13px;
+    resize: vertical;
+    margin-bottom: 7px;
+    background: #fff;
+    box-sizing: border-box;
+}
+.admin-save-btn {
+    width: 100%;
+}
+
+@media print {
+    .label-admin-edit { display: none !important; }
+}
