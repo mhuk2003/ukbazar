@@ -1013,72 +1013,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 .footer-col:hover h4::after {
     width: 70px;
 }
-/* Back to Top Button Styles */
-.back-to-top-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 30px;
-    position: relative;
-}
 
-.back-to-top-btn {
-    background: linear-gradient(135deg, var(--primary), #a78bfa);
-    color: white;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 50px;
-    cursor: pointer;
-    font-size: 1.1rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-    transition: all 0.3s ease;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    direction: rtl;
-}
-
-.back-to-top-btn i {
-    font-size: 1.2rem;
-    transition: transform 0.3s ease;
-}
-
-.back-to-top-btn:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
-    background: linear-gradient(135deg, #7c3aed, #8b5cf6);
-}
-
-.back-to-top-btn:hover i {
-    transform: translateY(-3px);
-}
-
-.back-to-top-btn:active {
-    transform: translateY(0);
-}
-
-/* Responsive styles */
-@media (max-width: 768px) {
-    .back-to-top-btn {
-        padding: 10px 25px;
-        font-size: 1rem;
-    }
-    
-    .back-to-top-btn span {
-        display: inline-block;
-    }
-}
-
-@media (max-width: 480px) {
-    .back-to-top-btn {
-        padding: 8px 20px;
-    }
-    
-    .back-to-top-btn i {
-        font-size: 1rem;
-    }
-}
 .contact-info {
     display: flex;
     flex-direction: column;
@@ -1376,37 +1311,37 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 /* Admin Section */
 .admin-section {
     background: white;
-    padding: 14px 12px;
-    border-radius: 16px;
-    margin: 12px 0;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    padding: 30px;
+    border-radius: 24px;
+    margin: 30px 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .admin-tabs {
     display: flex;
-    gap: 6px;
-    margin-bottom: 14px;
+    gap: 12px;
+    margin-bottom: 30px;
     flex-wrap: wrap;
     justify-content: center;
 }
 
 .admin-tab {
-    padding: 7px 14px;
-    border: 1.5px solid var(--primary);
+    padding: 12px 25px;
+    border: 2px solid var(--primary);
     background: white;
     color: var(--primary);
-    border-radius: 30px;
+    border-radius: 40px;
     cursor: pointer;
     font-weight: 600;
     transition: all 0.3s;
-    font-size: 0.82rem;
+    font-size: 0.95rem;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
 }
 
 .admin-tab i {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .admin-tab.active {
@@ -1417,34 +1352,32 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 
 .pending-items {
     display: grid;
-    gap: 10px;
+    gap: 20px;
 }
 
 .pending-item {
     background: #f8f9fa;
-    padding: 12px 14px;
-    border-radius: 10px;
-    border-right: 4px solid var(--warning);
+    padding: 20px;
+    border-radius: 16px;
+    border-right: 6px solid var(--warning);
 }
 
 .pending-item h4 {
-    margin-bottom: 8px;
+    margin-bottom: 15px;
     color: var(--dark);
-    font-size: 1rem;
+    font-size: 1.2rem;
 }
 
 .pending-item p {
-    margin: 4px 0;
+    margin: 8px 0;
     color: var(--gray);
-    font-size: 0.85rem;
+    font-size: 1rem;
 }
 
 .pending-item .actions {
     display: flex;
-    flex-direction: row;
-    gap: 7px;
-    margin-top: 10px;
-    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 15px;
 }
 
 /* Image Modal */
@@ -1750,14 +1683,12 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     }
     
     .admin-tab {
-        width: auto;
+        width: 100%;
         justify-content: center;
-        padding: 6px 11px;
-        font-size: 0.78rem;
     }
-
+    
     .form-actions {
-        flex-direction: row;
+        flex-direction: column;
     }
     
     .notification {
@@ -2013,37 +1944,193 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 @media print {
     .label-admin-edit { display: none !important; }
 }
-/* چارەسەری کێشەی شاڵاوی بوون */
-.container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
-    overflow-x: hidden;
+/* Back to Top Button Styles */
+.back-to-top-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    position: relative;
 }
 
-/* ڕێگری لە دەرچوونی وێنەکان */
-img, iframe, video {
-    max-width: 100%;
-    height: auto;
+.back-to-top-btn {
+    background: linear-gradient(135deg, var(--primary), #a78bfa);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    direction: rtl;
 }
 
-/* چارەسەری فۆنت لە مۆبایل */
-@media screen and (max-width: 320px) {
-    body {
-        font-size: 14px;
-    }
-    
-    .footer-logo h3 {
-        font-size: 1.3rem;
-    }
-    
+.back-to-top-btn i {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.back-to-top-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+    background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+}
+
+.back-to-top-btn:hover i {
+    transform: translateY(-3px);
+}
+
+.back-to-top-btn:active {
+    transform: translateY(0);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
     .back-to-top-btn {
-        padding: 8px 15px;
-        font-size: 0.9rem;
+        padding: 10px 25px;
+        font-size: 1rem;
+    }
+    
+    .back-to-top-btn span {
+        display: inline-block;
+    }
+}
+
+@media (max-width: 480px) {
+    .back-to-top-btn {
+        padding: 8px 20px;
     }
     
     .back-to-top-btn i {
-        font-size: 0.9rem;
+        font-size: 1rem;
+    }
+}
+/* شێوازی دوگمە نوێیەکان */
+.new-social {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+/* شێوازی تایبەت بە هەر کام لە دوگمەکان */
+.social-btn.snapchat {
+    background: #FFFC00;
+    color: #000;
+}
+
+.social-btn.snapchat:hover {
+    background: #e6e600;
+    box-shadow: 0 5px 15px rgba(255, 252, 0, 0.4);
+}
+
+.social-btn.viber {
+    background: #7360F2;
+    color: white;
+}
+
+.social-btn.viber:hover {
+    background: #5e4ad1;
+    box-shadow: 0 5px 15px rgba(115, 96, 242, 0.4);
+}
+
+.social-btn.tiktok {
+    background: #000000;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.social-btn.tiktok:hover {
+    background: #1a1a1a;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+.social-btn.tiktok::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, #25F4EE, #FE2C55);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.social-btn.tiktok:hover::before {
+    opacity: 0.2;
+}
+
+.social-btn.tiktok i {
+    position: relative;
+    z-index: 1;
+}
+
+/* بەشی پشتگیری Viber */
+.viber-support {
+    margin-top: 15px;
+    width: 100%;
+}
+
+.viber-direct-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(115, 96, 242, 0.1);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    border: 1px solid rgba(115, 96, 242, 0.3);
+    transition: all 0.3s ease;
+    width: 100%;
+    justify-content: center;
+}
+
+.viber-direct-link i {
+    font-size: 1.2rem;
+    color: #7360F2;
+}
+
+.viber-direct-link:hover {
+    background: rgba(115, 96, 242, 0.2);
+    border-color: #7360F2;
+    transform: translateY(-2px);
+}
+
+/* چارەسەری مۆبایل بۆ دوگمە نوێیەکان */
+@media (max-width: 768px) {
+    .new-social {
+        justify-content: center;
+    }
+    
+    .viber-support {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .viber-direct-link {
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .new-social {
+        gap: 8px;
+    }
+    
+    .viber-direct-link {
+        padding: 8px 15px;
+        font-size: 0.85rem;
     }
 }
