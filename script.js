@@ -508,12 +508,14 @@ function loadDeliveryRequests() {
                             ${d.deliveryNote ? `<div class="label-row label-note-row"><span>📝 تیبینی:</span><strong>${escapeHtml(d.deliveryNote)}</strong></div>` : ''}
                         </div>
                         <div class="label-admin-edit">
-                            <div class="admin-edit-title"><i class="fas fa-pen"></i> زانیاری شۆفیر و تیبینی</div>
-                            <div class="admin-edit-row">
-                                <input type="text" id="driver-name-${key}" placeholder="ناوی شۆفیر" value="${escapeHtml(d.driverName||'')}">
-                                <input type="tel" id="driver-mobile-${key}" placeholder="ژمارەی شۆفیر" value="${escapeHtml(d.driverMobile||'')}">
+                            <div class="admin-edit-title"><i class="fas fa-pen"></i> شۆفیر و تیبینی</div>
+                            <div class="admin-edit-fields">
+                                <div class="admin-edit-inputs">
+                                    <input type="text" id="driver-name-${key}" placeholder="👤 ناوی شۆفیر" value="${escapeHtml(d.driverName||'')}">
+                                    <input type="tel" id="driver-mobile-${key}" placeholder="📞 ژمارە" value="${escapeHtml(d.driverMobile||'')}">
+                                </div>
+                                <textarea id="delivery-note-${key}" placeholder="📝 تیبینی..." rows="3">${escapeHtml(d.deliveryNote||'')}</textarea>
                             </div>
-                            <textarea id="delivery-note-${key}" placeholder="تیبینی..." rows="2">${escapeHtml(d.deliveryNote||'')}</textarea>
                             <button class="btn btn-sm btn-primary admin-save-btn" onclick="saveDriverInfo('${key}')">
                                 <i class="fas fa-save"></i> پاشەکەوتکردن
                             </button>
