@@ -7,6 +7,13 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- PWA -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="UK BAZAR">
     
     <style>
 :root {
@@ -227,6 +234,52 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     flex-wrap: wrap;
     justify-content: flex-end;
     align-items: center;
+}
+
+/* Delivery button group */
+.delivery-btn-group {
+    display: flex;
+    gap: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+}
+
+.delivery-btn-group .btn {
+    border-radius: 0;
+    border: none;
+    margin: 0;
+    box-shadow: none;
+}
+
+.delivery-btn-group .btn:first-child {
+    border-radius: 10px 0 0 10px;
+}
+
+.delivery-btn-group .btn:last-child {
+    border-radius: 0 10px 10px 0;
+    border-right: none;
+}
+
+.btn-delivery-ku {
+    background: linear-gradient(135deg, #d4a017, #f0c040);
+    color: #1a1a1a !important;
+    font-weight: 700;
+}
+
+.btn-delivery-ku:hover {
+    background: linear-gradient(135deg, #f0c040, #ffd700);
+}
+
+.btn-delivery-uk {
+    background: linear-gradient(135deg, #b8960c, #d4a017);
+    color: #1a1a1a !important;
+    font-weight: 700;
+    border-right: 2px solid rgba(255,255,255,0.3);
+}
+
+.btn-delivery-uk:hover {
+    background: linear-gradient(135deg, #d4a017, #f0c040);
 }
 
 .btn {
@@ -2086,15 +2139,16 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
         <i class="fas fa-plus-circle"></i>
         <span class="btn-text">کاڵا دابنێ</span>
     </button>
-    <button class="btn btn-primary" onclick="showDeliveryModal()">
-        <i class="fas fa-shipping-fast"></i>
-        <span class="btn-text">گەیاندن 🇮🇶</span>
-    </button>
-    <button class="btn btn-primary" onclick="showUkDeliveryModal()" style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: 2px solid #f0c040; color: #f0c040;">
-        <i class="fas fa-shipping-fast"></i>
-        <span class="btn-text">UK Delivery 🇬🇧</span>
-    </button>
-    </button>
+    <div class="delivery-btn-group">
+        <button class="btn btn-delivery-ku" onclick="showDeliveryModal()">
+            <i class="fas fa-shipping-fast"></i>
+            <span class="btn-text">گەیاندن 🇮🇶</span>
+        </button>
+        <button class="btn btn-delivery-uk" onclick="showUkDeliveryModal()">
+            <i class="fas fa-shipping-fast"></i>
+            <span class="btn-text">UK Delivery 🇬🇧</span>
+        </button>
+    </div>
     <button class="cart-btn btn" onclick="showCartModal()">
         <i class="fas fa-shopping-cart"></i>
         <span class="cart-badge" id="cartBadge">0</span>
@@ -4384,5 +4438,34 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+    <script>
+    // ── Service Worker تۆمارکردن ──
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js', { scope: './' })
+                .then(reg => {
+                    console.log('[SW] تۆمارکرا:', reg.scope);
+
+                    // بپشکنە ئەپدەیت هەیە
+                    reg.addEventListener('updatefound', () => {
+                        const newWorker = reg.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                console.log('[SW] نوێکردنەوە بەردەستە');
+                                // فەوری ئەپدەیت بکە بەبێ پرسیار
+                                newWorker.postMessage({ type: 'SKIP_WAITING' });
+                            }
+                        });
+                    });
+                })
+                .catch(err => console.log('[SW] هەڵە:', err));
+
+            // کاتێک SW نوێ ئامادە بوو، ڕوونمایی نوێ بکەرەوە
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                window.location.reload();
+            });
+        });
+    }
+    </script>
 </body>
 </html>
