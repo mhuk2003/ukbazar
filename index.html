@@ -2239,13 +2239,13 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 <footer class="footer">
     <div class="container">
         <!-- دوگمەی گەڕانەوە بۆ سەرەوە -->
-    <!-- ئیمەیڵ -->
-        <div class="contact-row">
-            <i class="fas fa-envelope"></i>
-            <a href="/cdn-cgi/l/email-protection#8bc2e5ede4cbfee0e9eaf1eaf9a5e4e5e7e2e5ee" class="footer-email" style="color: #ffffff; text-decoration: none; direction: ltr; display: inline-block;">
-                <span class="__cf_email__" data-cfemail="01486f676e41746a63607b60732f6e6f6d686f64">[email&#160;protected]</span>
-            </a>
-        </div>
+ <!-- ئیمەیڵ -->
+<div class="contact-row">
+    <i class="fas fa-envelope"></i>
+    <a href="mailto:Info@ukbazar.online" class="footer-email" style="color: #ffffff; text-decoration: none; direction: ltr; display: inline-block;">
+        Info@ukbazar.online
+    </a>
+</div>
         <div class="back-to-top-container">
             <button id="backToTopBtn" class="back-to-top-btn" aria-label="گەڕانەوە بۆ سەرەوە">
                 <i class="fas fa-arrow-up"></i>
@@ -2569,6 +2569,18 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
                     <label style="font-weight: 700; color: #1a202c;">Phone number <span class="required-star">*</span></label>
                     <input type="tel" id="ukPhone" placeholder="+44" required style="direction: ltr;">
                     <small style="color: #718096; font-size: 12px;">May be used to assist delivery</small>
+                </div>
+                <div class="form-group" style="background: #f0f9ff; border: 1.5px solid #90cdf4; border-radius: 10px; padding: 14px;">
+                    <label style="font-weight: 700; color: #1a56a0; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; display: block;">📦 Receiver Details</label>
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-weight: 600; color: #1a202c; font-size: 14px;">Receiver name <span class="required-star">*</span></label>
+                        <input type="text" id="ukReceiverName" placeholder="Receiver full name" required style="direction: ltr; margin-top: 4px;">
+                    </div>
+                    <div>
+                        <label style="font-weight: 600; color: #1a202c; font-size: 14px;">Receiver mobile number <span class="required-star">*</span></label>
+                        <input type="tel" id="ukReceiverPhone" placeholder="+44" required style="direction: ltr; margin-top: 4px;">
+                        <small style="color: #718096; font-size: 12px;">Receiver's contact number</small>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label style="font-weight: 700; color: #1a202c;">Company name <span style="font-weight: 400; color: #718096;">(optional)</span></label>
@@ -3219,6 +3231,8 @@ function loadDeliveryRequests() {
                                     <div class="label-section-title" style="color:#92400e;">📦 Recipient</div>
                                     <div class="label-row" style="direction:ltr;"><span>Name:</span><strong>${escapeHtml(d.fullName||'—')}</strong></div>
                                     <div class="label-row" style="direction:ltr;"><span>Phone:</span><strong>${escapeHtml(d.phone||'—')}</strong></div>
+                                    ${d.receiverName ? `<div class="label-row" style="direction:ltr; background:#fffbeb;"><span>Receiver:</span><strong style="color:#d97706;">📬 ${escapeHtml(d.receiverName)}</strong></div>` : ''}
+                                    ${d.receiverPhone ? `<div class="label-row" style="direction:ltr; background:#fffbeb;"><span>Receiver Tel:</span><strong style="color:#d97706;">📞 ${escapeHtml(d.receiverPhone)}</strong></div>` : ''}
                                     ${d.company ? `<div class="label-row" style="direction:ltr;"><span>Company:</span><strong>${escapeHtml(d.company)}</strong></div>` : ''}
                                     <div class="label-row" style="direction:ltr;"><span>Address:</span><strong>${escapeHtml(d.address1||'—')}</strong></div>
                                     ${d.address2 ? `<div class="label-row" style="direction:ltr;"><span>Address 2:</span><strong>${escapeHtml(d.address2)}</strong></div>` : ''}
@@ -3395,6 +3409,8 @@ function printUkLabel(key) {
     const orderNum   = (card.querySelector('.label-order-num') || {}).textContent || '';
     const name       = getVal('Name:');
     const phone      = getVal('Phone:');
+    const receiverName  = getVal('Receiver:').replace(/^📬\s*/, '');
+    const receiverPhone = getVal('Receiver Tel:').replace(/^📞\s*/, '');
     const company    = getVal('Company:');
     const address1   = getVal('Address:');
     const address2   = getVal('Address 2:');
@@ -3456,6 +3472,8 @@ body{font-family:'Segoe UI','Arial',sans-serif;direction:ltr;padding:16px;backgr
         <div class="section-title">📦 Recipient</div>
         <div class="row"><span>Full Name</span><strong>${name}</strong></div>
         <div class="row"><span>Phone</span><strong>${phone}</strong></div>
+        ${receiverName && receiverName !== '—' ? `<div class="row" style="background:#fffbeb;"><span style="color:#d97706;">📬 Receiver</span><strong style="color:#d97706;">${receiverName}</strong></div>` : ''}
+        ${receiverPhone && receiverPhone !== '—' ? `<div class="row" style="background:#fffbeb;"><span style="color:#d97706;">📞 Rcvr Tel</span><strong style="color:#d97706;">${receiverPhone}</strong></div>` : ''}
         ${company && company !== '—' ? `<div class="row"><span>Company</span><strong>${company}</strong></div>` : ''}
         <div class="row"><span>Address 1</span><strong>${address1}</strong></div>
         ${address2 && address2 !== '—' ? `<div class="row"><span>Address 2</span><strong>${address2}</strong></div>` : ''}
@@ -4354,9 +4372,11 @@ document.addEventListener('DOMContentLoaded', function() {
         ukForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const fullName    = document.getElementById('ukFullName').value.trim();
-            const phone       = document.getElementById('ukPhone').value.trim();
-            const company     = document.getElementById('ukCompany').value.trim();
+            const fullName      = document.getElementById('ukFullName').value.trim();
+            const phone         = document.getElementById('ukPhone').value.trim();
+            const receiverName  = document.getElementById('ukReceiverName').value.trim();
+            const receiverPhone = document.getElementById('ukReceiverPhone').value.trim();
+            const company       = document.getElementById('ukCompany').value.trim();
             const postcode    = document.getElementById('ukPostcode').value.trim().toUpperCase();
             const address1    = document.getElementById('ukAddress1').value.trim();
             const address2    = document.getElementById('ukAddress2').value.trim();
@@ -4373,6 +4393,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 orderNumber,
                 fullName,
                 phone,
+                receiverName,
+                receiverPhone,
                 company,
                 postcode,
                 address1,
