@@ -1,25 +1,25 @@
 {
-  "name": "سیستەمی توێژینەوە — CIS سلێمانی",
-  "short_name": "CIS توێژینەوە",
-  "description": "سیستەمی توێژینەوەی پەیمانگەی کۆمپیوتەر — CIS سلێمانی",
+  "name": "UK BAZAR",
+  "short_name": "UK BAZAR",
+  "description": "بازاڕی ئۆنلاین — UK BAZAR",
   "start_url": "./index.html",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0f1f3d",
-  "theme_color": "#0f1f3d",
+  "background_color": "#667eea",
+  "theme_color": "#667eea",
   "lang": "ku",
   "dir": "rtl",
   "icons": [
     {
-      "src": "https://firebasestorage.googleapis.com/v0/b/promohouse-b5298.firebasestorage.app/o/logo-cis.jpg?alt=media&token=23f830c2-7c4b-4851-9c37-5a9e87a6c107",
+      "src": "logo-ukbazar.png",
       "sizes": "192x192",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://firebasestorage.googleapis.com/v0/b/promohouse-b5298.firebasestorage.app/o/logo-cis.jpg?alt=media&token=23f830c2-7c4b-4851-9c37-5a9e87a6c107",
+      "src": "logo-ukbazar.png",
       "sizes": "512x512",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
