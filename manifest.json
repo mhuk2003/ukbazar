@@ -1,0 +1,26 @@
+{
+  "name": "سیستەمی توێژینەوە — CIS سلێمانی",
+  "short_name": "CIS توێژینەوە",
+  "description": "سیستەمی توێژینەوەی پەیمانگەی کۆمپیوتەر — CIS سلێمانی",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f1f3d",
+  "theme_color": "#0f1f3d",
+  "lang": "ku",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "https://firebasestorage.googleapis.com/v0/b/promohouse-b5298.firebasestorage.app/o/logo-cis.jpg?alt=media&token=23f830c2-7c4b-4851-9c37-5a9e87a6c107",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://firebasestorage.googleapis.com/v0/b/promohouse-b5298.firebasestorage.app/o/logo-cis.jpg?alt=media&token=23f830c2-7c4b-4851-9c37-5a9e87a6c107",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
