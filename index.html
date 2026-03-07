@@ -2125,34 +2125,23 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
                     <div class="logo-text">UK BAZAR</div>
                 </div>
 
-                <div class="flags">
-                    <img src="https://firebasestorage.googleapis.com/v0/b/ukbazar-15eda.firebasestorage.app/o/uk-flag.webp?alt=media&token=83b7ce7b-db70-4d3a-9a32-f262c4773b1a" alt="UK Flag">
-                    <img src="https://firebasestorage.googleapis.com/v0/b/ukbazar-15eda.firebasestorage.app/o/images.png?alt=media&token=79847612-3eed-48ef-9413-a3ae76df758b" alt="Kurdistan Flag">
-                </div>
-
                 <div class="nav-buttons">
-    <button class="btn btn-warning" onclick="showRequestModal()">
-        <i class="fas fa-clipboard-list"></i>
-        <span class="btn-text">داواکاری کاڵا</span>
-    </button>
     <button class="btn btn-secondary" onclick="showAddProductModal()">
         <i class="fas fa-plus-circle"></i>
         <span class="btn-text">کاڵا دابنێ</span>
     </button>
-    <div class="delivery-btn-group">
-        <button class="btn btn-delivery-ku" onclick="showDeliveryModal()">
-            <i class="fas fa-shipping-fast"></i>
-            <span class="btn-text">گەیاندن 🇮🇶</span>
-        </button>
-        <button class="btn btn-delivery-uk" onclick="showUkDeliveryModal()">
-            <i class="fas fa-shipping-fast"></i>
-            <span class="btn-text">UK Delivery 🇬🇧</span>
-        </button>
-    </div>
-    <button class="cart-btn btn" onclick="showCartModal()">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="cart-badge" id="cartBadge">0</span>
+    <button class="btn btn-delivery-ku" onclick="showDeliveryModal()">
+        <i class="fas fa-shipping-fast"></i>
+        <span class="btn-text">گەیاندن 🇮🇶</span>
     </button>
+    <button class="btn btn-delivery-uk" onclick="showUkDeliveryModal()">
+        <i class="fas fa-shipping-fast"></i>
+        <span class="btn-text">UK Delivery 🇬🇧</span>
+    </button>
+    <div class="flags">
+        <img src="https://firebasestorage.googleapis.com/v0/b/ukbazar-15eda.firebasestorage.app/o/uk-flag.webp?alt=media&token=83b7ce7b-db70-4d3a-9a32-f262c4773b1a" alt="UK Flag">
+        <img src="https://firebasestorage.googleapis.com/v0/b/ukbazar-15eda.firebasestorage.app/o/images.png?alt=media&token=79847612-3eed-48ef-9413-a3ae76df758b" alt="Kurdistan Flag">
+    </div>
 </div>
             </div>
         </div>
@@ -2242,9 +2231,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
  <!-- ئیمەیڵ -->
 <div class="contact-row">
     <i class="fas fa-envelope"></i>
-    <a href="mailto:Info@ukbazar.online" class="footer-email" style="color: #ffffff; text-decoration: none; direction: ltr; display: inline-block;">
-        Info@ukbazar.online
-    </a>
+    <a href="mailto:info@ukbazar.co.uk" class="footer-email" style="color: #ffffff; text-decoration: none; direction: ltr; display: inline-block;">info@ukbazar.co.uk</a>
 </div>
         <div class="back-to-top-container">
             <button id="backToTopBtn" class="back-to-top-btn" aria-label="گەڕانەوە بۆ سەرەوە">
@@ -2561,25 +2548,24 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
                 <h2 style="direction: ltr;"><i class="fas fa-map-marker-alt"></i> Enter a new delivery address</h2>
             </div>
             <form id="ukDeliveryForm">
-                <div class="form-group">
-                    <label style="font-weight: 700; color: #1a202c;">Full name (first name and surname) <span class="required-star">*</span></label>
-                    <input type="text" id="ukFullName" placeholder="Full name" required style="direction: ltr;">
-                </div>
-                <div class="form-group">
-                    <label style="font-weight: 700; color: #1a202c;">Phone number <span class="required-star">*</span></label>
-                    <input type="tel" id="ukPhone" placeholder="+44" required style="direction: ltr;">
-                    <small style="color: #718096; font-size: 12px;">May be used to assist delivery</small>
-                </div>
-                <div class="form-group" style="background: #f0f9ff; border: 1.5px solid #90cdf4; border-radius: 10px; padding: 14px;">
-                    <label style="font-weight: 700; color: #1a56a0; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; display: block;">📦 Receiver Details</label>
-                    <div style="margin-bottom: 10px;">
-                        <label style="font-weight: 600; color: #1a202c; font-size: 14px;">Receiver name <span class="required-star">*</span></label>
-                        <input type="text" id="ukReceiverName" placeholder="Receiver full name" required style="direction: ltr; margin-top: 4px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 0;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-weight: 700; color: #1a202c;">Sender name <span class="required-star">*</span></label>
+                        <input type="text" id="ukFullName" placeholder="Full name" required style="direction: ltr;">
                     </div>
-                    <div>
-                        <label style="font-weight: 600; color: #1a202c; font-size: 14px;">Receiver mobile number <span class="required-star">*</span></label>
-                        <input type="tel" id="ukReceiverPhone" placeholder="+44" required style="direction: ltr; margin-top: 4px;">
-                        <small style="color: #718096; font-size: 12px;">Receiver's contact number</small>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-weight: 700; color: #1a202c;">Sender phone <span class="required-star">*</span></label>
+                        <input type="tel" id="ukPhone" placeholder="+44" required style="direction: ltr;">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; margin-top: 12px;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-weight: 700; color: #1a202c;">Receiver name <span class="required-star">*</span></label>
+                        <input type="text" id="ukReceiverName" placeholder="Full name" required style="direction: ltr;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-weight: 700; color: #1a202c;">Receiver phone <span class="required-star">*</span></label>
+                        <input type="tel" id="ukReceiverPhone" placeholder="+44" required style="direction: ltr;">
                     </div>
                 </div>
                 <div class="form-group">
@@ -4482,12 +4468,4 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 .catch(err => console.log('[SW] هەڵە:', err));
 
-            // کاتێک SW نوێ ئامادە بوو، ڕوونمایی نوێ بکەرەوە
-            navigator.serviceWorker.addEventListener('controllerchange', () => {
-                window.location.reload();
-            });
-        });
-    }
-    </script>
-</body>
-</html>
+            // کاتێک SW نوێ ئا
