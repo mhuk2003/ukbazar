@@ -2550,77 +2550,177 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
         </div>
     </div>
 
-    <!-- UK Delivery Address Modal (English) -->
+    <!-- UK Delivery Address Modal (English) — 2 Tabs: Sender / Receiver -->
     <div class="modal" id="ukDeliveryModal">
-        <div class="modal-content" style="direction: ltr; text-align: left; font-family: 'Segoe UI', Arial, sans-serif;">
+        <div class="modal-content" style="direction: ltr; text-align: left; font-family: 'Segoe UI', Arial, sans-serif; max-width: 520px;">
             <div class="modal-header" style="direction: ltr; text-align: left;">
                 <button class="close-modal" onclick="closeModal('ukDeliveryModal')">
                     <i class="fas fa-times"></i>
                 </button>
-                <h2 style="direction: ltr;"><i class="fas fa-map-marker-alt"></i> Enter a new delivery address</h2>
+                <h2 style="direction: ltr; font-size: 1.1rem;"><i class="fas fa-shipping-fast"></i> 🇬🇧 UK Delivery</h2>
             </div>
+
+            <!-- Tab Switcher -->
+            <div style="display:flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 18px;">
+                <button id="ukTab-sender" onclick="ukSwitchTab('sender')" style="flex:1; padding: 11px 0; border:none; background: none; font-weight:700; font-size:.97rem; cursor:pointer; border-bottom: 3px solid #667eea; color:#667eea; transition: all .2s;">
+                    📤 Sender
+                </button>
+                <button id="ukTab-receiver" onclick="ukSwitchTab('receiver')" style="flex:1; padding: 11px 0; border:none; background: none; font-weight:700; font-size:.97rem; cursor:pointer; border-bottom: 3px solid transparent; color:#718096; transition: all .2s;">
+                    📬 Receiver
+                </button>
+            </div>
+
             <form id="ukDeliveryForm">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 0;">
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label style="font-weight: 700; color: #1a202c;">Sender name <span class="required-star">*</span></label>
-                        <input type="text" id="ukFullName" placeholder="Full name" required style="direction: ltr;">
+
+                <!-- ── SENDER PANEL ── -->
+                <div id="ukPanel-sender">
+                    <p style="font-size:.82rem; color:#718096; margin-bottom:14px; background:#f0f4ff; border-radius:8px; padding:8px 12px;">
+                        <i class="fas fa-info-circle" style="color:#667eea;"></i> Enter the <strong>sender's</strong> details — the person sending the parcel from the UK.
+                    </p>
+                    <div class="form-group">
+                        <label style="font-weight:700; color:#1a202c;">Country / Region</label>
+                        <select id="ukSenderCountry" style="direction:ltr; width:100%; padding:10px 14px; border:1.5px solid #e2e8f0; border-radius:10px; font-size:.95rem; background:#fff;">
+                            <option value="United Kingdom" selected>United Kingdom</option>
+                        </select>
                     </div>
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label style="font-weight: 700; color: #1a202c;">Sender phone <span class="required-star">*</span></label>
-                        <input type="tel" id="ukPhone" placeholder="+44" required style="direction: ltr;">
+                    <div class="form-group">
+                        <label style="font-weight:700; color:#1a202c;">Full name (first name and surname) <span class="required-star">*</span></label>
+                        <input type="text" id="ukFullName" placeholder="Full name" required style="direction:ltr;">
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight:700; color:#1a202c;">Phone number <span class="required-star">*</span></label>
+                        <input type="tel" id="ukPhone" placeholder="+44" required style="direction:ltr;">
+                        <small style="color:#718096; font-size:.78rem;">May be used to assist delivery</small>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight:700; color:#1a202c;">Company name <span style="font-weight:400; color:#718096;">(optional)</span></label>
+                        <input type="text" id="ukCompany" placeholder="Company name" style="direction:ltr;">
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight:700; color:#1a202c;">Postcode <span class="required-star">*</span></label>
+                        <input type="text" id="ukPostcode" placeholder="Enter your area postcode" required style="direction:ltr; text-transform:uppercase;">
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight:700; color:#1a202c;">Address line 1 <span class="required-star">*</span></label>
+                        <input type="text" id="ukAddress1" placeholder="Start typing your address to get suggestions" required style="direction:ltr;">
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight:700; color:#1a202c;">Address Line 2 <span style="font-weight:400; color:#718096;">(optional)</span></label>
+                        <input type="text" id="ukAddress2" placeholder="Apartment, suite, unit, floor, etc." style="direction:ltr;">
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight:700; color:#1a202c;">Town / City <span class="required-star">*</span></label>
+                        <input type="text" id="ukCity" placeholder="Town or city" required style="direction:ltr;">
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight:700; color:#1a202c;">County <span style="font-weight:400; color:#718096;">(if applicable)</span></label>
+                        <input type="text" id="ukCounty" placeholder="County" style="direction:ltr;">
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight:700; color:#1a202c;">Delivery instructions <span style="font-weight:400; color:#718096;">(optional)</span></label>
+                        <textarea id="ukDeliveryNote" placeholder="Notes, preferences, access codes..." rows="3" style="direction:ltr;"></textarea>
+                    </div>
+                    <div class="form-actions" style="gap:10px; margin-top:4px;">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('ukDeliveryModal')" style="flex:1;">Cancel</button>
+                        <button type="button" onclick="ukGoToReceiver()" style="flex:1; background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; border:none; font-weight:700; font-size:1rem; border-radius:50px; padding:12px; cursor:pointer;">
+                            Next: Receiver →
+                        </button>
                     </div>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; margin-top: 12px;">
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label style="font-weight: 700; color: #1a202c;">Receiver name <span class="required-star">*</span></label>
-                        <input type="text" id="ukReceiverName" placeholder="Full name" required style="direction: ltr;">
+
+                <!-- ── RECEIVER PANEL ── -->
+                <div id="ukPanel-receiver" style="display:none;">
+                    <p style="font-size:.82rem; color:#718096; margin-bottom:14px; background:#f0fff4; border-radius:8px; padding:8px 12px;">
+                        <i class="fas fa-info-circle" style="color:#48bb78;"></i> Enter the <strong>receiver's</strong> details — the person receiving the parcel.
+                    </p>
+                    <div class="form-group">
+                        <label style="font-weight:700; color:#1a202c;">Country / Region</label>
+                        <select id="ukReceiverCountry" style="direction:ltr; width:100%; padding:10px 14px; border:1.5px solid #e2e8f0; border-radius:10px; font-size:.95rem; background:#fff;">
+                            <option value="United Kingdom">United Kingdom</option>
+                            <option value="Iraq">Iraq 🇮🇶</option>
+                            <option value="Other">Other</option>
+                        </select>
                     </div>
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label style="font-weight: 700; color: #1a202c;">Receiver phone <span class="required-star">*</span></label>
-                        <input type="tel" id="ukReceiverPhone" placeholder="+44" required style="direction: ltr;">
+                    <div class="form-group">
+                        <label style="font-weight:700; color:#1a202c;">Full name (first name and surname) <span class="required-star">*</span></label>
+                        <input type="text" id="ukReceiverName" placeholder="Full name" required style="direction:ltr;">
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight:700; color:#1a202c;">Phone number <span class="required-star">*</span></label>
+                        <input type="tel" id="ukReceiverPhone" placeholder="+44 or +964" required style="direction:ltr;">
+                        <small style="color:#718096; font-size:.78rem;">May be used to assist delivery</small>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight:700; color:#1a202c;">Company name <span style="font-weight:400; color:#718096;">(optional)</span></label>
+                        <input type="text" id="ukReceiverCompany" placeholder="Company name" style="direction:ltr;">
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight:700; color:#1a202c;">Postcode / Zip <span style="font-weight:400; color:#718096;">(if applicable)</span></label>
+                        <input type="text" id="ukReceiverPostcode" placeholder="Enter postcode or area code" style="direction:ltr; text-transform:uppercase;">
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight:700; color:#1a202c;">Address line 1 <span class="required-star">*</span></label>
+                        <input type="text" id="ukReceiverAddress1" placeholder="Start typing your address to get suggestions" required style="direction:ltr;">
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight:700; color:#1a202c;">Address Line 2 <span style="font-weight:400; color:#718096;">(optional)</span></label>
+                        <input type="text" id="ukReceiverAddress2" placeholder="Apartment, suite, unit, floor, etc." style="direction:ltr;">
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight:700; color:#1a202c;">Town / City <span class="required-star">*</span></label>
+                        <input type="text" id="ukReceiverCity" placeholder="Town or city" required style="direction:ltr;">
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight:700; color:#1a202c;">County / Province <span style="font-weight:400; color:#718096;">(if applicable)</span></label>
+                        <input type="text" id="ukReceiverCounty" placeholder="County or province" style="direction:ltr;">
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight:700; color:#1a202c;">Delivery instructions <span style="font-weight:400; color:#718096;">(optional)</span></label>
+                        <textarea id="ukReceiverNote" placeholder="Notes, preferences, access codes..." rows="3" style="direction:ltr;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight:700; color:#1a202c;">Package / Item description <span class="required-star">*</span></label>
+                        <input type="text" id="ukPackageName" placeholder="What are you sending?" required style="direction:ltr;">
+                    </div>
+                    <div class="form-actions" style="gap:10px; margin-top:4px;">
+                        <button type="button" onclick="ukSwitchTab('sender')" style="flex:1; background:#e2e8f0; color:#2d3748; border:none; font-weight:700; font-size:1rem; border-radius:50px; padding:12px; cursor:pointer;">
+                            ← Back
+                        </button>
+                        <button type="submit" class="btn btn-primary" style="flex:1; background:#f0c040; color:#1a1a1a; border:none; font-weight:700; font-size:1rem; border-radius:50px;">
+                            ✅ Use this address
+                        </button>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label style="font-weight: 700; color: #1a202c;">Company name <span style="font-weight: 400; color: #718096;">(optional)</span></label>
-                    <input type="text" id="ukCompany" placeholder="Company name" style="direction: ltr;">
-                </div>
-                <div class="form-group">
-                    <label style="font-weight: 700; color: #1a202c;">Postcode <span class="required-star">*</span></label>
-                    <input type="text" id="ukPostcode" placeholder="Enter your area postcode" required style="direction: ltr; text-transform: uppercase;">
-                </div>
-                <div class="form-group">
-                    <label style="font-weight: 700; color: #1a202c;">Address line 1 <span class="required-star">*</span></label>
-                    <input type="text" id="ukAddress1" placeholder="House number and street name" required style="direction: ltr;">
-                </div>
-                <div class="form-group">
-                    <label style="font-weight: 700; color: #1a202c;">Address Line 2 <span style="font-weight: 400; color: #718096;">(optional)</span></label>
-                    <input type="text" id="ukAddress2" placeholder="Apartment, suite, unit, building, floor, etc." style="direction: ltr;">
-                </div>
-                <div class="form-group">
-                    <label style="font-weight: 700; color: #1a202c;">Town/City <span class="required-star">*</span></label>
-                    <input type="text" id="ukCity" placeholder="Town or city" required style="direction: ltr;">
-                </div>
-                <div class="form-group">
-                    <label style="font-weight: 700; color: #1a202c;">County <span style="font-weight: 400; color: #718096;">(if applicable)</span></label>
-                    <input type="text" id="ukCounty" placeholder="County" style="direction: ltr;">
-                </div>
-                <div class="form-group">
-                    <label style="font-weight: 700; color: #1a202c;">Delivery instructions <span style="font-weight: 400; color: #718096;">(optional)</span></label>
-                    <textarea id="ukDeliveryNote" placeholder="Notes, preferences, access codes..." rows="3" style="direction: ltr;"></textarea>
-                </div>
-                <div class="form-group">
-                    <label style="font-weight: 700; color: #1a202c;">Package / Item description <span class="required-star">*</span></label>
-                    <input type="text" id="ukPackageName" placeholder="What are you sending?" required style="direction: ltr;">
-                </div>
-                <div class="form-actions" style="flex-direction: row-reverse; gap: 10px;">
-                    <button type="submit" class="btn btn-primary" style="flex: 1; background: #f0c040; color: #1a1a1a; border: none; font-weight: 700; font-size: 1rem; border-radius: 50px;">
-                        Use this address
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('ukDeliveryModal')" style="flex: 1;">Cancel</button>
-                </div>
+
             </form>
         </div>
     </div>
+
+    <script>
+    /* ── UK Delivery Tab Switcher ── */
+    function ukSwitchTab(tab) {
+        document.getElementById('ukPanel-sender').style.display   = tab === 'sender'   ? 'block' : 'none';
+        document.getElementById('ukPanel-receiver').style.display = tab === 'receiver' ? 'block' : 'none';
+        var sBtn = document.getElementById('ukTab-sender');
+        var rBtn = document.getElementById('ukTab-receiver');
+        sBtn.style.borderBottom = tab==='sender'   ? '3px solid #667eea' : '3px solid transparent';
+        sBtn.style.color        = tab==='sender'   ? '#667eea' : '#718096';
+        rBtn.style.borderBottom = tab==='receiver' ? '3px solid #48bb78' : '3px solid transparent';
+        rBtn.style.color        = tab==='receiver' ? '#48bb78' : '#718096';
+    }
+    function ukGoToReceiver() {
+        var name = document.getElementById('ukFullName').value.trim();
+        var phone = document.getElementById('ukPhone').value.trim();
+        var addr = document.getElementById('ukAddress1').value.trim();
+        var city = document.getElementById('ukCity').value.trim();
+        var post = document.getElementById('ukPostcode').value.trim();
+        if (!name || !phone || !addr || !city || !post) {
+            alert('Please fill in all required sender fields before continuing.');
+            return;
+        }
+        ukSwitchTab('receiver');
+    }
+    </script>
 
     <!-- FIB Modal -->
     <div class="modal" id="fibModal">
@@ -4370,18 +4470,28 @@ document.addEventListener('DOMContentLoaded', function() {
         ukForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
+            // Sender
             const fullName      = document.getElementById('ukFullName').value.trim();
             const phone         = document.getElementById('ukPhone').value.trim();
-            const receiverName  = document.getElementById('ukReceiverName').value.trim();
-            const receiverPhone = document.getElementById('ukReceiverPhone').value.trim();
             const company       = document.getElementById('ukCompany').value.trim();
-            const postcode    = document.getElementById('ukPostcode').value.trim().toUpperCase();
-            const address1    = document.getElementById('ukAddress1').value.trim();
-            const address2    = document.getElementById('ukAddress2').value.trim();
-            const city        = document.getElementById('ukCity').value.trim();
-            const county      = document.getElementById('ukCounty').value.trim();
-            const note        = document.getElementById('ukDeliveryNote').value.trim();
-            const packageName = document.getElementById('ukPackageName').value.trim();
+            const postcode      = document.getElementById('ukPostcode').value.trim().toUpperCase();
+            const address1      = document.getElementById('ukAddress1').value.trim();
+            const address2      = document.getElementById('ukAddress2').value.trim();
+            const city          = document.getElementById('ukCity').value.trim();
+            const county        = document.getElementById('ukCounty').value.trim();
+            const note          = document.getElementById('ukDeliveryNote').value.trim();
+            // Receiver
+            const receiverName    = document.getElementById('ukReceiverName').value.trim();
+            const receiverPhone   = document.getElementById('ukReceiverPhone').value.trim();
+            const receiverCompany = (document.getElementById('ukReceiverCompany')||{value:''}).value.trim();
+            const receiverPost    = (document.getElementById('ukReceiverPostcode')||{value:''}).value.trim().toUpperCase();
+            const receiverAddr1   = (document.getElementById('ukReceiverAddress1')||{value:''}).value.trim();
+            const receiverAddr2   = (document.getElementById('ukReceiverAddress2')||{value:''}).value.trim();
+            const receiverCity    = (document.getElementById('ukReceiverCity')||{value:''}).value.trim();
+            const receiverCounty  = (document.getElementById('ukReceiverCounty')||{value:''}).value.trim();
+            const receiverNote    = (document.getElementById('ukReceiverNote')||{value:''}).value.trim();
+            const receiverCountry = (document.getElementById('ukReceiverCountry')||{value:'United Kingdom'}).value.trim();
+            const packageName     = document.getElementById('ukPackageName').value.trim();
 
             const orderNumber = 'UK-' + Date.now().toString().slice(-6);
             const timestamp   = new Date().toLocaleString('en-GB');
@@ -4389,17 +4499,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const deliveryData = {
                 type: 'uk',
                 orderNumber,
-                fullName,
-                phone,
-                receiverName,
-                receiverPhone,
-                company,
-                postcode,
-                address1,
-                address2,
-                city,
-                county,
+                // sender
+                fullName, phone, company, postcode, address1, address2, city, county,
                 deliveryNote: note,
+                // receiver
+                receiverName, receiverPhone, receiverCompany,
+                receiverPostcode: receiverPost,
+                receiverAddress1: receiverAddr1,
+                receiverAddress2: receiverAddr2,
+                receiverCity, receiverCounty, receiverNote, receiverCountry,
                 packageName,
                 country: 'United Kingdom',
                 timestamp,
