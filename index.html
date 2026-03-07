@@ -2244,10 +2244,12 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 <footer class="footer">
     <div class="container">
         <!-- دوگمەی گەڕانەوە بۆ سەرەوە -->
- <!-- ئیمەیڵ -->
+<!-- ئیمەیڵ -->
 <div class="contact-row">
     <i class="fas fa-envelope"></i>
-    <a href="/cdn-cgi/l/email-protection#2841464e47685d434a4952495a064b47065d43" class="footer-email" style="color: #ffffff; text-decoration: none; direction: ltr; display: inline-block;"><span class="__cf_email__" data-cfemail="1970777f76596c727b7863786b377a76376c72">[email&#160;protected]</span></a>
+    <a href="mailto:Info@ukbazar.online" class="footer-email" style="color: #ffffff; text-decoration: none; direction: ltr; display: inline-block;">
+        Info@ukbazar.online
+    </a>
 </div>
         <div class="back-to-top-container">
             <button id="backToTopBtn" class="back-to-top-btn" aria-label="گەڕانەوە بۆ سەرەوە">
@@ -2265,8 +2267,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
                 </div>
                 <p class="footer-slogan">World Online Shopping</p>
                 <div class="footer-flags">
-                    <span style="font-size:1.5rem;">🇬🇧</span>
-                    <span style="font-size:1.5rem;">🇮🇶</span>
+                    
                 </div>
             </div>
 
@@ -2359,52 +2360,72 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
         </a>
     </div>
 
-    <!-- Privacy Policy Link -->
-    <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.12); text-align: center;">
-        <a href="javascript:void(0)" onclick="document.getElementById('privacyModal').classList.add('show')"
-           style="color: rgba(255,255,255,0.65); font-size: 0.82rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: color .2s;"
-           onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.65)'">
-            <i class="fas fa-shield-alt" style="font-size:.85rem;"></i>
-            Privacy Policy &amp; Terms
-        </a>
-    </div>
-</div>
+</div><!-- /footer-grid -->
 
-<!-- ════════ Privacy Policy Modal ════════ -->
-<div id="privacyModal" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.6); overflow-y:auto; padding:20px;"
-     onclick="if(event.target===this) this.classList.remove('show')">
-    <div style="background:#fff; max-width:760px; margin:0 auto; border-radius:16px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.3);">
-        <!-- Header -->
-        <div style="background:linear-gradient(135deg,#667eea,#764ba2); padding:24px 28px; display:flex; justify-content:space-between; align-items:center;">
-            <div>
-                <h2 style="color:#fff; font-size:1.2rem; margin:0;">🔒 UK BAZAR — Privacy Policy</h2>
-                <p style="color:rgba(255,255,255,0.75); font-size:.8rem; margin:4px 0 0;">Last updated: March 07, 2026</p>
-            </div>
-            <button onclick="document.getElementById('privacyModal').classList.remove('show')"
-                    style="background:rgba(255,255,255,0.2); border:none; color:#fff; width:36px; height:36px; border-radius:50%; font-size:1.1rem; cursor:pointer;">✕</button>
+        <!-- Privacy Policy — ژێری فووتەر -->
+        <div class="footer-bottom" style="text-align:center; margin-top:10px;">
+            <a href="javascript:void(0)" onclick="openPrivacyPage()"
+               style="color:rgba(255,255,255,0.55); font-size:0.82rem; text-decoration:none; display:inline-flex; align-items:center; gap:6px; transition:color .2s;"
+               onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'">
+                <i class="fas fa-shield-alt"></i> Privacy Policy &amp; Terms
+            </a>
         </div>
-        <!-- Body -->
-        <div style="padding:28px; font-family:'Segoe UI',Arial,sans-serif; color:#2d3748; line-height:1.75; font-size:.93rem; direction:ltr; text-align:left; max-height:70vh; overflow-y:auto;">
 
-            <p>This Privacy Notice for <strong>UK POST LTD</strong> (doing business as <strong>UK BAZAR</strong>) ('we', 'us', or 'our'), describes how and why we might access, collect, store, use, and/or share your personal information when you use our services.</p>
-            <p style="margin-top:8px;">Questions or concerns? Contact us at <a href="mailto:Info@ukbazar.online" style="color:#667eea;">Info@ukbazar.online</a></p>
+<!-- ════════ Privacy Policy Full Page ════════ -->
+<div id="privacyPage" style="display:none; position:fixed; inset:0; z-index:99999; background:#f0f4ff; overflow-y:auto;">
 
-            <hr style="border:none; border-top:1px solid #e2e8f0; margin:20px 0;">
+    <!-- Top Bar -->
+    <div style="background:linear-gradient(135deg,#667eea,#764ba2); padding:16px 20px; display:flex; align-items:center; gap:14px; position:sticky; top:0; z-index:10; box-shadow:0 2px 12px rgba(0,0,0,0.2);">
+        <button onclick="closePrivacyPage()"
+                style="background:rgba(255,255,255,0.2); border:none; color:#fff; width:38px; height:38px; border-radius:50%; font-size:1.1rem; cursor:pointer; flex-shrink:0;">
+            ← 
+        </button>
+        <div>
+            <div style="color:#fff; font-weight:700; font-size:1rem;">🔒 UK BAZAR — Privacy Policy</div>
+            <div style="color:rgba(255,255,255,0.75); font-size:0.75rem;">Last updated: March 07, 2026</div>
+        </div>
+    </div>
 
-            <h3 style="color:#667eea; font-size:1rem; margin-bottom:8px;">📋 SUMMARY OF KEY POINTS</h3>
-            <ul style="padding-left:20px; display:flex; flex-direction:column; gap:8px; color:#4a5568;">
-                <li><strong>Personal information:</strong> We may process personal information depending on how you interact with our Services.</li>
-                <li><strong>Sensitive information:</strong> We do not process sensitive personal information.</li>
-                <li><strong>Third parties:</strong> We do not collect any information from third parties.</li>
-                <li><strong>Processing:</strong> We process your information to provide, improve, and administer our Services, for security and fraud prevention, and to comply with law.</li>
-                <li><strong>Sharing:</strong> We may share information in specific situations and with specific third parties only.</li>
-                <li><strong>Security:</strong> We have adequate processes in place to protect your personal information, but no transmission over the internet can be guaranteed 100% secure.</li>
+    <!-- Content -->
+    <div style="max-width:800px; margin:0 auto; padding:28px 20px 60px; font-family:'Segoe UI',Arial,sans-serif; direction:ltr; text-align:left; color:#2d3748; line-height:1.8; font-size:0.95rem;">
+
+        <!-- Intro -->
+        <div style="background:#fff; border-radius:14px; padding:24px; margin-bottom:20px; box-shadow:0 2px 12px rgba(102,126,234,0.1); border-left:4px solid #667eea;">
+            <p>This Privacy Notice for <strong>UK POST LTD</strong> (doing business as <strong>UK BAZAR</strong>) describes how and why we might access, collect, store, use, and/or share your personal information when you use our services, including when you:</p>
+            <ul style="margin:12px 0 0 20px; display:flex; flex-direction:column; gap:6px; color:#4a5568;">
+                <li>Visit our website at <a href="https://www.ukbazar.online" style="color:#667eea;">www.ukbazar.online</a></li>
+                <li>Download and use our mobile application (UK BAZAR)</li>
+                <li>Engage with us in other related ways, including marketing or events</li>
             </ul>
+            <p style="margin-top:14px;">Questions or concerns? Contact us at <a href="mailto:Info@ukbazar.online" style="color:#667eea; font-weight:600;">Info@ukbazar.online</a></p>
+        </div>
 
-            <hr style="border:none; border-top:1px solid #e2e8f0; margin:20px 0;">
+        <!-- Summary -->
+        <div style="background:#fff; border-radius:14px; padding:24px; margin-bottom:20px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
+            <h2 style="color:#667eea; font-size:1.05rem; margin:0 0 14px; display:flex; align-items:center; gap:8px;">📋 SUMMARY OF KEY POINTS</h2>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <div style="background:#f7f9ff; border-radius:8px; padding:12px 16px; border-left:3px solid #667eea;">
+                    <strong>Personal information:</strong> We may process personal information depending on how you interact with our Services.
+                </div>
+                <div style="background:#f7f9ff; border-radius:8px; padding:12px 16px; border-left:3px solid #48bb78;">
+                    <strong>Sensitive information:</strong> We do <u>not</u> process sensitive personal information.
+                </div>
+                <div style="background:#f7f9ff; border-radius:8px; padding:12px 16px; border-left:3px solid #48bb78;">
+                    <strong>Third parties:</strong> We do <u>not</u> collect any information from third parties.
+                </div>
+                <div style="background:#f7f9ff; border-radius:8px; padding:12px 16px; border-left:3px solid #667eea;">
+                    <strong>Processing:</strong> We process your information to provide, improve, and administer our Services, for security and fraud prevention, and to comply with law.
+                </div>
+                <div style="background:#f7f9ff; border-radius:8px; padding:12px 16px; border-left:3px solid #ed8936;">
+                    <strong>Security:</strong> We have adequate processes in place to protect your personal information, but no transmission over the internet can be guaranteed 100% secure.
+                </div>
+            </div>
+        </div>
 
-            <h3 style="color:#667eea; font-size:1rem; margin-bottom:12px;">📑 TABLE OF CONTENTS</h3>
-            <ol style="padding-left:20px; color:#4a5568; display:flex; flex-direction:column; gap:4px;">
+        <!-- TOC -->
+        <div style="background:#fff; border-radius:14px; padding:24px; margin-bottom:20px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
+            <h2 style="color:#667eea; font-size:1.05rem; margin:0 0 14px;">📑 TABLE OF CONTENTS</h2>
+            <ol style="margin:0 0 0 20px; display:flex; flex-direction:column; gap:8px; color:#4a5568;">
                 <li>What information do we collect?</li>
                 <li>How do we process your information?</li>
                 <li>When and with whom do we share your personal information?</li>
@@ -2414,44 +2435,72 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
                 <li>What are your privacy rights?</li>
                 <li>Controls</li>
             </ol>
-
-            <hr style="border:none; border-top:1px solid #e2e8f0; margin:20px 0;">
-
-            <h3 style="color:#667eea; font-size:1rem; margin-bottom:8px;">1. WHAT INFORMATION DO WE COLLECT?</h3>
-            <p>We collect personal information that you voluntarily provide to us when you use our Services, including name, phone number, delivery address, and payment information necessary to process your orders.</p>
-
-            <h3 style="color:#667eea; font-size:1rem; margin:16px 0 8px;">2. HOW DO WE PROCESS YOUR INFORMATION?</h3>
-            <p>We process your information to fulfil and manage your orders, provide customer support, send you updates about your delivery, and improve our Services. We process your information only when we have a valid legal reason to do so.</p>
-
-            <h3 style="color:#667eea; font-size:1rem; margin:16px 0 8px;">3. WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?</h3>
-            <p>We may share your information with delivery partners and service providers strictly necessary to complete your order. We do not sell your personal data to third parties.</p>
-
-            <h3 style="color:#667eea; font-size:1rem; margin:16px 0 8px;">4. DO WE USE COOKIES?</h3>
-            <p>We may use cookies and similar tracking technologies to improve your browsing experience and analyse site traffic. You can control cookies through your browser settings.</p>
-
-            <h3 style="color:#667eea; font-size:1rem; margin:16px 0 8px;">5. HOW LONG DO WE KEEP YOUR INFORMATION?</h3>
-            <p>We keep your personal information only for as long as necessary to fulfil the purposes outlined in this notice, unless a longer retention period is required by law.</p>
-
-            <h3 style="color:#667eea; font-size:1rem; margin:16px 0 8px;">6. HOW DO WE KEEP YOUR INFORMATION SAFE?</h3>
-            <p>We have implemented appropriate technical and organisational security measures to protect your personal information. However, no electronic transmission over the internet can be guaranteed 100% secure.</p>
-
-            <h3 style="color:#667eea; font-size:1rem; margin:16px 0 8px;">7. WHAT ARE YOUR PRIVACY RIGHTS?</h3>
-            <p>Depending on your location, you may have the right to request access to, correction of, or deletion of your personal information. To exercise your rights, contact us at <a href="mailto:Info@ukbazar.online" style="color:#667eea;">Info@ukbazar.online</a>.</p>
-
-            <h3 style="color:#667eea; font-size:1rem; margin:16px 0 8px;">8. CONTROLS</h3>
-            <p>You may review, change, or terminate your account at any time. If you have questions or comments about your privacy rights, you may contact us at <a href="mailto:Info@ukbazar.online" style="color:#667eea;">Info@ukbazar.online</a>.</p>
-
-            <div style="background:#f7fafc; border-radius:10px; padding:16px; margin-top:20px; text-align:center; border:1px solid #e2e8f0;">
-                <p style="margin:0; font-size:.85rem; color:#718096;">© 2026 <strong>UK POST LTD</strong> — UK BAZAR &nbsp;|&nbsp; <a href="https://www.ukbazar.online" style="color:#667eea;">www.ukbazar.online</a></p>
-            </div>
         </div>
+
+        <!-- Sections -->
+        <div style="display:flex; flex-direction:column; gap:16px;">
+
+            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
+                <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">1. WHAT INFORMATION DO WE COLLECT?</h3>
+                <p style="margin:0; color:#4a5568;">We collect personal information that you voluntarily provide to us when you use our Services, including name, phone number, delivery address, and payment information necessary to process your orders.</p>
+            </div>
+
+            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
+                <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">2. HOW DO WE PROCESS YOUR INFORMATION?</h3>
+                <p style="margin:0; color:#4a5568;">We process your information to fulfil and manage your orders, provide customer support, send you updates about your delivery, and improve our Services. We process your information only when we have a valid legal reason to do so.</p>
+            </div>
+
+            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
+                <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">3. WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?</h3>
+                <p style="margin:0; color:#4a5568;">We may share your information with delivery partners and service providers strictly necessary to complete your order. We do <strong>not</strong> sell your personal data to third parties.</p>
+            </div>
+
+            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
+                <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">4. DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES?</h3>
+                <p style="margin:0; color:#4a5568;">We may use cookies and similar tracking technologies to improve your browsing experience and analyse site traffic. You can control cookies through your browser settings.</p>
+            </div>
+
+            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
+                <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">5. HOW LONG DO WE KEEP YOUR INFORMATION?</h3>
+                <p style="margin:0; color:#4a5568;">We keep your personal information only for as long as necessary to fulfil the purposes outlined in this notice, unless a longer retention period is required by law.</p>
+            </div>
+
+            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
+                <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">6. HOW DO WE KEEP YOUR INFORMATION SAFE?</h3>
+                <p style="margin:0; color:#4a5568;">We have implemented appropriate technical and organisational security measures to protect your personal information. However, no electronic transmission over the internet can be guaranteed 100% secure, so we cannot promise that hackers or other unauthorised third parties will not be able to defeat our security.</p>
+            </div>
+
+            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
+                <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">7. WHAT ARE YOUR PRIVACY RIGHTS?</h3>
+                <p style="margin:0; color:#4a5568;">Depending on your location, you may have the right to request access to, correction of, or deletion of your personal information. To exercise your rights, contact us at <a href="mailto:Info@ukbazar.online" style="color:#667eea;">Info@ukbazar.online</a>.</p>
+            </div>
+
+            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
+                <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">8. CONTROLS</h3>
+                <p style="margin:0; color:#4a5568;">You may review, change, or terminate your account at any time. If you have questions or comments about your privacy rights, contact us at <a href="mailto:Info@ukbazar.online" style="color:#667eea;">Info@ukbazar.online</a>.</p>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div style="background:#667eea; border-radius:14px; padding:20px; margin-top:28px; text-align:center; color:#fff;">
+            <p style="margin:0 0 6px; font-weight:700; font-size:1rem;">UK POST LTD — UK BAZAR</p>
+            <p style="margin:0; font-size:0.82rem; opacity:.85;"><a href="https://www.ukbazar.online" style="color:#fff;">www.ukbazar.online</a> &nbsp;|&nbsp; <a href="mailto:Info@ukbazar.online" style="color:#fff;">Info@ukbazar.online</a></p>
+            <p style="margin:8px 0 0; font-size:0.78rem; opacity:.7;">© 2026 All rights reserved</p>
+        </div>
+
+        <!-- Close Button Bottom -->
+        <div style="text-align:center; margin-top:24px;">
+            <button onclick="closePrivacyPage()"
+                    style="background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; border:none; padding:14px 40px; border-radius:50px; font-size:1rem; font-weight:700; cursor:pointer; box-shadow:0 4px 15px rgba(102,126,234,0.4);">
+                ← گەڕانەوە بۆ سایت
+            </button>
+        </div>
+
     </div>
 </div>
 
-<style>
-#privacyModal { display: none; }
-#privacyModal.show { display: block; }
-</style>
+
 
 
     <!-- Image Modal -->
@@ -2918,6 +2967,18 @@ function closeModal(modalId) {
             document.body.style.overflow = 'auto';
         }
     }
+}
+
+function openPrivacyPage() {
+    var p = document.getElementById('privacyPage');
+    if (p) {
+        p.style.display = 'block';
+        p.scrollTop = 0;
+    }
+}
+function closePrivacyPage() {
+    var p = document.getElementById('privacyPage');
+    if (p) p.style.display = 'none';
 }
 
 function showHomePage() {
