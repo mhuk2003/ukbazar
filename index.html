@@ -968,6 +968,19 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     background: rgba(102, 126, 234, 0.05);
 }
 
+.bottom-nav-add {
+    color: var(--secondary) !important;
+}
+
+.bottom-nav-add i {
+    font-size: 1.6rem !important;
+}
+
+.bottom-nav-add:hover {
+    color: var(--secondary) !important;
+    background: rgba(72, 187, 120, 0.1) !important;
+}
+
 /* Footer Styles - Improved */
 .footer {
     background: linear-gradient(135deg, #1a2634, #0f172a);
@@ -2126,10 +2139,6 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
                 </div>
 
                 <div class="nav-buttons">
-    <button class="btn btn-secondary" onclick="showAddProductModal()">
-        <i class="fas fa-plus-circle"></i>
-        <span class="btn-text">کاڵا دابنێ</span>
-    </button>
     <button class="btn btn-delivery-ku" onclick="showDeliveryModal()">
         <i class="fas fa-shipping-fast"></i>
         <span class="btn-text">گەیاندن 🇮🇶</span>
@@ -2214,6 +2223,9 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
                 <a href="javascript:void(0)" class="bottom-nav-item" onclick="showCartModal()">
                     <i class="fas fa-shopping-cart"></i><span>سەبەتە</span>
                 </a>
+                <a href="javascript:void(0)" class="bottom-nav-item bottom-nav-add" onclick="showAddProductModal()">
+                    <i class="fas fa-plus-circle"></i><span>کاڵا دابنێ</span>
+                </a>
                 <a href="javascript:void(0)" class="bottom-nav-item" onclick="showAdminLogin()">
                     <i class="fas fa-user-shield"></i><span>بەڕێوەبەر</span>
                 </a>
@@ -2231,7 +2243,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
  <!-- ئیمەیڵ -->
 <div class="contact-row">
     <i class="fas fa-envelope"></i>
-    <a href="mailto:info@ukbazar.co.uk" class="footer-email" style="color: #ffffff; text-decoration: none; direction: ltr; display: inline-block;">info@ukbazar.co.uk</a>
+    <a href="/cdn-cgi/l/email-protection#2841464e47685d434a4952495a064b47065d43" class="footer-email" style="color: #ffffff; text-decoration: none; direction: ltr; display: inline-block;"><span class="__cf_email__" data-cfemail="1970777f76596c727b7863786b377a76376c72">[email&#160;protected]</span></a>
 </div>
         <div class="back-to-top-container">
             <button id="backToTopBtn" class="back-to-top-btn" aria-label="گەڕانەوە بۆ سەرەوە">
@@ -2632,7 +2644,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 
     
     <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 
@@ -4461,11 +4473,4 @@ document.addEventListener('DOMContentLoaded', function() {
                             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                                 console.log('[SW] نوێکردنەوە بەردەستە');
                                 // فەوری ئەپدەیت بکە بەبێ پرسیار
-                                newWorker.postMessage({ type: 'SKIP_WAITING' });
-                            }
-                        });
-                    });
-                })
-                .catch(err => console.log('[SW] هەڵە:', err));
-
-            // کاتێک SW نوێ ئا
+                                newWorker.postMes
