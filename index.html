@@ -467,8 +467,10 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 .slides-wrapper {
     display: flex;
     height: 100%;
+    width: 100%;
     transition: transform 0.6s ease-in-out;
     direction: ltr;
+    will-change: transform;
 }
 
 .slide {
@@ -944,14 +946,21 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     color: var(--gray);
     text-decoration: none;
-    font-size: 0.85rem;
-    padding: 8px 16px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 8px 14px;
     border-radius: 30px;
-    transition: all 0.3s;
+    transition: all 0.25s;
     cursor: pointer;
+}
+
+.bottom-nav-item i,
+.bottom-nav-item span {
+    color: inherit;
+    transition: color 0.25s;
 }
 
 .bottom-nav-item i {
@@ -960,25 +969,26 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 
 .bottom-nav-item.active {
     color: var(--primary);
-    background: rgba(102, 126, 234, 0.1);
+    background: rgba(102, 126, 234, 0.12);
+}
+
+.bottom-nav-item.active i,
+.bottom-nav-item.active span {
+    color: var(--primary);
 }
 
 .bottom-nav-item:hover {
     color: var(--primary);
-    background: rgba(102, 126, 234, 0.05);
+    background: rgba(102, 126, 234, 0.07);
 }
 
-.bottom-nav-add {
-    color: var(--secondary) !important;
+.bottom-nav-item:hover i,
+.bottom-nav-item:hover span {
+    color: var(--primary);
 }
 
 .bottom-nav-add i {
-    font-size: 1.6rem !important;
-}
-
-.bottom-nav-add:hover {
-    color: var(--secondary) !important;
-    background: rgba(72, 187, 120, 0.1) !important;
+    font-size: 1.4rem;
 }
 
 /* Footer Styles - Improved */
@@ -2118,10 +2128,8 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
         <h2 class="banner-title">UK BAZAR</h2>
         <p class="banner-slogan">World Online Shopping</p>
         
-        <div class="banner-image">
-            <img src="https://firebasestorage.googleapis.com/v0/b/ukbazar-15eda.firebasestorage.app/o/uk-flag.webp?alt=media&token=83b7ce7b-db70-4d3a-9a32-f262c4773b1a" 
-                 alt="Loading"
-                 onerror="this.src='https://via.placeholder.com/300x140/667eea/ffffff?text=Loading...'">
+        <div class="banner-image" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#667eea,#764ba2);">
+            <span style="font-size:2.5rem;font-weight:900;color:#fff;letter-spacing:2px;text-shadow:0 2px 8px rgba(0,0,0,0.2);">🇬🇧 UK BAZAR 🇮🇶</span>
         </div>
         
         <div class="spinner-small"></div>
@@ -2147,10 +2155,6 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
         <i class="fas fa-shipping-fast"></i>
         <span class="btn-text">UK Delivery 🇬🇧</span>
     </button>
-    <div class="flags">
-        <img src="https://firebasestorage.googleapis.com/v0/b/ukbazar-15eda.firebasestorage.app/o/uk-flag.webp?alt=media&token=83b7ce7b-db70-4d3a-9a32-f262c4773b1a" alt="UK Flag">
-        <img src="https://firebasestorage.googleapis.com/v0/b/ukbazar-15eda.firebasestorage.app/o/images.png?alt=media&token=79847612-3eed-48ef-9413-a3ae76df758b" alt="Kurdistan Flag">
-    </div>
 </div>
             </div>
         </div>
@@ -2224,7 +2228,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
                     <i class="fas fa-shopping-cart"></i><span>سەبەتە</span>
                 </a>
                 <a href="javascript:void(0)" class="bottom-nav-item bottom-nav-add" onclick="showAddProductModal()">
-                    <i class="fas fa-plus-circle"></i><span>کاڵا دابنێ</span>
+                    <i class="fas fa-plus"></i><span>کاڵا دابنێ</span>
                 </a>
                 <a href="javascript:void(0)" class="bottom-nav-item" onclick="showAdminLogin()">
                     <i class="fas fa-user-shield"></i><span>بەڕێوەبەر</span>
@@ -2263,8 +2267,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
                 </div>
                 <p class="footer-slogan">World Online Shopping</p>
                 <div class="footer-flags">
-                    <img src="https://firebasestorage.googleapis.com/v0/b/ukbazar-15eda.firebasestorage.app/o/uk-flag.webp?alt=media&token=83b7ce7b-db70-4d3a-9a32-f262c4773b1a" alt="UK">
-                    <img src="https://firebasestorage.googleapis.com/v0/b/ukbazar-15eda.firebasestorage.app/o/images.png?alt=media&token=79847612-3eed-48ef-9413-a3ae76df758b" alt="Kurdistan">
+                    
                 </div>
             </div>
 
@@ -2356,7 +2359,148 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
             <span>پەیوەندی بکە لە Viber</span>
         </a>
     </div>
+
+</div><!-- /footer-grid -->
+
+        <!-- Privacy Policy — ژێری فووتەر -->
+        <div class="footer-bottom" style="text-align:center; margin-top:10px;">
+            <a href="javascript:void(0)" onclick="openPrivacyPage()"
+               style="color:rgba(255,255,255,0.55); font-size:0.82rem; text-decoration:none; display:inline-flex; align-items:center; gap:6px; transition:color .2s;"
+               onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'">
+                <i class="fas fa-shield-alt"></i> Privacy Policy &amp; Terms
+            </a>
+        </div>
+
+<!-- ════════ Privacy Policy Full Page ════════ -->
+<div id="privacyPage" style="display:none; position:fixed; inset:0; z-index:99999; background:#f0f4ff; overflow-y:auto;">
+
+    <!-- Top Bar -->
+    <div style="background:linear-gradient(135deg,#667eea,#764ba2); padding:16px 20px; display:flex; align-items:center; gap:14px; position:sticky; top:0; z-index:10; box-shadow:0 2px 12px rgba(0,0,0,0.2);">
+        <button onclick="closePrivacyPage()"
+                style="background:rgba(255,255,255,0.2); border:none; color:#fff; width:38px; height:38px; border-radius:50%; font-size:1.1rem; cursor:pointer; flex-shrink:0;">
+            ← 
+        </button>
+        <div>
+            <div style="color:#fff; font-weight:700; font-size:1rem;">🔒 UK BAZAR — Privacy Policy</div>
+            <div style="color:rgba(255,255,255,0.75); font-size:0.75rem;">Last updated: March 07, 2026</div>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div style="max-width:800px; margin:0 auto; padding:28px 20px 60px; font-family:'Segoe UI',Arial,sans-serif; direction:ltr; text-align:left; color:#2d3748; line-height:1.8; font-size:0.95rem;">
+
+        <!-- Intro -->
+        <div style="background:#fff; border-radius:14px; padding:24px; margin-bottom:20px; box-shadow:0 2px 12px rgba(102,126,234,0.1); border-left:4px solid #667eea;">
+            <p>This Privacy Notice for <strong>UK POST LTD</strong> (doing business as <strong>UK BAZAR</strong>) describes how and why we might access, collect, store, use, and/or share your personal information when you use our services, including when you:</p>
+            <ul style="margin:12px 0 0 20px; display:flex; flex-direction:column; gap:6px; color:#4a5568;">
+                <li>Visit our website at <a href="https://www.ukbazar.online" style="color:#667eea;">www.ukbazar.online</a></li>
+                <li>Download and use our mobile application (UK BAZAR)</li>
+                <li>Engage with us in other related ways, including marketing or events</li>
+            </ul>
+            <p style="margin-top:14px;">Questions or concerns? Contact us at <a href="mailto:Info@ukbazar.online" style="color:#667eea; font-weight:600;">Info@ukbazar.online</a></p>
+        </div>
+
+        <!-- Summary -->
+        <div style="background:#fff; border-radius:14px; padding:24px; margin-bottom:20px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
+            <h2 style="color:#667eea; font-size:1.05rem; margin:0 0 14px; display:flex; align-items:center; gap:8px;">📋 SUMMARY OF KEY POINTS</h2>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <div style="background:#f7f9ff; border-radius:8px; padding:12px 16px; border-left:3px solid #667eea;">
+                    <strong>Personal information:</strong> We may process personal information depending on how you interact with our Services.
+                </div>
+                <div style="background:#f7f9ff; border-radius:8px; padding:12px 16px; border-left:3px solid #48bb78;">
+                    <strong>Sensitive information:</strong> We do <u>not</u> process sensitive personal information.
+                </div>
+                <div style="background:#f7f9ff; border-radius:8px; padding:12px 16px; border-left:3px solid #48bb78;">
+                    <strong>Third parties:</strong> We do <u>not</u> collect any information from third parties.
+                </div>
+                <div style="background:#f7f9ff; border-radius:8px; padding:12px 16px; border-left:3px solid #667eea;">
+                    <strong>Processing:</strong> We process your information to provide, improve, and administer our Services, for security and fraud prevention, and to comply with law.
+                </div>
+                <div style="background:#f7f9ff; border-radius:8px; padding:12px 16px; border-left:3px solid #ed8936;">
+                    <strong>Security:</strong> We have adequate processes in place to protect your personal information, but no transmission over the internet can be guaranteed 100% secure.
+                </div>
+            </div>
+        </div>
+
+        <!-- TOC -->
+        <div style="background:#fff; border-radius:14px; padding:24px; margin-bottom:20px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
+            <h2 style="color:#667eea; font-size:1.05rem; margin:0 0 14px;">📑 TABLE OF CONTENTS</h2>
+            <ol style="margin:0 0 0 20px; display:flex; flex-direction:column; gap:8px; color:#4a5568;">
+                <li>What information do we collect?</li>
+                <li>How do we process your information?</li>
+                <li>When and with whom do we share your personal information?</li>
+                <li>Do we use cookies and other tracking technologies?</li>
+                <li>How long do we keep your information?</li>
+                <li>How do we keep your information safe?</li>
+                <li>What are your privacy rights?</li>
+                <li>Controls</li>
+            </ol>
+        </div>
+
+        <!-- Sections -->
+        <div style="display:flex; flex-direction:column; gap:16px;">
+
+            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
+                <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">1. WHAT INFORMATION DO WE COLLECT?</h3>
+                <p style="margin:0; color:#4a5568;">We collect personal information that you voluntarily provide to us when you use our Services, including name, phone number, delivery address, and payment information necessary to process your orders.</p>
+            </div>
+
+            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
+                <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">2. HOW DO WE PROCESS YOUR INFORMATION?</h3>
+                <p style="margin:0; color:#4a5568;">We process your information to fulfil and manage your orders, provide customer support, send you updates about your delivery, and improve our Services. We process your information only when we have a valid legal reason to do so.</p>
+            </div>
+
+            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
+                <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">3. WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?</h3>
+                <p style="margin:0; color:#4a5568;">We may share your information with delivery partners and service providers strictly necessary to complete your order. We do <strong>not</strong> sell your personal data to third parties.</p>
+            </div>
+
+            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
+                <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">4. DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES?</h3>
+                <p style="margin:0; color:#4a5568;">We may use cookies and similar tracking technologies to improve your browsing experience and analyse site traffic. You can control cookies through your browser settings.</p>
+            </div>
+
+            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
+                <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">5. HOW LONG DO WE KEEP YOUR INFORMATION?</h3>
+                <p style="margin:0; color:#4a5568;">We keep your personal information only for as long as necessary to fulfil the purposes outlined in this notice, unless a longer retention period is required by law.</p>
+            </div>
+
+            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
+                <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">6. HOW DO WE KEEP YOUR INFORMATION SAFE?</h3>
+                <p style="margin:0; color:#4a5568;">We have implemented appropriate technical and organisational security measures to protect your personal information. However, no electronic transmission over the internet can be guaranteed 100% secure, so we cannot promise that hackers or other unauthorised third parties will not be able to defeat our security.</p>
+            </div>
+
+            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
+                <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">7. WHAT ARE YOUR PRIVACY RIGHTS?</h3>
+                <p style="margin:0; color:#4a5568;">Depending on your location, you may have the right to request access to, correction of, or deletion of your personal information. To exercise your rights, contact us at <a href="mailto:Info@ukbazar.online" style="color:#667eea;">Info@ukbazar.online</a>.</p>
+            </div>
+
+            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
+                <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">8. CONTROLS</h3>
+                <p style="margin:0; color:#4a5568;">You may review, change, or terminate your account at any time. If you have questions or comments about your privacy rights, contact us at <a href="mailto:Info@ukbazar.online" style="color:#667eea;">Info@ukbazar.online</a>.</p>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div style="background:#667eea; border-radius:14px; padding:20px; margin-top:28px; text-align:center; color:#fff;">
+            <p style="margin:0 0 6px; font-weight:700; font-size:1rem;">UK POST LTD — UK BAZAR</p>
+            <p style="margin:0; font-size:0.82rem; opacity:.85;"><a href="https://www.ukbazar.online" style="color:#fff;">www.ukbazar.online</a> &nbsp;|&nbsp; <a href="mailto:Info@ukbazar.online" style="color:#fff;">Info@ukbazar.online</a></p>
+            <p style="margin:8px 0 0; font-size:0.78rem; opacity:.7;">© 2026 All rights reserved</p>
+        </div>
+
+        <!-- Close Button Bottom -->
+        <div style="text-align:center; margin-top:24px;">
+            <button onclick="closePrivacyPage()"
+                    style="background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; border:none; padding:14px 40px; border-radius:50px; font-size:1rem; font-weight:700; cursor:pointer; box-shadow:0 4px 15px rgba(102,126,234,0.4);">
+                ← گەڕانەوە بۆ سایت
+            </button>
+        </div>
+
+    </div>
 </div>
+
+
 
 
     <!-- Image Modal -->
@@ -2552,171 +2696,160 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
         </div>
     </div>
 
-    <!-- UK Delivery Address Modal (English) — 2 Tabs: Sender / Receiver -->
+    <!-- UK Delivery Address Modal — 2 Tabs: Sender / Receiver -->
     <div class="modal" id="ukDeliveryModal">
-        <div class="modal-content" style="direction: ltr; text-align: left; font-family: 'Segoe UI', Arial, sans-serif; max-width: 520px;">
-            <div class="modal-header" style="direction: ltr; text-align: left;">
-                <button class="close-modal" onclick="closeModal('ukDeliveryModal')">
-                    <i class="fas fa-times"></i>
-                </button>
-                <h2 style="direction: ltr; font-size: 1.1rem;"><i class="fas fa-shipping-fast"></i> 🇬🇧 UK Delivery</h2>
+        <div class="modal-content" style="direction:ltr;text-align:left;font-family:'Segoe UI',Arial,sans-serif;max-width:520px;">
+            <div class="modal-header" style="direction:ltr;text-align:left;">
+                <button class="close-modal" onclick="closeModal('ukDeliveryModal')"><i class="fas fa-times"></i></button>
+                <h2 style="direction:ltr;font-size:1.1rem;"><i class="fas fa-shipping-fast"></i> 🇬🇧 UK Delivery</h2>
             </div>
-
-            <!-- Tab Switcher -->
-            <div style="display:flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 18px;">
-                <button id="ukTab-sender" onclick="ukSwitchTab('sender')" style="flex:1; padding: 11px 0; border:none; background: none; font-weight:700; font-size:.97rem; cursor:pointer; border-bottom: 3px solid #667eea; color:#667eea; transition: all .2s;">
+            <!-- Tabs -->
+            <div style="display:flex;border-bottom:2px solid #e2e8f0;margin-bottom:18px;">
+                <button id="ukTab-sender" onclick="ukSwitchTab('sender')"
+                    style="flex:1;padding:11px 0;border:none;background:none;font-weight:700;font-size:.95rem;cursor:pointer;border-bottom:3px solid #667eea;color:#667eea;transition:all .2s;">
                     📤 Sender
                 </button>
-                <button id="ukTab-receiver" onclick="ukSwitchTab('receiver')" style="flex:1; padding: 11px 0; border:none; background: none; font-weight:700; font-size:.97rem; cursor:pointer; border-bottom: 3px solid transparent; color:#718096; transition: all .2s;">
+                <button id="ukTab-receiver" onclick="ukSwitchTab('receiver')"
+                    style="flex:1;padding:11px 0;border:none;background:none;font-weight:700;font-size:.95rem;cursor:pointer;border-bottom:3px solid transparent;color:#718096;transition:all .2s;">
                     📬 Receiver
                 </button>
             </div>
-
             <form id="ukDeliveryForm">
-
-                <!-- ── SENDER PANEL ── -->
+                <!-- SENDER -->
                 <div id="ukPanel-sender">
-                    <p style="font-size:.82rem; color:#718096; margin-bottom:14px; background:#f0f4ff; border-radius:8px; padding:8px 12px;">
-                        <i class="fas fa-info-circle" style="color:#667eea;"></i> Enter the <strong>sender's</strong> details — the person sending the parcel from the UK.
+                    <p style="font-size:.82rem;color:#718096;margin-bottom:14px;background:#f0f4ff;border-radius:8px;padding:8px 12px;">
+                        <i class="fas fa-info-circle" style="color:#667eea;"></i> Enter the <strong>sender's</strong> details — the person sending from the UK.
                     </p>
                     <div class="form-group">
-                        <label style="font-weight:700; color:#1a202c;">Country / Region</label>
-                        <select id="ukSenderCountry" style="direction:ltr; width:100%; padding:10px 14px; border:1.5px solid #e2e8f0; border-radius:10px; font-size:.95rem; background:#fff;">
-                            <option value="United Kingdom" selected>United Kingdom</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight:700; color:#1a202c;">Full name (first name and surname) <span class="required-star">*</span></label>
+                        <label style="font-weight:700;color:#1a202c;">Full name <span class="required-star">*</span></label>
                         <input type="text" id="ukFullName" placeholder="Full name" required style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700; color:#1a202c;">Phone number <span class="required-star">*</span></label>
+                        <label style="font-weight:700;color:#1a202c;">Phone number <span class="required-star">*</span></label>
                         <input type="tel" id="ukPhone" placeholder="+44" required style="direction:ltr;">
-                        <small style="color:#718096; font-size:.78rem;">May be used to assist delivery</small>
+                        <small style="color:#718096;font-size:.78rem;">May be used to assist delivery</small>
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700; color:#1a202c;">Company name <span style="font-weight:400; color:#718096;">(optional)</span></label>
+                        <label style="font-weight:700;color:#1a202c;">Company name <span style="font-weight:400;color:#718096;">(optional)</span></label>
                         <input type="text" id="ukCompany" placeholder="Company name" style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700; color:#1a202c;">Postcode <span class="required-star">*</span></label>
-                        <input type="text" id="ukPostcode" placeholder="Enter your area postcode" required style="direction:ltr; text-transform:uppercase;">
+                        <label style="font-weight:700;color:#1a202c;">Postcode <span class="required-star">*</span></label>
+                        <input type="text" id="ukPostcode" placeholder="Enter your area postcode" required style="direction:ltr;text-transform:uppercase;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700; color:#1a202c;">Address line 1 <span class="required-star">*</span></label>
-                        <input type="text" id="ukAddress1" placeholder="Start typing your address to get suggestions" required style="direction:ltr;">
+                        <label style="font-weight:700;color:#1a202c;">Address line 1 <span class="required-star">*</span></label>
+                        <input type="text" id="ukAddress1" placeholder="Start typing your address..." required style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700; color:#1a202c;">Address Line 2 <span style="font-weight:400; color:#718096;">(optional)</span></label>
+                        <label style="font-weight:700;color:#1a202c;">Address Line 2 <span style="font-weight:400;color:#718096;">(optional)</span></label>
                         <input type="text" id="ukAddress2" placeholder="Apartment, suite, unit, floor, etc." style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700; color:#1a202c;">Town / City <span class="required-star">*</span></label>
+                        <label style="font-weight:700;color:#1a202c;">Town / City <span class="required-star">*</span></label>
                         <input type="text" id="ukCity" placeholder="Town or city" required style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700; color:#1a202c;">County <span style="font-weight:400; color:#718096;">(if applicable)</span></label>
+                        <label style="font-weight:700;color:#1a202c;">County <span style="font-weight:400;color:#718096;">(if applicable)</span></label>
                         <input type="text" id="ukCounty" placeholder="County" style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700; color:#1a202c;">Delivery instructions <span style="font-weight:400; color:#718096;">(optional)</span></label>
+                        <label style="font-weight:700;color:#1a202c;">Delivery instructions <span style="font-weight:400;color:#718096;">(optional)</span></label>
                         <textarea id="ukDeliveryNote" placeholder="Notes, preferences, access codes..." rows="3" style="direction:ltr;"></textarea>
                     </div>
-                    <div class="form-actions" style="gap:10px; margin-top:4px;">
+                    <div class="form-actions" style="gap:10px;margin-top:4px;">
                         <button type="button" class="btn btn-secondary" onclick="closeModal('ukDeliveryModal')" style="flex:1;">Cancel</button>
-                        <button type="button" onclick="ukGoToReceiver()" style="flex:1; background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; border:none; font-weight:700; font-size:1rem; border-radius:50px; padding:12px; cursor:pointer;">
+                        <button type="button" onclick="ukGoToReceiver()"
+                            style="flex:1;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;font-weight:700;font-size:1rem;border-radius:50px;padding:12px;cursor:pointer;">
                             Next: Receiver →
                         </button>
                     </div>
                 </div>
-
-                <!-- ── RECEIVER PANEL ── -->
+                <!-- RECEIVER -->
                 <div id="ukPanel-receiver" style="display:none;">
-                    <p style="font-size:.82rem; color:#718096; margin-bottom:14px; background:#f0fff4; border-radius:8px; padding:8px 12px;">
+                    <p style="font-size:.82rem;color:#718096;margin-bottom:14px;background:#f0fff4;border-radius:8px;padding:8px 12px;">
                         <i class="fas fa-info-circle" style="color:#48bb78;"></i> Enter the <strong>receiver's</strong> details — the person receiving the parcel.
                     </p>
                     <div class="form-group">
-                        <label style="font-weight:700; color:#1a202c;">Country / Region</label>
-                        <select id="ukReceiverCountry" style="direction:ltr; width:100%; padding:10px 14px; border:1.5px solid #e2e8f0; border-radius:10px; font-size:.95rem; background:#fff;">
-                            <option value="United Kingdom">United Kingdom</option>
+                        <label style="font-weight:700;color:#1a202c;">Country / Region</label>
+                        <select id="ukReceiverCountry" style="direction:ltr;width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:.95rem;background:#fff;">
+                            <option value="United Kingdom">United Kingdom 🇬🇧</option>
                             <option value="Iraq">Iraq 🇮🇶</option>
                             <option value="Other">Other</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700; color:#1a202c;">Full name (first name and surname) <span class="required-star">*</span></label>
+                        <label style="font-weight:700;color:#1a202c;">Full name <span class="required-star">*</span></label>
                         <input type="text" id="ukReceiverName" placeholder="Full name" required style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700; color:#1a202c;">Phone number <span class="required-star">*</span></label>
+                        <label style="font-weight:700;color:#1a202c;">Phone number <span class="required-star">*</span></label>
                         <input type="tel" id="ukReceiverPhone" placeholder="+44 or +964" required style="direction:ltr;">
-                        <small style="color:#718096; font-size:.78rem;">May be used to assist delivery</small>
+                        <small style="color:#718096;font-size:.78rem;">May be used to assist delivery</small>
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700; color:#1a202c;">Company name <span style="font-weight:400; color:#718096;">(optional)</span></label>
+                        <label style="font-weight:700;color:#1a202c;">Company name <span style="font-weight:400;color:#718096;">(optional)</span></label>
                         <input type="text" id="ukReceiverCompany" placeholder="Company name" style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700; color:#1a202c;">Postcode / Zip <span style="font-weight:400; color:#718096;">(if applicable)</span></label>
-                        <input type="text" id="ukReceiverPostcode" placeholder="Enter postcode or area code" style="direction:ltr; text-transform:uppercase;">
+                        <label style="font-weight:700;color:#1a202c;">Postcode <span style="font-weight:400;color:#718096;">(if applicable)</span></label>
+                        <input type="text" id="ukReceiverPostcode" placeholder="Enter postcode or area code" style="direction:ltr;text-transform:uppercase;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700; color:#1a202c;">Address line 1 <span class="required-star">*</span></label>
-                        <input type="text" id="ukReceiverAddress1" placeholder="Start typing your address to get suggestions" required style="direction:ltr;">
+                        <label style="font-weight:700;color:#1a202c;">Address line 1 <span class="required-star">*</span></label>
+                        <input type="text" id="ukReceiverAddress1" placeholder="Start typing your address..." required style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700; color:#1a202c;">Address Line 2 <span style="font-weight:400; color:#718096;">(optional)</span></label>
+                        <label style="font-weight:700;color:#1a202c;">Address Line 2 <span style="font-weight:400;color:#718096;">(optional)</span></label>
                         <input type="text" id="ukReceiverAddress2" placeholder="Apartment, suite, unit, floor, etc." style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700; color:#1a202c;">Town / City <span class="required-star">*</span></label>
+                        <label style="font-weight:700;color:#1a202c;">Town / City <span class="required-star">*</span></label>
                         <input type="text" id="ukReceiverCity" placeholder="Town or city" required style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700; color:#1a202c;">County / Province <span style="font-weight:400; color:#718096;">(if applicable)</span></label>
+                        <label style="font-weight:700;color:#1a202c;">County / Province <span style="font-weight:400;color:#718096;">(if applicable)</span></label>
                         <input type="text" id="ukReceiverCounty" placeholder="County or province" style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700; color:#1a202c;">Delivery instructions <span style="font-weight:400; color:#718096;">(optional)</span></label>
+                        <label style="font-weight:700;color:#1a202c;">Delivery instructions <span style="font-weight:400;color:#718096;">(optional)</span></label>
                         <textarea id="ukReceiverNote" placeholder="Notes, preferences, access codes..." rows="3" style="direction:ltr;"></textarea>
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700; color:#1a202c;">Package / Item description <span class="required-star">*</span></label>
+                        <label style="font-weight:700;color:#1a202c;">Package / Item description <span class="required-star">*</span></label>
                         <input type="text" id="ukPackageName" placeholder="What are you sending?" required style="direction:ltr;">
                     </div>
-                    <div class="form-actions" style="gap:10px; margin-top:4px;">
-                        <button type="button" onclick="ukSwitchTab('sender')" style="flex:1; background:#e2e8f0; color:#2d3748; border:none; font-weight:700; font-size:1rem; border-radius:50px; padding:12px; cursor:pointer;">
+                    <div class="form-actions" style="gap:10px;margin-top:4px;">
+                        <button type="button" onclick="ukSwitchTab('sender')"
+                            style="flex:1;background:#e2e8f0;color:#2d3748;border:none;font-weight:700;font-size:1rem;border-radius:50px;padding:12px;cursor:pointer;">
                             ← Back
                         </button>
-                        <button type="submit" class="btn btn-primary" style="flex:1; background:#f0c040; color:#1a1a1a; border:none; font-weight:700; font-size:1rem; border-radius:50px;">
+                        <button type="submit" class="btn btn-primary"
+                            style="flex:1;background:#f0c040;color:#1a1a1a;border:none;font-weight:700;font-size:1rem;border-radius:50px;">
                             ✅ Use this address
                         </button>
                     </div>
                 </div>
-
             </form>
         </div>
     </div>
-
     <script>
-    /* ── UK Delivery Tab Switcher ── */
     function ukSwitchTab(tab) {
-        document.getElementById('ukPanel-sender').style.display   = tab === 'sender'   ? 'block' : 'none';
-        document.getElementById('ukPanel-receiver').style.display = tab === 'receiver' ? 'block' : 'none';
-        var sBtn = document.getElementById('ukTab-sender');
-        var rBtn = document.getElementById('ukTab-receiver');
-        sBtn.style.borderBottom = tab==='sender'   ? '3px solid #667eea' : '3px solid transparent';
-        sBtn.style.color        = tab==='sender'   ? '#667eea' : '#718096';
-        rBtn.style.borderBottom = tab==='receiver' ? '3px solid #48bb78' : '3px solid transparent';
-        rBtn.style.color        = tab==='receiver' ? '#48bb78' : '#718096';
+        document.getElementById('ukPanel-sender').style.display   = tab==='sender'   ? 'block' : 'none';
+        document.getElementById('ukPanel-receiver').style.display = tab==='receiver' ? 'block' : 'none';
+        var s = document.getElementById('ukTab-sender');
+        var r = document.getElementById('ukTab-receiver');
+        s.style.borderBottom = tab==='sender'   ? '3px solid #667eea' : '3px solid transparent';
+        s.style.color        = tab==='sender'   ? '#667eea' : '#718096';
+        r.style.borderBottom = tab==='receiver' ? '3px solid #48bb78' : '3px solid transparent';
+        r.style.color        = tab==='receiver' ? '#48bb78' : '#718096';
     }
     function ukGoToReceiver() {
-        var name = document.getElementById('ukFullName').value.trim();
-        var phone = document.getElementById('ukPhone').value.trim();
-        var addr = document.getElementById('ukAddress1').value.trim();
-        var city = document.getElementById('ukCity').value.trim();
-        var post = document.getElementById('ukPostcode').value.trim();
-        if (!name || !phone || !addr || !city || !post) {
+        if (!document.getElementById('ukFullName').value.trim() ||
+            !document.getElementById('ukPhone').value.trim() ||
+            !document.getElementById('ukAddress1').value.trim() ||
+            !document.getElementById('ukCity').value.trim() ||
+            !document.getElementById('ukPostcode').value.trim()) {
             alert('Please fill in all required sender fields before continuing.');
             return;
         }
@@ -2746,7 +2879,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 
     
     <!-- Firebase SDKs -->
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 
@@ -2834,6 +2967,18 @@ function closeModal(modalId) {
             document.body.style.overflow = 'auto';
         }
     }
+}
+
+function openPrivacyPage() {
+    var p = document.getElementById('privacyPage');
+    if (p) {
+        p.style.display = 'block';
+        p.scrollTop = 0;
+    }
+}
+function closePrivacyPage() {
+    var p = document.getElementById('privacyPage');
+    if (p) p.style.display = 'none';
 }
 
 function showHomePage() {
@@ -2977,6 +3122,8 @@ function loadApprovedProducts() {
                     hideLoading();
                 }, 300);
                 
+                // سلایدەر بار بکە
+                loadRealSliderImages();
                 // لە پشتەوە داتا نوێ بکەرەوە
                 refreshProductsFromFirebase();
                 return;
@@ -4174,9 +4321,6 @@ function createProductCard(product) {
         '<button class="btn btn-secondary btn-small" onclick="contactSellerWhatsApp(\'' + (product.sellerMobile || '') + '\', \'' + (product.name || '').replace(/'/g, "\\'") + '\')">' +
         '<i class="fab fa-whatsapp"></i> <span class="btn-text">واتساپ</span>' +
         '</button>' +
-        '<button class="btn btn-fib btn-small" onclick="showFibModal()">' +
-        '<i class="fas fa-credit-card"></i> <span class="btn-text">FIB</span>' +
-        '</button>' +
         '</div>' +
         '</div>' +
         '</div>';
@@ -4299,27 +4443,12 @@ function initializeSlider() {
 function loadRealSliderImages() {
     const slidesWrapper = document.getElementById('slidesWrapper');
     const sliderDots = document.getElementById('sliderDots');
-    
     if (!slidesWrapper || !sliderDots) return;
-    
-    // هەوڵی وەرگرتن لە کاش
-    const cachedSlider = localStorage.getItem('ukbazar_slider');
-    
-    if (cachedSlider) {
-        try {
-            const sliderData = JSON.parse(cachedSlider);
-            if (sliderData && sliderData.length > 0) {
-                updateSliderWithImages(sliderData);
-                return;
-            }
-        } catch (e) {}
-    }
-    
-    // وەرگرتن لە فایربەیس
+
     database.ref('slider').once('value')
         .then((snapshot) => {
             let images = [];
-            
+
             if (snapshot.exists()) {
                 snapshot.forEach((child) => {
                     const imageUrl = child.val().imageUrl;
@@ -4330,31 +4459,38 @@ function loadRealSliderImages() {
                         });
                     }
                 });
-                
-                if (images.length > 0) {
-                    images.reverse(); // نوێترین یەکەم
-                }
+                if (images.length > 0) images.reverse();
             }
-            
-            // ئەگەر وێنەی سلایدەر نەبوو، لە کاڵاکان وەربگرە
-            if (images.length === 0 && products.length > 0) {
+
+            if (images.length > 0) {
+                // وێنەی سلایدەر هەیە — پیشانی بدە
+                updateSliderWithImages(images);
+            } else if (products.length > 0) {
+                // وێنەی سلایدەر نییە — لە کاڵاکان وەربگرە
                 images = products.slice().reverse().slice(0, 5).map(p => ({
                     url: p.images && p.images[0] ? p.images[0] : DEFAULT_SLIDER_IMAGE,
                     title: p.name || 'کاڵا'
                 }));
-            }
-            
-            if (images.length > 0) {
-                // پاشەکەوتکردن لە کاش
-                try {
-                    localStorage.setItem('ukbazar_slider', JSON.stringify(images));
-                } catch (e) {}
-                
                 updateSliderWithImages(images);
+            } else {
+                // هەردووکیان خاوێنن — وێنەی یەدەگ پیشان بدە
+                updateSliderWithImages([{ url: DEFAULT_SLIDER_IMAGE, title: 'UK BAZAR' }]);
+                // کاتێک کاڵاکان بار بون، دووبارە هەوڵ بدە
+                setTimeout(() => {
+                    if (products.length > 0) {
+                        const fallback = products.slice().reverse().slice(0, 5).map(p => ({
+                            url: p.images && p.images[0] ? p.images[0] : DEFAULT_SLIDER_IMAGE,
+                            title: p.name || 'کاڵا'
+                        }));
+                        updateSliderWithImages(fallback);
+                    }
+                }, 3000);
             }
         })
         .catch((error) => {
             console.error('Error loading slider:', error);
+            // هەڵە — وێنەی یەدەگ پیشان بدە
+            updateSliderWithImages([{ url: DEFAULT_SLIDER_IMAGE, title: 'UK BAZAR' }]);
         });
 }
 
@@ -4366,6 +4502,10 @@ function updateSliderWithImages(images) {
     
     totalSlides = images.length;
     currentSlide = 0;
+
+    // wrapper بمێنێتەوە 100% — هەر slide min-width:100% ە
+    slidesWrapper.style.width = '';
+    slidesWrapper.style.transform = 'translateX(0)';
     
     slidesWrapper.innerHTML = images.map(img => 
         '<div class="slide">' +
@@ -4379,14 +4519,16 @@ function updateSliderWithImages(images) {
     sliderDots.innerHTML = images.map((_, i) => 
         '<div class="dot ' + (i === 0 ? 'active' : '') + '" onclick="goToSlide(' + i + ')"></div>'
     ).join('');
+
+    startAutoPlay();
 }
 
 function updateSlider() {
     const slidesWrapper = document.getElementById('slidesWrapper');
     if (slidesWrapper) {
-        slidesWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+        // هەر slide = 100% پانی container — translateX(-N*100%)
+        slidesWrapper.style.transform = 'translateX(-' + (currentSlide * 100) + '%)';
     }
-    
     document.querySelectorAll('.dot').forEach((dot, index) => {
         dot.classList.toggle('active', index === currentSlide);
     });
@@ -4471,18 +4613,15 @@ document.addEventListener('DOMContentLoaded', function() {
     if (ukForm) {
         ukForm.addEventListener('submit', function(e) {
             e.preventDefault();
-
-            // Sender
-            const fullName      = document.getElementById('ukFullName').value.trim();
-            const phone         = document.getElementById('ukPhone').value.trim();
-            const company       = document.getElementById('ukCompany').value.trim();
-            const postcode      = document.getElementById('ukPostcode').value.trim().toUpperCase();
-            const address1      = document.getElementById('ukAddress1').value.trim();
-            const address2      = document.getElementById('ukAddress2').value.trim();
-            const city          = document.getElementById('ukCity').value.trim();
-            const county        = document.getElementById('ukCounty').value.trim();
-            const note          = document.getElementById('ukDeliveryNote').value.trim();
-            // Receiver
+            const fullName    = document.getElementById('ukFullName').value.trim();
+            const phone       = document.getElementById('ukPhone').value.trim();
+            const company     = document.getElementById('ukCompany').value.trim();
+            const postcode    = document.getElementById('ukPostcode').value.trim().toUpperCase();
+            const address1    = document.getElementById('ukAddress1').value.trim();
+            const address2    = document.getElementById('ukAddress2').value.trim();
+            const city        = document.getElementById('ukCity').value.trim();
+            const county      = document.getElementById('ukCounty').value.trim();
+            const note        = document.getElementById('ukDeliveryNote').value.trim();
             const receiverName    = document.getElementById('ukReceiverName').value.trim();
             const receiverPhone   = document.getElementById('ukReceiverPhone').value.trim();
             const receiverCompany = (document.getElementById('ukReceiverCompany')||{value:''}).value.trim();
@@ -4494,35 +4633,23 @@ document.addEventListener('DOMContentLoaded', function() {
             const receiverNote    = (document.getElementById('ukReceiverNote')||{value:''}).value.trim();
             const receiverCountry = (document.getElementById('ukReceiverCountry')||{value:'United Kingdom'}).value.trim();
             const packageName     = document.getElementById('ukPackageName').value.trim();
-
             const orderNumber = 'UK-' + Date.now().toString().slice(-6);
             const timestamp   = new Date().toLocaleString('en-GB');
-
             const deliveryData = {
-                type: 'uk',
-                orderNumber,
-                // sender
-                fullName, phone, company, postcode, address1, address2, city, county,
-                deliveryNote: note,
-                // receiver
+                type: 'uk', orderNumber,
+                fullName, phone, company, postcode, address1, address2, city, county, deliveryNote: note,
                 receiverName, receiverPhone, receiverCompany,
-                receiverPostcode: receiverPost,
-                receiverAddress1: receiverAddr1,
-                receiverAddress2: receiverAddr2,
+                receiverPostcode: receiverPost, receiverAddress1: receiverAddr1, receiverAddress2: receiverAddr2,
                 receiverCity, receiverCounty, receiverNote, receiverCountry,
-                packageName,
-                country: 'United Kingdom',
-                timestamp,
-                sortKey: Date.now()
+                packageName, country: 'United Kingdom', timestamp, sortKey: Date.now()
             };
-
             showLoading();
-
             database.ref('delivery').push(deliveryData)
                 .then(() => {
                     hideLoading();
                     closeModal('ukDeliveryModal');
                     ukForm.reset();
+                    ukSwitchTab('sender');
                     showNotification(`✅ UK delivery request submitted! Order: ${orderNumber}`);
                 })
                 .catch((err) => {
@@ -4583,5 +4710,14 @@ document.addEventListener('DOMContentLoaded', function() {
                             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                                 console.log('[SW] نوێکردنەوە بەردەستە');
                                 // فەوری ئەپدەیت بکە بەبێ پرسیار
-                                newWorker.postMes
-
+                                newWorker.postMessage({ type: 'SKIP_WAITING' });
+                            }
+                        });
+                    });
+                })
+                .catch(err => console.log('[SW] تۆمارکردن شکست هێنا:', err));
+        });
+    }
+    </script>
+</body>
+</html>
