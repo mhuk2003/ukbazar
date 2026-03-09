@@ -2507,34 +2507,30 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 <footer class="footer">
     <div class="container">
         <!-- دوگمەی گەڕانەوە بۆ سەرەوە -->
-
-<!-- ئیمەیڵ -->
-<div class="contact-row">
-    <i class="fas fa-envelope"></i>
-    <a href="mailto:Info@ukbazar.online" class="footer-email" style="color: #ffffff; text-decoration: none; direction: ltr; display: inline-block;">
+<!-- ئیمەیڵ + Privacy row -->
+<div class="contact-row" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+    <i class="fas fa-envelope" style="color:rgba(255,255,255,0.7); font-size:1rem; flex-shrink:0;"></i>
+    <a href="mailto:Info@ukbazar.online"
+       style="color:#fff; text-decoration:none; direction:ltr; font-size:0.9rem; font-weight:600; letter-spacing:0.2px; flex:1; min-width:0;">
         Info@ukbazar.online
     </a>
-<div style="display:flex; justify-content:center; align-items:center; margin-top:24px; padding:16px 0 8px; border-top:1px solid rgba(255,255,255,0.15);">
+    <button onclick="openPrivacyPage()"
+       title="Privacy Policy & Terms"
+       style="background:rgba(102,126,234,0.25); border:1px solid rgba(102,126,234,0.5); color:#c7d2fe; font-size:0.72rem; padding:6px 12px; border-radius:20px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-family:inherit; font-weight:700; white-space:nowrap; transition:all .2s; flex-shrink:0;"
+       onmouseover="this.style.background='rgba(102,126,234,0.45)';this.style.color='#fff'" 
+       onmouseout="this.style.background='rgba(102,126,234,0.25)';this.style.color='#c7d2fe'">
+        <i class="fas fa-shield-alt" style="font-size:0.68rem;"></i> Privacy
+    </button>
+</div>
 
+<div style="text-align:center; margin-top:24px; padding:16px 0 8px; border-top:1px solid rgba(255,255,255,0.15);">
     <a href="https://ukbazar-online-privacy.vercel.app/" target="_blank"
        style="background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.35); color:#fff; font-size:0.92rem; padding:12px 28px; border-radius:50px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; font-family:inherit; transition:all .2s; text-decoration:none;"
        onmouseover="this.style.background='rgba(255,255,255,0.22)'" 
        onmouseout="this.style.background='rgba(255,255,255,0.12)'">
-       
         <i class="fas fa-shield-alt"></i> Privacy Policy &amp; Terms
-        
     </a>
-
 </div>
-</div>
-  <!-- Privacy Policy — ژێری فووتەر -->
-        <div style="text-align:center; margin-top:24px; padding:16px 0 8px; border-top:1px solid rgba(255,255,255,0.15);">
-            <button onclick="openPrivacyPage()"
-               style="background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.35); color:#fff; font-size:0.92rem; padding:12px 28px; border-radius:50px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; font-family:inherit; transition:all .2s;"
-               onmouseover="this.style.background='rgba(255,255,255,0.22)'" onmouseout="this.style.background='rgba(255,255,255,0.12)'">
-                <i class="fas fa-shield-alt"></i> Privacy Policy &amp; Terms
-            </button>
-        </div>
         <div class="back-to-top-container">
             <button id="backToTopBtn" class="back-to-top-btn" aria-label="گەڕانەوە بۆ سەرەوە">
                 <i class="fas fa-arrow-up"></i>
@@ -3124,7 +3120,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
             </form>
         </div>
     </div>
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     function ukSwitchTab(tab) {
         document.getElementById('ukPanel-sender').style.display   = tab==='sender'   ? 'block' : 'none';
         document.getElementById('ukPanel-receiver').style.display = tab==='receiver' ? 'block' : 'none';
@@ -4988,24 +4984,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <script>
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js', { scope: './' })
-            .then(reg => {
-                console.log('[SW] تۆمارکرا:', reg.scope);
-                reg.addEventListener('updatefound', () => {
-                    const nw = reg.installing;
-                    if (nw) {
-                        nw.addEventListener('statechange', () => {
-                            if (nw.state === 'installed' && navigator.serviceWorker.controller) {
-                                nw.postMessage({ type: 'SKIP_WAITING' });
-                            }
-                        });
-                    }
-                });
-            })
-            .catch(err => console.log('[SW] error:', err));
-    });
-}
-</script>
-</body>
-</html>
+    windo
