@@ -1269,12 +1269,13 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.65);
     z-index: 1000;
     align-items: center;
     justify-content: center;
-    padding: 10px;
-    backdrop-filter: blur(5px);
+    padding: 12px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
 }
 
 .modal.show {
@@ -1283,75 +1284,97 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 
 .modal-content {
     background: white;
-    padding: 16px 18px;
-    border-radius: 16px;
+    padding: 0;
+    border-radius: 20px;
     max-width: 480px;
     width: 100%;
-    max-height: 92vh;
+    max-height: 94vh;
     overflow-y: auto;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 20px 56px rgba(0, 0, 0, 0.28);
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid #e2e8f8;
 }
 
 .modal-header {
-    text-align: center;
-    margin-bottom: 14px;
+    background: linear-gradient(135deg, var(--primary), #764ba2);
+    border-radius: 20px 20px 0 0;
+    padding: 16px 44px 16px 20px;
+    margin-bottom: 0;
     position: relative;
+    text-align: right;
 }
 
 .modal-header h2 {
-    font-size: 1.15rem;
-    color: var(--dark);
-    margin-bottom: 4px;
+    font-size: 1rem;
+    color: #fff;
+    margin: 0;
+    font-weight: 800;
+}
+
+.modal-header p,
+.modal-header small {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.73rem;
+    margin-top: 3px;
+    display: block;
 }
 
 .close-modal {
     position: absolute;
-    top: -15px;
-    right: -15px;
-    background: var(--danger);
+    top: 12px;
+    left: 14px;
+    background: rgba(255,255,255,0.2);
     color: white;
-    border: none;
-    width: 35px;
-    height: 35px;
+    border: 1.5px solid rgba(255,255,255,0.3);
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 1.3rem;
+    font-size: 1.05rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s;
-    box-shadow: 0 5px 15px rgba(245, 101, 101, 0.4);
+    transition: all 0.25s;
 }
 
 .close-modal:hover {
     transform: rotate(90deg);
-    background: #c53030;
+    background: rgba(255,255,255,0.35);
+}
+
+/* Form Body */
+.modal-content form,
+.modal-body {
+    padding: 16px 18px 20px;
 }
 
 /* Form Groups */
 .form-group {
-    margin-bottom: 10px;
+    margin-bottom: 11px;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 4px;
-    font-weight: 600;
+    margin-bottom: 5px;
+    font-weight: 700;
     color: var(--dark);
-    font-size: 0.82rem;
+    font-size: 0.79rem;
+    letter-spacing: 0.1px;
 }
 
 .form-group input,
 .form-group textarea,
 .form-group select {
     width: 100%;
-    padding: 8px 10px;
+    padding: 9px 12px;
     border: 1.5px solid var(--border);
-    border-radius: 8px;
-    font-size: 0.88rem;
-    transition: all 0.3s;
-    background: white;
+    border-radius: 10px;
+    font-size: 0.87rem;
+    transition: all 0.2s;
+    background: #fafbfd;
     direction: rtl;
+    font-family: inherit;
+    color: var(--dark);
 }
 
 .form-group input:focus,
@@ -1359,7 +1382,14 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 .form-group select:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.12);
+    background: #fff;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #b0bcc8;
+    font-size: 0.82rem;
 }
 
 .form-group textarea {
@@ -1367,104 +1397,328 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     resize: vertical;
 }
 
+/* Delivery section dividers */
+.delivery-section-title {
+    font-size: 0.73rem;
+    font-weight: 800;
+    color: var(--primary);
+    background: #eef2ff;
+    border-right: 3px solid var(--primary);
+    padding: 5px 10px;
+    border-radius: 7px;
+    margin: 14px 0 9px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
 .image-preview {
-    margin-top: 15px;
+    margin-top: 12px;
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 10px;
 }
 
 .image-preview img {
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
     object-fit: cover;
     border-radius: 8px;
-    border: 3px solid var(--border);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border: 2px solid var(--border);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 .form-actions {
     display: flex;
     gap: 8px;
     margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #f0f4ff;
 }
 
 .form-actions .btn {
     flex: 1;
-    padding: 9px 10px;
-    font-size: 0.88rem;
+    padding: 10px 10px;
+    font-size: 0.87rem;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+/* Mobile Modal fixes */
+@media (max-width: 480px) {
+    .modal { padding: 8px; }
+    .modal-content { border-radius: 16px; max-height: 96vh; }
+    .modal-header { border-radius: 16px 16px 0 0; padding: 13px 40px 13px 16px; }
+    .modal-header h2 { font-size: 0.92rem; }
+    .close-modal { top: 10px; left: 10px; width: 28px; height: 28px; font-size: 0.9rem; }
+    .modal-content form, .modal-body { padding: 13px 14px 16px; }
+    .form-group { margin-bottom: 9px; }
+    .form-group label { font-size: 0.76rem; margin-bottom: 4px; }
+    .form-group input, .form-group textarea, .form-group select {
+        padding: 8px 10px; font-size: 0.84rem; border-radius: 9px;
+    }
+    .form-actions { flex-direction: row; gap: 7px; }
+    .form-actions .btn { font-size: 0.82rem; padding: 9px 8px; }
+    .image-preview img { width: 75px; height: 75px; }
 }
 
 /* Admin Section */
+/* ══════════ ADMIN SECTION ══════════ */
 .admin-section {
-    background: white;
-    padding: 30px;
-    border-radius: 24px;
-    margin: 30px 0;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    background: #f4f6ff;
+    padding: 20px 18px 28px;
+    border-radius: 22px;
+    margin: 20px 0 30px;
+    box-shadow: 0 6px 28px rgba(102,126,234,0.12);
+    border: 1px solid #dde3f8;
 }
 
-.admin-tabs {
+/* Hero Bar */
+.admin-hero-bar {
+    background: linear-gradient(135deg, #1a1f3c 0%, #2d3a7c 60%, #3b4dbf 100%);
+    border-radius: 16px;
+    padding: 18px 22px;
+    margin-bottom: 18px;
     display: flex;
+    align-items: center;
+    justify-content: space-between;
     gap: 12px;
-    margin-bottom: 30px;
     flex-wrap: wrap;
-    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(45,58,124,0.35);
+}
+.admin-hero-bar::before {
+    content: '';
+    position: absolute;
+    right: -50px; top: -50px;
+    width: 160px; height: 160px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.admin-hero-bar .ah-title {
+    color: #fff;
+    font-size: 1.05rem;
+    font-weight: 800;
+    margin: 0;
+    position: relative; z-index: 1;
+}
+.admin-hero-bar .ah-sub {
+    color: rgba(255,255,255,0.5);
+    font-size: 0.73rem;
+    margin: 3px 0 0;
+    position: relative; z-index: 1;
+}
+.admin-hero-bar .ah-badge {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    border: 1px solid rgba(255,255,255,0.25);
+    position: relative; z-index: 1;
+    white-space: nowrap;
+}
+
+/* Admin Tabs — Grid */
+.admin-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 18px;
 }
 
 .admin-tab {
-    padding: 12px 25px;
-    border: 2px solid var(--primary);
-    background: white;
-    color: var(--primary);
-    border-radius: 40px;
+    padding: 10px 8px;
+    border: 1.5px solid #c9d3f5;
+    background: #fff;
+    color: #4a5580;
+    border-radius: 12px;
     cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s;
-    font-size: 0.95rem;
+    font-weight: 700;
+    transition: all 0.2s;
+    font-size: 0.8rem;
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    gap: 6px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(102,126,234,0.07);
+    white-space: nowrap;
+    font-family: inherit;
 }
 
 .admin-tab i {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+.admin-tab:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: #eef1ff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(102,126,234,0.16);
 }
 
 .admin-tab.active {
     background: linear-gradient(135deg, var(--primary), #764ba2);
     color: white;
     border-color: transparent;
+    box-shadow: 0 5px 16px rgba(102,126,234,0.38);
+    transform: translateY(-2px);
 }
 
+.admin-tab.tab-logout {
+    background: #fff5f5;
+    border-color: #fca5a5;
+    color: #e53e3e;
+}
+.admin-tab.tab-logout:hover {
+    background: #e53e3e;
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 5px 14px rgba(229,62,62,0.3);
+}
+
+/* Admin Content Box */
+#adminContent {
+    background: #fff;
+    border-radius: 14px;
+    padding: 18px;
+    border: 1px solid #e2e8f8;
+    box-shadow: 0 2px 10px rgba(102,126,234,0.07);
+    min-height: 80px;
+}
+
+/* Pending Items */
 .pending-items {
-    display: grid;
-    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .pending-item {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 16px;
-    border-right: 6px solid var(--warning);
+    background: #fff;
+    padding: 16px 18px;
+    border-radius: 14px;
+    border: 1px solid #e8edf8;
+    border-right: 5px solid var(--warning);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: all 0.2s;
+}
+
+.pending-item:hover {
+    box-shadow: 0 6px 20px rgba(102,126,234,0.13);
+    transform: translateX(-3px);
 }
 
 .pending-item h4 {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     color: var(--dark);
-    font-size: 1.2rem;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 7px;
 }
 
 .pending-item p {
-    margin: 8px 0;
+    margin: 5px 0;
     color: var(--gray);
-    font-size: 1rem;
+    font-size: 0.83rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.pending-item p strong {
+    color: #4a5568;
+    font-weight: 700;
+    min-width: 80px;
+    flex-shrink: 0;
 }
 
 .pending-item .actions {
     display: flex;
-    gap: 12px;
-    margin-top: 15px;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+/* ══════════ MOBILE ADMIN ══════════ */
+@media (max-width: 768px) {
+    .admin-section {
+        padding: 14px 12px 20px;
+        border-radius: 18px;
+        margin: 12px 0 20px;
+    }
+    .admin-hero-bar {
+        padding: 15px 16px;
+        border-radius: 13px;
+        margin-bottom: 13px;
+    }
+    .admin-hero-bar .ah-title { font-size: 0.95rem; }
+    .admin-tabs {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 7px;
+        margin-bottom: 13px;
+    }
+    .admin-tab {
+        padding: 10px 8px;
+        font-size: 0.77rem;
+        border-radius: 11px;
+    }
+    #adminContent { padding: 14px 12px; }
+    .pending-item { padding: 13px 14px; }
+    .pending-item h4 { font-size: 0.9rem; }
+    .pending-item p { font-size: 0.8rem; }
+}
+
+@media (max-width: 480px) {
+    .admin-section {
+        padding: 11px 9px 16px;
+        border-radius: 14px;
+        margin: 8px 0 16px;
+    }
+    .admin-hero-bar {
+        padding: 13px 14px;
+        border-radius: 12px;
+        margin-bottom: 11px;
+    }
+    .admin-hero-bar .ah-title { font-size: 0.88rem; }
+    .admin-hero-bar .ah-sub { display: none; }
+    .admin-tabs {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+        margin-bottom: 11px;
+    }
+    .admin-tab {
+        padding: 9px 6px;
+        font-size: 0.72rem;
+        border-radius: 10px;
+        gap: 4px;
+    }
+    .admin-tab i { font-size: 0.82rem; }
+    #adminContent { padding: 11px 10px; border-radius: 11px; }
+    .pending-item { padding: 11px 12px; border-radius: 11px; }
+    .pending-item .actions { flex-direction: row; flex-wrap: wrap; gap: 6px; }
+    .pending-item .actions .btn { flex: 1; min-width: 80px; font-size: 0.78rem; padding: 7px 8px; }
+}
+
+@media (max-width: 360px) {
+    .admin-tabs {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 5px;
+    }
+    .admin-tab {
+        font-size: 0.66rem;
+        padding: 8px 5px;
+        gap: 3px;
+    }
+    .admin-tab i { font-size: 0.75rem; }
+    .admin-hero-bar .ah-badge { display: none; }
 }
 
 /* Image Modal */
@@ -2120,10 +2374,10 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 <!-- Loading Spinner with Banner - چاککراو -->
 <div class="loading-spinner" id="loadingSpinner">
     <div class="spinner-banner">
-        <img src="https://firebasestorage.googleapis.com/v0/b/ukbazar-15eda.firebasestorage.app/o/logo-ukbazar.png?alt=media&token=c1b2a45a-fbe0-4ac8-bc8f-26ae4fd7966c" 
+        <img src="./logo-ukbazar.png" 
              alt="UK BAZAR" 
              class="banner-logo"
-             onerror="this.src='https://via.placeholder.com/70x70/667eea/ffffff?text=UK'">
+             onerror="this.style.display='none'">
         
         <h2 class="banner-title">UK BAZAR</h2>
         <p class="banner-slogan">World Online Shopping</p>
@@ -2141,7 +2395,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
             <div class="header-content">
                 <div class="logo" onclick="showHomePage()">
                     <div class="logo-icon">
-                        <img src="https://firebasestorage.googleapis.com/v0/b/ukbazar-15eda.firebasestorage.app/o/logo-ukbazar.png?alt=media&token=c1b2a45a-fbe0-4ac8-bc8f-26ae4fd7966c" alt="UK BAZAR">
+                        <img src="./logo-ukbazar.png" alt="UK BAZAR">
                     </div>
                     <div class="logo-text">UK BAZAR</div>
                 </div>
@@ -2201,15 +2455,23 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 
     <section class="admin-section" id="adminPanel" style="display: none;">
         <div class="container">
-            <h2 class="section-title">🔐 داشبۆردی بەڕێوەبەر</h2>
+            <!-- Hero Bar -->
+            <div class="admin-hero-bar">
+                <div>
+                    <p class="ah-title">🔐 داشبۆردی بەڕێوەبەر</p>
+                    <p class="ah-sub">UK BAZAR — Control Panel</p>
+                </div>
+                <span class="ah-badge">⚙️ Admin</span>
+            </div>
+            <!-- Tabs Grid -->
             <div class="admin-tabs">
-                <button class="admin-tab active" onclick="showAdminTab('products')"><i class="fas fa-box"></i> کاڵا</button>
-                <button class="admin-tab" onclick="showAdminTab('allProducts')"><i class="fas fa-boxes"></i> هەموو کاڵاکان</button>
+                <button class="admin-tab active" onclick="showAdminTab('products')"><i class="fas fa-clock"></i> چاوەڕوان</button>
+                <button class="admin-tab" onclick="showAdminTab('allProducts')"><i class="fas fa-boxes"></i> کاڵاکان</button>
                 <button class="admin-tab" onclick="showAdminTab('requests')"><i class="fas fa-clipboard-list"></i> داواکاری</button>
                 <button class="admin-tab" onclick="showAdminTab('delivery')"><i class="fas fa-shipping-fast"></i> گەیاندن</button>
                 <button class="admin-tab" onclick="showAdminTab('addSlider')"><i class="fas fa-images"></i> سلایدەر</button>
-                <button class="admin-tab" onclick="showAdminTab('addProduct')"><i class="fas fa-plus"></i> زیادکردن</button>
-                <button class="admin-tab" onclick="logout()"><i class="fas fa-sign-out-alt"></i> دەرچوون</button>
+                <button class="admin-tab" onclick="showAdminTab('addProduct')"><i class="fas fa-plus-circle"></i> زیادکردن</button>
+                <button class="admin-tab tab-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> دەرچوون</button>
             </div>
             <div id="adminContent"></div>
         </div>
@@ -2272,7 +2534,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
             <!-- بەشی یەکەم: لۆگۆ و ناونیشان -->
             <div class="footer-col footer-brand">
                 <div class="footer-logo">
-                    <img src="https://firebasestorage.googleapis.com/v0/b/ukbazar-15eda.firebasestorage.app/o/logo-ukbazar.png?alt=media&token=c1b2a45a-fbe0-4ac8-bc8f-26ae4fd7966c" alt="UK BAZAR">
+                    <img src="./logo-ukbazar.png" alt="UK BAZAR">
                     <h3>UK BAZAR</h3>
                 </div>
                 <p class="footer-slogan">World Online Shopping</p>
@@ -2400,7 +2662,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
                 <li>Download and use our mobile application (UK BAZAR)</li>
                 <li>Engage with us in other related ways, including marketing or events</li>
             </ul>
-            <p style="margin-top:14px;">Questions or concerns? Contact us at <a href="/cdn-cgi/l/email-protection#6f260109002f1a040d0e150e1d4100010306010a" style="color:#667eea; font-weight:600;"><span class="__cf_email__" data-cfemail="e6af888089a6938d84879c8794c889888a8f8883">[email&#160;protected]</span></a></p>
+            <p style="margin-top:14px;">Questions or concerns? Contact us at <a href="mailto:Info@ukbazar.online" style="color:#667eea; font-weight:600;">Info@ukbazar.online</a></p>
         </div>
 
         <!-- Summary -->
@@ -2478,7 +2740,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     <p style="margin:0; color:#4a5568;">
         Depending on your location, you may have the right to request access to, correction of, or deletion of your personal information. 
         To exercise your rights, contact us at 
-        <a href="mailto:Info@ukpost.online" style="color:#667eea;">Info@ukpost.online</a>.
+        <a href="mailto:Info@ukbazar.online" style="color:#667eea;">Info@ukbazar.online</a>.
     </p>
 </div>
 
@@ -2487,7 +2749,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     <p style="margin:0; color:#4a5568;">
         You may review, change, or terminate your account at any time. 
         If you have questions or comments about your privacy rights, contact us at 
-        <a href="mailto:Info@ukpost.online" style="color:#667eea;">Info@ukpost.online</a>.
+        <a href="mailto:Info@ukbazar.online" style="color:#667eea;">Info@ukbazar.online</a>.
     </p>
 </div>
 
@@ -2500,7 +2762,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     <p style="margin:0; font-size:0.82rem; opacity:.85;">
         <a href="https://www.ukbazar.online" style="color:#fff;">www.ukbazar.online</a> 
         &nbsp;|&nbsp; 
-        <a href="mailto:Info@ukpost.online" style="color:#fff;">Info@ukpost.online</a>
+        <a href="mailto:Info@ukbazar.online" style="color:#fff;">Info@ukbazar.online</a>
     </p>
     
     <p style="margin:8px 0 0; font-size:0.78rem; opacity:.7;">© 2026 All rights reserved</p>
@@ -2850,7 +3112,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
             </form>
         </div>
     </div>
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
     function ukSwitchTab(tab) {
         document.getElementById('ukPanel-sender').style.display   = tab==='sender'   ? 'block' : 'none';
         document.getElementById('ukPanel-receiver').style.display = tab==='receiver' ? 'block' : 'none';
@@ -4712,17 +4974,26 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-    <script>
-    // ── Service Worker تۆمارکردن ──
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js', { scope: './' })
-                .then(reg => {
-                    console.log('[SW] تۆمارکرا:', reg.scope);
-
-                    // بپشکنە ئەپدەیت هەیە
-                    reg.addEventListener(
-
-
-
-
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js', { scope: './' })
+            .then(reg => {
+                console.log('[SW] تۆمارکرا:', reg.scope);
+                reg.addEventListener('updatefound', () => {
+                    const nw = reg.installing;
+                    if (nw) {
+                        nw.addEventListener('statechange', () => {
+                            if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+                                nw.postMessage({ type: 'SKIP_WAITING' });
+                            }
+                        });
+                    }
+                });
+            })
+            .catch(err => console.log('[SW] error:', err));
+    });
+}
+</script>
+</body>
+</html>
