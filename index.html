@@ -14,6 +14,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="UK BAZAR">
+    <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+    <link rel="shortcut icon" type="image/png" href="./icon-192.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="./icon-192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="./icon-512.png">
     
     <style>
 :root {
@@ -2510,9 +2515,8 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 <!-- ئیمەیڵ + Privacy row -->
 <div class="contact-row" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
     <i class="fas fa-envelope" style="color:rgba(255,255,255,0.7); font-size:1rem; flex-shrink:0;"></i>
-    <a href="mailto:Info@ukbazar.online"
-       style="color:#fff; text-decoration:none; direction:ltr; font-size:0.9rem; font-weight:600; letter-spacing:0.2px; flex:1; min-width:0;">
-        Info@ukbazar.online
+    <a href="mailto:Info@ukbazar.online" style="color:#fff; text-decoration:none; direction:ltr; font-size:0.9rem; font-weight:600; letter-spacing:0.2px; flex:1; min-width:0;">
+        <a href="mailto:Info@ukbazar.online" style="color:inherit;">Info@ukbazar.online</a>
     </a>
     <button onclick="openPrivacyPage()"
        title="Privacy Policy & Terms"
@@ -2670,7 +2674,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
                 <li>Download and use our mobile application (UK BAZAR)</li>
                 <li>Engage with us in other related ways, including marketing or events</li>
             </ul>
-            <p style="margin-top:14px;">Questions or concerns? Contact us at <a href="mailto:Info@ukbazar.online" style="color:#667eea; font-weight:600;">Info@ukbazar.online</a></p>
+            <p style="margin-top:14px;">Questions or concerns? Contact us at <a href="mailto:Info@ukbazar.online" style="color:#667eea; font-weight:600;"><a href="mailto:Info@ukbazar.online" style="color:inherit;">Info@ukbazar.online</a></a></p>
         </div>
 
         <!-- Summary -->
@@ -2748,7 +2752,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     <p style="margin:0; color:#4a5568;">
         Depending on your location, you may have the right to request access to, correction of, or deletion of your personal information. 
         To exercise your rights, contact us at 
-        <a href="mailto:Info@ukbazar.online" style="color:#667eea;">Info@ukbazar.online</a>.
+        <a href="mailto:Info@ukbazar.online" style="color:#667eea;"><a href="mailto:Info@ukbazar.online" style="color:inherit;">Info@ukbazar.online</a></a>.
     </p>
 </div>
 
@@ -2757,7 +2761,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     <p style="margin:0; color:#4a5568;">
         You may review, change, or terminate your account at any time. 
         If you have questions or comments about your privacy rights, contact us at 
-        <a href="mailto:Info@ukbazar.online" style="color:#667eea;">Info@ukbazar.online</a>.
+        <a href="mailto:Info@ukbazar.online" style="color:#667eea;"><a href="mailto:Info@ukbazar.online" style="color:inherit;">Info@ukbazar.online</a></a>.
     </p>
 </div>
 
@@ -2770,7 +2774,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     <p style="margin:0; font-size:0.82rem; opacity:.85;">
         <a href="https://www.ukbazar.online" style="color:#fff;">www.ukbazar.online</a> 
         &nbsp;|&nbsp; 
-        <a href="mailto:Info@ukbazar.online" style="color:#fff;">Info@ukbazar.online</a>
+        <a href="mailto:Info@ukbazar.online" style="color:#fff;"><a href="mailto:Info@ukbazar.online" style="color:inherit;">Info@ukbazar.online</a></a>
     </p>
     
     <p style="margin:8px 0 0; font-size:0.78rem; opacity:.7;">© 2026 All rights reserved</p>
@@ -3120,7 +3124,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
             </form>
         </div>
     </div>
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
     function ukSwitchTab(tab) {
         document.getElementById('ukPanel-sender').style.display   = tab==='sender'   ? 'block' : 'none';
         document.getElementById('ukPanel-receiver').style.display = tab==='receiver' ? 'block' : 'none';
@@ -4956,32 +4960,41 @@ document.addEventListener('DOMContentLoaded', function() {
 // Back to Top Button Functionality
 document.addEventListener('DOMContentLoaded', function() {
     const backToTopBtn = document.getElementById('backToTopBtn');
-    
     if (backToTopBtn) {
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.style.display = 'flex';
+            } else {
+                backToTopBtn.style.display = 'none';
+            }
+        });
         backToTopBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            
-            // Smooth scroll to top
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-        
-        // ئەم بەشە هەڵبژاردەیە - دەتوانیت دوگمەکە نیشان بدەیت یان بشاریتەوە
-        // کاتێک بەکارهێنەر دەگەڕێتەوە سەرەوە (بەڵام لەبەر ئەوەی لە فووتەردایە، هەمیشە دیارە)
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > 500) {
-                backToTopBtn.style.opacity = '1';
-                backToTopBtn.style.visibility = 'visible';
-            } else {
-                backToTopBtn.style.opacity = '0.6';
-                backToTopBtn.style.visibility = 'visible';
-            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
 });
 </script>
+
+<!-- Service Worker Registration -->
 <script>
-if ('serviceWorker' in navigator) {
-    windo
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('./sw.js')
+            .then(function(reg) {
+                console.log('[SW] تۆمارکرا:', reg.scope);
+                reg.onupdatefound = function() {
+                    var w = reg.installing;
+                    w.onstatechange = function() {
+                        if (w.state === 'installed' && navigator.serviceWorker.controller) {
+                            w.postMessage({ type: 'SKIP_WAITING' });
+                        }
+                    };
+                };
+            })
+            .catch(function(err) { console.log('[SW] هەڵە:', err); });
+    });
+}
+</script>
+</body>
+</html>
