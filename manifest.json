@@ -3,24 +3,57 @@
   "short_name": "UK BAZAR",
   "description": "بازاڕی ئۆنلاین — UK BAZAR",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#667eea",
+  "background_color": "#ffffff",
   "theme_color": "#667eea",
   "lang": "ku",
   "dir": "rtl",
+  "prefer_related_applications": false,
+  "categories": ["shopping", "lifestyle"],
   "icons": [
     {
-      "src": "logo-ukbazar.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "logo-ukbazar.png",
+      "src": "icon-192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "UK BAZAR - بازاڕی ئۆنلاین"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "گەڕان بە کاڵا",
+      "short_name": "گەڕان",
+      "description": "گەڕان بە کاڵاکان",
+      "url": "./index.html#search",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }]
     }
   ]
 }
