@@ -2,7 +2,7 @@
 <html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>UK BAZAR - بازاڕی ئۆنلاین</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -39,6 +39,10 @@
     box-sizing: border-box;
 }
 
+html {
+    overflow-x: hidden;
+}
+
 body {
     background: #f0ecec;
     min-height: 100vh;
@@ -47,6 +51,7 @@ body {
     font-size: 16px;
     font-family: 'Noto Sans Arabic', 'Tahoma', 'Arial', sans-serif;
     line-height: 1.6;
+    overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
@@ -2094,284 +2099,6 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
         font-size: 0.6rem;
     }
 }
-/* Loading Spinner with Banner */
-.loading-spinner {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.5s;
-}
-
-.spinner-banner {
-    background: white;
-    padding: 30px;
-    border-radius: 24px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    text-align: center;
-    max-width: 90%;
-    width: 400px;
-    animation: fadeInUp 0.6s ease;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.banner-logo {
-    width: 80px;
-    height: 80px;
-    object-fit: contain;
-    margin-bottom: 10px;
-    border-radius: 16px;
-    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
-}
-
-.banner-title {
-    font-size: 2rem;
-    color: #2d3748;
-    margin-bottom: 5px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.banner-slogan {
-    color: #718096;
-    margin-bottom: 20px;
-    font-size: 1rem;
-}
-
-.banner-image {
-    width: 100%;
-    height: 150px;
-    border-radius: 12px;
-    overflow: hidden;
-    margin-bottom: 20px;
-    background: #f0f0f0;
-}
-
-.banner-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.spinner-small {
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #667eea;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 15px;
-}
-
-.loading-text {
-    color: #718096;
-    font-size: 1rem;
-    margin: 0;
-}
-/* ==================== Delivery Section Titles ==================== */
-.delivery-section-title {
-    font-size: 12px; font-weight: bold; color: var(--primary);
-    background: #eef2ff; border-right: 3px solid var(--primary);
-    padding: 5px 10px; border-radius: 6px; margin: 8px 0 6px;
-}
-.required-star { color: var(--danger); margin-right: 2px; }
-
-/* ==================== Delivery Label Card ==================== */
-.delivery-label-card {
-    border: 2px solid var(--border); border-radius: 12px;
-    padding: 14px; margin-bottom: 18px; background: #fff;
-    box-shadow: 0 2px 10px rgba(102,126,234,0.08);
-}
-.label-header {
-    display: flex; justify-content: space-between; align-items: center;
-    font-weight: bold; border-bottom: 2px dashed var(--border);
-    padding-bottom: 10px; margin-bottom: 12px;
-}
-.label-order-num {
-    font-size: 20px; font-weight: bold; color: #2d3748;
-    background: #eef2ff; padding: 3px 12px;
-    border-radius: 8px; border: 2px solid #667eea;
-    min-width: 50px; text-align: center;
-}
-.label-title-center { font-size: 14px; color: var(--primary); flex: 1; text-align: center; }
-.label-body-wrap { display: flex; gap: 10px; align-items: flex-start; }
-.label-grid { display: flex; gap: 8px; margin-bottom: 10px; flex: 1; flex-direction: column; }
-.label-section {
-    flex: 1; background: #f7fafc;
-    border: 1.5px solid var(--border); border-radius: 8px; padding: 9px;
-}
-.sender-section { border-right: 3px solid #667eea; }
-.receiver-section { border-right: 3px solid #48bb78; }
-.label-section-title {
-    font-size: 12px; font-weight: bold; color: var(--dark);
-    margin-bottom: 7px; padding-bottom: 4px; border-bottom: 1px solid var(--border);
-}
-.label-row {
-    display: flex; justify-content: space-between; font-size: 12px;
-    padding: 3px 0; border-bottom: 1px dotted #e2e8f0; gap: 5px;
-}
-.label-row span { color: var(--gray); white-space: nowrap; }
-.label-row strong { color: var(--dark); }
-.label-package { background: #edf2ff; border-radius: 8px; padding: 9px; margin-bottom: 0; }
-.label-qr-wrap {
-    display: flex; flex-direction: column; align-items: center;
-    gap: 5px; padding: 8px; border: 1.5px solid var(--border);
-    border-radius: 8px; background: #f7fafc; min-width: 130px;
-}
-.label-qr-img { width: 110px; height: 110px; border-radius: 6px; }
-.label-qr-hint { font-size: 11px; color: var(--gray); }
-.label-footer {
-    text-align: center; font-size: 11px; color: var(--gray);
-    border-top: 1px dashed var(--border); padding-top: 6px; margin-top: 10px;
-}
-.btn-sm { padding: 5px 12px !important; font-size: 12px !important; }
-@media (max-width: 520px) {
-    .label-body-wrap { flex-direction: column; }
-    .label-qr-wrap { flex-direction: row; min-width: unset; }
-}
-
-/* ==================== Admin Edit Box — Driver & Note ==================== */
-.label-admin-edit {
-    margin-top: 10px;
-    padding: 10px 12px;
-    background: #f0f4ff;
-    border: 1.5px dashed #667eea;
-    border-radius: 10px;
-}
-.admin-edit-title {
-    font-size: 11px;
-    font-weight: bold;
-    color: #667eea;
-    margin-bottom: 7px;
-    letter-spacing: 0.2px;
-}
-/* ناو و ژمارە تەنیشت یەک — تیبینی لەخوارەوە */
-.admin-edit-fields {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-bottom: 7px;
-}
-.admin-edit-fields .admin-edit-inputs {
-    display: flex;
-    flex-direction: row;
-    gap: 6px;
-}
-.admin-edit-fields input {
-    flex: 1;
-    min-width: 0;
-    padding: 6px 8px;
-    border: 1px solid #c3cfe2;
-    border-radius: 7px;
-    font-family: 'Noto Sans Arabic', Tahoma, sans-serif;
-    font-size: 12px;
-    background: #fff;
-    box-sizing: border-box;
-}
-.admin-edit-fields textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #c3cfe2;
-    border-radius: 7px;
-    font-family: 'Noto Sans Arabic', Tahoma, sans-serif;
-    font-size: 13px;
-    background: #fff;
-    box-sizing: border-box;
-    resize: vertical;
-    min-height: 60px;
-    line-height: 1.6;
-}
-.admin-save-btn {
-    width: 100%;
-    font-size: 13px;
-}
-
-@media print {
-    .label-admin-edit { display: none !important; }
-}
-/* Back to Top Button Styles */
-.back-to-top-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 30px;
-    position: relative;
-}
-
-.back-to-top-btn {
-    background: linear-gradient(135deg, var(--primary), #a78bfa);
-    color: white;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 50px;
-    cursor: pointer;
-    font-size: 1.1rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-    transition: all 0.3s ease;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    direction: rtl;
-}
-
-.back-to-top-btn i {
-    font-size: 1.2rem;
-    transition: transform 0.3s ease;
-}
-
-.back-to-top-btn:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
-    background: linear-gradient(135deg, #7c3aed, #8b5cf6);
-}
-
-.back-to-top-btn:hover i {
-    transform: translateY(-3px);
-}
-
-.back-to-top-btn:active {
-    transform: translateY(0);
-}
-
-/* Responsive styles */
-@media (max-width: 768px) {
-    .back-to-top-btn {
-        padding: 10px 25px;
-        font-size: 1rem;
-    }
-    
-    .back-to-top-btn span {
-        display: inline-block;
-    }
-}
-
-@media (max-width: 480px) {
-    .back-to-top-btn {
-        padding: 8px 20px;
-    }
-    
-    .back-to-top-btn i {
-        font-size: 1rem;
-    }
-}
 </style>
 </head>
 <body>
@@ -2515,8 +2242,8 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 <!-- ئیمەیڵ + Privacy row -->
 <div class="contact-row" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
     <i class="fas fa-envelope" style="color:rgba(255,255,255,0.7); font-size:1rem; flex-shrink:0;"></i>
-    <a href="mailto:Info@ukbazar.online" style="color:#fff; text-decoration:none; direction:ltr; font-size:0.9rem; font-weight:600; letter-spacing:0.2px; flex:1; min-width:0;">
-        <a href="mailto:Info@ukbazar.online" style="color:inherit;">Info@ukbazar.online</a>
+    <a href="/cdn-cgi/l/email-protection#3970575f56794c525b5843584b1756575550575c" style="color:#fff; text-decoration:none; direction:ltr; font-size:0.9rem; font-weight:600; letter-spacing:0.2px; flex:1; min-width:0;">
+        <a href="/cdn-cgi/l/email-protection#baf3d4dcd5facfd1d8dbc0dbc894d5d4d6d3d4df" style="color:inherit;"><span class="__cf_email__" data-cfemail="3a73545c557a4f51585b405b481455545653545f">[email&#160;protected]</span></a>
     </a>
     <button onclick="openPrivacyPage()"
        title="Privacy Policy & Terms"
@@ -2674,7 +2401,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
                 <li>Download and use our mobile application (UK BAZAR)</li>
                 <li>Engage with us in other related ways, including marketing or events</li>
             </ul>
-            <p style="margin-top:14px;">Questions or concerns? Contact us at <a href="mailto:Info@ukbazar.online" style="color:#667eea; font-weight:600;"><a href="mailto:Info@ukbazar.online" style="color:inherit;">Info@ukbazar.online</a></a></p>
+            <p style="margin-top:14px;">Questions or concerns? Contact us at <a href="/cdn-cgi/l/email-protection#97def9f1f8d7e2fcf5f6edf6e5b9f8f9fbfef9f2" style="color:#667eea; font-weight:600;"><a href="/cdn-cgi/l/email-protection#8ac3e4ece5caffe1e8ebf0ebf8a4e5e4e6e3e4ef" style="color:inherit;"><span class="__cf_email__" data-cfemail="51183f373e11243a33302b30237f3e3f3d383f34">[email&#160;protected]</span></a></a></p>
         </div>
 
         <!-- Summary -->
@@ -2752,7 +2479,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     <p style="margin:0; color:#4a5568;">
         Depending on your location, you may have the right to request access to, correction of, or deletion of your personal information. 
         To exercise your rights, contact us at 
-        <a href="mailto:Info@ukbazar.online" style="color:#667eea;"><a href="mailto:Info@ukbazar.online" style="color:inherit;">Info@ukbazar.online</a></a>.
+        <a href="/cdn-cgi/l/email-protection#236a4d454c63564841425942510d4c4d4f4a4d46" style="color:#667eea;"><a href="/cdn-cgi/l/email-protection#541d3a323b14213f36352e35267a3b3a383d3a31" style="color:inherit;"><span class="__cf_email__" data-cfemail="0c45626a634c79676e6d766d7e22636260656269">[email&#160;protected]</span></a></a>.
     </p>
 </div>
 
@@ -2761,7 +2488,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     <p style="margin:0; color:#4a5568;">
         You may review, change, or terminate your account at any time. 
         If you have questions or comments about your privacy rights, contact us at 
-        <a href="mailto:Info@ukbazar.online" style="color:#667eea;"><a href="mailto:Info@ukbazar.online" style="color:inherit;">Info@ukbazar.online</a></a>.
+        <a href="/cdn-cgi/l/email-protection#70391e161f30051b12110a11025e1f1e1c191e15" style="color:#667eea;"><a href="/cdn-cgi/l/email-protection#db92b5bdb49baeb0b9baa1baa9f5b4b5b7b2b5be" style="color:inherit;"><span class="__cf_email__" data-cfemail="ade4c3cbc2edd8c6cfccd7ccdf83c2c3c1c4c3c8">[email&#160;protected]</span></a></a>.
     </p>
 </div>
 
@@ -2774,7 +2501,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     <p style="margin:0; font-size:0.82rem; opacity:.85;">
         <a href="https://www.ukbazar.online" style="color:#fff;">www.ukbazar.online</a> 
         &nbsp;|&nbsp; 
-        <a href="mailto:Info@ukbazar.online" style="color:#fff;"><a href="mailto:Info@ukbazar.online" style="color:inherit;">Info@ukbazar.online</a></a>
+        <a href="/cdn-cgi/l/email-protection#feb7909891be8b959c9f849f8cd091909297909b" style="color:#fff;"><a href="/cdn-cgi/l/email-protection#6f260109002f1a040d0e150e1d4100010306010a" style="color:inherit;"><span class="__cf_email__" data-cfemail="fdb4939b92bd88969f9c879c8fd3929391949398">[email&#160;protected]</span></a></a>
     </p>
     
     <p style="margin:8px 0 0; font-size:0.78rem; opacity:.7;">© 2026 All rights reserved</p>
@@ -3124,7 +2851,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
             </form>
         </div>
     </div>
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     function ukSwitchTab(tab) {
         document.getElementById('ukPanel-sender').style.display   = tab==='sender'   ? 'block' : 'none';
         document.getElementById('ukPanel-receiver').style.display = tab==='receiver' ? 'block' : 'none';
@@ -4968,33 +4695,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 backToTopBtn.style.display = 'none';
             }
         });
-        backToTopBtn.addEventListener('click', function(e) {
-            e.preventDefault();
+        backToTopBtn.addEventListener('click', function() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
 });
-</script>
-
-<!-- Service Worker Registration -->
-<script>
-if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-    window.addEventListener('load', function() {
-        navigator.serviceWorker.register('./sw.js')
-            .then(function(reg) {
-                console.log('[SW] تۆمارکرا:', reg.scope);
-                reg.onupdatefound = function() {
-                    var w = reg.installing;
-                    w.onstatechange = function() {
-                        if (w.state === 'installed' && navigator.serviceWorker.controller) {
-                            w.postMessage({ type: 'SKIP_WAITING' });
-                        }
-                    };
-                };
-            })
-            .catch(function(err) { console.log('[SW] هەڵە:', err); });
-    });
-}
 </script>
 </body>
 </html>
