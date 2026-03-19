@@ -521,7 +521,7 @@ function renderDeliveryItems(items) {
             const key = d.key;
             const orderNum = d.orderNumber || '—';
             const qrText = encodeURIComponent(
-                `پسولە: ${orderNum} | نێردەر: ${d.senderName||d.name||''} ${d.senderMobile||d.mobile||''} (${d.senderLocation||d.address||''}) | وەرگر: ${d.receiverName||''} ${d.receiverMobile||''} (${d.receiverLocation||''}) | کەلوپەل: ${d.packageName||d.details||''} x${d.packageQty||''} - ${d.packageKg||''}کگ`
+                `پسولە: ${orderNum} | نێردەر: ${d.senderName||d.name||''} ${d.senderMobile||d.mobile||''} (${d.senderLocation||d.address||''}) | وەرگر: ${d.receiverName||''} ${d.receiverMobile||''} (${d.receiverLocation||''}) | کەلوپەل: ${d.packageName||d.details||''} x${d.packageQty||''} بۆکس:${d.packageBoxes||''} - ${d.packageKg||''}کگ`
             );
             const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${qrText}`;
             html += buildKurdishLabelHtml(d, key, orderNum, qrUrl);
@@ -655,9 +655,14 @@ function buildKurdishLabelHtml(d, key, orderNum, qrUrl) {
         <div class="label-header">
             <span class="label-order-num"># ${orderNum}</span>
             <span class="label-title-center"><i class="fas fa-shipping-fast"></i> لەیبلی گەیاندن</span>
-            <button class="btn btn-sm btn-primary" onclick="printLabel('${key}')">
-                <i class="fas fa-print"></i> چاپ
-            </button>
+            <div style="display:flex;gap:6px;align-items:center;">
+                <button class="btn btn-sm btn-primary" onclick="printLabel('${key}')">
+                    <i class="fas fa-print"></i> چاپ
+                </button>
+                <button onclick="deleteDeliveryLabel('${key}')" style="background:#f56565;color:#fff;border:none;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:13px;font-weight:600;">
+                    <i class="fas fa-trash"></i> سڕینەوە
+                </button>
+            </div>
         </div>
         <div class="label-body-wrap">
             <div class="label-grid">
@@ -679,7 +684,8 @@ function buildKurdishLabelHtml(d, key, orderNum, qrUrl) {
             <div class="label-package">
                 <div class="label-row"><span>📦 کەلوپەل:</span><strong>${escapeHtml(d.packageName||d.details||'—')}</strong></div>
                 <div class="label-row"><span>🔢 پارچە:</span><strong>${escapeHtml(String(d.packageQty||'—'))}</strong></div>
-                <div class="label-row"><span>⚖️ کیلۆ:</span><strong>${escapeHtml(String(d.packageKg||'—'))} کگ</strong></div>
+                <div class="label-row" style="background:#fffbeb;"><span>📦 ژمارەی بۆکس:</span><strong style="color:#d97706;">${escapeHtml(String(d.packageBoxes||'—'))}</strong></div>
+                <div class="label-row" style="background:#ebf8ff;"><span>⚖️ کیلۆ:</span><strong style="color:#2b6cb0;">${escapeHtml(String(d.packageKg||'—'))} کگ</strong></div>
                 ${d.driverName||d.driverMobile ? `<div class="label-row label-driver-row"><span>🚗 شۆفیر:</span><strong>${escapeHtml(d.driverName||'—')} — ${escapeHtml(d.driverMobile||'')}</strong></div>` : ''}
                 ${d.deliveryNote ? `<div class="label-row label-note-row"><span>📝 تیبینی:</span><strong>${escapeHtml(d.deliveryNote)}</strong></div>` : ''}
             </div>
@@ -713,9 +719,14 @@ function buildUkLabelHtml(d, key, orderNum, qrUrl) {
         <div class="label-header" style="direction:ltr;">
             <span class="label-order-num"># ${orderNum}</span>
             <span class="label-title-center" style="background:#fef3c7; color:#92400e; padding:4px 10px; border-radius:20px; font-size:13px;">UK Delivery</span>
-            <button class="btn btn-sm btn-primary" onclick="printUkLabel('${key}')">
-                <i class="fas fa-print"></i> Print
-            </button>
+            <div style="display:flex;gap:6px;align-items:center;">
+                <button class="btn btn-sm btn-primary" onclick="printUkLabel('${key}')">
+                    <i class="fas fa-print"></i> Print
+                </button>
+                <button onclick="deleteDeliveryLabel('${key}')" style="background:#f56565;color:#fff;border:none;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:13px;font-weight:600;">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
         </div>
         <div class="label-body-wrap" style="direction:ltr;">
             <div class="label-grid" style="direction:ltr;">
@@ -839,6 +850,18 @@ function saveDriverInfo(key) {
             loadDeliveryRequests();
         })
         .catch(() => showNotification('هەڵە لە پاشەکەوتکردن!', 'error'));
+}
+
+// ==================== Delete Delivery Label ====================
+function deleteDeliveryLabel(key) {
+    if (confirm('دڵنیایت لە سڕینەوەی ئەم داواکاری گەیاندنە؟')) {
+        database.ref('delivery/' + key).remove()
+            .then(() => {
+                showNotification('داواکاری گەیاندن بە سەرکەوتوویی سڕایەوە! 🗑️');
+                loadDeliveryRequests();
+            })
+            .catch(() => showNotification('هەڵە لە سڕینەوە!', 'error'));
+    }
 }
 
 // ==================== Print Delivery Label ====================
@@ -1448,6 +1471,7 @@ document.addEventListener('submit', async function(e) {
                 receiverLocation: document.getElementById('receiverLocation').value,
                 packageName:      document.getElementById('packageName').value,
                 packageQty:       document.getElementById('packageQty').value,
+                packageBoxes:     (document.getElementById('packageBoxes')||{value:''}).value,
                 packageKg:        document.getElementById('packageKg').value,
                 timestamp:        new Date().toLocaleString('ku'),
                 sortKey:          Date.now()
