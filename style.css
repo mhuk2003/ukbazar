@@ -2189,3 +2189,443 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
         font-size: 0.6rem;
     }
 }
+/* ==================== Improved Delivery Label Styles ==================== */
+.delivery-section-header {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.delivery-section-header i {
+    font-size: 1.2rem;
+}
+
+.delivery-section-header.uk-header {
+    background: linear-gradient(135deg, #f0c040, #d4a017);
+    color: #1a1a1a;
+    margin-top: 30px;
+}
+
+.delivery-items-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.delivery-label-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid #eef2ff;
+}
+
+.delivery-label-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+}
+
+.label-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.label-order-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.label-order-badge i {
+    font-size: 0.8rem;
+}
+
+.label-order-badge.uk-badge {
+    background: linear-gradient(135deg, #f0c040, #d4a017);
+    color: #1a1a1a;
+}
+
+.label-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.label-action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    background: white;
+    border: 1px solid #e2e8f0;
+}
+
+.label-action-btn i {
+    font-size: 0.9rem;
+}
+
+.label-action-btn.print-btn {
+    color: #48bb78;
+}
+
+.label-action-btn.print-btn:hover {
+    background: #48bb78;
+    color: white;
+    border-color: #48bb78;
+    transform: scale(1.05);
+}
+
+.label-action-btn.delete-btn {
+    color: #f56565;
+}
+
+.label-action-btn.delete-btn:hover {
+    background: #f56565;
+    color: white;
+    border-color: #f56565;
+    transform: scale(1.05);
+}
+
+.label-card-body {
+    padding: 16px;
+}
+
+.label-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.label-info-card {
+    background: #fefefe;
+    border-radius: 12px;
+    padding: 12px;
+    border: 1px solid #eef2ff;
+}
+
+.label-info-card.sender-card {
+    border-right: 3px solid #667eea;
+}
+
+.label-info-card.receiver-card {
+    border-right: 3px solid #48bb78;
+}
+
+.info-card-title {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #4a5568;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-card-title i {
+    font-size: 0.9rem;
+}
+
+.info-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 0.8rem;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.info-label {
+    color: #718096;
+    font-weight: 500;
+    min-width: 55px;
+}
+
+.info-value {
+    color: #2d3748;
+    font-weight: 600;
+    text-align: left;
+    word-break: break-word;
+    flex: 1;
+}
+
+.postcode-value {
+    background: #eef2ff;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-family: monospace;
+    font-size: 0.75rem;
+}
+
+.label-package-card {
+    background: linear-gradient(135deg, #f8fafc, #ffffff);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 16px;
+    border: 1px solid #e2e8f0;
+}
+
+.package-title {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #667eea;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.package-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.detail-item {
+    flex: 1;
+    min-width: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.detail-label {
+    font-size: 0.7rem;
+    color: #718096;
+    font-weight: 500;
+}
+
+.detail-value {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #2d3748;
+}
+
+.label-driver-card {
+    background: #fffaf0;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 16px;
+    border: 1px solid #fed7aa;
+}
+
+.driver-title {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #ed8936;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.driver-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.driver-inputs {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.input-group {
+    flex: 1;
+    min-width: 140px;
+}
+
+.input-group input,
+.input-group textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.input-group.full-width {
+    width: 100%;
+}
+
+.save-driver-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+    transition: all 0.2s;
+}
+
+.save-driver-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.label-footer-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.label-qr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.qr-code-img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    background: white;
+    padding: 4px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+
+.qr-label {
+    font-size: 0.65rem;
+    color: #718096;
+}
+
+.label-timestamp {
+    font-size: 0.7rem;
+    color: #718096;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* UK Label specific styles */
+.delivery-label-card.uk-label {
+    border-left: 3px solid #f0c040;
+}
+
+.delivery-label-card.uk-label .info-card-title {
+    color: #d97706;
+}
+
+.delivery-label-card.uk-label .package-title {
+    color: #d97706;
+}
+
+.uk-grid .uk-receiver {
+    border-left: 3px solid #f0c040;
+    border-right: none;
+}
+
+.uk-grid .uk-package {
+    border-left: 3px solid #667eea;
+    border-right: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .label-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .driver-inputs {
+        flex-direction: column;
+    }
+    
+    .input-group {
+        width: 100%;
+    }
+    
+    .save-driver-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .label-card-header {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .label-actions {
+        margin-right: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .label-card-body {
+        padding: 12px;
+    }
+    
+    .info-row {
+        flex-direction: column;
+        gap: 2px;
+    }
+    
+    .info-label {
+        min-width: auto;
+    }
+    
+    .info-value {
+        text-align: right;
+    }
+    
+    .package-details {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .label-footer-info {
+        flex-direction: column-reverse;
+        gap: 10px;
+        align-items: flex-start;
+    }
+}
