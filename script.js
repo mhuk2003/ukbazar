@@ -46,6 +46,114 @@ let autoPlayInterval = null;
 const DEFAULT_PRODUCT_IMAGE = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'300\' viewBox=\'0 0 300 300\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23667eea\'/%3E%3Ctext x=\'50\' y=\'150\' font-family=\'Arial\' font-size=\'24\' fill=\'%23ffffff\'%3EUK BAZAR%3C/text%3E%3C/svg%3E';
 const DEFAULT_SLIDER_IMAGE = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'1200\' height=\'400\' viewBox=\'0 0 1200 400\'%3E%3Crect width=\'1200\' height=\'400\' fill=\'%23667eea\'/%3E%3Ctext x=\'400\' y=\'200\' font-family=\'Arial\' font-size=\'48\' fill=\'%23ffffff\'%3EUK BAZAR%3C/text%3E%3C/svg%3E';
 
+// ==================== Inject Compact Label CSS for Mobile ====================
+(function injectLabelStyles() {
+    if (document.getElementById('delivery-label-compact-css')) return;
+    const style = document.createElement('style');
+    style.id = 'delivery-label-compact-css';
+    style.textContent = `
+        /* ===== Compact Delivery Label Card ===== */
+        .delivery-label-card {
+            border-radius: 12px !important;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(102,126,234,0.13);
+            margin-bottom: 14px !important;
+            font-size: 0.88rem;
+        }
+        .label-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            padding: 8px 12px !important;
+            flex-wrap: nowrap;
+        }
+        .label-order-num {
+            font-size: 1rem !important;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+        .label-title-center {
+            font-size: 0.78rem !important;
+            flex: 1;
+            text-align: center;
+        }
+        .label-body-wrap {
+            padding: 8px 10px !important;
+        }
+        .label-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px;
+            margin-bottom: 7px;
+        }
+        .label-section {
+            padding: 7px 8px !important;
+            border-radius: 8px;
+        }
+        .label-section-title {
+            font-size: 0.78rem !important;
+            margin-bottom: 5px !important;
+        }
+        .label-row {
+            font-size: 0.78rem !important;
+            padding: 2px 0 !important;
+        }
+        .label-package {
+            padding: 7px 8px !important;
+            border-radius: 8px;
+            margin-bottom: 7px !important;
+        }
+        .label-admin-edit {
+            padding: 8px 10px !important;
+            border-radius: 10px;
+            margin-bottom: 7px !important;
+        }
+        .admin-edit-title {
+            font-size: 0.78rem !important;
+            margin-bottom: 6px !important;
+        }
+        .admin-edit-inputs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+        .admin-edit-inputs input {
+            font-size: 0.8rem !important;
+            padding: 6px 8px !important;
+        }
+        .admin-save-btn {
+            padding: 6px 14px !important;
+            font-size: 0.8rem !important;
+        }
+        .label-qr-wrap {
+            text-align: center;
+            padding: 6px 0 !important;
+        }
+        .label-qr-img {
+            width: 80px !important;
+            height: 80px !important;
+        }
+        .label-qr-hint {
+            font-size: 0.7rem !important;
+            margin-top: 2px !important;
+        }
+        .label-footer {
+            padding: 6px 12px !important;
+            font-size: 0.75rem !important;
+        }
+        @media (max-width: 480px) {
+            .label-grid {
+                grid-template-columns: 1fr;
+            }
+            .label-title-center {
+                display: none;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+})();
+
 // ==================== Helper Functions ====================
 function showNotification(message, type = 'success') {
     const notification = document.getElementById('notification');
@@ -493,8 +601,6 @@ function loadRequests() {
 // ==================== Delivery Search ====================
 let _allDeliveryItems = [];
 
-// ==================== Improved Delivery Functions ====================
-
 function renderDeliveryItems(items) {
     const content = document.getElementById('adminContent');
     if (!content) return;
@@ -511,292 +617,269 @@ function renderDeliveryItems(items) {
     let html = '';
 
     if (kurdishItems.length === 0 && ukItems.length === 0) {
-        html = '<p style="text-align:center;color:var(--gray);padding:40px 20px;">هیچ ئەنجامێک نەدۆزرایەوە</p>';
+        html = '<p style="text-align:center;color:var(--gray);padding:20px 0;">هیچ ئەنجامێک نەدۆزرایەوە</p>';
         resultsDiv.innerHTML = html;
         return;
     }
 
     if (kurdishItems.length > 0) {
-        html += `
-            <div class="delivery-section-header">
-                <i class="fas fa-shipping-fast"></i> 
-                <span>داواکارییە کوردییەکان (${kurdishItems.length})</span>
-            </div>
-            <div class="delivery-items-grid">
-        `;
+        html += '<h3 style="margin:0 0 12px 0; color:#667eea; border-bottom:2px solid #667eea; padding-bottom:6px;"><i class="fas fa-shipping-fast"></i> داواکارییە کوردییەکان (' + kurdishItems.length + ')</h3>';
+        html += '<div class="pending-items">';
         kurdishItems.forEach((d) => {
             const key = d.key;
             const orderNum = d.orderNumber || '—';
             const qrText = encodeURIComponent(
                 `پسولە: ${orderNum} | نێردەر: ${d.senderName||d.name||''} ${d.senderMobile||d.mobile||''} (${d.senderLocation||d.address||''}) | وەرگر: ${d.receiverName||''} ${d.receiverMobile||''} (${d.receiverLocation||''}) | کەلوپەل: ${d.packageName||d.details||''} x${d.packageQty||''} - ${d.packageKg||''}کگ`
             );
-            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${qrText}`;
-            html += buildImprovedKurdishLabelHtml(d, key, orderNum, qrUrl);
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${qrText}`;
+            html += buildKurdishLabelHtml(d, key, orderNum, qrUrl);
         });
-        html += `</div>`;
+        html += '</div>';
     }
 
     if (ukItems.length > 0) {
-        html += `
-            <div class="delivery-section-header uk-header">
-                <i class="fas fa-globe"></i> 
-                <span>UK Delivery Requests (${ukItems.length})</span>
-            </div>
-            <div class="delivery-items-grid">
-        `;
+        html += '<h3 style="margin:24px 0 12px 0; color:#d97706; border-bottom:2px solid #f0c040; padding-bottom:6px; direction:ltr; text-align:left;">UK Delivery Requests (' + ukItems.length + ')</h3>';
+        html += '<div class="pending-items" style="direction:ltr;">';
         ukItems.forEach((d) => {
             const key = d.key;
             const orderNum = d.orderNumber || '—';
             const fullAddress = [d.address1, d.address2, d.city, d.county, d.postcode, 'United Kingdom'].filter(Boolean).join(', ');
             const qrText = encodeURIComponent(`Order: ${orderNum} | To: ${d.fullName||''} | Tel: ${d.phone||''} | ${fullAddress} | Item: ${d.packageName||''}`);
-            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${qrText}`;
-            html += buildImprovedUkLabelHtml(d, key, orderNum, qrUrl);
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${qrText}`;
+            html += buildUkLabelHtml(d, key, orderNum, qrUrl);
         });
-        html += `</div>`;
+        html += '</div>';
     }
 
     resultsDiv.innerHTML = html;
 }
 
-function buildImprovedKurdishLabelHtml(d, key, orderNum, qrUrl) {
-    return `
-    <div class="delivery-label-card" id="label-${key}" data-order="${orderNum}">
-        <div class="label-card-header">
-            <div class="label-order-badge">
-                <i class="fas fa-tag"></i>
-                <span>#${orderNum}</span>
-            </div>
-            <div class="label-actions">
-                <button class="label-action-btn print-btn" onclick="printLabel('${key}')" title="چاپکردن">
-                    <i class="fas fa-print"></i>
-                </button>
-                <button class="label-action-btn delete-btn" onclick="deleteDeliveryItem('${key}')" title="سڕینەوە">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            </div>
-        </div>
-        
-        <div class="label-card-body">
-            <div class="label-grid">
-                <div class="label-info-card sender-card">
-                    <div class="info-card-title">
-                        <i class="fas fa-user-circle"></i>
-                        <span>نێردەر</span>
-                    </div>
-                    <div class="info-card-content">
-                        <div class="info-row">
-                            <span class="info-label">ناو:</span>
-                            <span class="info-value">${escapeHtml(d.senderName||d.name||'—')}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">ژمارە:</span>
-                            <span class="info-value">${escapeHtml(d.senderMobile||d.mobile||'—')}</span>
-                        </div>
-                        ${d.senderMobile2 ? `<div class="info-row"><span class="info-label">ژمارە ٢:</span><span class="info-value">${escapeHtml(d.senderMobile2)}</span></div>` : ''}
-                        <div class="info-row">
-                            <span class="info-label">شوێن:</span>
-                            <span class="info-value">${escapeHtml(d.senderLocation||d.address||'—')}</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="label-info-card receiver-card">
-                    <div class="info-card-title">
-                        <i class="fas fa-user-check"></i>
-                        <span>وەرگر</span>
-                    </div>
-                    <div class="info-card-content">
-                        <div class="info-row">
-                            <span class="info-label">ناو:</span>
-                            <span class="info-value">${escapeHtml(d.receiverName||'—')}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">ژمارە:</span>
-                            <span class="info-value">${escapeHtml(d.receiverMobile||'—')}</span>
-                        </div>
-                        ${d.receiverMobile2 ? `<div class="info-row"><span class="info-label">ژمارە ٢:</span><span class="info-value">${escapeHtml(d.receiverMobile2)}</span></div>` : ''}
-                        <div class="info-row">
-                            <span class="info-label">شوێن:</span>
-                            <span class="info-value">${escapeHtml(d.receiverLocation||'—')}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="label-package-card">
-                <div class="package-title">
-                    <i class="fas fa-box"></i>
-                    <span>زانیاری کەلوپەل</span>
-                </div>
-                <div class="package-details">
-                    <div class="detail-item">
-                        <span class="detail-label">ناوی کەلوپەل:</span>
-                        <span class="detail-value">${escapeHtml(d.packageName||d.details||'—')}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">ژمارەی پارچە:</span>
-                        <span class="detail-value">${escapeHtml(String(d.packageQty||'—'))}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">کیلۆ:</span>
-                        <span class="detail-value">${escapeHtml(String(d.packageKg||'—'))} کگ</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="label-driver-card">
-                <div class="driver-title">
-                    <i class="fas fa-truck"></i>
-                    <span>زانیاری گەیاندن</span>
-                </div>
-                <div class="driver-fields">
-                    <div class="driver-inputs">
-                        <div class="input-group">
-                            <input type="text" id="driver-name-${key}" placeholder="ناوی شۆفیر" value="${escapeHtml(d.driverName||'')}">
-                        </div>
-                        <div class="input-group">
-                            <input type="tel" id="driver-mobile-${key}" placeholder="ژمارەی مۆبایل" value="${escapeHtml(d.driverMobile||'')}">
-                        </div>
-                    </div>
-                    <div class="input-group full-width">
-                        <textarea id="delivery-note-${key}" placeholder="تیبینی..." rows="2">${escapeHtml(d.deliveryNote||'')}</textarea>
-                    </div>
-                    <button class="save-driver-btn" onclick="saveDriverInfo('${key}')">
-                        <i class="fas fa-save"></i> پاشەکەوتکردن
-                    </button>
-                </div>
-            </div>
-            
-            <div class="label-footer-info">
-                <div class="label-qr">
-                    <img src="${qrUrl}" alt="QR" class="qr-code-img" loading="lazy">
-                    <span class="qr-label">QR کۆد</span>
-                </div>
-                <div class="label-timestamp">
-                    <i class="far fa-calendar-alt"></i>
-                    <span>${escapeHtml(d.timestamp||'')}</span>
-                </div>
-            </div>
-        </div>
-    </div>`;
+function _matchesDeliverySearch(d, val) {
+    if (!val) return true;
+
+    const rawNum   = (d.orderNumber || '').toLowerCase().trim();
+    // کۆدی پسولە: exact یان prefix — نه substring
+    // مەسەلەن "08" تەنها # 08 دۆزێتەوە، نەک # 083 یان # 108
+    const numClean  = rawNum.replace(/^0+/, '');   // 08 → 8
+    const valClean  = val.replace(/^0+/, '');       // 08 → 8
+    const orderMatch = rawNum === val                // exact
+        || rawNum === valClean
+        || numClean === valClean
+        || rawNum.startsWith(val)                   // prefix
+        || ('uk-' + valClean) === rawNum;           // uk-894133
+
+    // ناو: substring باشە
+    const sender   = (d.senderName   || d.name     || '').toLowerCase();
+    const receiver = (d.receiverName || d.fullName || '').toLowerCase();
+    const nameMatch = sender.includes(val) || receiver.includes(val);
+
+    // مۆبایل: suffix match بۆ کۆدی وڵات
+    const valDigits = val.replace(/\D/g, '');
+    const mobMatch = (raw) => {
+        if (!valDigits || valDigits.length < 4) return false;
+        const mob = (raw || '').replace(/\D/g, '');
+        if (!mob) return false;
+        const suffix = valDigits.replace(/^0+/, '');
+        return mob === valDigits || mob.endsWith(suffix) || mob.includes(valDigits);
+    };
+    const mobileMatch = mobMatch(d.senderMobile  || d.mobile)
+        || mobMatch(d.senderMobile2)
+        || mobMatch(d.receiverMobile || d.phone)
+        || mobMatch(d.receiverMobile2);
+
+    const pkg = (d.packageName || d.details || '').toLowerCase();
+    const pkgMatch = pkg.includes(val);
+
+    return orderMatch || nameMatch || mobileMatch || pkgMatch;
 }
 
-function buildImprovedUkLabelHtml(d, key, orderNum, qrUrl) {
-    return `
-    <div class="delivery-label-card uk-label" id="label-${key}" data-order="${orderNum}">
-        <div class="label-card-header">
-            <div class="label-order-badge uk-badge">
-                <i class="fas fa-flag-uk"></i>
-                <span>${orderNum}</span>
-            </div>
-            <div class="label-actions">
-                <button class="label-action-btn print-btn" onclick="printUkLabel('${key}')" title="Print">
-                    <i class="fas fa-print"></i>
-                </button>
-                <button class="label-action-btn delete-btn" onclick="deleteDeliveryItem('${key}')" title="Delete">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            </div>
-        </div>
-        
-        <div class="label-card-body">
-            <div class="label-grid uk-grid">
-                <div class="label-info-card receiver-card uk-receiver">
-                    <div class="info-card-title">
-                        <i class="fas fa-user-check"></i>
-                        <span>Recipient</span>
-                    </div>
-                    <div class="info-card-content">
-                        <div class="info-row">
-                            <span class="info-label">Name:</span>
-                            <span class="info-value">${escapeHtml(d.fullName||'—')}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Phone:</span>
-                            <span class="info-value">${escapeHtml(d.phone||'—')}</span>
-                        </div>
-                        ${d.company ? `<div class="info-row"><span class="info-label">Company:</span><span class="info-value">${escapeHtml(d.company)}</span></div>` : ''}
-                        <div class="info-row">
-                            <span class="info-label">Address:</span>
-                            <span class="info-value">${escapeHtml(d.address1||'—')}</span>
-                        </div>
-                        ${d.address2 ? `<div class="info-row"><span class="info-label">Address 2:</span><span class="info-value">${escapeHtml(d.address2)}</span></div>` : ''}
-                        <div class="info-row">
-                            <span class="info-label">City:</span>
-                            <span class="info-value">${escapeHtml(d.city||'—')}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Postcode:</span>
-                            <span class="info-value postcode-value">${escapeHtml(d.postcode||'—')}</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="label-info-card sender-card uk-package">
-                    <div class="info-card-title">
-                        <i class="fas fa-box"></i>
-                        <span>Package</span>
-                    </div>
-                    <div class="info-card-content">
-                        <div class="info-row">
-                            <span class="info-label">Item:</span>
-                            <span class="info-value">${escapeHtml(d.packageName||'—')}</span>
-                        </div>
-                        ${d.receiverName ? `<div class="info-row"><span class="info-label">Receiver:</span><span class="info-value">${escapeHtml(d.receiverName)}</span></div>` : ''}
-                        ${d.receiverPhone ? `<div class="info-row"><span class="info-label">Receiver Tel:</span><span class="info-value">${escapeHtml(d.receiverPhone)}</span></div>` : ''}
-                    </div>
-                </div>
-            </div>
-            
-            <div class="label-driver-card">
-                <div class="driver-title">
-                    <i class="fas fa-truck"></i>
-                    <span>Driver Info</span>
-                </div>
-                <div class="driver-fields">
-                    <div class="driver-inputs">
-                        <div class="input-group">
-                            <input type="text" id="driver-name-${key}" placeholder="Driver name" value="${escapeHtml(d.driverName||'')}">
-                        </div>
-                        <div class="input-group">
-                            <input type="tel" id="driver-mobile-${key}" placeholder="Phone number" value="${escapeHtml(d.driverMobile||'')}">
-                        </div>
-                    </div>
-                    <div class="input-group full-width">
-                        <textarea id="delivery-note-${key}" placeholder="Notes..." rows="2">${escapeHtml(d.deliveryNote||'')}</textarea>
-                    </div>
-                    <button class="save-driver-btn" onclick="saveDriverInfo('${key}')">
-                        <i class="fas fa-save"></i> Save
-                    </button>
-                </div>
-            </div>
-            
-            <div class="label-footer-info">
-                <div class="label-qr">
-                    <img src="${qrUrl}" alt="QR" class="qr-code-img" loading="lazy">
-                    <span class="qr-label">QR Code</span>
-                </div>
-                <div class="label-timestamp">
-                    <i class="far fa-calendar-alt"></i>
-                    <span>${escapeHtml(d.timestamp||'')}</span>
-                </div>
-            </div>
-        </div>
-    </div>`;
+let _searchDebounce = null;
+
+function liveDeliverySearch(raw) {
+    clearTimeout(_searchDebounce);
+    _searchDebounce = setTimeout(() => {
+        const val = raw.trim().toLowerCase();
+        const countEl = document.getElementById('deliverySearchCount');
+
+        // ئەگەر بەتاڵ بوو — هەموو پیشان بدە، highlight لادەبە
+        if (!val) {
+            renderDeliveryItems(_allDeliveryItems);
+            if (countEl) countEl.textContent = '';
+            _clearDeliveryHighlight();
+            return;
+        }
+
+        const filtered = _allDeliveryItems.filter(d => _matchesDeliverySearch(d, val));
+
+        if (countEl) {
+            countEl.textContent = filtered.length > 0 ? filtered.length + ' ئەنجام' : 'نەدۆزرایەوە';
+            countEl.style.color = filtered.length > 0 ? '#667eea' : '#f56565';
+        }
+
+        // ئەگەر تەنها یەک ئەنجام — یەکسەر لەیبلەکە پیشان بدە و scroll بکە
+        if (filtered.length === 1) {
+            renderDeliveryItems(filtered);
+            setTimeout(() => {
+                const card = document.querySelector('.delivery-label-card');
+                if (card) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    card.style.outline = '3px solid #667eea';
+                    card.style.boxShadow = '0 0 0 4px rgba(102,126,234,0.25)';
+                }
+            }, 80);
+            return;
+        }
+
+        // ئەگەر چەند ئەنجام — هەموو پیشان بدە و highlight بکە
+        renderDeliveryItems(filtered);
+        setTimeout(() => _highlightDeliveryCards(), 80);
+
+    }, 120); // 120ms debounce — خیرا و بەبێ lag
 }
 
-// Delete delivery item function
-function deleteDeliveryItem(key) {
-    if (confirm('دڵنیایت لە سڕینەوەی ئەم داواکاری گەیاندنە؟')) {
-        database.ref('delivery/' + key).remove()
-            .then(() => {
-                showNotification('داواکاری گەیاندن بە سەرکەوتوویی سڕایەوە! 🗑️');
-                loadDeliveryRequests();
-            })
-            .catch(() => {
-                showNotification('هەڵە لە سڕینەوە!', 'error');
-            });
+function _highlightDeliveryCards() {
+    // کارتی یەکەم scroll دەکات بۆ سەرەوە
+    const first = document.querySelector('.delivery-label-card');
+    if (first) {
+        first.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+}
+
+function _clearDeliveryHighlight() {
+    document.querySelectorAll('.delivery-label-card').forEach(c => {
+        c.style.outline = '';
+        c.style.boxShadow = '';
+    });
+}
+
+// کۆن — پاراستراوە بۆ پاراستنی هاوئاهەنگی
+function filterDeliverySearch() {
+    liveDeliverySearch(document.getElementById('deliverySearchBox')?.value || '');
+}
+
+function buildKurdishLabelHtml(d, key, orderNum, qrUrl) {
+    return `
+    <div class="pending-item delivery-label-card" id="label-${key}">
+        <div class="label-header">
+            <span class="label-order-num"># ${orderNum}</span>
+            <span class="label-title-center"><i class="fas fa-shipping-fast"></i> لەیبلی گەیاندن</span>
+            <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
+                <button class="btn btn-sm btn-primary" onclick="printLabel('${key}')" style="padding:5px 10px;font-size:0.8rem;">
+                    <i class="fas fa-print"></i> چاپ
+                </button>
+                <button class="btn btn-sm" onclick="deleteDelivery('${key}')" style="padding:5px 10px;font-size:0.8rem;background:#fff0f0;color:#e53e3e;border:1.5px solid #fc8181;border-radius:8px;cursor:pointer;" title="سڕینەوەی لەیبل">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
+        </div>
+        <div class="label-body-wrap">
+            <div class="label-grid">
+                <div class="label-section sender-section">
+                    <div class="label-section-title">📤 نێردەر</div>
+                    <div class="label-row"><span>ناو:</span><strong>${escapeHtml(d.senderName||d.name||'—')}</strong></div>
+                    <div class="label-row"><span>ژمارە:</span><strong>${escapeHtml(d.senderMobile||d.mobile||'—')}</strong></div>
+                    ${d.senderMobile2 ? `<div class="label-row"><span>ژمارە ٢:</span><strong>${escapeHtml(d.senderMobile2)}</strong></div>` : ''}
+                    <div class="label-row"><span>شوێن:</span><strong>${escapeHtml(d.senderLocation||d.address||'—')}</strong></div>
+                </div>
+                <div class="label-section receiver-section">
+                    <div class="label-section-title">📥 وەرگر</div>
+                    <div class="label-row"><span>ناو:</span><strong>${escapeHtml(d.receiverName||'—')}</strong></div>
+                    <div class="label-row"><span>ژمارە:</span><strong>${escapeHtml(d.receiverMobile||'—')}</strong></div>
+                    ${d.receiverMobile2 ? `<div class="label-row"><span>ژمارە ٢:</span><strong>${escapeHtml(d.receiverMobile2)}</strong></div>` : ''}
+                    <div class="label-row"><span>شوێن:</span><strong>${escapeHtml(d.receiverLocation||'—')}</strong></div>
+                </div>
+            </div>
+            <div class="label-package">
+                <div class="label-row"><span>📦 کەلوپەل:</span><strong>${escapeHtml(d.packageName||d.details||'—')}</strong></div>
+                <div class="label-row"><span>🔢 پارچە:</span><strong>${escapeHtml(String(d.packageQty||'—'))}</strong></div>
+                <div class="label-row"><span>⚖️ کیلۆ:</span><strong>${escapeHtml(String(d.packageKg||'—'))} کگ</strong></div>
+                ${d.driverName||d.driverMobile ? `<div class="label-row label-driver-row"><span>🚗 شۆفیر:</span><strong>${escapeHtml(d.driverName||'—')} — ${escapeHtml(d.driverMobile||'')}</strong></div>` : ''}
+                ${d.deliveryNote ? `<div class="label-row label-note-row"><span>📝 تیبینی:</span><strong>${escapeHtml(d.deliveryNote)}</strong></div>` : ''}
+            </div>
+            <div class="label-admin-edit">
+                <div class="admin-edit-title"><i class="fas fa-pen"></i> شۆفیر و تیبینی</div>
+                <div class="admin-edit-fields">
+                    <div class="admin-edit-inputs">
+                        <input type="text" id="driver-name-${key}" placeholder="👤 ناوی شۆفیر" value="${escapeHtml(d.driverName||'')}">
+                        <input type="tel" id="driver-mobile-${key}" placeholder="📞 ژمارە" value="${escapeHtml(d.driverMobile||'')}">
+                    </div>
+                    <textarea id="delivery-note-${key}" placeholder="📝 تیبینی..." rows="3">${escapeHtml(d.deliveryNote||'')}</textarea>
+                </div>
+                <button class="btn btn-sm btn-primary admin-save-btn" onclick="saveDriverInfo('${key}')">
+                    <i class="fas fa-save"></i> پاشەکەوتکردن
+                </button>
+            </div>
+            <div class="label-qr-wrap">
+                <img src="${qrUrl}" alt="QR" class="label-qr-img" loading="lazy">
+                <div class="label-qr-hint">QR کۆد</div>
+            </div>
+        </div>
+        <div class="label-footer">
+            <span>📅 ${escapeHtml(d.timestamp||'')}</span>
+        </div>
+    </div>`;
+}
+
+function buildUkLabelHtml(d, key, orderNum, qrUrl) {
+    return `
+    <div class="pending-item delivery-label-card" id="label-${key}" style="direction:ltr; text-align:left; font-family:'Segoe UI',Arial,sans-serif;">
+        <div class="label-header" style="direction:ltr;">
+            <span class="label-order-num"># ${orderNum}</span>
+            <span class="label-title-center" style="background:#fef3c7; color:#92400e; padding:4px 10px; border-radius:20px; font-size:13px;">UK Delivery</span>
+            <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
+                <button class="btn btn-sm btn-primary" onclick="printUkLabel('${key}')" style="padding:5px 10px;font-size:0.8rem;">
+                    <i class="fas fa-print"></i> Print
+                </button>
+                <button class="btn btn-sm" onclick="deleteDelivery('${key}')" style="padding:5px 10px;font-size:0.8rem;background:#fff0f0;color:#e53e3e;border:1.5px solid #fc8181;border-radius:8px;cursor:pointer;" title="Delete label">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
+        </div>
+        <div class="label-body-wrap" style="direction:ltr;">
+            <div class="label-grid" style="direction:ltr;">
+                <div class="label-section receiver-section" style="border-left:3px solid #f0c040; border-right:none;">
+                    <div class="label-section-title" style="color:#92400e;">📦 Recipient</div>
+                    <div class="label-row" style="direction:ltr;"><span>Name:</span><strong>${escapeHtml(d.fullName||'—')}</strong></div>
+                    <div class="label-row" style="direction:ltr;"><span>Phone:</span><strong>${escapeHtml(d.phone||'—')}</strong></div>
+                    ${d.receiverName ? `<div class="label-row" style="direction:ltr; background:#fffbeb;"><span>Receiver:</span><strong style="color:#d97706;">📬 ${escapeHtml(d.receiverName)}</strong></div>` : ''}
+                    ${d.receiverPhone ? `<div class="label-row" style="direction:ltr; background:#fffbeb;"><span>Receiver Tel:</span><strong style="color:#d97706;">📞 ${escapeHtml(d.receiverPhone)}</strong></div>` : ''}
+                    ${d.company ? `<div class="label-row" style="direction:ltr;"><span>Company:</span><strong>${escapeHtml(d.company)}</strong></div>` : ''}
+                    <div class="label-row" style="direction:ltr;"><span>Address:</span><strong>${escapeHtml(d.address1||'—')}</strong></div>
+                    ${d.address2 ? `<div class="label-row" style="direction:ltr;"><span>Address 2:</span><strong>${escapeHtml(d.address2)}</strong></div>` : ''}
+                    <div class="label-row" style="direction:ltr;"><span>City:</span><strong>${escapeHtml(d.city||'—')}</strong></div>
+                    ${d.county ? `<div class="label-row" style="direction:ltr;"><span>County:</span><strong>${escapeHtml(d.county)}</strong></div>` : ''}
+                    <div class="label-row" style="direction:ltr;"><span>Postcode:</span><strong>${escapeHtml(d.postcode||'—')}</strong></div>
+                    <div class="label-row" style="direction:ltr;"><span>Country:</span><strong>United Kingdom</strong></div>
+                </div>
+                <div class="label-section sender-section" style="border-right:none; border-left:3px solid #667eea;">
+                    <div class="label-section-title" style="color:#667eea;">📬 Package</div>
+                    <div class="label-row" style="direction:ltr;"><span>Item:</span><strong>${escapeHtml(d.packageName||'—')}</strong></div>
+                    ${d.deliveryNote ? `<div class="label-row" style="direction:ltr;"><span>Notes:</span><strong>${escapeHtml(d.deliveryNote)}</strong></div>` : ''}
+                    <div class="label-row" style="direction:ltr;"><span>Date:</span><strong>${escapeHtml(d.timestamp||'—')}</strong></div>
+                </div>
+            </div>
+            <div class="label-admin-edit" style="direction:ltr; text-align:left;">
+                <div class="admin-edit-title" style="text-align:left;"><i class="fas fa-pen"></i> Driver & Notes</div>
+                <div class="admin-edit-fields">
+                    <div class="admin-edit-inputs">
+                        <input type="text" id="driver-name-${key}" placeholder="👤 Driver name" value="${escapeHtml(d.driverName||'')}">
+                        <input type="tel" id="driver-mobile-${key}" placeholder="📞 Phone" value="${escapeHtml(d.driverMobile||'')}">
+                    </div>
+                    <textarea id="delivery-note-${key}" placeholder="📝 Notes..." rows="3" style="direction:ltr;">${escapeHtml(d.deliveryNote||'')}</textarea>
+                </div>
+                <button class="btn btn-sm btn-primary admin-save-btn" onclick="saveDriverInfo('${key}')">
+                    <i class="fas fa-save"></i> Save
+                </button>
+            </div>
+            <div class="label-qr-wrap">
+                <img src="${qrUrl}" alt="QR" class="label-qr-img" loading="lazy">
+                <div class="label-qr-hint">QR Code</div>
+            </div>
+        </div>
+        <div class="label-footer" style="direction:ltr; text-align:left;">
+            <span>📅 ${escapeHtml(d.timestamp||'')}</span>
+        </div>
+    </div>`;
 }
 
 function loadDeliveryRequests() {
@@ -877,722 +960,201 @@ function saveDriverInfo(key) {
 }
 
 // ==================== Print Delivery Label ====================
-// ==================== Improved Print Functions ====================
-
 function printLabel(key) {
     const card = document.getElementById('label-' + key);
     if (!card) return;
-    
-    // Extract all data from the card
-    const orderNum = card.querySelector('.label-order-badge span')?.textContent.trim() || '';
-    const timestamp = card.querySelector('.label-timestamp span')?.textContent.trim() || '';
-    
-    // Get sender info
-    const senderName = getLabelValue(card, '.sender-card .info-row:first-child .info-value');
-    const senderMobile = getLabelValue(card, '.sender-card .info-row:nth-child(2) .info-value');
-    const senderMobile2 = getLabelValue(card, '.sender-card .info-row:nth-child(3) .info-value');
-    const senderLocation = getLabelValue(card, '.sender-card .info-row:last-child .info-value');
-    
-    // Get receiver info
-    const receiverName = getLabelValue(card, '.receiver-card .info-row:first-child .info-value');
-    const receiverMobile = getLabelValue(card, '.receiver-card .info-row:nth-child(2) .info-value');
-    const receiverMobile2 = getLabelValue(card, '.receiver-card .info-row:nth-child(3) .info-value');
-    const receiverLocation = getLabelValue(card, '.receiver-card .info-row:last-child .info-value');
-    
-    // Get package info
-    const packageName = getLabelValue(card, '.detail-item:first-child .detail-value');
-    const packageQty = getLabelValue(card, '.detail-item:nth-child(2) .detail-value');
-    const packageKg = getLabelValue(card, '.detail-item:last-child .detail-value');
-    
-    // Get driver info
-    const driverName = document.getElementById('driver-name-' + key)?.value || '';
-    const driverMobile = document.getElementById('driver-mobile-' + key)?.value || '';
-    const deliveryNote = document.getElementById('delivery-note-' + key)?.value || '';
-    
-    // Get QR code image
-    const qrImg = card.querySelector('.qr-code-img');
+    const orderNum = card.querySelector('.label-order-num') ? card.querySelector('.label-order-num').textContent.trim() : '';
+    const qrImg = card.querySelector('.label-qr-img');
     const qrSrc = qrImg ? qrImg.src : '';
-    
-    const printWin = window.open('', '_blank', 'width=720,height=900');
+    const rows = (selector) => Array.from(card.querySelectorAll(selector))
+        .map(r => `<div class="row"><span>${r.querySelector('span').textContent}</span><strong>${r.querySelector('strong').textContent}</strong></div>`)
+        .join('');
+    const dateText = card.querySelector('.label-footer span') ? card.querySelector('.label-footer span').textContent : '';
+
+    const printWin = window.open('', '_blank', 'width=640,height=560');
     printWin.document.write(`<!DOCTYPE html>
 <html lang="ku" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <title>لەیبلی گەیاندن ${orderNum}</title>
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    
-    body {
-        font-family: 'Tahoma', 'Arial', 'Noto Sans Arabic', sans-serif;
-        direction: rtl;
-        padding: 20px;
-        background: #fff;
-        color: #1a202c;
-    }
-    
-    .print-container {
-        max-width: 700px;
-        margin: 0 auto;
-        border: 2px solid #2d3748;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    
-    .print-header {
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: white;
-        padding: 20px;
-        text-align: center;
-    }
-    
-    .print-header h1 {
-        font-size: 24px;
-        margin-bottom: 5px;
-    }
-    
-    .print-header p {
-        font-size: 12px;
-        opacity: 0.9;
-    }
-    
-    .order-badge {
-        background: white;
-        color: #667eea;
-        display: inline-block;
-        padding: 5px 15px;
-        border-radius: 30px;
-        font-weight: bold;
-        margin-top: 10px;
-        font-size: 18px;
-    }
-    
-    .print-body {
-        padding: 20px;
-    }
-    
-    .info-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-        margin-bottom: 20px;
-    }
-    
-    .info-card {
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        overflow: hidden;
-    }
-    
-    .info-card-header {
-        background: #f7fafc;
-        padding: 10px 15px;
-        font-weight: bold;
-        border-bottom: 2px solid;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .info-card-header.sender {
-        border-bottom-color: #667eea;
-        color: #667eea;
-    }
-    
-    .info-card-header.receiver {
-        border-bottom-color: #48bb78;
-        color: #48bb78;
-    }
-    
-    .info-card-content {
-        padding: 12px 15px;
-    }
-    
-    .info-row {
-        display: flex;
-        justify-content: space-between;
-        padding: 6px 0;
-        border-bottom: 1px dotted #e2e8f0;
-        font-size: 13px;
-    }
-    
-    .info-row:last-child {
-        border-bottom: none;
-    }
-    
-    .info-label {
-        color: #718096;
-        font-weight: 500;
-    }
-    
-    .info-value {
-        font-weight: 600;
-        color: #2d3748;
-        text-align: left;
-    }
-    
-    .package-card {
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        margin-bottom: 20px;
-        background: #fefce8;
-    }
-    
-    .package-header {
-        background: #fef3c7;
-        padding: 10px 15px;
-        font-weight: bold;
-        color: #d97706;
-        border-bottom: 1px solid #fde68a;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .package-details {
-        padding: 12px 15px;
-        display: flex;
-        gap: 20px;
-        flex-wrap: wrap;
-    }
-    
-    .package-item {
-        flex: 1;
-        min-width: 120px;
-    }
-    
-    .package-item-label {
-        font-size: 11px;
-        color: #718096;
-        margin-bottom: 4px;
-    }
-    
-    .package-item-value {
-        font-size: 15px;
-        font-weight: bold;
-        color: #2d3748;
-    }
-    
-    .driver-card {
-        border: 1px solid #fed7aa;
-        border-radius: 12px;
-        margin-bottom: 20px;
-        background: #fff7ed;
-    }
-    
-    .driver-header {
-        background: #fed7aa;
-        padding: 10px 15px;
-        font-weight: bold;
-        color: #92400e;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .driver-content {
-        padding: 12px 15px;
-    }
-    
-    .driver-row {
-        display: flex;
-        justify-content: space-between;
-        padding: 6px 0;
-        font-size: 13px;
-    }
-    
-    .note-box {
-        background: #fef9e6;
-        padding: 10px;
-        border-radius: 8px;
-        margin-top: 10px;
-        font-size: 12px;
-        border-right: 3px solid #f0c040;
-    }
-    
-    .footer-section {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 20px;
-        padding-top: 15px;
-        border-top: 1px dashed #e2e8f0;
-    }
-    
-    .qr-code {
-        text-align: center;
-    }
-    
-    .qr-code img {
-        width: 100px;
-        height: 100px;
-        border: 1px solid #e2e8f0;
-        padding: 5px;
-        border-radius: 8px;
-    }
-    
-    .qr-label {
-        font-size: 10px;
-        color: #718096;
-        margin-top: 5px;
-        display: block;
-    }
-    
-    .timestamp {
-        font-size: 11px;
-        color: #718096;
-    }
-    
-    .print-footer {
-        background: #f7fafc;
-        padding: 12px;
-        text-align: center;
-        font-size: 11px;
-        color: #718096;
-        border-top: 1px solid #e2e8f0;
-    }
-    
-    @media print {
-        body {
-            padding: 0;
-            margin: 0;
-        }
-        .print-container {
-            box-shadow: none;
-            border: 1px solid #ddd;
-        }
-        .save-driver-btn, .label-action-btn {
-            display: none;
-        }
-    }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Tahoma','Arial',sans-serif;direction:rtl;padding:16px;background:#fff;color:#1a202c}
+.wrap{border:3px solid #2d3748;border-radius:12px;padding:16px;max-width:560px;margin:auto}
+.top{display:flex;justify-content:space-between;align-items:center;border-bottom:2px dashed #667eea;padding-bottom:10px;margin-bottom:12px}
+.top-title{font-size:16px;font-weight:bold;color:#667eea}
+.top-num{font-size:22px;font-weight:bold;color:#2d3748;background:#eef2ff;padding:4px 14px;border-radius:8px;border:2px solid #667eea}
+.top-date{font-size:11px;color:#718096;text-align:center;margin-top:3px}
+.body-wrap{display:flex;gap:10px;align-items:flex-start}
+.body-main{flex:1}
+.cols{display:flex;gap:8px;margin-bottom:10px}
+.col{flex:1;border:1.5px solid #e2e8f0;border-radius:8px;padding:9px;background:#f7fafc}
+.col.sender{border-right:3px solid #667eea}
+.col.receiver{border-right:3px solid #48bb78}
+.col-title{font-size:12px;font-weight:bold;color:#667eea;border-bottom:1px solid #e2e8f0;padding-bottom:4px;margin-bottom:7px}
+.col.receiver .col-title{color:#48bb78}
+.row{display:flex;justify-content:space-between;font-size:12px;padding:2px 0;border-bottom:1px dotted #e2e8f0;gap:5px}
+.row span{color:#718096;white-space:nowrap}.row strong{color:#2d3748}
+.pkg{background:#edf2ff;border-radius:8px;padding:9px;margin-bottom:0}
+.qr-box{display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px;border:1.5px solid #e2e8f0;border-radius:8px;background:#f7fafc;min-width:130px}
+.qr-box img{width:120px;height:120px}
+.qr-box small{font-size:11px;color:#718096}
+.foot{text-align:center;font-size:11px;color:#a0aec0;margin-top:10px;border-top:1px dashed #e2e8f0;padding-top:7px}
+.info-box{display:flex;justify-content:space-between;font-size:12px;padding:5px 9px;margin-top:5px;border-radius:6px;gap:5px}
+.driver-box{background:#ebf8ff;border:1px solid #bee3f8}
+.note-box{background:#fefce8;border:1px solid #fde68a}
+.info-box span{color:#718096;white-space:nowrap}
+.info-box strong{color:#1a202c}
+@media print{body{padding:0}}
 </style>
 </head>
 <body>
-    <div class="print-container">
-        <div class="print-header">
-            <h1>🚚 UK BAZAR</h1>
-            <p>World Online Shopping - لەیبلی گەیاندن</p>
-            <div class="order-badge">#${orderNum}</div>
-        </div>
-        
-        <div class="print-body">
-            <div class="info-grid">
-                <div class="info-card">
-                    <div class="info-card-header sender">
-                        <i class="fas fa-user-circle"></i> 📤 نێردەر
-                    </div>
-                    <div class="info-card-content">
-                        <div class="info-row"><span class="info-label">ناو:</span><span class="info-value">${escapeHtml(senderName)}</span></div>
-                        <div class="info-row"><span class="info-label">ژمارە:</span><span class="info-value">${escapeHtml(senderMobile)}</span></div>
-                        ${senderMobile2 && senderMobile2 !== '—' ? `<div class="info-row"><span class="info-label">ژمارە ٢:</span><span class="info-value">${escapeHtml(senderMobile2)}</span></div>` : ''}
-                        <div class="info-row"><span class="info-label">شوێن:</span><span class="info-value">${escapeHtml(senderLocation)}</span></div>
-                    </div>
-                </div>
-                
-                <div class="info-card">
-                    <div class="info-card-header receiver">
-                        <i class="fas fa-user-check"></i> 📥 وەرگر
-                    </div>
-                    <div class="info-card-content">
-                        <div class="info-row"><span class="info-label">ناو:</span><span class="info-value">${escapeHtml(receiverName)}</span></div>
-                        <div class="info-row"><span class="info-label">ژمارە:</span><span class="info-value">${escapeHtml(receiverMobile)}</span></div>
-                        ${receiverMobile2 && receiverMobile2 !== '—' ? `<div class="info-row"><span class="info-label">ژمارە ٢:</span><span class="info-value">${escapeHtml(receiverMobile2)}</span></div>` : ''}
-                        <div class="info-row"><span class="info-label">شوێن:</span><span class="info-value">${escapeHtml(receiverLocation)}</span></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="package-card">
-                <div class="package-header">
-                    <i class="fas fa-box"></i> 📦 زانیاری کەلوپەل
-                </div>
-                <div class="package-details">
-                    <div class="package-item">
-                        <div class="package-item-label">ناوی کەلوپەل</div>
-                        <div class="package-item-value">${escapeHtml(packageName)}</div>
-                    </div>
-                    <div class="package-item">
-                        <div class="package-item-label">ژمارەی پارچە</div>
-                        <div class="package-item-value">${escapeHtml(packageQty)}</div>
-                    </div>
-                    <div class="package-item">
-                        <div class="package-item-label">کیلۆ</div>
-                        <div class="package-item-value">${escapeHtml(packageKg)}</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="driver-card">
-                <div class="driver-header">
-                    <i class="fas fa-truck"></i> 🚚 زانیاری گەیاندن
-                </div>
-                <div class="driver-content">
-                    <div class="driver-row"><span class="info-label">👤 شۆفیر:</span><span class="info-value">${escapeHtml(driverName) || '—'}</span></div>
-                    <div class="driver-row"><span class="info-label">📞 ژمارەی شۆفیر:</span><span class="info-value">${escapeHtml(driverMobile) || '—'}</span></div>
-                    ${deliveryNote ? `<div class="note-box"><strong>📝 تیبینی:</strong><br>${escapeHtml(deliveryNote)}</div>` : ''}
-                </div>
-            </div>
-            
-            <div class="footer-section">
-                <div class="qr-code">
-                    ${qrSrc ? `<img src="${qrSrc}" alt="QR Code">` : '<div style="width:100px;height:100px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:12px;">QR</div>'}
-                    <span class="qr-label">QR کۆد بۆ سکانکردن</span>
-                </div>
-                <div class="timestamp">
-                    <i class="far fa-calendar-alt"></i> ${escapeHtml(timestamp)}
-                </div>
-            </div>
-        </div>
-        
-        <div class="print-footer">
-            UK BAZAR - World Online Shopping | www.ukbazar.online | پەیوەندی: 07755436275
-        </div>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <div class="top-title">🚚 UK BAZAR — لەیبلی گەیاندن</div>
+      <div class="top-date">${dateText}</div>
     </div>
-    <script>
-        window.onload = function() {
-            window.print();
-            setTimeout(function() { window.close(); }, 1000);
-        };
-    <\/script>
-</body>
-</html>`);
+    <div class="top-num">${orderNum}</div>
+  </div>
+  <div class="body-wrap">
+    <div class="body-main">
+      <div class="cols">
+        <div class="col sender"><div class="col-title">📤 نێردەر</div>${rows('.sender-section .label-row')}</div>
+        <div class="col receiver"><div class="col-title">📥 وەرگر</div>${rows('.receiver-section .label-row')}</div>
+      </div>
+      <div class="pkg">${rows('.label-package .label-row:not(.label-driver-row):not(.label-note-row)')}</div>
+      ${(() => { const dr = card.querySelector('.label-driver-row'); return dr ? `<div class="info-box driver-box"><span>🚗 شۆفیر:</span><strong>${dr.querySelector('strong').textContent}</strong></div>` : ''; })()}
+      ${(() => { const nr = card.querySelector('.label-note-row'); return nr ? `<div class="info-box note-box"><span>📝 تیبینی:</span><strong>${nr.querySelector('strong').textContent}</strong></div>` : ''; })()}
+    </div>
+    <div class="qr-box">
+      <img src="${qrSrc}" alt="QR">
+      <small>QR کۆد</small>
+    </div>
+  </div>
+  <div class="foot">UK BAZAR — World Online Shopping</div>
+</div>
+<\/body><\/html>`);
     printWin.document.close();
+    printWin.focus();
+    setTimeout(() => printWin.print(), 600);
 }
 
+
+// ==================== Print UK Delivery Label ====================
 function printUkLabel(key) {
     const card = document.getElementById('label-' + key);
     if (!card) return;
-    
-    const orderNum = card.querySelector('.label-order-badge span')?.textContent.trim() || '';
-    const timestamp = card.querySelector('.label-timestamp span')?.textContent.trim() || '';
-    
-    // Get recipient info
-    const fullName = getLabelValue(card, '.uk-receiver .info-row:first-child .info-value');
-    const phone = getLabelValue(card, '.uk-receiver .info-row:nth-child(2) .info-value');
-    const company = getLabelValue(card, '.uk-receiver .info-row:nth-child(3) .info-value');
-    const address1 = getLabelValue(card, '.uk-receiver .info-row:nth-child(4) .info-value');
-    const address2 = getLabelValue(card, '.uk-receiver .info-row:nth-child(5) .info-value');
-    const city = getLabelValue(card, '.uk-receiver .info-row:nth-child(6) .info-value');
-    const postcode = getLabelValue(card, '.uk-receiver .info-row:last-child .info-value');
-    
-    // Get package info
-    const packageName = getLabelValue(card, '.uk-package .info-row:first-child .info-value');
-    const receiverName = getLabelValue(card, '.uk-package .info-row:nth-child(2) .info-value');
-    const receiverPhone = getLabelValue(card, '.uk-package .info-row:nth-child(3) .info-value');
-    
-    // Get driver info
-    const driverName = document.getElementById('driver-name-' + key)?.value || '';
-    const driverMobile = document.getElementById('driver-mobile-' + key)?.value || '';
-    const deliveryNote = document.getElementById('delivery-note-' + key)?.value || '';
-    
-    const qrImg = card.querySelector('.qr-code-img');
-    const qrSrc = qrImg ? qrImg.src : '';
-    
-    const printWin = window.open('', '_blank', 'width=720,height=900');
+
+    // Read data from the card's label-row elements
+    const getVal = (label) => {
+        const rows = card.querySelectorAll('.label-row');
+        for (const r of rows) {
+            const sp = r.querySelector('span');
+            const st = r.querySelector('strong');
+            if (sp && st && sp.textContent.trim().toLowerCase().startsWith(label.toLowerCase())) {
+                return st.textContent.trim();
+            }
+        }
+        return '—';
+    };
+
+    const orderNum   = (card.querySelector('.label-order-num') || {}).textContent || '';
+    const name       = getVal('Name:');
+    const phone      = getVal('Phone:');
+    const receiverName  = getVal('Receiver:').replace(/^📬\s*/, '');
+    const receiverPhone = getVal('Receiver Tel:').replace(/^📞\s*/, '');
+    const company    = getVal('Company:');
+    const address1   = getVal('Address:');
+    const address2   = getVal('Address 2:');
+    const city       = getVal('City:');
+    const county     = getVal('County:');
+    const postcode   = getVal('Postcode:');
+    const item       = getVal('Item:');
+    const notes      = getVal('Notes:');
+    const dateText   = (card.querySelector('.label-footer span') || {}).textContent || '';
+    const qrImg      = card.querySelector('.label-qr-img');
+    const qrSrc      = qrImg ? qrImg.src : '';
+
+    const printWin = window.open('', '_blank', 'width=680,height=620');
     printWin.document.write(`<!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <title>UK Delivery Label ${orderNum}</title>
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    
-    body {
-        font-family: 'Segoe UI', 'Arial', sans-serif;
-        direction: ltr;
-        padding: 20px;
-        background: #fff;
-        color: #1a202c;
-    }
-    
-    .print-container {
-        max-width: 700px;
-        margin: 0 auto;
-        border: 2px solid #d97706;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    
-    .print-header {
-        background: linear-gradient(135deg, #f0c040, #d4a017);
-        color: #1a1a1a;
-        padding: 20px;
-        text-align: center;
-    }
-    
-    .print-header h1 {
-        font-size: 24px;
-        margin-bottom: 5px;
-    }
-    
-    .print-header p {
-        font-size: 12px;
-        opacity: 0.8;
-    }
-    
-    .order-badge {
-        background: white;
-        color: #d97706;
-        display: inline-block;
-        padding: 5px 15px;
-        border-radius: 30px;
-        font-weight: bold;
-        margin-top: 10px;
-        font-size: 18px;
-    }
-    
-    .print-body {
-        padding: 20px;
-    }
-    
-    .info-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-        margin-bottom: 20px;
-    }
-    
-    .info-card {
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        overflow: hidden;
-    }
-    
-    .info-card-header {
-        background: #f7fafc;
-        padding: 10px 15px;
-        font-weight: bold;
-        border-bottom: 2px solid;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .info-card-header.recipient {
-        border-bottom-color: #f0c040;
-        color: #d97706;
-    }
-    
-    .info-card-header.package {
-        border-bottom-color: #667eea;
-        color: #667eea;
-    }
-    
-    .info-card-content {
-        padding: 12px 15px;
-    }
-    
-    .info-row {
-        display: flex;
-        justify-content: space-between;
-        padding: 6px 0;
-        border-bottom: 1px dotted #e2e8f0;
-        font-size: 13px;
-    }
-    
-    .info-row:last-child {
-        border-bottom: none;
-    }
-    
-    .info-label {
-        color: #718096;
-        font-weight: 500;
-    }
-    
-    .info-value {
-        font-weight: 600;
-        color: #2d3748;
-        text-align: right;
-    }
-    
-    .postcode-highlight {
-        background: #fef3c7;
-        padding: 2px 8px;
-        border-radius: 12px;
-        font-family: monospace;
-        font-weight: bold;
-        font-size: 14px;
-    }
-    
-    .driver-card {
-        border: 1px solid #fed7aa;
-        border-radius: 12px;
-        margin-bottom: 20px;
-        background: #fff7ed;
-    }
-    
-    .driver-header {
-        background: #fed7aa;
-        padding: 10px 15px;
-        font-weight: bold;
-        color: #92400e;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .driver-content {
-        padding: 12px 15px;
-    }
-    
-    .driver-row {
-        display: flex;
-        justify-content: space-between;
-        padding: 6px 0;
-        font-size: 13px;
-    }
-    
-    .note-box {
-        background: #fef9e6;
-        padding: 10px;
-        border-radius: 8px;
-        margin-top: 10px;
-        font-size: 12px;
-        border-left: 3px solid #f0c040;
-    }
-    
-    .footer-section {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 20px;
-        padding-top: 15px;
-        border-top: 1px dashed #e2e8f0;
-    }
-    
-    .qr-code {
-        text-align: center;
-    }
-    
-    .qr-code img {
-        width: 100px;
-        height: 100px;
-        border: 1px solid #e2e8f0;
-        padding: 5px;
-        border-radius: 8px;
-    }
-    
-    .qr-label {
-        font-size: 10px;
-        color: #718096;
-        margin-top: 5px;
-        display: block;
-    }
-    
-    .timestamp {
-        font-size: 11px;
-        color: #718096;
-    }
-    
-    .print-footer {
-        background: #f7fafc;
-        padding: 12px;
-        text-align: center;
-        font-size: 11px;
-        color: #718096;
-        border-top: 1px solid #e2e8f0;
-    }
-    
-    @media print {
-        body {
-            padding: 0;
-            margin: 0;
-        }
-        .print-container {
-            box-shadow: none;
-            border: 1px solid #ddd;
-        }
-    }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI','Arial',sans-serif;direction:ltr;padding:16px;background:#fff;color:#1a202c}
+.wrap{border:3px solid #d97706;border-radius:12px;padding:16px;max-width:580px;margin:auto}
+.top{display:flex;justify-content:space-between;align-items:center;border-bottom:2px dashed #f0c040;padding-bottom:10px;margin-bottom:14px}
+.top-left{display:flex;flex-direction:column;gap:3px}
+.top-brand{font-size:18px;font-weight:bold;color:#d97706;letter-spacing:1px}
+.top-sub{font-size:12px;color:#92400e;background:#fef3c7;padding:2px 8px;border-radius:10px;display:inline-block}
+.top-num{font-size:24px;font-weight:bold;color:#1a202c;background:#fef3c7;padding:5px 16px;border-radius:8px;border:2px solid #f0c040}
+.body{display:flex;gap:12px;align-items:flex-start}
+.body-main{flex:1;display:flex;flex-direction:column;gap:10px}
+.section{border:1.5px solid #e2e8f0;border-radius:8px;padding:10px;background:#f8fafc}
+.section.recipient{border-left:4px solid #f0c040}
+.section.package{border-left:4px solid #667eea}
+.section-title{font-size:12px;font-weight:700;color:#92400e;border-bottom:1px solid #e2e8f0;padding-bottom:5px;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px}
+.section.package .section-title{color:#667eea}
+.row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px dotted #e2e8f0;gap:8px}
+.row:last-child{border-bottom:none}
+.row span{color:#718096;white-space:nowrap;min-width:70px}
+.row strong{color:#1a202c;text-align:right}
+.postcode-box{background:#1a1a2e;color:#f0c040;font-size:28px;font-weight:900;text-align:center;padding:10px;border-radius:8px;letter-spacing:4px;margin-top:6px}
+.qr-box{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px;border:1.5px solid #e2e8f0;border-radius:8px;background:#f7fafc;min-width:130px}
+.qr-box img{width:120px;height:120px}
+.qr-box small{font-size:10px;color:#718096;text-align:center}
+.foot{text-align:center;font-size:11px;color:#a0aec0;margin-top:12px;border-top:1px dashed #e2e8f0;padding-top:8px}
+@media print{body{padding:0} .no-print{display:none}}
 </style>
 </head>
 <body>
-    <div class="print-container">
-        <div class="print-header">
-            <h1>🚚 UK POST LTD</h1>
-            <p>UK Delivery Label - UK BAZAR</p>
-            <div class="order-badge">${orderNum}</div>
-        </div>
-        
-        <div class="print-body">
-            <div class="info-grid">
-                <div class="info-card">
-                    <div class="info-card-header recipient">
-                        <i class="fas fa-user-check"></i> 📬 Recipient
-                    </div>
-                    <div class="info-card-content">
-                        <div class="info-row"><span class="info-label">Full Name:</span><span class="info-value">${escapeHtml(fullName)}</span></div>
-                        <div class="info-row"><span class="info-label">Phone:</span><span class="info-value">${escapeHtml(phone)}</span></div>
-                        ${company && company !== '—' ? `<div class="info-row"><span class="info-label">Company:</span><span class="info-value">${escapeHtml(company)}</span></div>` : ''}
-                        <div class="info-row"><span class="info-label">Address 1:</span><span class="info-value">${escapeHtml(address1)}</span></div>
-                        ${address2 && address2 !== '—' ? `<div class="info-row"><span class="info-label">Address 2:</span><span class="info-value">${escapeHtml(address2)}</span></div>` : ''}
-                        <div class="info-row"><span class="info-label">City:</span><span class="info-value">${escapeHtml(city)}</span></div>
-                        <div class="info-row"><span class="info-label">Postcode:</span><span class="info-value"><span class="postcode-highlight">${escapeHtml(postcode)}</span></span></div>
-                    </div>
-                </div>
-                
-                <div class="info-card">
-                    <div class="info-card-header package">
-                        <i class="fas fa-box"></i> 📦 Package Info
-                    </div>
-                    <div class="info-card-content">
-                        <div class="info-row"><span class="info-label">Item:</span><span class="info-value">${escapeHtml(packageName)}</span></div>
-                        ${receiverName && receiverName !== '—' ? `<div class="info-row"><span class="info-label">Receiver Name:</span><span class="info-value">${escapeHtml(receiverName)}</span></div>` : ''}
-                        ${receiverPhone && receiverPhone !== '—' ? `<div class="info-row"><span class="info-label">Receiver Phone:</span><span class="info-value">${escapeHtml(receiverPhone)}</span></div>` : ''}
-                    </div>
-                </div>
-            </div>
-            
-            <div class="driver-card">
-                <div class="driver-header">
-                    <i class="fas fa-truck"></i> 🚚 Delivery Information
-                </div>
-                <div class="driver-content">
-                    <div class="driver-row"><span class="info-label">👤 Driver Name:</span><span class="info-value">${escapeHtml(driverName) || '—'}</span></div>
-                    <div class="driver-row"><span class="info-label">📞 Driver Phone:</span><span class="info-value">${escapeHtml(driverMobile) || '—'}</span></div>
-                    ${deliveryNote ? `<div class="note-box"><strong>📝 Notes:</strong><br>${escapeHtml(deliveryNote)}</div>` : ''}
-                </div>
-            </div>
-            
-            <div class="footer-section">
-                <div class="qr-code">
-                    ${qrSrc ? `<img src="${qrSrc}" alt="QR Code">` : '<div style="width:100px;height:100px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:12px;">QR</div>'}
-                    <span class="qr-label">Scan QR Code</span>
-                </div>
-                <div class="timestamp">
-                    <i class="far fa-calendar-alt"></i> ${escapeHtml(timestamp)}
-                </div>
-            </div>
-        </div>
-        
-        <div class="print-footer">
-            UK POST LTD - UK BAZAR | www.ukbazar.online | Contact: 00447449218670
-        </div>
+<div class="wrap">
+  <div class="top">
+    <div class="top-left">
+      <div class="top-brand">🚚 UK POST</div>
+      <div class="top-sub">UK Delivery Label</div>
     </div>
-    <script>
-        window.onload = function() {
-            window.print();
-            setTimeout(function() { window.close(); }, 1000);
-        };
-    <\/script>
-</body>
-</html>`);
+    <div class="top-num">${orderNum.replace('#','').trim()}</div>
+  </div>
+  <div class="body">
+    <div class="body-main">
+      <div class="section recipient">
+        <div class="section-title">📦 Recipient</div>
+        <div class="row"><span>Full Name</span><strong>${name}</strong></div>
+        <div class="row"><span>Phone</span><strong>${phone}</strong></div>
+        ${receiverName && receiverName !== '—' ? `<div class="row" style="background:#fffbeb;"><span style="color:#d97706;">📬 Receiver</span><strong style="color:#d97706;">${receiverName}</strong></div>` : ''}
+        ${receiverPhone && receiverPhone !== '—' ? `<div class="row" style="background:#fffbeb;"><span style="color:#d97706;">📞 Rcvr Tel</span><strong style="color:#d97706;">${receiverPhone}</strong></div>` : ''}
+        ${company && company !== '—' ? `<div class="row"><span>Company</span><strong>${company}</strong></div>` : ''}
+        <div class="row"><span>Address 1</span><strong>${address1}</strong></div>
+        ${address2 && address2 !== '—' ? `<div class="row"><span>Address 2</span><strong>${address2}</strong></div>` : ''}
+        <div class="row"><span>City</span><strong>${city}</strong></div>
+        ${county && county !== '—' ? `<div class="row"><span>County</span><strong>${county}</strong></div>` : ''}
+        <div class="row"><span>Country</span><strong>United Kingdom</strong></div>
+        <div class="postcode-box">${postcode}</div>
+      </div>
+      <div class="section package">
+        <div class="section-title">📬 Package Info</div>
+        <div class="row"><span>Item</span><strong>${item}</strong></div>
+        ${notes && notes !== '—' ? `<div class="row"><span>Notes</span><strong>${notes}</strong></div>` : ''}
+        <div class="row"><span>Date</span><strong>${dateText.replace('📅','').trim()}</strong></div>
+      </div>
+    </div>
+    <div class="qr-box">
+      <img src="${qrSrc}" alt="QR Code">
+      <small>Scan for delivery info</small>
+    </div>
+  </div>
+  <div class="foot">UK POST— World Online Shopping |www. ukpost.online</div>
+</div>
+<\/body><\/html>`);
     printWin.document.close();
+    printWin.focus();
+    setTimeout(() => printWin.print(), 600);
 }
 
-// Helper function to get value from label
-function getLabelValue(card, selector) {
-    const element = card.querySelector(selector);
-    return element ? element.textContent.trim() : '—';
-}
 // ==================== Admin Actions ====================
 function approveProduct(productId) {
     if (confirm('دڵنیایت لە پەسەندکردنی ئەم کاڵایە؟')) {
@@ -1640,6 +1202,27 @@ function deleteSliderImage(sliderId) {
             .catch(() => {
                 showNotification('هەڵە لە سڕینەوە!', 'error');
             });
+    }
+}
+
+// ==================== Delete Delivery Label ====================
+function deleteDelivery(key) {
+    if (confirm('دڵنیایت لە سڕینەوەی ئەم لەیبلە؟\nAre you sure you want to delete this label?')) {
+        database.ref('delivery/' + key).remove()
+            .then(() => {
+                showNotification('لەیبل بە سەرکەوتوویی سڕایەوە 🗑️');
+                // سڕینەوەی کارتەکە بە ئەنیمەیشن
+                const card = document.getElementById('label-' + key);
+                if (card) {
+                    card.style.transition = 'opacity 0.3s, transform 0.3s';
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.95)';
+                    setTimeout(() => card.remove(), 300);
+                }
+                // نوێکردنەوەی لیستی کاشی
+                _allDeliveryItems = _allDeliveryItems.filter(i => i.key !== key);
+            })
+            .catch(() => showNotification('هەڵە لە سڕینەوە!', 'error'));
     }
 }
 
