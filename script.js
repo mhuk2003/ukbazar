@@ -2217,3 +2217,41 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, 4000);
 });
+// ==================== UK Delivery Tab Switching ====================
+function ukSwitchTab(tab) {
+    const senderPanel   = document.getElementById('ukPanel-sender');
+    const receiverPanel = document.getElementById('ukPanel-receiver');
+    const senderTab     = document.getElementById('ukTab-sender');
+    const receiverTab   = document.getElementById('ukTab-receiver');
+
+    if (tab === 'sender') {
+        if (senderPanel)   senderPanel.style.display   = 'block';
+        if (receiverPanel) receiverPanel.style.display  = 'none';
+        if (senderTab)  { senderTab.style.borderBottom  = '3px solid #667eea'; senderTab.style.color  = '#667eea'; }
+        if (receiverTab){ receiverTab.style.borderBottom = '3px solid transparent'; receiverTab.style.color = '#718096'; }
+    } else {
+        if (senderPanel)   senderPanel.style.display   = 'none';
+        if (receiverPanel) receiverPanel.style.display  = 'block';
+        if (receiverTab){ receiverTab.style.borderBottom = '3px solid #667eea'; receiverTab.style.color = '#667eea'; }
+        if (senderTab)  { senderTab.style.borderBottom  = '3px solid transparent'; senderTab.style.color = '#718096'; }
+    }
+}
+
+function ukGoToReceiver() {
+    const fields = [
+        { id: 'ukFullName', msg: 'تکایە ناوی تەواو داخڵ بکە' },
+        { id: 'ukPhone',    msg: 'تکایە ژمارەی تەلەفۆن داخڵ بکە' },
+        { id: 'ukPostcode', msg: 'تکایە Postcode داخڵ بکە' },
+        { id: 'ukAddress1', msg: 'تکایە ناونیشان داخڵ بکە' },
+        { id: 'ukCity',     msg: 'تکایە شار داخڵ بکە' },
+    ];
+    for (const f of fields) {
+        const el = document.getElementById(f.id);
+        if (!el || !el.value.trim()) {
+            if (el) el.focus();
+            showNotification(f.msg, 'error');
+            return;
+        }
+    }
+    ukSwitchTab('receiver');
+}
