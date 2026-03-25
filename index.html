@@ -164,9 +164,9 @@
         <!-- فوتەر تاپ بار: ئیمەیل + Privacy + گەڕانەوە -->
         <div class="footer-topbar">
             <!-- ئیمەیل -->
-            <a href="mailto:INFO@UKPOST.ONLINE" class="footer-email-link">
+            <a href="/cdn-cgi/l/email-protection#b8f1f6fef7f8edf3e8f7ebec96f7f6f4f1f6fd" class="footer-email-link">
                 <i class="fas fa-envelope"></i>
-                <span>INFO@UKPOST.ONLINE</span>
+                <span><span class="__cf_email__" data-cfemail="ce878088818e9b859e819d9ae081808287808b">[email&#160;protected]</span></span>
             </a>
 
             <!-- Privacy Policy دوگمە -->
@@ -763,29 +763,6 @@
             </form>
         </div>
     </div>
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-    function ukSwitchTab(tab) {
-        document.getElementById('ukPanel-sender').style.display   = tab==='sender'   ? 'block' : 'none';
-        document.getElementById('ukPanel-receiver').style.display = tab==='receiver' ? 'block' : 'none';
-        var s = document.getElementById('ukTab-sender');
-        var r = document.getElementById('ukTab-receiver');
-        s.style.borderBottom = tab==='sender'   ? '3px solid #667eea' : '3px solid transparent';
-        s.style.color        = tab==='sender'   ? '#667eea' : '#718096';
-        r.style.borderBottom = tab==='receiver' ? '3px solid #48bb78' : '3px solid transparent';
-        r.style.color        = tab==='receiver' ? '#48bb78' : '#718096';
-    }
-    function ukGoToReceiver() {
-        if (!document.getElementById('ukFullName').value.trim() ||
-            !document.getElementById('ukPhone').value.trim() ||
-            !document.getElementById('ukAddress1').value.trim() ||
-            !document.getElementById('ukCity').value.trim() ||
-            !document.getElementById('ukPostcode').value.trim()) {
-            alert('Please fill in all required sender fields before continuing.');
-            return;
-        }
-        ukSwitchTab('receiver');
-    }
-    </script>
 
     <!-- FIB Modal -->
     <div class="modal" id="fibModal">
@@ -808,57 +785,19 @@
     </div>
 
     
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-    function ukSwitchTab(tab) {
-        document.getElementById('ukPanel-sender').style.display   = tab==='sender'   ? 'block' : 'none';
-        document.getElementById('ukPanel-receiver').style.display = tab==='receiver' ? 'block' : 'none';
-        var s = document.getElementById('ukTab-sender');
-        var r = document.getElementById('ukTab-receiver');
-        s.style.borderBottom = tab==='sender'   ? '3px solid #667eea' : '3px solid transparent';
-        s.style.color        = tab==='sender'   ? '#667eea' : '#718096';
-        r.style.borderBottom = tab==='receiver' ? '3px solid #48bb78' : '3px solid transparent';
-        r.style.color        = tab==='receiver' ? '#48bb78' : '#718096';
-    }
-    function ukGoToReceiver() {
-        if (!document.getElementById('ukFullName').value.trim() ||
-            !document.getElementById('ukPhone').value.trim() ||
-            !document.getElementById('ukAddress1').value.trim() ||
-            !document.getElementById('ukCity').value.trim() ||
-            !document.getElementById('ukPostcode').value.trim()) {
-            alert('Please fill in all required sender fields before continuing.');
-            return;
-        }
-        ukSwitchTab('receiver');
-    }
-    </script>
+    
 
 
     <!-- FIB Modal -->
-<!-- FIB Modal -->
-    <div class="modal" id="fibModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button class="close-modal" onclick="closeModal('fibModal')">
-                    <i class="fas fa-times"></i>
-                </button>
-                <h2>💳 پارەدان بە FIB کوردستان</h2>
-            </div>
-            <div class="fib-card" style="background: linear-gradient(135deg, #1e3a8a, #1e40af); padding: 30px; border-radius: 12px; text-align: center; color: white; margin-bottom: 20px;">
-                <p>ژمارەی حیساب</p>
-                <h3 style="font-size: 2rem; letter-spacing: 2px;">7769654490</h3>
-            </div>
-            <div class="form-actions" style="display: flex; gap: 10px;">
-                <button class="btn btn-primary" onclick="copyFibNumber()" style="flex: 1;">کۆپی ژمارە</button>
-                <button class="btn btn-secondary" onclick="contactFibWhatsApp()" style="flex: 1;">واتساپ</button>
-            </div>
-        </div>
-    </div>
+
 
     
         <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="./script.js"></script>
 </body>
 </html>
