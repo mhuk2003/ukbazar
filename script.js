@@ -1,25 +1,3 @@
-function ukSwitchTab(tab) {
-        document.getElementById('ukPanel-sender').style.display   = tab==='sender'   ? 'block' : 'none';
-        document.getElementById('ukPanel-receiver').style.display = tab==='receiver' ? 'block' : 'none';
-        var s = document.getElementById('ukTab-sender');
-        var r = document.getElementById('ukTab-receiver');
-        s.style.borderBottom = tab==='sender'   ? '3px solid #667eea' : '3px solid transparent';
-        s.style.color        = tab==='sender'   ? '#667eea' : '#718096';
-        r.style.borderBottom = tab==='receiver' ? '3px solid #48bb78' : '3px solid transparent';
-        r.style.color        = tab==='receiver' ? '#48bb78' : '#718096';
-    }
-    function ukGoToReceiver() {
-        if (!document.getElementById('ukFullName').value.trim() ||
-            !document.getElementById('ukPhone').value.trim() ||
-            !document.getElementById('ukAddress1').value.trim() ||
-            !document.getElementById('ukCity').value.trim() ||
-            !document.getElementById('ukPostcode').value.trim()) {
-            alert('Please fill in all required sender fields before continuing.');
-            return;
-        }
-        ukSwitchTab('receiver');
-    }
-
 // Firebase Configuration
 const firebaseConfig = {
     apiKey: "AIzaSyBTXwymNyHqLHVqYL7XN6FYSOeL1V_dNwo",
@@ -32,8 +10,23 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-const storage = firebase.storage();
+
+let database, storage;
+try {
+    database = firebase.database();
+} catch(e) {
+    console.error('Firebase Database error:', e);
+    database = {
+        ref: () => ({ once: () => Promise.resolve({ val: () => null, forEach: () => {} }),
+                      push: () => Promise.resolve(), on: () => {}, off: () => {} })
+    };
+}
+try {
+    storage = firebase.storage();
+} catch(e) {
+    console.error('Firebase Storage error:', e);
+    storage = { ref: () => ({ put: () => Promise.resolve(), getDownloadURL: () => Promise.resolve('') }) };
+}
 
 let products = [];
 let cart = [];
@@ -52,104 +45,188 @@ const DEFAULT_SLIDER_IMAGE = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.or
     const style = document.createElement('style');
     style.id = 'delivery-label-compact-css';
     style.textContent = `
-        /* ===== Compact Delivery Label Card ===== */
+        /* ===== Ultra-Compact Delivery Label — Mobile First ===== */
         .delivery-label-card {
-            border-radius: 12px !important;
+            border-radius: 10px !important;
             overflow: hidden;
-            box-shadow: 0 2px 12px rgba(102,126,234,0.13);
-            margin-bottom: 14px !important;
-            font-size: 0.88rem;
+            box-shadow: 0 2px 8px rgba(102,126,234,0.12);
+            margin-bottom: 10px !important;
+            font-size: 0.82rem;
+            border: 1.5px solid #e2e8f0;
         }
         .label-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 6px;
-            padding: 8px 12px !important;
-            flex-wrap: nowrap;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 5px !important;
+            padding: 6px 10px !important;
+            flex-wrap: nowrap !important;
+            min-height: unset !important;
         }
         .label-order-num {
-            font-size: 1rem !important;
+            font-size: 0.9rem !important;
             font-weight: 800;
             flex-shrink: 0;
         }
         .label-title-center {
-            font-size: 0.78rem !important;
+            font-size: 0.72rem !important;
             flex: 1;
             text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .label-body-wrap {
-            padding: 8px 10px !important;
-        }
-        .label-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 7px;
-            margin-bottom: 7px;
-        }
-        .label-section {
-            padding: 7px 8px !important;
-            border-radius: 8px;
-        }
-        .label-section-title {
-            font-size: 0.78rem !important;
-            margin-bottom: 5px !important;
-        }
-        .label-row {
-            font-size: 0.78rem !important;
-            padding: 2px 0 !important;
-        }
-        .label-package {
-            padding: 7px 8px !important;
-            border-radius: 8px;
-            margin-bottom: 7px !important;
-        }
-        .label-admin-edit {
-            padding: 8px 10px !important;
-            border-radius: 10px;
-            margin-bottom: 7px !important;
-        }
-        .admin-edit-title {
-            font-size: 0.78rem !important;
-            margin-bottom: 6px !important;
-        }
-        .admin-edit-inputs {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 6px;
-        }
-        .admin-edit-inputs input {
-            font-size: 0.8rem !important;
             padding: 6px 8px !important;
         }
-        .admin-save-btn {
-            padding: 6px 14px !important;
-            font-size: 0.8rem !important;
+        .label-grid {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 5px !important;
+            margin-bottom: 5px !important;
         }
+        .label-section {
+            padding: 5px 7px !important;
+            border-radius: 7px !important;
+        }
+        .label-section-title {
+            font-size: 0.72rem !important;
+            font-weight: 700 !important;
+            margin-bottom: 3px !important;
+            padding-bottom: 3px !important;
+        }
+        .label-row {
+            font-size: 0.72rem !important;
+            padding: 1px 0 !important;
+            gap: 3px !important;
+        }
+        .label-row span { font-size: 0.68rem !important; }
+        .label-row strong { font-size: 0.72rem !important; }
+        .label-package {
+            padding: 5px 7px !important;
+            border-radius: 7px !important;
+            margin-bottom: 5px !important;
+        }
+        /* بەشی شۆفیر — دابخرێت بۆ ئەوەی بچووکتر بێت */
+        .label-admin-edit {
+            padding: 6px 8px !important;
+            border-radius: 8px !important;
+            margin-bottom: 5px !important;
+        }
+        .admin-edit-title {
+            font-size: 0.72rem !important;
+            margin-bottom: 4px !important;
+        }
+        .admin-edit-inputs {
+            display: flex !important;
+            gap: 4px !important;
+            margin-bottom: 4px !important;
+        }
+        .admin-edit-inputs input,
+        .label-admin-edit textarea {
+            font-size: 0.75rem !important;
+            padding: 5px 7px !important;
+            border-radius: 6px !important;
+        }
+        .label-admin-edit textarea {
+            rows: 2 !important;
+            min-height: 40px !important;
+            max-height: 60px !important;
+            resize: none !important;
+        }
+        .admin-save-btn {
+            padding: 5px 12px !important;
+            font-size: 0.75rem !important;
+            border-radius: 6px !important;
+        }
+        /* QR بچووکتر */
         .label-qr-wrap {
-            text-align: center;
-            padding: 6px 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 8px !important;
+            padding: 4px 0 !important;
         }
         .label-qr-img {
-            width: 80px !important;
-            height: 80px !important;
+            width: 64px !important;
+            height: 64px !important;
         }
         .label-qr-hint {
-            font-size: 0.7rem !important;
-            margin-top: 2px !important;
+            font-size: 0.65rem !important;
+            margin-top: 1px !important;
+            color: #718096;
         }
         .label-footer {
-            padding: 6px 12px !important;
-            font-size: 0.75rem !important;
+            padding: 4px 10px !important;
+            font-size: 0.68rem !important;
         }
-        @media (max-width: 480px) {
+        /* موبایل: ستوون یەک */
+        @media (max-width: 500px) {
             .label-grid {
-                grid-template-columns: 1fr;
-            }
-            .label-title-center {
-                display: none;
+                grid-template-columns: 1fr !important;
+                gap: 4px !important;
             }
         }
+
+        /* ===== Loading Screen — بچووکتر و خێراتر ===== */
+        .loading-spinner {
+            position: fixed !important;
+            inset: 0 !important;
+            z-index: 9999 !important;
+            background: #fff !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: opacity 0.25s !important;
+        }
+        .spinner-banner {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 6px !important;
+            padding: 24px 20px !important;
+            max-width: 280px !important;
+            width: 90% !important;
+        }
+        /* لۆگۆی سەرەوە — بچووکتر */
+        .spinner-banner .banner-logo {
+            width: 52px !important;
+            height: 52px !important;
+            border-radius: 14px !important;
+            object-fit: contain !important;
+        }
+        /* ناوی سایت */
+        .spinner-banner .banner-title {
+            font-size: 1.3rem !important;
+            font-weight: 800 !important;
+            color: #667eea !important;
+            margin: 0 !important;
+        }
+        .spinner-banner .banner-slogan {
+            font-size: 0.78rem !important;
+            color: #718096 !important;
+            margin: 0 !important;
+        }
+        /* وێنەی باندەر — بسڕێتەوە */
+        .spinner-banner .banner-image {
+            display: none !important;
+        }
+        /* spinner */
+        .spinner-small {
+            width: 32px !important;
+            height: 32px !important;
+            border: 3px solid #e2e8f0 !important;
+            border-top-color: #667eea !important;
+            border-radius: 50% !important;
+            animation: spin 0.7s linear infinite !important;
+            margin-top: 6px !important;
+        }
+        .loading-text {
+            font-size: 0.8rem !important;
+            color: #a0aec0 !important;
+            margin: 0 !important;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     `;
     document.head.appendChild(style);
 })();
@@ -182,6 +259,7 @@ function hideLoading() {
     const spinner = document.getElementById('loadingSpinner');
     if (spinner) {
         spinner.style.opacity = '0';
+        spinner.style.pointerEvents = 'none';
         setTimeout(() => {
             spinner.style.display = 'none';
         }, 300);
@@ -193,6 +271,7 @@ function showLoading() {
     if (spinner) {
         spinner.style.display = 'flex';
         spinner.style.opacity = '1';
+        spinner.style.pointerEvents = 'all';
     }
 }
 
@@ -2092,13 +2171,22 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
     loadApprovedProducts();
     updateCartBadge();
-});
-// Back to Top Button - scroll visibility only (click handled via onclick in HTML)
-document.addEventListener('DOMContentLoaded', function() {
+
+    // Back to Top scroll visibility
     const backToTopBtn = document.getElementById('backToTopBtn');
     if (backToTopBtn) {
         window.addEventListener('scroll', function() {
             backToTopBtn.style.opacity = window.pageYOffset > 300 ? '1' : '0.4';
         });
     }
+
+    // سەیف-گارد: ئەگەر لۆدینگ سکرین پاش 4 چرکە هێشتا بوو — بیشارەوە
+    setTimeout(() => {
+        const spinner = document.getElementById('loadingSpinner');
+        if (spinner) {
+            spinner.style.opacity = '0';
+            spinner.style.pointerEvents = 'none';
+            spinner.style.display = 'none';
+        }
+    }, 4000);
 });
