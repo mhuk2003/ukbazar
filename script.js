@@ -658,12 +658,18 @@ function loadRequests() {
             
             snapshot.forEach((child) => {
                 const request = child.val();
+                const key = child.key;
                 html += `
-                    <div class="pending-item">
+                    <div class="pending-item" id="request-${key}">
                         <h4>📋 ${escapeHtml(request.itemName)}</h4>
                         <p><strong>کەس:</strong> ${escapeHtml(request.name)} - ${escapeHtml(request.mobile)}</p>
                         <p><strong>وردەکاری:</strong> ${escapeHtml(request.details) || 'بەبەتاڵ'}</p>
                         <p><strong>بەروار:</strong> ${escapeHtml(request.timestamp)}</p>
+                        <div class="actions">
+                            <button class="btn btn-danger btn-small" onclick="deleteRequest('${key}')">
+                                <i class="fas fa-trash"></i> سڕینەوە
+                            </button>
+                        </div>
                     </div>
                 `;
             });
@@ -1284,25 +1290,46 @@ function deleteSliderImage(sliderId) {
     }
 }
 
+// ==================== Delete Request ====================
+function deleteRequest(key) {
+    if (!confirm('دڵنیایت لە سڕینەوەی ئەم داواکارییە؟')) return;
+    database.ref('requests/' + key).remove()
+        .then(() => {
+            showNotification('داواکاری بە سەرکەوتوویی سڕایەوە 🗑️');
+            const item = document.getElementById('request-' + key);
+            if (item) {
+                item.style.transition = 'opacity 0.3s, transform 0.3s';
+                item.style.opacity = '0';
+                item.style.transform = 'scale(0.95)';
+                setTimeout(() => item.remove(), 300);
+            }
+        })
+        .catch(() => showNotification('هەڵە لە سڕینەوە!', 'error'));
+}
+
 // ==================== Delete Delivery Label ====================
 function deleteDelivery(key) {
-    if (confirm('دڵنیایت لە سڕینەوەی ئەم لەیبلە؟\nAre you sure you want to delete this label?')) {
-        database.ref('delivery/' + key).remove()
-            .then(() => {
-                showNotification('لەیبل بە سەرکەوتوویی سڕایەوە 🗑️');
-                // سڕینەوەی کارتەکە بە ئەنیمەیشن
-                const card = document.getElementById('label-' + key);
-                if (card) {
-                    card.style.transition = 'opacity 0.3s, transform 0.3s';
-                    card.style.opacity = '0';
-                    card.style.transform = 'scale(0.95)';
-                    setTimeout(() => card.remove(), 300);
-                }
-                // نوێکردنەوەی لیستی کاشی
-                _allDeliveryItems = _allDeliveryItems.filter(i => i.key !== key);
-            })
-            .catch(() => showNotification('هەڵە لە سڕینەوە!', 'error'));
+    const pass = prompt('🔐 وشەی تێپەڕی بەڕێوەبەر داخڵ بکە بۆ سڕینەوەی لەیبل:\n(Admin password required to delete label)');
+    if (pass === null) return; // cancelled
+    if (pass !== 'admin112233') {
+        showNotification('❌ وشەی تێپەڕ هەڵەیە! تەنها بەڕێوەبەر دەتوانێت لەیبل بسڕێتەوە.', 'error');
+        return;
     }
+    database.ref('delivery/' + key).remove()
+        .then(() => {
+            showNotification('لەیبل بە سەرکەوتوویی سڕایەوە 🗑️');
+            // سڕینەوەی کارتەکە بە ئەنیمەیشن
+            const card = document.getElementById('label-' + key);
+            if (card) {
+                card.style.transition = 'opacity 0.3s, transform 0.3s';
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.95)';
+                setTimeout(() => card.remove(), 300);
+            }
+            // نوێکردنەوەی لیستی کاشی
+            _allDeliveryItems = _allDeliveryItems.filter(i => i.key !== key);
+        })
+        .catch(() => showNotification('هەڵە لە سڕینەوە!', 'error'));
 }
 
 // ==================== Admin Forms ====================
