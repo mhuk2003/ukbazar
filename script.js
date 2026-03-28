@@ -1902,28 +1902,38 @@ function createProductCard(product) {
 const pcAutoTimers = {};
 const pcTouchState = {};
 
-// pcImgClick: کلیک بەسەر وینە = وینەی دیکە
-// تەنها یەک وینە بوو = zoom
+// pcImgClick: کلیک بەسەر وینە = zoom + وینەی دیکە
 function pcImgClick(cardId, imgSrc, event) {
     event.stopPropagation();
+    // یەکەم zoom بکا
+    openImageModal(imgSrc);
+    // دواتر وینەی دیکە پیشان بدات (بۆ جار دواتر)
     const card = document.getElementById(cardId);
     if (!card) return;
     const slides = card.querySelectorAll('.pc-slide');
-    if (slides.length <= 1) {
-        openImageModal(imgSrc);
-        return;
-    }
-    pcSlide(cardId, 1);
+    if (slides.length > 1) pcSlide(cardId, 1);
 }
 
-// zoom دوگمە لە کارتەکەدا
+// zoom دوگمە — وینەی ئێستا zoom بکات
 function pcZoom(cardId, event) {
     event.stopPropagation();
     const card = document.getElementById(cardId);
     if (!card) return;
-    const idx = parseInt(card.dataset.imgIndex) || 0;
+    // pc-slide imgs (چەند وینە)
     const slides = card.querySelectorAll('.pc-slide img');
-    if (slides[idx]) openImageModal(slides[idx].src);
+    if (slides.length > 0) {
+        const idx = parseInt(card.dataset.imgIndex) || 0;
+        if (slides[idx]) { openImageModal(slides[idx].src); return; }
+    }
+    // وینەی تەنها دانە — ڕاستەوخۆ img
+    const img = card.querySelector('.product-image img');
+    if (img) openImageModal(img.src);
+}
+
+// zoom بۆ وینەی تەنها (بەبێ دوگمە)
+function pcImgZoomSingle(imgSrc, event) {
+    event.stopPropagation();
+    openImageModal(imgSrc);
 }
 
 // hover desktop — auto-play
