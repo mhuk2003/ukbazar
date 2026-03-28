@@ -1867,10 +1867,9 @@ function createProductCard(product) {
         ? '<span class="pc-count">' + images.length + ' 📷</span>'
         : '';
 
-    // Auto slideshow events — mouse hover و touch
+    // Touch swipe events تەنها
     const autoEvents = images.length > 1
-        ? ' onmouseenter="pcStartAuto(\'' + cardId + '\')" onmouseleave="pcStopAuto(\'' + cardId + '\')"' +
-          ' ontouchstart="pcHandleTouch(\'' + cardId + '\',event)" ontouchend="pcHandleTouchEnd(\'' + cardId + '\',event)"'
+        ? ' ontouchstart="pcHandleTouch(\'' + cardId + '\',event)" ontouchend="pcHandleTouchEnd(\'' + cardId + '\',event)"'
         : '';
 
     return '<div class="product-card" id="' + cardId + '" data-img-index="0" data-img-count="' + images.length + '"' + autoEvents + '>' +
@@ -1903,19 +1902,17 @@ function createProductCard(product) {
 const pcAutoTimers = {};
 const pcTouchState = {};
 
-// pcImgClick: کلیک بەسەر وینە = وینەی دیکە (موبایل و desktop)
-// بۆ zoom: دوگمەی zoom-ەکە بەکار بهێنە
+// pcImgClick: کلیک بەسەر وینە = وینەی دیکە
+// تەنها یەک وینە بوو = zoom
 function pcImgClick(cardId, imgSrc, event) {
     event.stopPropagation();
     const card = document.getElementById(cardId);
     if (!card) return;
     const slides = card.querySelectorAll('.pc-slide');
     if (slides.length <= 1) {
-        // تەنها یەک وینە — zoom
         openImageModal(imgSrc);
         return;
     }
-    // چەند وینە — وینەی دیکە پیشان بدات
     pcSlide(cardId, 1);
 }
 
@@ -1941,7 +1938,6 @@ function pcStartAuto(cardId) {
 
 function pcStopAuto(cardId) {
     if (pcAutoTimers[cardId]) { clearInterval(pcAutoTimers[cardId]); delete pcAutoTimers[cardId]; }
-    pcGoTo(cardId, 0);
 }
 
 // swipe touch
