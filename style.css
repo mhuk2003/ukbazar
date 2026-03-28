@@ -636,6 +636,28 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 
+
+/* Zoom Button on product card */
+.pc-zoom-btn {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(0,0,0,0.45);
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 12px;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+.pc-zoom-btn:hover { background: rgba(102,126,234,0.85); }
+
 .pc-arrow {
     position: absolute;
     top: 50%;
