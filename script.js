@@ -1831,10 +1831,15 @@ function createProductCard(product) {
 
     // Build image slides
     let slidesHtml = '';
+    const _imgCount = images.length;
     images.forEach((img, idx) => {
-        slidesHtml += '<div class="pc-slide" style="' + (idx === 0 ? 'display:block' : 'display:none') + '">' +
+        const clickHandler = _imgCount > 1
+            ? 'pcImageClick(\'' + cardId + '\',\'' + img.replace(/'/g, "\\'") + '\',event)'
+            : 'openImageModal(\'' + img.replace(/'/g, "\\'") + '\')';
+        slidesHtml += '<div class="pc-slide' + (idx === 0 ? ' visible' : '') + '">' +
             '<img src="' + img + '" alt="' + (product.name || 'product') + '" loading="lazy" ' +
-            'onclick="openImageModal(\'' + img.replace(/'/g, "\\'") + '\')" style="cursor:zoom-in;width:100%;height:100%;object-fit:cover;" ' +
+            'onclick="' + clickHandler + '" ' +
+            'style="width:100%;height:100%;object-fit:cover;cursor:pointer;" ' +
             'onerror="this.onerror=null;this.src=\'' + DEFAULT_PRODUCT_IMAGE + '\'">' +
             '</div>';
     });
@@ -1862,8 +1867,15 @@ function createProductCard(product) {
         ? '<span class="pc-count">' + images.length + ' 📷</span>'
         : '';
 
-    return '<div class="product-card" id="' + cardId + '" data-img-index="0" data-img-count="' + images.length + '">' +
-        '<div class="product-image" style="position:relative;overflow:hidden;">' +
+    // Auto slideshow events — mouse hover و touch و click
+    const autoEvents = images.length > 1
+        ? ' onmouseenter="pcStartAuto(\'' + cardId + '\')" onmouseleave="pcStopAuto(\'' + cardId + '\')"' +
+          ' ontouchstart="pcHandleTouch(\'' + cardId + '\',event)" ontouchend="pcHandleTouchEnd(\'' + cardId + '\',event)"'
+        : '';
+
+    return '<div class="product-card" id="' + cardId + '" data-img-index="0" data-img-count="' + images.length + '"' + autoEvents + 
+        (images.length > 1 ? ' onclick="pcHandleCardClick(\'' + cardId + '\',event)"' : '') + '>' +
+        '<div class="product-image" style="position:relative;overflow:hidden;height:200px;">' +
         slidesHtml +
         arrowsHtml +
         dotsHtml +
@@ -1887,6 +1899,150 @@ function createProductCard(product) {
         '</div>';
 }
 
+// ==================== Auto Slideshow on Hover/Touch/Click ====================
+// کاتێک دەستت دەخەیتە سەر کارتەکە یان کلیک دەکەیت، وینەکان بەخۆیان دەگۆڕن
+const pcAutoTimers = {};
+const pcTouchState = {}; // touch start X position per card
+const pcClickActive = {}; // track if card is in click-slideshow mode
+
+function pcStartAuto(cardId) {
+    if (pcAutoTimers[cardId]) return;
+    const card = document.getElementById(cardId);
+    if (!card) return;
+    const slides = card.querySelectorAll('.pc-slide');
+    if (slides.length <= 1) return;
+    pcAutoTimers[cardId] = setInterval(() => {
+        pcSlide(cardId, 1);
+    }, 900);
+}
+
+function pcStopAuto(cardId) {
+    if (pcAutoTimers[cardId]) {
+        clearInterval(pcAutoTimers[cardId]);
+        delete pcAutoTimers[cardId];
+    }
+    if (!pcClickActive[cardId]) {
+        // گەڕانەوە بۆ وینەی یەکەم تەنها ئەگەر click mode چالاک نەبوو
+        const card = document.getElementById(cardId);
+        if (!card) return;
+        pcGoTo(cardId, 0);
+    }
+}
+
+// ==================== Click-to-Slideshow ====================
+function pcHandleCardClick(cardId, event) {
+    // ئەگەر کلیک لە دوگمە یان لینکدا بوو، پشتگوێ بخە
+    if (event.target.closest('button') || event.target.closest('a')) return;
+    // ئەگەر وینە zoom-in click بوو
+    if (event.target.tagName === 'IMG') return;
+
+    const card = document.getElementById(cardId);
+    if (!card) return;
+    const slides = card.querySelectorAll('.pc-slide');
+    if (slides.length <= 1) return;
+
+    if (!pcClickActive[cardId]) {
+        // یەکەم کلیک: چالاک بکە و auto-play دەست پێ بکا
+        pcClickActive[cardId] = true;
+        card.classList.add('pc-active');
+        pcStopAuto(cardId);
+        pcStartAutoClick(cardId);
+    }
+    // کلیک هەر بار وینەی دیکە پیشان بدات
+    pcSlide(cardId, 1);
+}
+
+function pcStartAutoClick(cardId) {
+    if (pcAutoTimers[cardId]) clearInterval(pcAutoTimers[cardId]);
+    const card = document.getElementById(cardId);
+    if (!card) return;
+    const slides = card.querySelectorAll('.pc-slide');
+    if (slides.length <= 1) return;
+    pcAutoTimers[cardId] = setInterval(() => {
+        pcSlide(cardId, 1);
+    }, 1200);
+
+    // پاش 6 چرکە بوەستێت و گەڕانەوە
+    if (card._clickTimeout) clearTimeout(card._clickTimeout);
+    card._clickTimeout = setTimeout(() => {
+        pcCancelClickMode(cardId);
+    }, 6000);
+}
+
+
+// ================== Image Click Logic ==================
+// کلیکی یەکەم: وینەی دیکە پیشان بدات
+// کلیکی دووەم (کاتێ pc-active): zoom بکا
+function pcImageClick(cardId, imgSrc, event) {
+    event.stopPropagation();
+    var card = document.getElementById(cardId);
+    if (!card) return;
+    if (pcClickActive[cardId]) {
+        openImageModal(imgSrc);
+    } else {
+        pcClickActive[cardId] = true;
+        card.classList.add("pc-active");
+        if (card._clickTimeout) clearTimeout(card._clickTimeout);
+        card._clickTimeout = setTimeout(function() { pcCancelClickMode(cardId); }, 6000);
+        pcSlide(cardId, 1);
+    }
+}
+
+function pcCancelClickMode(cardId) {
+    if (pcAutoTimers[cardId]) {
+        clearInterval(pcAutoTimers[cardId]);
+        delete pcAutoTimers[cardId];
+    }
+    delete pcClickActive[cardId];
+    const card = document.getElementById(cardId);
+    if (!card) return;
+    card.classList.remove('pc-active');
+    pcGoTo(cardId, 0);
+}
+
+// ==================== Touch Swipe Support ====================
+function pcHandleTouch(cardId, event) {
+    const card = document.getElementById(cardId);
+    if (!card) return;
+    const slides = card.querySelectorAll('.pc-slide');
+    if (slides.length <= 1) return;
+    // ذخیرەکردنی شوێنی دەست
+    if (event.touches && event.touches[0]) {
+        pcTouchState[cardId] = { x: event.touches[0].clientX, y: event.touches[0].clientY, time: Date.now() };
+    }
+}
+
+function pcHandleTouchEnd(cardId, event) {
+    const card = document.getElementById(cardId);
+    if (!card) return;
+    const slides = card.querySelectorAll('.pc-slide');
+    if (slides.length <= 1) return;
+
+    const start = pcTouchState[cardId];
+    if (!start) return;
+
+    const touch = event.changedTouches && event.changedTouches[0];
+    if (!touch) return;
+
+    const dx = touch.clientX - start.x;
+    const dy = touch.clientY - start.y;
+    const dt = Date.now() - start.time;
+
+    // Swipe: horizontal > 40px و vertical < 60px و مێژووی کەم
+    if (Math.abs(dx) > 40 && Math.abs(dy) < 60 && dt < 500) {
+        // RTL: swipe چەپ = وینەی دیکە
+        const dir = dx < 0 ? 1 : -1;
+        pcClickActive[cardId] = true;
+        card.classList.add('pc-active');
+        if (card._clickTimeout) clearTimeout(card._clickTimeout);
+        card._clickTimeout = setTimeout(() => { pcCancelClickMode(cardId); }, 5000);
+        pcSlide(cardId, dir);
+        event.preventDefault();
+    }
+
+    delete pcTouchState[cardId];
+}
+
 // Product Card Slider Functions
 function pcSlide(cardId, dir) {
     const card = document.getElementById(cardId);
@@ -1894,10 +2050,10 @@ function pcSlide(cardId, dir) {
     const slides = card.querySelectorAll('.pc-slide');
     const dots = card.querySelectorAll('.pc-dot');
     let idx = parseInt(card.dataset.imgIndex) || 0;
-    slides[idx].style.display = 'none';
+    slides[idx].classList.remove('visible');
     if (dots[idx]) dots[idx].classList.remove('active');
     idx = (idx + dir + slides.length) % slides.length;
-    slides[idx].style.display = 'block';
+    slides[idx].classList.add('visible');
     if (dots[idx]) dots[idx].classList.add('active');
     card.dataset.imgIndex = idx;
 }
@@ -1908,9 +2064,9 @@ function pcGoTo(cardId, idx) {
     const slides = card.querySelectorAll('.pc-slide');
     const dots = card.querySelectorAll('.pc-dot');
     const cur = parseInt(card.dataset.imgIndex) || 0;
-    slides[cur].style.display = 'none';
+    slides[cur].classList.remove('visible');
     if (dots[cur]) dots[cur].classList.remove('active');
-    slides[idx].style.display = 'block';
+    slides[idx].classList.add('visible');
     if (dots[idx]) dots[idx].classList.add('active');
     card.dataset.imgIndex = idx;
 }
