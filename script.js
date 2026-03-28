@@ -1496,9 +1496,9 @@ function showAdminAddProductForm() {
                         <option value="زەوی">زەوی</option>
                         <option value="باخ">باخ</option>
                         <option value="ئاژەڵ">ئاژەڵ</option>
-                        <option value=" پیاوان"> پیاوان</option>
-                        <option value=" ئافرەتان"> ئافرەتان</option>
-                        <option value=" منداڵان"> منداڵان</option>
+                        <option value="جلوبەرگی پیاوان">جلوبەرگی پیاوان</option>
+                        <option value="جلوبەرگی ئافرەتان">جلوبەرگی ئافرەتان</option>
+                        <option value="جلوبەرگی منداڵان">جلوبەرگی منداڵان</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -1747,9 +1747,9 @@ function createCategoryButtons() {
         'زەوی',
         'باخ',
         'ئاژەڵ',
-        ' پیاوان',
-        ' ئافرەتان',
-        ' منداڵان'
+        'جلوبەرگی پیاوان',
+        'جلوبەرگی ئافرەتان',
+        'جلوبەرگی منداڵان'
     ];
     
     const container = document.getElementById('categoryButtons');
@@ -1811,10 +1811,11 @@ function performSearch() {
 
 // ==================== Product Card & Rendering ====================
 function createProductCard(product) {
-    let firstImage = DEFAULT_PRODUCT_IMAGE;
-    if (product.images && product.images.length > 0 && product.images[0]) {
-        firstImage = product.images[0];
-    }
+    const images = (product.images && product.images.length > 0)
+        ? product.images.filter(Boolean)
+        : [DEFAULT_PRODUCT_IMAGE];
+
+    const cardId = 'card_' + (product.firebaseId || Math.random().toString(36).substr(2,8));
 
     const productName = product.name && product.name.length > 30 
         ? product.name.substring(0, 27) + '...' 
@@ -1828,25 +1829,52 @@ function createProductCard(product) {
         ? product.location.substring(0, 17) + '...' 
         : product.location || 'نادیار';
 
-    return '<div class="product-card">' +
-        '<div class="product-image">' +
-        '<img src="' + firstImage + '" ' +
-        'alt="' + (product.name || 'product') + '" ' +
-        'loading="lazy" ' +
-        'onclick="openImageModal(\'' + firstImage.replace(/'/g, "\\'") + '\')" ' +
-        'style="cursor: zoom-in;" ' +
-        'onerror="this.onerror=null; this.src=\'' + DEFAULT_PRODUCT_IMAGE + '\'">' +
+    // Build image slides
+    let slidesHtml = '';
+    images.forEach((img, idx) => {
+        slidesHtml += '<div class="pc-slide" style="' + (idx === 0 ? 'display:block' : 'display:none') + '">' +
+            '<img src="' + img + '" alt="' + (product.name || 'product') + '" loading="lazy" ' +
+            'onclick="openImageModal(\'' + img.replace(/'/g, "\\'") + '\')" style="cursor:zoom-in;width:100%;height:100%;object-fit:cover;" ' +
+            'onerror="this.onerror=null;this.src=\'' + DEFAULT_PRODUCT_IMAGE + '\'">' +
+            '</div>';
+    });
+
+    // Dots
+    let dotsHtml = '';
+    if (images.length > 1) {
+        dotsHtml = '<div class="pc-dots">';
+        images.forEach((_, idx) => {
+            dotsHtml += '<span class="pc-dot' + (idx === 0 ? ' active' : '') + '" onclick="pcGoTo(\'' + cardId + '\',' + idx + ')"></span>';
+        });
+        dotsHtml += '</div>';
+    }
+
+    // Arrows
+    let arrowsHtml = '';
+    if (images.length > 1) {
+        arrowsHtml =
+            '<button class="pc-arrow pc-prev" onclick="pcSlide(\'' + cardId + '\',-1)"><i class="fas fa-chevron-right"></i></button>' +
+            '<button class="pc-arrow pc-next" onclick="pcSlide(\'' + cardId + '\',1)"><i class="fas fa-chevron-left"></i></button>';
+    }
+
+    // Image count badge
+    const countBadge = images.length > 1
+        ? '<span class="pc-count">' + images.length + ' 📷</span>'
+        : '';
+
+    return '<div class="product-card" id="' + cardId + '" data-img-index="0" data-img-count="' + images.length + '">' +
+        '<div class="product-image" style="position:relative;overflow:hidden;">' +
+        slidesHtml +
+        arrowsHtml +
+        dotsHtml +
+        countBadge +
         '</div>' +
         '<div class="product-info">' +
         '<div class="product-category">' + (product.category || 'هەموویی') + '</div>' +
         '<h3 class="product-name" title="' + (product.name || '') + '">' + productName + '</h3>' +
         '<div class="product-price">' + (product.price || '0') + ' ' + (product.currency || 'IQD') + '</div>' +
-        '<div class="product-seller">' +
-        '<i class="fas fa-user"></i> ' + sellerName +
-        '</div>' +
-        '<div class="product-location" title="' + (product.location || '') + '">' +
-        '<i class="fas fa-map-marker-alt"></i> ' + location +
-        '</div>' +
+        '<div class="product-seller"><i class="fas fa-user"></i> ' + sellerName + '</div>' +
+        '<div class="product-location" title="' + (product.location || '') + '"><i class="fas fa-map-marker-alt"></i> ' + location + '</div>' +
         '<div class="product-actions">' +
         '<button class="btn btn-primary btn-small" onclick="addToCart(\'' + product.firebaseId + '\')">' +
         '<i class="fas fa-cart-plus"></i> <span class="btn-text">سەبەتە</span>' +
@@ -1857,6 +1885,34 @@ function createProductCard(product) {
         '</div>' +
         '</div>' +
         '</div>';
+}
+
+// Product Card Slider Functions
+function pcSlide(cardId, dir) {
+    const card = document.getElementById(cardId);
+    if (!card) return;
+    const slides = card.querySelectorAll('.pc-slide');
+    const dots = card.querySelectorAll('.pc-dot');
+    let idx = parseInt(card.dataset.imgIndex) || 0;
+    slides[idx].style.display = 'none';
+    if (dots[idx]) dots[idx].classList.remove('active');
+    idx = (idx + dir + slides.length) % slides.length;
+    slides[idx].style.display = 'block';
+    if (dots[idx]) dots[idx].classList.add('active');
+    card.dataset.imgIndex = idx;
+}
+
+function pcGoTo(cardId, idx) {
+    const card = document.getElementById(cardId);
+    if (!card) return;
+    const slides = card.querySelectorAll('.pc-slide');
+    const dots = card.querySelectorAll('.pc-dot');
+    const cur = parseInt(card.dataset.imgIndex) || 0;
+    slides[cur].style.display = 'none';
+    if (dots[cur]) dots[cur].classList.remove('active');
+    slides[idx].style.display = 'block';
+    if (dots[idx]) dots[idx].classList.add('active');
+    card.dataset.imgIndex = idx;
 }
 
 function renderProducts(productsList) {
