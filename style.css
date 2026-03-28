@@ -917,32 +917,35 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     left: 0;
     right: 0;
     background: white;
-    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
-    padding: 12px 0;
+    box-shadow: 0 -3px 15px rgba(0, 0, 0, 0.1);
+    padding: 6px 0;
     z-index: 99;
 }
 
 .bottom-nav {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    max-width: 600px;
-    margin: 0 auto;
+    width: 100%;
+    padding: 0 4px;
 }
 
 .bottom-nav-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    justify-content: center;
+    gap: 2px;
     color: var(--gray);
     text-decoration: none;
-    font-size: 0.75rem;
+    font-size: 0.62rem;
     font-weight: 500;
-    padding: 8px 14px;
-    border-radius: 30px;
+    padding: 4px 2px;
+    border-radius: 12px;
     transition: all 0.25s;
     cursor: pointer;
+    flex: 1;
+    min-width: 0;
 }
 
 .bottom-nav-item i,
@@ -952,7 +955,16 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .bottom-nav-item i {
-    font-size: 1.4rem;
+    font-size: 1.15rem;
+    line-height: 1;
+}
+
+.bottom-nav-item span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    text-align: center;
 }
 
 .bottom-nav-item.active {
