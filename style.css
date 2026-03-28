@@ -135,7 +135,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 .header {
     background: white;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
-    padding: 15px 0;
+    padding: 8px 0;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -344,11 +344,11 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 
 /* Search Section */
 .search-section {
-    padding: 20px 0;
+    padding: 10px 0;
     background: linear-gradient(135deg, #f8f9fa, #ffffff);
-    margin: 20px 0;
-    border-radius: 16px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    margin: 10px 0;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
 }
 
 .search-box {
@@ -357,8 +357,8 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     margin: 0 auto;
     background: white;
     border-radius: 50px;
-    padding: 5px 5px 5px 20px;
-    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.15);
+    padding: 3px 3px 3px 14px;
+    box-shadow: 0 3px 12px rgba(102, 126, 234, 0.15);
     border: 2px solid var(--primary);
 }
 
@@ -366,8 +366,8 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     flex: 1;
     border: none;
     outline: none;
-    padding: 15px;
-    font-size: 1.1rem;
+    padding: 9px 10px;
+    font-size: 0.95rem;
     background: transparent;
     direction: rtl;
 }
@@ -380,19 +380,14 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     background: linear-gradient(135deg, var(--primary), #764ba2);
     border: none;
     color: white;
-    padding: 12px 30px;
+    padding: 9px 20px;
     border-radius: 40px;
     cursor: pointer;
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     transition: all 0.3s;
-}
-
-.search-box button:hover {
-    transform: scale(1.02);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
 }
 
 /* Category Filter - Optimized for Mobile */
