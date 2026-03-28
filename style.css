@@ -609,11 +609,30 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     height: 100%;
     position: absolute;
     top: 0; left: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: block !important;
+    pointer-events: none;
+}
+
+.pc-slide.visible {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .pc-slide img {
     transition: transform 0.4s;
 }
+
+/* کارتی کلیک چالاک */
+.product-card[data-img-count]:not([data-img-count="1"]) {
+    cursor: pointer;
+}
+
+.product-card.pc-active .pc-count {
+    background: rgba(102,126,234,0.85);
+}
+
 
 .pc-arrow {
     position: absolute;
