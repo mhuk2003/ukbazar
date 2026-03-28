@@ -610,6 +610,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     position: absolute;
     top: 0; left: 0;
     opacity: 0;
+    z-index: 1;
     transition: opacity 0.3s ease;
     display: block !important;
     pointer-events: none;
@@ -617,6 +618,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 
 .pc-slide.visible {
     opacity: 1;
+    z-index: 2;
     pointer-events: auto;
 }
 
@@ -649,7 +651,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 5;
+    z-index: 10;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     transition: all 0.2s;
     padding: 0;
@@ -666,7 +668,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     transform: translateX(-50%);
     display: flex;
     gap: 5px;
-    z-index: 5;
+    z-index: 10;
 }
 
 .pc-dot {
