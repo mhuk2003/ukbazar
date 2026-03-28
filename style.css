@@ -919,7 +919,13 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     background: white;
     box-shadow: 0 -3px 15px rgba(0, 0, 0, 0.1);
     padding: 6px 0;
+    padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
     z-index: 99;
+}
+
+.bottom-panel .container {
+    padding: 0 6px;
+    width: 100%;
 }
 
 .bottom-nav {
