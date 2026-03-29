@@ -1948,52 +1948,86 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 .image-modal {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.95);
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.96);
     z-index: 9999;
     align-items: center;
     justify-content: center;
-    cursor: zoom-out;
+    touch-action: none;
 }
+.image-modal.show { display: flex; }
 
-.image-modal.show {
+.modal-img-wrap {
+    position: relative;
     display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%; height: 100%;
+    overflow: hidden;
 }
 
 .image-modal img {
-    max-width: 95%;
-    max-height: 95%;
+    max-width: 95vw;
+    max-height: 88vh;
     object-fit: contain;
-    border-radius: 12px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    user-select: none;
+    transform-origin: center center;
+    touch-action: none;
+    will-change: transform;
 }
 
 .image-modal-close {
     position: absolute;
-    top: 25px;
-    right: 25px;
-    background: white;
-    color: #333;
+    top: 16px; right: 16px;
+    background: rgba(255,255,255,0.15);
+    color: white;
     border: none;
-    width: 60px;
-    height: 60px;
+    width: 44px; height: 44px;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 2rem;
+    font-size: 1.2rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s;
+    z-index: 10001;
+    transition: background 0.2s;
 }
+.image-modal-close:hover { background: rgba(220,53,69,0.8); }
 
-.image-modal-close:hover {
-    background: var(--danger);
+.image-modal-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.15);
     color: white;
-    transform: rotate(180deg) scale(1.1);
+    border: none;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    transition: background 0.2s;
+}
+.image-modal-arrow:hover { background: rgba(255,255,255,0.35); }
+.modal-prev { right: 12px; }
+.modal-next { left: 12px; }
+
+.modal-counter {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,0.75);
+    font-size: 0.85rem;
+    z-index: 10001;
+    background: rgba(0,0,0,0.4);
+    padding: 4px 14px;
+    border-radius: 20px;
 }
 
 /* Notification */
