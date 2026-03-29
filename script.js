@@ -1902,16 +1902,14 @@ function createProductCard(product) {
 const pcAutoTimers = {};
 const pcTouchState = {};
 
-// pcImgClick: کلیک بەسەر وینە = zoom + وینەی دیکە
+// pcImgClick: کلیک = zoom + هەموو وینەکانی کارتەکە بنێرە بۆ modal
 function pcImgClick(cardId, imgSrc, event) {
     event.stopPropagation();
-    // یەکەم zoom بکا
-    openImageModal(imgSrc);
-    // دواتر وینەی دیکە پیشان بدات (بۆ جار دواتر)
     const card = document.getElementById(cardId);
-    if (!card) return;
-    const slides = card.querySelectorAll('.pc-slide');
-    if (slides.length > 1) pcSlide(cardId, 1);
+    // لیستی هەموو وینەکان
+    const imgs = card ? Array.from(card.querySelectorAll('.pc-slide img')).map(i => i.src) : [imgSrc];
+    const idx = imgs.indexOf(imgSrc);
+    openImageModal(imgSrc, imgs.length > 0 ? imgs : [imgSrc], idx >= 0 ? idx : 0);
 }
 
 // zoom دوگمە — وینەی ئێستا zoom بکات
@@ -1919,15 +1917,15 @@ function pcZoom(cardId, event) {
     event.stopPropagation();
     const card = document.getElementById(cardId);
     if (!card) return;
-    // pc-slide imgs (چەند وینە)
     const slides = card.querySelectorAll('.pc-slide img');
     if (slides.length > 0) {
         const idx = parseInt(card.dataset.imgIndex) || 0;
-        if (slides[idx]) { openImageModal(slides[idx].src); return; }
+        const allSrcs = Array.from(slides).map(i => i.src);
+        openImageModal(allSrcs[idx], allSrcs, idx);
+        return;
     }
-    // وینەی تەنها دانە — ڕاستەوخۆ img
     const img = card.querySelector('.product-image img');
-    if (img) openImageModal(img.src);
+    if (img) openImageModal(img.src, [img.src], 0);
 }
 
 // zoom بۆ وینەی تەنها (بەبێ دوگمە)
@@ -2237,14 +2235,73 @@ function startAutoPlay() {
 }
 
 // ==================== Image Modal ====================
-function openImageModal(imageSrc) {
+// ==================== Image Modal با Swipe + Pinch Zoom ====================
+let _modalImages = [];   // لیستی هەموو وینەکان
+let _modalIdx = 0;       // ئێستا کام وینە
+let _mScale = 1;         // zoom scale
+let _mTouchStart = null;
+let _mPinchDist = 0;
+
+function openImageModal(imageSrc, allImages, startIdx) {
     const modal = document.getElementById('imageModal');
     const img = document.getElementById('zoomedImage');
     if (!modal || !img) return;
-    
-    img.src = imageSrc;
+
+    // لیستی وینەکان دیاری بکە
+    if (allImages && allImages.length > 0) {
+        _modalImages = allImages;
+        _modalIdx = startIdx || 0;
+    } else {
+        _modalImages = [imageSrc];
+        _modalIdx = 0;
+    }
+
+    _mScale = 1;
+    img.style.transform = 'scale(1)';
+    img.src = _modalImages[_modalIdx];
     modal.classList.add('show');
     document.body.style.overflow = 'hidden';
+    _updateModalCounter();
+    _bindModalTouch();
+}
+
+function _updateModalCounter() {
+    const counter = document.getElementById('modalCounter');
+    const prevBtn = document.querySelector('.modal-prev');
+    const nextBtn = document.querySelector('.modal-next');
+    if (!counter) return;
+    if (_modalImages.length <= 1) {
+        counter.style.display = 'none';
+        if (prevBtn) prevBtn.style.display = 'none';
+        if (nextBtn) nextBtn.style.display = 'none';
+    } else {
+        counter.style.display = 'block';
+        counter.textContent = (_modalIdx + 1) + ' / ' + _modalImages.length;
+        if (prevBtn) prevBtn.style.display = 'flex';
+        if (nextBtn) nextBtn.style.display = 'flex';
+    }
+}
+
+function modalNextImg() {
+    if (_modalImages.length <= 1) return;
+    _modalIdx = (_modalIdx + 1) % _modalImages.length;
+    _setModalImg();
+}
+
+function modalPrevImg() {
+    if (_modalImages.length <= 1) return;
+    _modalIdx = (_modalIdx - 1 + _modalImages.length) % _modalImages.length;
+    _setModalImg();
+}
+
+function _setModalImg() {
+    const img = document.getElementById('zoomedImage');
+    if (img) {
+        _mScale = 1;
+        img.style.transform = 'scale(1)';
+        img.src = _modalImages[_modalIdx];
+    }
+    _updateModalCounter();
 }
 
 function closeImageModal() {
@@ -2252,7 +2309,96 @@ function closeImageModal() {
     if (modal) {
         modal.classList.remove('show');
         document.body.style.overflow = 'auto';
+        _mScale = 1;
     }
+}
+
+function _bindModalTouch() {
+    const wrap = document.getElementById('modalImgWrap');
+    if (!wrap || wrap._bound) return;
+    wrap._bound = true;
+
+    let startX = 0, startY = 0;
+    let panX = 0, panY = 0;       // شوێنی ئێستای وینە کاتی zoom
+    let startPanX = 0, startPanY = 0;
+    let isDrag = false;
+
+    function getImg() { return document.getElementById('zoomedImage'); }
+
+    function applyTransform() {
+        const img = getImg();
+        if (!img) return;
+        if (_mScale <= 1) {
+            panX = 0; panY = 0;
+            img.style.transform = 'scale(1) translate(0,0)';
+        } else {
+            img.style.transform = 'scale(' + _mScale + ') translate(' + panX + 'px,' + panY + 'px)';
+        }
+    }
+
+    wrap.addEventListener('touchstart', function(e) {
+        if (e.touches.length === 2) {
+            _mPinchDist = _pinchDist(e.touches);
+            isDrag = false;
+        } else if (e.touches.length === 1) {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            startPanX = panX;
+            startPanY = panY;
+            isDrag = true;
+        }
+    }, { passive: true });
+
+    wrap.addEventListener('touchmove', function(e) {
+        if (e.touches.length === 2) {
+            // Pinch zoom
+            const dist = _pinchDist(e.touches);
+            const ratio = dist / _mPinchDist;
+            _mScale = Math.min(Math.max(_mScale * ratio, 1), 4);
+            _mPinchDist = dist;
+            applyTransform();
+            isDrag = false;
+        } else if (e.touches.length === 1 && isDrag && _mScale > 1.05) {
+            // Pan کاتی zoom
+            const dx = (e.touches[0].clientX - startX) / _mScale;
+            const dy = (e.touches[0].clientY - startY) / _mScale;
+            panX = startPanX + dx;
+            panY = startPanY + dy;
+            applyTransform();
+        }
+    }, { passive: true });
+
+    wrap.addEventListener('touchend', function(e) {
+        if (!isDrag) return;
+        const dx = e.changedTouches[0].clientX - startX;
+        const dy = e.changedTouches[0].clientY - startY;
+        isDrag = false;
+
+        if (_mScale > 1.05) {
+            // Zoom کراوە — تەنها pan، وینە نागۆڕێت
+            return;
+        }
+        // Scale = 1 — swipe بۆ گۆڕینی وینە یان داخستن
+        if (Math.abs(dx) > 50 && Math.abs(dy) < 80) {
+            if (dx < 0) modalNextImg();
+            else modalPrevImg();
+        } else if (Math.abs(dy) > 80 && Math.abs(dx) < 60) {
+            closeImageModal();
+        }
+    }, { passive: true });
+
+    // دوو کلیک = reset zoom و pan
+    wrap.addEventListener('dblclick', function() {
+        _mScale = 1;
+        panX = 0; panY = 0;
+        applyTransform();
+    });
+}
+
+function _pinchDist(touches) {
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.sqrt(dx*dx + dy*dy);
 }
 
 // Close modal when clicking outside
@@ -2266,15 +2412,19 @@ window.onclick = function(event) {
     });
 }
 
-// Close modal with Escape key
+// کیبۆرد: Escape داخستن، تیر گۆڕینی وینە
 document.addEventListener('keydown', function(event) {
+    const imgModal = document.getElementById('imageModal');
+    if (imgModal && imgModal.classList.contains('show')) {
+        if (event.key === 'Escape') { closeImageModal(); return; }
+        if (event.key === 'ArrowLeft') { modalNextImg(); return; }
+        if (event.key === 'ArrowRight') { modalPrevImg(); return; }
+    }
     if (event.key === 'Escape') {
-        const modals = ['requestModal', 'addProductModal', 'deliveryModal', 'fibModal', 'imageModal', 'ukDeliveryModal'];
+        const modals = ['requestModal', 'addProductModal', 'deliveryModal', 'fibModal', 'ukDeliveryModal'];
         modals.forEach(id => {
             const modal = document.getElementById(id);
-            if (modal && modal.classList.contains('show')) {
-                closeModal(id);
-            }
+            if (modal && modal.classList.contains('show')) closeModal(id);
         });
     }
 });
