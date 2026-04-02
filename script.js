@@ -878,17 +878,25 @@ function buildKurdishLabelHtml(d, key, orderNum, qrUrl) {
                 <div class="label-row"><span>📦 کەلوپەل:</span><strong>${escapeHtml(d.packageName||d.details||'—')}</strong></div>
                 <div class="label-row"><span>🔢 پارچە:</span><strong>${escapeHtml(String(d.packageQty||'—'))}</strong></div>
                 <div class="label-row"><span>⚖️ کیلۆ:</span><strong>${escapeHtml(String(d.packageKg||'—'))} کگ</strong></div>
+                ${d.adminQty ? `<div class="label-row label-admin-row"><span>🔢 پارچە (کارمەند):</span><strong>${escapeHtml(String(d.adminQty))}</strong></div>` : ''}
+                ${d.adminKg ? `<div class="label-row label-admin-row"><span>⚖️ کیلۆ (کارمەند):</span><strong>${escapeHtml(String(d.adminKg))} کگ</strong></div>` : ''}
+                ${d.adminAmt ? `<div class="label-row label-admin-row" style="background:#f0fff4;"><span>💰 پارە (کارمەند):</span><strong style="color:#276749;">${escapeHtml(d.adminAmt)}</strong></div>` : ''}
                 ${d.driverName||d.driverMobile ? `<div class="label-row label-driver-row"><span>🚗 شۆفیر:</span><strong>${escapeHtml(d.driverName||'—')} — ${escapeHtml(d.driverMobile||'')}</strong></div>` : ''}
                 ${d.deliveryNote ? `<div class="label-row label-note-row"><span>📝 تیبینی:</span><strong>${escapeHtml(d.deliveryNote)}</strong></div>` : ''}
             </div>
             <div class="label-admin-edit">
-                <div class="admin-edit-title"><i class="fas fa-pen"></i> شۆفیر و تیبینی</div>
+                <div class="admin-edit-title"><i class="fas fa-pen"></i> شۆفیر و زانیاری زیاتر</div>
                 <div class="admin-edit-fields">
                     <div class="admin-edit-inputs">
                         <input type="text" id="driver-name-${key}" placeholder="👤 ناوی شۆفیر" value="${escapeHtml(d.driverName||'')}">
                         <input type="tel" id="driver-mobile-${key}" placeholder="📞 ژمارە" value="${escapeHtml(d.driverMobile||'')}">
                     </div>
-                    <textarea id="delivery-note-${key}" placeholder="📝 تیبینی..." rows="3">${escapeHtml(d.deliveryNote||'')}</textarea>
+                    <div class="admin-edit-inputs" style="margin-top:4px;">
+                        <input type="number" id="admin-qty-${key}" placeholder="🔢 پارچە" min="0" step="1" value="${escapeHtml(String(d.adminQty||''))}" style="flex:1;">
+                        <input type="number" id="admin-kg-${key}" placeholder="⚖️ کیلۆ" min="0" step="0.1" value="${escapeHtml(String(d.adminKg||''))}" style="flex:1;">
+                        <input type="text" id="admin-amt-${key}" placeholder="💰 پارە" value="${escapeHtml(d.adminAmt||'')}" style="flex:1.2;">
+                    </div>
+                    <textarea id="delivery-note-${key}" placeholder="📝 تیبینی..." rows="2">${escapeHtml(d.deliveryNote||'')}</textarea>
                 </div>
                 <button class="btn btn-sm btn-primary admin-save-btn" onclick="saveDriverInfo('${key}')">
                     <i class="fas fa-save"></i> پاشەکەوتکردن
@@ -939,18 +947,26 @@ function buildUkLabelHtml(d, key, orderNum, qrUrl) {
                 <div class="label-section sender-section" style="border-right:none; border-left:3px solid #667eea;">
                     <div class="label-section-title" style="color:#667eea;">📬 Package</div>
                     <div class="label-row" style="direction:ltr;"><span>Item:</span><strong>${escapeHtml(d.packageName||'—')}</strong></div>
+                    ${d.adminQty ? `<div class="label-row" style="direction:ltr;"><span>🔢 Pieces (staff):</span><strong>${escapeHtml(String(d.adminQty))}</strong></div>` : ''}
+                    ${d.adminKg ? `<div class="label-row" style="direction:ltr;"><span>⚖️ Weight (staff):</span><strong>${escapeHtml(String(d.adminKg))} kg</strong></div>` : ''}
+                    ${d.adminAmt ? `<div class="label-row" style="direction:ltr;background:#f0fff4;"><span>💰 Received (staff):</span><strong style="color:#276749;">${escapeHtml(d.adminAmt)}</strong></div>` : ''}
                     ${d.deliveryNote ? `<div class="label-row" style="direction:ltr;"><span>Notes:</span><strong>${escapeHtml(d.deliveryNote)}</strong></div>` : ''}
                     <div class="label-row" style="direction:ltr;"><span>Date:</span><strong>${escapeHtml(d.timestamp||'—')}</strong></div>
                 </div>
             </div>
             <div class="label-admin-edit" style="direction:ltr; text-align:left;">
-                <div class="admin-edit-title" style="text-align:left;"><i class="fas fa-pen"></i> Driver & Notes</div>
+                <div class="admin-edit-title" style="text-align:left;"><i class="fas fa-pen"></i> Driver & Package Info</div>
                 <div class="admin-edit-fields">
                     <div class="admin-edit-inputs">
                         <input type="text" id="driver-name-${key}" placeholder="👤 Driver name" value="${escapeHtml(d.driverName||'')}">
                         <input type="tel" id="driver-mobile-${key}" placeholder="📞 Phone" value="${escapeHtml(d.driverMobile||'')}">
                     </div>
-                    <textarea id="delivery-note-${key}" placeholder="📝 Notes..." rows="3" style="direction:ltr;">${escapeHtml(d.deliveryNote||'')}</textarea>
+                    <div class="admin-edit-inputs" style="margin-top:4px;">
+                        <input type="number" id="admin-qty-${key}" placeholder="🔢 Pieces" min="0" step="1" value="${escapeHtml(String(d.adminQty||''))}" style="flex:1;direction:ltr;">
+                        <input type="number" id="admin-kg-${key}" placeholder="⚖️ kg" min="0" step="0.1" value="${escapeHtml(String(d.adminKg||''))}" style="flex:1;direction:ltr;">
+                        <input type="text" id="admin-amt-${key}" placeholder="💰 Received" value="${escapeHtml(d.adminAmt||'')}" style="flex:1.2;direction:ltr;">
+                    </div>
+                    <textarea id="delivery-note-${key}" placeholder="📝 Notes..." rows="2" style="direction:ltr;">${escapeHtml(d.deliveryNote||'')}</textarea>
                 </div>
                 <button class="btn btn-sm btn-primary admin-save-btn" onclick="saveDriverInfo('${key}')">
                     <i class="fas fa-save"></i> Save
@@ -1035,8 +1051,11 @@ function saveDriverInfo(key) {
     const driverName   = (document.getElementById('driver-name-' + key) || {value:''}).value.trim();
     const driverMobile = (document.getElementById('driver-mobile-' + key) || {value:''}).value.trim();
     const deliveryNote = (document.getElementById('delivery-note-' + key) || {value:''}).value.trim();
+    const adminQty     = (document.getElementById('admin-qty-' + key) || {value:''}).value.trim();
+    const adminKg      = (document.getElementById('admin-kg-' + key) || {value:''}).value.trim();
+    const adminAmt     = (document.getElementById('admin-amt-' + key) || {value:''}).value.trim();
 
-    database.ref('delivery/' + key).update({ driverName, driverMobile, deliveryNote })
+    database.ref('delivery/' + key).update({ driverName, driverMobile, deliveryNote, adminQty, adminKg, adminAmt })
         .then(() => {
             showNotification('زانیاری شۆفیر پاشەکەوت کرا ✅');
             loadDeliveryRequests();
@@ -1156,6 +1175,9 @@ function printUkLabel(key) {
     const county     = getVal('County:');
     const postcode   = getVal('Postcode:');
     const item       = getVal('Item:');
+    const adminQty   = getVal('🔢 Pieces (staff):');
+    const adminKg    = getVal('⚖️ Weight (staff):');
+    const adminAmt   = getVal('💰 Received (staff):');
     const notes      = getVal('Notes:');
     const dateText   = (card.querySelector('.label-footer span') || {}).textContent || '';
     const qrImg      = card.querySelector('.label-qr-img');
@@ -1223,6 +1245,9 @@ body{font-family:'Segoe UI','Arial',sans-serif;direction:ltr;padding:16px;backgr
       <div class="section package">
         <div class="section-title">📬 Package Info</div>
         <div class="row"><span>Item</span><strong>${item}</strong></div>
+        ${adminQty && adminQty !== '—' ? `<div class="row"><span>🔢 Pieces</span><strong>${adminQty}</strong></div>` : ''}
+        ${adminKg && adminKg !== '—' ? `<div class="row"><span>⚖️ Weight</span><strong>${adminKg}</strong></div>` : ''}
+        ${adminAmt && adminAmt !== '—' ? `<div class="row" style="background:#f0fff4;"><span style="color:#276749;">💰 Received</span><strong style="color:#276749;">${adminAmt}</strong></div>` : ''}
         ${notes && notes !== '—' ? `<div class="row"><span>Notes</span><strong>${notes}</strong></div>` : ''}
         <div class="row"><span>Date</span><strong>${dateText.replace('📅','').trim()}</strong></div>
       </div>
@@ -1496,9 +1521,9 @@ function showAdminAddProductForm() {
                         <option value="زەوی">زەوی</option>
                         <option value="باخ">باخ</option>
                         <option value="ئاژەڵ">ئاژەڵ</option>
-                        <option value=" پیاوان"> پیاوان</option>
-                        <option value=" ئافرەتان"> ئافرەتان</option>
-                        <option value=" منداڵان"> منداڵان</option>
+                        <option value="جلوبەرگی پیاوان">جلوبەرگی پیاوان</option>
+                        <option value="جلوبەرگی ئافرەتان">جلوبەرگی ئافرەتان</option>
+                        <option value="جلوبەرگی منداڵان">جلوبەرگی منداڵان</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -1747,9 +1772,9 @@ function createCategoryButtons() {
         'زەوی',
         'باخ',
         'ئاژەڵ',
-        ' پیاوان',
-        ' ئافرەتان',
-        ' منداڵان'
+        'جلوبەرگی پیاوان',
+        'جلوبەرگی ئافرەتان',
+        'جلوبەرگی منداڵان'
     ];
     
     const container = document.getElementById('categoryButtons');
@@ -1811,11 +1836,10 @@ function performSearch() {
 
 // ==================== Product Card & Rendering ====================
 function createProductCard(product) {
-    const images = (product.images && product.images.length > 0)
-        ? product.images.filter(Boolean)
-        : [DEFAULT_PRODUCT_IMAGE];
-
-    const cardId = 'card_' + (product.firebaseId || Math.random().toString(36).substr(2,8));
+    let firstImage = DEFAULT_PRODUCT_IMAGE;
+    if (product.images && product.images.length > 0 && product.images[0]) {
+        firstImage = product.images[0];
+    }
 
     const productName = product.name && product.name.length > 30 
         ? product.name.substring(0, 27) + '...' 
@@ -1829,64 +1853,25 @@ function createProductCard(product) {
         ? product.location.substring(0, 17) + '...' 
         : product.location || 'نادیار';
 
-    // Build image slides
-    let slidesHtml = '';
-    const _imgCount = images.length;
-    images.forEach((img, idx) => {
-        const clickHandler = _imgCount > 1
-            ? 'pcImageClick(\'' + cardId + '\',\'' + img.replace(/'/g, "\\'") + '\',event)'
-            : 'openImageModal(\'' + img.replace(/'/g, "\\'") + '\')';
-        slidesHtml += '<div class="pc-slide' + (idx === 0 ? ' visible' : '') + '">' +
-            '<img src="' + img + '" alt="' + (product.name || 'product') + '" loading="lazy" ' +
-            'onclick="' + clickHandler + '" ' +
-            'style="width:100%;height:100%;object-fit:cover;cursor:pointer;" ' +
-            'onerror="this.onerror=null;this.src=\'' + DEFAULT_PRODUCT_IMAGE + '\'">' +
-            '</div>';
-    });
-
-    // Dots
-    let dotsHtml = '';
-    if (images.length > 1) {
-        dotsHtml = '<div class="pc-dots">';
-        images.forEach((_, idx) => {
-            dotsHtml += '<span class="pc-dot' + (idx === 0 ? ' active' : '') + '" onclick="pcGoTo(\'' + cardId + '\',' + idx + ')"></span>';
-        });
-        dotsHtml += '</div>';
-    }
-
-    // Arrows
-    let arrowsHtml = '';
-    if (images.length > 1) {
-        arrowsHtml =
-            '<button class="pc-arrow pc-prev" onclick="pcSlide(\'' + cardId + '\',-1)"><i class="fas fa-chevron-right"></i></button>' +
-            '<button class="pc-arrow pc-next" onclick="pcSlide(\'' + cardId + '\',1)"><i class="fas fa-chevron-left"></i></button>';
-    }
-
-    // Image count badge
-    const countBadge = images.length > 1
-        ? '<span class="pc-count">' + images.length + ' 📷</span>'
-        : '';
-
-    // Auto slideshow events — mouse hover و touch و click
-    const autoEvents = images.length > 1
-        ? ' onmouseenter="pcStartAuto(\'' + cardId + '\')" onmouseleave="pcStopAuto(\'' + cardId + '\')"' +
-          ' ontouchstart="pcHandleTouch(\'' + cardId + '\',event)" ontouchend="pcHandleTouchEnd(\'' + cardId + '\',event)"'
-        : '';
-
-    return '<div class="product-card" id="' + cardId + '" data-img-index="0" data-img-count="' + images.length + '"' + autoEvents + 
-        (images.length > 1 ? ' onclick="pcHandleCardClick(\'' + cardId + '\',event)"' : '') + '>' +
-        '<div class="product-image" style="position:relative;overflow:hidden;height:200px;">' +
-        slidesHtml +
-        arrowsHtml +
-        dotsHtml +
-        countBadge +
+    return '<div class="product-card">' +
+        '<div class="product-image">' +
+        '<img src="' + firstImage + '" ' +
+        'alt="' + (product.name || 'product') + '" ' +
+        'loading="lazy" ' +
+        'onclick="openImageModal(\'' + firstImage.replace(/'/g, "\\'") + '\')" ' +
+        'style="cursor: zoom-in;" ' +
+        'onerror="this.onerror=null; this.src=\'' + DEFAULT_PRODUCT_IMAGE + '\'">' +
         '</div>' +
         '<div class="product-info">' +
         '<div class="product-category">' + (product.category || 'هەموویی') + '</div>' +
         '<h3 class="product-name" title="' + (product.name || '') + '">' + productName + '</h3>' +
         '<div class="product-price">' + (product.price || '0') + ' ' + (product.currency || 'IQD') + '</div>' +
-        '<div class="product-seller"><i class="fas fa-user"></i> ' + sellerName + '</div>' +
-        '<div class="product-location" title="' + (product.location || '') + '"><i class="fas fa-map-marker-alt"></i> ' + location + '</div>' +
+        '<div class="product-seller">' +
+        '<i class="fas fa-user"></i> ' + sellerName +
+        '</div>' +
+        '<div class="product-location" title="' + (product.location || '') + '">' +
+        '<i class="fas fa-map-marker-alt"></i> ' + location +
+        '</div>' +
         '<div class="product-actions">' +
         '<button class="btn btn-primary btn-small" onclick="addToCart(\'' + product.firebaseId + '\')">' +
         '<i class="fas fa-cart-plus"></i> <span class="btn-text">سەبەتە</span>' +
@@ -1897,178 +1882,6 @@ function createProductCard(product) {
         '</div>' +
         '</div>' +
         '</div>';
-}
-
-// ==================== Auto Slideshow on Hover/Touch/Click ====================
-// کاتێک دەستت دەخەیتە سەر کارتەکە یان کلیک دەکەیت، وینەکان بەخۆیان دەگۆڕن
-const pcAutoTimers = {};
-const pcTouchState = {}; // touch start X position per card
-const pcClickActive = {}; // track if card is in click-slideshow mode
-
-function pcStartAuto(cardId) {
-    if (pcAutoTimers[cardId]) return;
-    const card = document.getElementById(cardId);
-    if (!card) return;
-    const slides = card.querySelectorAll('.pc-slide');
-    if (slides.length <= 1) return;
-    pcAutoTimers[cardId] = setInterval(() => {
-        pcSlide(cardId, 1);
-    }, 900);
-}
-
-function pcStopAuto(cardId) {
-    if (pcAutoTimers[cardId]) {
-        clearInterval(pcAutoTimers[cardId]);
-        delete pcAutoTimers[cardId];
-    }
-    if (!pcClickActive[cardId]) {
-        // گەڕانەوە بۆ وینەی یەکەم تەنها ئەگەر click mode چالاک نەبوو
-        const card = document.getElementById(cardId);
-        if (!card) return;
-        pcGoTo(cardId, 0);
-    }
-}
-
-// ==================== Click-to-Slideshow ====================
-function pcHandleCardClick(cardId, event) {
-    // ئەگەر کلیک لە دوگمە یان لینکدا بوو، پشتگوێ بخە
-    if (event.target.closest('button') || event.target.closest('a')) return;
-    // ئەگەر وینە zoom-in click بوو
-    if (event.target.tagName === 'IMG') return;
-
-    const card = document.getElementById(cardId);
-    if (!card) return;
-    const slides = card.querySelectorAll('.pc-slide');
-    if (slides.length <= 1) return;
-
-    if (!pcClickActive[cardId]) {
-        // یەکەم کلیک: چالاک بکە و auto-play دەست پێ بکا
-        pcClickActive[cardId] = true;
-        card.classList.add('pc-active');
-        pcStopAuto(cardId);
-        pcStartAutoClick(cardId);
-    }
-    // کلیک هەر بار وینەی دیکە پیشان بدات
-    pcSlide(cardId, 1);
-}
-
-function pcStartAutoClick(cardId) {
-    if (pcAutoTimers[cardId]) clearInterval(pcAutoTimers[cardId]);
-    const card = document.getElementById(cardId);
-    if (!card) return;
-    const slides = card.querySelectorAll('.pc-slide');
-    if (slides.length <= 1) return;
-    pcAutoTimers[cardId] = setInterval(() => {
-        pcSlide(cardId, 1);
-    }, 1200);
-
-    // پاش 6 چرکە بوەستێت و گەڕانەوە
-    if (card._clickTimeout) clearTimeout(card._clickTimeout);
-    card._clickTimeout = setTimeout(() => {
-        pcCancelClickMode(cardId);
-    }, 6000);
-}
-
-
-// ================== Image Click Logic ==================
-// کلیکی یەکەم: وینەی دیکە پیشان بدات
-// کلیکی دووەم (کاتێ pc-active): zoom بکا
-function pcImageClick(cardId, imgSrc, event) {
-    event.stopPropagation();
-    var card = document.getElementById(cardId);
-    if (!card) return;
-    if (pcClickActive[cardId]) {
-        openImageModal(imgSrc);
-    } else {
-        pcClickActive[cardId] = true;
-        card.classList.add("pc-active");
-        if (card._clickTimeout) clearTimeout(card._clickTimeout);
-        card._clickTimeout = setTimeout(function() { pcCancelClickMode(cardId); }, 6000);
-        pcSlide(cardId, 1);
-    }
-}
-
-function pcCancelClickMode(cardId) {
-    if (pcAutoTimers[cardId]) {
-        clearInterval(pcAutoTimers[cardId]);
-        delete pcAutoTimers[cardId];
-    }
-    delete pcClickActive[cardId];
-    const card = document.getElementById(cardId);
-    if (!card) return;
-    card.classList.remove('pc-active');
-    pcGoTo(cardId, 0);
-}
-
-// ==================== Touch Swipe Support ====================
-function pcHandleTouch(cardId, event) {
-    const card = document.getElementById(cardId);
-    if (!card) return;
-    const slides = card.querySelectorAll('.pc-slide');
-    if (slides.length <= 1) return;
-    // ذخیرەکردنی شوێنی دەست
-    if (event.touches && event.touches[0]) {
-        pcTouchState[cardId] = { x: event.touches[0].clientX, y: event.touches[0].clientY, time: Date.now() };
-    }
-}
-
-function pcHandleTouchEnd(cardId, event) {
-    const card = document.getElementById(cardId);
-    if (!card) return;
-    const slides = card.querySelectorAll('.pc-slide');
-    if (slides.length <= 1) return;
-
-    const start = pcTouchState[cardId];
-    if (!start) return;
-
-    const touch = event.changedTouches && event.changedTouches[0];
-    if (!touch) return;
-
-    const dx = touch.clientX - start.x;
-    const dy = touch.clientY - start.y;
-    const dt = Date.now() - start.time;
-
-    // Swipe: horizontal > 40px و vertical < 60px و مێژووی کەم
-    if (Math.abs(dx) > 40 && Math.abs(dy) < 60 && dt < 500) {
-        // RTL: swipe چەپ = وینەی دیکە
-        const dir = dx < 0 ? 1 : -1;
-        pcClickActive[cardId] = true;
-        card.classList.add('pc-active');
-        if (card._clickTimeout) clearTimeout(card._clickTimeout);
-        card._clickTimeout = setTimeout(() => { pcCancelClickMode(cardId); }, 5000);
-        pcSlide(cardId, dir);
-        event.preventDefault();
-    }
-
-    delete pcTouchState[cardId];
-}
-
-// Product Card Slider Functions
-function pcSlide(cardId, dir) {
-    const card = document.getElementById(cardId);
-    if (!card) return;
-    const slides = card.querySelectorAll('.pc-slide');
-    const dots = card.querySelectorAll('.pc-dot');
-    let idx = parseInt(card.dataset.imgIndex) || 0;
-    slides[idx].classList.remove('visible');
-    if (dots[idx]) dots[idx].classList.remove('active');
-    idx = (idx + dir + slides.length) % slides.length;
-    slides[idx].classList.add('visible');
-    if (dots[idx]) dots[idx].classList.add('active');
-    card.dataset.imgIndex = idx;
-}
-
-function pcGoTo(cardId, idx) {
-    const card = document.getElementById(cardId);
-    if (!card) return;
-    const slides = card.querySelectorAll('.pc-slide');
-    const dots = card.querySelectorAll('.pc-dot');
-    const cur = parseInt(card.dataset.imgIndex) || 0;
-    slides[cur].classList.remove('visible');
-    if (dots[cur]) dots[cur].classList.remove('active');
-    slides[idx].classList.add('visible');
-    if (dots[idx]) dots[idx].classList.add('active');
-    card.dataset.imgIndex = idx;
 }
 
 function renderProducts(productsList) {
