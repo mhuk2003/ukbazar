@@ -1772,9 +1772,9 @@ function createCategoryButtons() {
         'زەوی',
         'باخ',
         'ئاژەڵ',
-        'جلوبەرگی پیاوان',
-        'جلوبەرگی ئافرەتان',
-        'جلوبەرگی منداڵان'
+        ' پیاوان',
+        ' ئافرەتان',
+        ' منداڵان'
     ];
     
     const container = document.getElementById('categoryButtons');
