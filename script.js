@@ -1499,9 +1499,9 @@ function showAdminAddProductForm() {
                         <option value="زەوی">زەوی</option>
                         <option value="باخ">باخ</option>
                         <option value="ئاژەڵ">ئاژەڵ</option>
-                        <option value="جلوبەرگی پیاوان">جلوبەرگی پیاوان</option>
-                        <option value="جلوبەرگی ئافرەتان">جلوبەرگی ئافرەتان</option>
-                        <option value="جلوبەرگی منداڵان">جلوبەرگی منداڵان</option>
+                        <option value=" پیاوان"> پیاوان</option>
+                        <option value=" ئافرەتان"> ئافرەتان</option>
+                        <option value=" منداڵان"> منداڵان</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -1750,9 +1750,9 @@ function createCategoryButtons() {
         'زەوی',
         'باخ',
         'ئاژەڵ',
-        'جلوبەرگی پیاوان',
-        'جلوبەرگی ئافرەتان',
-        'جلوبەرگی منداڵان'
+        ' پیاوان',
+        ' ئافرەتان',
+        ' منداڵان'
     ];
     
     const container = document.getElementById('categoryButtons');
@@ -2350,27 +2350,89 @@ function createVideoCard(video) {
         '</div></div>';
 }
 
-function playDirectVideo(key) {
-    const thumb  = document.getElementById('vthumb-'   + key);
-    const player = document.getElementById('vplayer-'  + key);
-    const btn    = document.getElementById('vplaybtn-' + key);
-    // wrapper کلیک غیرفعال بکە تا دووبارە نەکرێتەوە
-    const wrap = player ? player.closest('.direct-video-wrap') : null;
-    if (wrap) wrap.onclick = null;
-    if (thumb)  thumb.style.display  = 'none';
-    if (btn)    btn.style.display    = 'none';
-    if (player) {
-        player.style.display = 'block';
-        // بەکاربردنی load() پێش play() بۆ مۆبایل
-        player.load();
-        const tryPlay = () => player.play().catch(() => {});
-        player.addEventListener('canplay', tryPlay, { once: true });
-        setTimeout(tryPlay, 500);
+// ==================== Video Modal (Fullscreen) ====================
+function _openVideoModal(innerHtml) {
+    // modal کۆن لادەبەین
+    const old = document.getElementById('_videoModal');
+    if (old) old.remove();
+
+    const modal = document.createElement('div');
+    modal.id = '_videoModal';
+    modal.style.cssText = [
+        'position:fixed','inset:0','z-index:99999',
+        'background:rgba(0,0,0,0.92)',
+        'display:flex','align-items:center','justify-content:center',
+        'padding:12px','box-sizing:border-box'
+    ].join(';');
+
+    // کلیک لە دەرەوە — دادخات
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) _closeVideoModal();
+    });
+
+    // ناوەرۆک
+    const box = document.createElement('div');
+    box.style.cssText = [
+        'position:relative','width:100%','max-width:860px',
+        'aspect-ratio:16/9','background:#000','border-radius:12px','overflow:hidden'
+    ].join(';');
+    box.innerHTML = innerHtml;
+
+    // دوگمەی داخستن
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '&#x2715;';
+    closeBtn.style.cssText = [
+        'position:absolute','top:10px','right:10px','z-index:10',
+        'background:rgba(0,0,0,0.7)','color:#fff','border:none',
+        'width:36px','height:36px','border-radius:50%',
+        'font-size:1.1rem','cursor:pointer','display:flex',
+        'align-items:center','justify-content:center'
+    ].join(';');
+    closeBtn.onclick = _closeVideoModal;
+    box.appendChild(closeBtn);
+
+    modal.appendChild(box);
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+
+    // ESC دادخات
+    document._videoModalEsc = function(e) {
+        if (e.key === 'Escape') _closeVideoModal();
+    };
+    document.addEventListener('keydown', document._videoModalEsc);
+}
+
+function _closeVideoModal() {
+    const modal = document.getElementById('_videoModal');
+    if (modal) {
+        // ڤیدیۆ ئەگەر هەیە وەستێنە
+        const vid = modal.querySelector('video');
+        if (vid) { vid.pause(); vid.src = ''; }
+        modal.remove();
+    }
+    document.body.style.overflow = '';
+    if (document._videoModalEsc) {
+        document.removeEventListener('keydown', document._videoModalEsc);
+        delete document._videoModalEsc;
     }
 }
 
+function playDirectVideo(key) {
+    const srcEl = document.getElementById('vplayer-' + key);
+    const videoUrl = srcEl ? (srcEl.querySelector('source') || srcEl).getAttribute('src') || srcEl.src : '';
+    if (!videoUrl) return;
+
+    const html = '<video src="' + videoUrl + '" controls autoplay ' +
+        'style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000;" ' +
+        'onclick="event.stopPropagation()"></video>';
+    _openVideoModal(html);
+}
+
 function expandVideo(wrapper, embedUrl) {
-    wrapper.innerHTML = '<iframe src="' + embedUrl + '&autoplay=1" frameborder="0" allowfullscreen allow="autoplay;encrypted-media" class="video-iframe" style="position:absolute;inset:0;width:100%;height:100%;border:none;"></iframe>';
+    const html = '<iframe src="' + embedUrl + '&autoplay=1" frameborder="0" allowfullscreen ' +
+        'allow="autoplay;encrypted-media;fullscreen" ' +
+        'style="position:absolute;inset:0;width:100%;height:100%;border:none;"></iframe>';
+    _openVideoModal(html);
 }
 
 // ==================== Admin: Video Management ====================
