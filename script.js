@@ -2530,7 +2530,12 @@ function showVideoAdminForm() {
     </div>
 
     <div style="background:#fff;padding:20px;border-radius:14px;">
-        <h3 style="color:var(--danger);margin-bottom:14px;"><i class="fas fa-list"></i> هەموو ڤیدیۆکان</h3>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+            <h3 style="color:var(--danger);margin:0;"><i class="fas fa-list"></i> هەموو ڤیدیۆکان</h3>
+            <button onclick="loadVideoListAdmin()" style="background:#f0f4ff;color:#667eea;border:1.5px solid #667eea;border-radius:8px;padding:5px 12px;cursor:pointer;font-size:.82rem;font-family:inherit;">
+                <i class="fas fa-sync-alt"></i> نوێکردنەوە
+            </button>
+        </div>
         <div id="videoListAdmin"><p style="text-align:center;color:var(--gray);">چاوەڕوانی بکە...</p></div>
     </div>`;
 
@@ -2675,16 +2680,22 @@ function loadVideoListAdmin() {
                 const thumb = v.thumbUrl || getYouTubeThumbnail(v.videoUrl) || '';
                 const bc = v.type === 'ریکلام' ? '#f56565' : v.type === 'فیرکاری' ? '#48bb78' : '#667eea';
                 const isYT = !!getYouTubeId(v.videoUrl);
-                const srcIcon = isYT ? '<i class="fab fa-youtube" style="color:#f56565;"></i>' : '<i class="fas fa-file-video" style="color:#667eea;"></i>';
+                const srcLabel = isYT
+                    ? '<span style="background:#fff0f0;color:#f56565;border:1px solid #fc8181;padding:2px 7px;border-radius:20px;font-size:.7rem;"><i class=\"fab fa-youtube\"></i> YouTube</span>'
+                    : '<span style="background:#f0f4ff;color:#667eea;border:1px solid #c3cffe;padding:2px 7px;border-radius:20px;font-size:.7rem;"><i class=\"fas fa-file-video\"></i> Storage</span>';
                 return '<div style="display:flex;gap:12px;align-items:center;background:#f8f9ff;border-radius:12px;padding:12px;margin-bottom:10px;border:1.5px solid #e2e8f0;">' +
-                    (thumb ? '<img src="' + thumb + '" style="width:80px;height:54px;object-fit:cover;border-radius:8px;flex-shrink:0;" onerror="this.style.display=\'none\'">' : '<div style="width:80px;height:54px;background:#e2e8f0;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🎬</div>') +
+                    (thumb
+                        ? '<img src="' + thumb + '" style="width:90px;height:60px;object-fit:cover;border-radius:8px;flex-shrink:0;" onerror="this.style.display=\'none\'">'
+                        : '<div style="width:90px;height:60px;background:#e2e8f0;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.8rem;">🎬</div>') +
                     '<div style="flex:1;min-width:0;">' +
-                    '<div style="font-weight:700;font-size:.9rem;color:#2d3748;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(v.title || 'ڤیدیۆ') + '</div>' +
-                    '<div style="margin-top:3px;display:flex;gap:6px;align-items:center;">' +
-                    '<span style="background:' + bc + ';color:#fff;padding:2px 8px;border-radius:20px;font-size:.72rem;">' + escapeHtml(v.type || '') + '</span>' +
-                    srcIcon + '</div>' +
-                    '<div style="font-size:.75rem;color:#718096;margin-top:3px;">' + escapeHtml(v.uploaderName || '') + ' — ' + escapeHtml(v.timestamp || '') + '</div></div>' +
-                    '<button onclick="deleteVideo(\'' + v.key + '\')" style="background:#fff0f0;color:#e53e3e;border:1.5px solid #fc8181;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:.82rem;flex-shrink:0;"><i class="fas fa-trash"></i></button></div>';
+                    '<div style="font-weight:700;font-size:.92rem;color:#2d3748;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(v.title || 'ڤیدیۆ') + '</div>' +
+                    '<div style="margin-top:4px;display:flex;gap:5px;align-items:center;flex-wrap:wrap;">' +
+                    '<span style="background:' + bc + ';color:#fff;padding:2px 8px;border-radius:20px;font-size:.7rem;">' + escapeHtml(v.type || '') + '</span>' +
+                    srcLabel + '</div>' +
+                    '<div style="font-size:.73rem;color:#718096;margin-top:3px;">' + escapeHtml(v.uploaderName || '') + (v.timestamp ? ' — ' + escapeHtml(v.timestamp) : '') + '</div></div>' +
+                    '<button onclick="deleteVideo(\'' + v.key + '\')" ' +
+                    'style="background:#e53e3e;color:#fff;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:.85rem;flex-shrink:0;font-weight:700;" ' +
+                    'title="سڕینەوە"><i class="fas fa-trash-alt"></i> سڕینەوە</button></div>';
             }).join('');
         })
         .catch(() => { container.innerHTML = '<p style="text-align:center;color:var(--danger);">هەڵە لە بارکردن!</p>'; });
