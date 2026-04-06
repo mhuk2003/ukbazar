@@ -437,7 +437,7 @@ function loadApprovedProducts() {
         const now = Date.now();
         const timeDiff = now - parseInt(cacheTime);
         
-        if (timeDiff < 30 * 60 * 1000) { // 30 خولەک کاش
+        if (timeDiff < 10 * 60 * 1000) {
             try {
                 products = JSON.parse(cachedProducts);
                 
@@ -942,6 +942,9 @@ function buildUkLabelHtml(d, key, orderNum, qrUrl) {
                 <div class="label-section sender-section" style="border-right:none; border-left:3px solid #667eea;">
                     <div class="label-section-title" style="color:#667eea;">📬 Package</div>
                     <div class="label-row" style="direction:ltr;"><span>Item:</span><strong>${escapeHtml(d.packageName||'—')}</strong></div>
+                    ${d.packageQty ? `<div class="label-row" style="direction:ltr;"><span>Qty:</span><strong>${escapeHtml(String(d.packageQty))} pcs</strong></div>` : ''}
+                    ${d.packageKg  ? `<div class="label-row" style="direction:ltr;"><span>Weight:</span><strong>${escapeHtml(String(d.packageKg))} kg</strong></div>` : ''}
+                    ${d.payment    ? `<div class="label-row" style="direction:ltr;background:#f0fff4;"><span>&#x1F4B3; Payment:</span><strong style="color:#276749;">${escapeHtml(d.payment)}</strong></div>` : ''}
                     ${d.deliveryNote ? `<div class="label-row" style="direction:ltr;"><span>Notes:</span><strong>${escapeHtml(d.deliveryNote)}</strong></div>` : ''}
                     <div class="label-row" style="direction:ltr;"><span>Date:</span><strong>${escapeHtml(d.timestamp||'—')}</strong></div>
                 </div>
@@ -1159,6 +1162,9 @@ function printUkLabel(key) {
     const county     = getVal('County:');
     const postcode   = getVal('Postcode:');
     const item       = getVal('Item:');
+    const qty        = getVal('Qty:').replace(' pcs','');
+    const kg         = getVal('Weight:').replace(' kg','');
+    const payment    = getVal('💳 Payment:');
     const notes      = getVal('Notes:');
     const dateText   = (card.querySelector('.label-footer span') || {}).textContent || '';
     const qrImg      = card.querySelector('.label-qr-img');
@@ -1226,6 +1232,9 @@ body{font-family:'Segoe UI','Arial',sans-serif;direction:ltr;padding:16px;backgr
       <div class="section package">
         <div class="section-title">📬 Package Info</div>
         <div class="row"><span>Item</span><strong>${item}</strong></div>
+        ${qty && qty !== '—' ? `<div class="row"><span>Qty</span><strong>${qty} pcs</strong></div>` : ''}
+        ${kg  && kg  !== '—' ? `<div class="row"><span>Weight</span><strong>${kg} kg</strong></div>` : ''}
+        ${payment && payment !== '—' ? `<div class="row" style="background:#f0fff4;"><span style="color:#276749;">Payment</span><strong style="color:#276749;">${payment}</strong></div>` : ''}
         ${notes && notes !== '—' ? `<div class="row"><span>Notes</span><strong>${notes}</strong></div>` : ''}
         <div class="row"><span>Date</span><strong>${dateText.replace('📅','').trim()}</strong></div>
       </div>
@@ -1499,9 +1508,9 @@ function showAdminAddProductForm() {
                         <option value="زەوی">زەوی</option>
                         <option value="باخ">باخ</option>
                         <option value="ئاژەڵ">ئاژەڵ</option>
-                        <option value=" پیاوان"> پیاوان</option>
-                        <option value=" ئافرەتان"> ئافرەتان</option>
-                        <option value=" منداڵان"> منداڵان</option>
+                        <option value="جلوبەرگی پیاوان">جلوبەرگی پیاوان</option>
+                        <option value="جلوبەرگی ئافرەتان">جلوبەرگی ئافرەتان</option>
+                        <option value="جلوبەرگی منداڵان">جلوبەرگی منداڵان</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -1750,9 +1759,9 @@ function createCategoryButtons() {
         'زەوی',
         'باخ',
         'ئاژەڵ',
-        ' پیاوان',
-        ' ئافرەتان',
-        ' منداڵان'
+        'جلوبەرگی پیاوان',
+        'جلوبەرگی ئافرەتان',
+        'جلوبەرگی منداڵان'
     ];
     
     const container = document.getElementById('categoryButtons');
@@ -2174,6 +2183,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const receiverNote    = (document.getElementById('ukReceiverNote')||{value:''}).value.trim();
             const receiverCountry = (document.getElementById('ukReceiverCountry')||{value:'United Kingdom'}).value.trim();
             const packageName     = document.getElementById('ukPackageName').value.trim();
+            const packageQty      = (document.getElementById('ukPackageQty')||{value:''}).value.trim();
+            const packageKg       = (document.getElementById('ukPackageKg')||{value:''}).value.trim();
+            const payment         = (document.getElementById('ukPayment')||{value:''}).value.trim();
             const orderNumber = 'UK-' + Date.now().toString().slice(-6);
             const timestamp   = new Date().toLocaleString('en-GB');
             const deliveryData = {
@@ -2182,7 +2194,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 receiverName, receiverPhone, receiverCompany,
                 receiverPostcode: receiverPost, receiverAddress1: receiverAddr1, receiverAddress2: receiverAddr2,
                 receiverCity, receiverCounty, receiverNote, receiverCountry,
-                packageName, country: 'United Kingdom', timestamp, sortKey: Date.now()
+                packageName, packageQty, packageKg, payment, country: 'United Kingdom', timestamp, sortKey: Date.now()
             };
             showLoading();
             database.ref('delivery').push(deliveryData)
@@ -2216,10 +2228,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // سەیف-گارد: ئەگەر لۆدینگ سکرین پاش 8 چرکە هێشتا بوو — بیشارەوە
+    // سەیف-گارد: ئەگەر لۆدینگ سکرین پاش 4 چرکە هێشتا بوو — بیشارەوە
     setTimeout(() => {
-        hideLoading();
-    }, 8000);
+        const spinner = document.getElementById('loadingSpinner');
+        if (spinner) {
+            spinner.style.opacity = '0';
+            spinner.style.pointerEvents = 'none';
+            spinner.style.display = 'none';
+        }
+    }, 4000);
 });
 // ==================== UK Delivery Tab Switching ====================
 function ukSwitchTab(tab) {
@@ -2269,8 +2286,7 @@ function getYouTubeId(url) {
 }
 function getYouTubeEmbed(url) {
     const id = getYouTubeId(url);
-    // youtube-nocookie.com بەکاردەهێنین بۆ بەربەستکردنی third-party cookies
-    return id ? 'https://www.youtube-nocookie.com/embed/' + id + '?rel=0&modestbranding=1' : null;
+    return id ? 'https://www.youtube.com/embed/' + id + '?rel=0&modestbranding=1' : null;
 }
 function getYouTubeThumbnail(url) {
     const id = getYouTubeId(url);
@@ -2281,30 +2297,20 @@ function loadVideos() {
     const grid = document.getElementById('videosGrid');
     const section = document.getElementById('videosSection');
     if (!grid) return;
-    // هەموو ڤیدیۆ بخوێنەوە بەبێ orderByChild تا کێشەی index نەبێت
-    database.ref('videos').once('value')
+    database.ref('videos').orderByChild('status').equalTo('approved').once('value')
         .then((snapshot) => {
             if (!snapshot.exists()) { if (section) section.style.display = 'none'; return; }
             const items = [];
-            snapshot.forEach(child => {
-                const val = child.val();
-                if (!val.status || val.status === 'approved') {
-                    items.push({ key: child.key, ...val });
-                }
-            });
+            snapshot.forEach(child => items.push({ key: child.key, ...child.val() }));
             items.reverse();
             if (items.length === 0) { if (section) section.style.display = 'none'; return; }
             if (section) section.style.display = 'block';
             grid.innerHTML = items.map(v => createVideoCard(v)).join('');
         })
-        .catch((err) => {
-            console.error('loadVideos error:', err);
-            if (section) section.style.display = 'none';
-        });
+        .catch(() => { if (section) section.style.display = 'none'; });
 }
 
 function createVideoCard(video) {
-    const safeKey = video.key || ('v' + Math.random().toString(36).slice(2));
     const isYoutube = getYouTubeId(video.videoUrl);
     const thumb = isYoutube ? getYouTubeThumbnail(video.videoUrl) : (video.thumbUrl || '');
     const embedUrl = isYoutube ? getYouTubeEmbed(video.videoUrl) : null;
@@ -2315,29 +2321,19 @@ function createVideoCard(video) {
 
     let mediaHtml = '';
     if (embedUrl) {
-        // YouTube — کلیک بکە iframe بکرێتەوە
-        const safeEmbed = embedUrl.replace(/'/g, "\'");
+        const safeEmbed = embedUrl.replace(/'/g, "\\'");
         mediaHtml = '<div class="video-thumb-wrap" onclick="expandVideo(this,\'' + safeEmbed + '\')">' +
-            (thumb ? '<img src="' + thumb + '" alt="' + safeTitle + '" class="video-thumb" onerror="this.style.display=\'none\'">' : '<div class="video-thumb" style="background:#1a1a2e;"></div>') +
+            '<img src="' + (thumb||'') + '" alt="' + safeTitle + '" class="video-thumb" onerror="this.src=\'' + DEFAULT_PRODUCT_IMAGE + '\'">' +
             '<div class="video-play-btn"><i class="fas fa-play"></i></div></div>';
     } else if (video.videoUrl) {
-        // Firebase Storage — ڤیدیۆی ئەپلۆدکراو
-        const safeUrl = escapeHtml(video.videoUrl);
-        mediaHtml = '<div class="video-thumb-wrap direct-video-wrap" style="cursor:pointer;" onclick="playDirectVideo(\'' + safeKey + '\')">' +
-            (thumb
-                ? '<img src="' + thumb + '" alt="' + safeTitle + '" class="video-thumb" id="vthumb-' + safeKey + '" onerror="this.style.display=\'none\'">'
-                : '<div class="video-thumb" style="background:#1a1a2e;" id="vthumb-' + safeKey + '"></div>') +
-            '<video id="vplayer-' + safeKey + '" preload="metadata" controls ' +
-                'style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000;" ' +
-                'onclick="event.stopPropagation()">' +
-                '<source src="' + safeUrl + '" type="video/mp4">' +
-                '<source src="' + safeUrl + '">' +
+        // راستەوخۆ ڤیدیۆ لە Firebase Storage
+        mediaHtml = '<div class="video-thumb-wrap direct-video-wrap">' +
+            (thumb ? '<img src="' + thumb + '" alt="' + safeTitle + '" class="video-thumb" id="vthumb-' + video.key + '">' : '') +
+            '<video class="video-player" id="vplayer-' + video.key + '" preload="none" controls style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000;">' +
+            '<source src="' + escapeHtml(video.videoUrl) + '" type="video/mp4">' +
             '</video>' +
-            '<div class="video-play-btn" id="vplaybtn-' + safeKey + '"><i class="fas fa-play"></i></div>' +
+            '<div class="video-play-btn" onclick="playDirectVideo(\'' + video.key + '\')" id="vplaybtn-' + video.key + '"><i class="fas fa-play"></i></div>' +
             '</div>';
-    } else {
-        // ڤیدیۆ نییە
-        mediaHtml = '<div class="video-thumb-wrap" style="background:#1a1a2e;display:flex;align-items:center;justify-content:center;"><i class="fas fa-video" style="font-size:2rem;color:#444;"></i></div>';
     }
 
     return '<div class="video-card">' +
@@ -2350,89 +2346,45 @@ function createVideoCard(video) {
         '</div></div>';
 }
 
-// ==================== Video Modal (Fullscreen) ====================
-function _openVideoModal(innerHtml) {
-    // modal کۆن لادەبەین
-    const old = document.getElementById('_videoModal');
-    if (old) old.remove();
-
-    const modal = document.createElement('div');
-    modal.id = '_videoModal';
-    modal.style.cssText = [
-        'position:fixed','inset:0','z-index:99999',
-        'background:rgba(0,0,0,0.92)',
-        'display:flex','align-items:center','justify-content:center',
-        'padding:12px','box-sizing:border-box'
-    ].join(';');
-
-    // کلیک لە دەرەوە — دادخات
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) _closeVideoModal();
-    });
-
-    // ناوەرۆک
-    const box = document.createElement('div');
-    box.style.cssText = [
-        'position:relative','width:100%','max-width:860px',
-        'aspect-ratio:16/9','background:#000','border-radius:12px','overflow:hidden'
-    ].join(';');
-    box.innerHTML = innerHtml;
-
-    // دوگمەی داخستن
-    const closeBtn = document.createElement('button');
-    closeBtn.innerHTML = '&#x2715;';
-    closeBtn.style.cssText = [
-        'position:absolute','top:10px','right:10px','z-index:10',
-        'background:rgba(0,0,0,0.7)','color:#fff','border:none',
-        'width:36px','height:36px','border-radius:50%',
-        'font-size:1.1rem','cursor:pointer','display:flex',
-        'align-items:center','justify-content:center'
-    ].join(';');
-    closeBtn.onclick = _closeVideoModal;
-    box.appendChild(closeBtn);
-
-    modal.appendChild(box);
-    document.body.appendChild(modal);
-    document.body.style.overflow = 'hidden';
-
-    // ESC دادخات
-    document._videoModalEsc = function(e) {
-        if (e.key === 'Escape') _closeVideoModal();
-    };
-    document.addEventListener('keydown', document._videoModalEsc);
-}
-
-function _closeVideoModal() {
-    const modal = document.getElementById('_videoModal');
-    if (modal) {
-        // ڤیدیۆ ئەگەر هەیە وەستێنە
-        const vid = modal.querySelector('video');
-        if (vid) { vid.pause(); vid.src = ''; }
-        modal.remove();
-    }
-    document.body.style.overflow = '';
-    if (document._videoModalEsc) {
-        document.removeEventListener('keydown', document._videoModalEsc);
-        delete document._videoModalEsc;
-    }
-}
-
 function playDirectVideo(key) {
-    const srcEl = document.getElementById('vplayer-' + key);
-    const videoUrl = srcEl ? (srcEl.querySelector('source') || srcEl).getAttribute('src') || srcEl.src : '';
-    if (!videoUrl) return;
-
-    const html = '<video src="' + videoUrl + '" controls autoplay ' +
-        'style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000;" ' +
-        'onclick="event.stopPropagation()"></video>';
-    _openVideoModal(html);
+    const player = document.getElementById('vplayer-' + key);
+    const src = player ? player.querySelector('source').src : '';
+    openVideoModal(src, false);
 }
 
 function expandVideo(wrapper, embedUrl) {
-    const html = '<iframe src="' + embedUrl + '&autoplay=1" frameborder="0" allowfullscreen ' +
-        'allow="autoplay;encrypted-media;fullscreen" ' +
-        'style="position:absolute;inset:0;width:100%;height:100%;border:none;"></iframe>';
-    _openVideoModal(html);
+    openVideoModal(embedUrl, true);
+}
+
+function openVideoModal(src, isYoutube) {
+    let overlay = document.getElementById('videoFullscreenOverlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'videoFullscreenOverlay';
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.96);display:flex;align-items:center;justify-content:center;';
+        overlay.innerHTML =
+            '<button onclick="closeVideoModal()" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.15);border:none;color:#fff;width:44px;height:44px;border-radius:50%;font-size:1.4rem;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center;">✕</button>' +
+            '<div id="videoFullscreenInner" style="width:95vw;max-width:960px;"></div>';
+        overlay.addEventListener('click', function(e) { if (e.target === overlay) closeVideoModal(); });
+        document.body.appendChild(overlay);
+    }
+    const inner = document.getElementById('videoFullscreenInner');
+    if (isYoutube) {
+        inner.innerHTML = '<div style="position:relative;padding-top:56.25%;width:100%;"><iframe src="' + src + '&autoplay=1" frameborder="0" allowfullscreen allow="autoplay;encrypted-media" style="position:absolute;inset:0;width:100%;height:100%;border:none;border-radius:8px;"></iframe></div>';
+    } else {
+        inner.innerHTML = '<video src="' + src + '" controls autoplay style="width:100%;max-height:85vh;border-radius:8px;display:block;"></video>';
+    }
+    overlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeVideoModal() {
+    const overlay = document.getElementById('videoFullscreenOverlay');
+    if (!overlay) return;
+    const inner = document.getElementById('videoFullscreenInner');
+    if (inner) inner.innerHTML = '';
+    overlay.style.display = 'none';
+    document.body.style.overflow = '';
 }
 
 // ==================== Admin: Video Management ====================
@@ -2530,12 +2482,7 @@ function showVideoAdminForm() {
     </div>
 
     <div style="background:#fff;padding:20px;border-radius:14px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-            <h3 style="color:var(--danger);margin:0;"><i class="fas fa-list"></i> هەموو ڤیدیۆکان</h3>
-            <button onclick="loadVideoListAdmin()" style="background:#f0f4ff;color:#667eea;border:1.5px solid #667eea;border-radius:8px;padding:5px 12px;cursor:pointer;font-size:.82rem;font-family:inherit;">
-                <i class="fas fa-sync-alt"></i> نوێکردنەوە
-            </button>
-        </div>
+        <h3 style="color:var(--danger);margin-bottom:14px;"><i class="fas fa-list"></i> هەموو ڤیدیۆکان</h3>
         <div id="videoListAdmin"><p style="text-align:center;color:var(--gray);">چاوەڕوانی بکە...</p></div>
     </div>`;
 
@@ -2680,22 +2627,16 @@ function loadVideoListAdmin() {
                 const thumb = v.thumbUrl || getYouTubeThumbnail(v.videoUrl) || '';
                 const bc = v.type === 'ریکلام' ? '#f56565' : v.type === 'فیرکاری' ? '#48bb78' : '#667eea';
                 const isYT = !!getYouTubeId(v.videoUrl);
-                const srcLabel = isYT
-                    ? '<span style="background:#fff0f0;color:#f56565;border:1px solid #fc8181;padding:2px 7px;border-radius:20px;font-size:.7rem;"><i class=\"fab fa-youtube\"></i> YouTube</span>'
-                    : '<span style="background:#f0f4ff;color:#667eea;border:1px solid #c3cffe;padding:2px 7px;border-radius:20px;font-size:.7rem;"><i class=\"fas fa-file-video\"></i> Storage</span>';
+                const srcIcon = isYT ? '<i class="fab fa-youtube" style="color:#f56565;"></i>' : '<i class="fas fa-file-video" style="color:#667eea;"></i>';
                 return '<div style="display:flex;gap:12px;align-items:center;background:#f8f9ff;border-radius:12px;padding:12px;margin-bottom:10px;border:1.5px solid #e2e8f0;">' +
-                    (thumb
-                        ? '<img src="' + thumb + '" style="width:90px;height:60px;object-fit:cover;border-radius:8px;flex-shrink:0;" onerror="this.style.display=\'none\'">'
-                        : '<div style="width:90px;height:60px;background:#e2e8f0;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.8rem;">🎬</div>') +
+                    (thumb ? '<img src="' + thumb + '" style="width:80px;height:54px;object-fit:cover;border-radius:8px;flex-shrink:0;" onerror="this.style.display=\'none\'">' : '<div style="width:80px;height:54px;background:#e2e8f0;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🎬</div>') +
                     '<div style="flex:1;min-width:0;">' +
-                    '<div style="font-weight:700;font-size:.92rem;color:#2d3748;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(v.title || 'ڤیدیۆ') + '</div>' +
-                    '<div style="margin-top:4px;display:flex;gap:5px;align-items:center;flex-wrap:wrap;">' +
-                    '<span style="background:' + bc + ';color:#fff;padding:2px 8px;border-radius:20px;font-size:.7rem;">' + escapeHtml(v.type || '') + '</span>' +
-                    srcLabel + '</div>' +
-                    '<div style="font-size:.73rem;color:#718096;margin-top:3px;">' + escapeHtml(v.uploaderName || '') + (v.timestamp ? ' — ' + escapeHtml(v.timestamp) : '') + '</div></div>' +
-                    '<button onclick="deleteVideo(\'' + v.key + '\')" ' +
-                    'style="background:#e53e3e;color:#fff;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:.85rem;flex-shrink:0;font-weight:700;" ' +
-                    'title="سڕینەوە"><i class="fas fa-trash-alt"></i> سڕینەوە</button></div>';
+                    '<div style="font-weight:700;font-size:.9rem;color:#2d3748;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(v.title || 'ڤیدیۆ') + '</div>' +
+                    '<div style="margin-top:3px;display:flex;gap:6px;align-items:center;">' +
+                    '<span style="background:' + bc + ';color:#fff;padding:2px 8px;border-radius:20px;font-size:.72rem;">' + escapeHtml(v.type || '') + '</span>' +
+                    srcIcon + '</div>' +
+                    '<div style="font-size:.75rem;color:#718096;margin-top:3px;">' + escapeHtml(v.uploaderName || '') + ' — ' + escapeHtml(v.timestamp || '') + '</div></div>' +
+                    '<button onclick="deleteVideo(\'' + v.key + '\')" style="background:#fff0f0;color:#e53e3e;border:1.5px solid #fc8181;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:.82rem;flex-shrink:0;"><i class="fas fa-trash"></i></button></div>';
             }).join('');
         })
         .catch(() => { container.innerHTML = '<p style="text-align:center;color:var(--danger);">هەڵە لە بارکردن!</p>'; });
