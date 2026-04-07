@@ -855,6 +855,12 @@ function buildKurdishLabelHtml(d, key, orderNum, qrUrl) {
                 <button class="btn btn-sm btn-primary" onclick="printLabel('${key}')" style="padding:5px 10px;font-size:0.8rem;">
                     <i class="fas fa-print"></i> چاپ
                 </button>
+                <button class="btn btn-sm" onclick="editDeliveryLabel('${key}')" style="padding:5px 10px;font-size:0.8rem;background:#e6fffa;color:#276749;border:1.5px solid #68d391;border-radius:8px;cursor:pointer;" title="دەستکاریکردن">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm" onclick="shareDeliveryWhatsApp('${key}')" style="padding:5px 10px;font-size:0.8rem;background:#f0fff4;color:#25d366;border:1.5px solid #25d366;border-radius:8px;cursor:pointer;" title="شێرکردن بە واتسئاپ">
+                    <i class="fab fa-whatsapp"></i>
+                </button>
                 <button class="btn btn-sm" onclick="deleteDelivery('${key}')" style="padding:5px 10px;font-size:0.8rem;background:#fff0f0;color:#e53e3e;border:1.5px solid #fc8181;border-radius:8px;cursor:pointer;" title="سڕینەوەی لەیبل">
                     <i class="fas fa-trash-alt"></i>
                 </button>
@@ -917,6 +923,12 @@ function buildUkLabelHtml(d, key, orderNum, qrUrl) {
             <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
                 <button class="btn btn-sm btn-primary" onclick="printUkLabel('${key}')" style="padding:5px 10px;font-size:0.8rem;">
                     <i class="fas fa-print"></i> Print
+                </button>
+                <button class="btn btn-sm" onclick="editDeliveryLabel('${key}')" style="padding:5px 10px;font-size:0.8rem;background:#e6fffa;color:#276749;border:1.5px solid #68d391;border-radius:8px;cursor:pointer;" title="Edit">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm" onclick="shareDeliveryWhatsApp('${key}')" style="padding:5px 10px;font-size:0.8rem;background:#f0fff4;color:#25d366;border:1.5px solid #25d366;border-radius:8px;cursor:pointer;" title="Share via WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
                 </button>
                 <button class="btn btn-sm" onclick="deleteDelivery('${key}')" style="padding:5px 10px;font-size:0.8rem;background:#fff0f0;color:#e53e3e;border:1.5px solid #fc8181;border-radius:8px;cursor:pointer;" title="Delete label">
                     <i class="fas fa-trash-alt"></i>
@@ -1319,6 +1331,219 @@ function deleteRequest(key) {
         .catch(() => showNotification('هەڵە لە سڕینەوە!', 'error'));
 }
 
+// ==================== Edit Delivery Label ====================
+function editDeliveryLabel(key) {
+    const item = _allDeliveryItems.find(i => i.key === key);
+    if (!item) { showNotification('زانیاری نەدۆزرایەوە!', 'error'); return; }
+    const d = item;
+    const isUk = !!d.fullName; // UK labels have fullName field
+
+    // Remove existing modal if any
+    const existingModal = document.getElementById('editDeliveryModal');
+    if (existingModal) existingModal.remove();
+
+    let formFields = '';
+    if (isUk) {
+        formFields = `
+            <div class="form-group"><label style="font-weight:700;">Full Name *</label><input type="text" id="edit-fullName" value="${escapeHtml(d.fullName||'')}" style="direction:ltr;"></div>
+            <div class="form-group"><label style="font-weight:700;">Phone *</label><input type="tel" id="edit-phone" value="${escapeHtml(d.phone||'')}" style="direction:ltr;"></div>
+            <div class="form-group"><label style="font-weight:700;">Receiver Name</label><input type="text" id="edit-receiverName" value="${escapeHtml(d.receiverName||'')}" style="direction:ltr;"></div>
+            <div class="form-group"><label style="font-weight:700;">Receiver Phone</label><input type="tel" id="edit-receiverPhone" value="${escapeHtml(d.receiverPhone||'')}" style="direction:ltr;"></div>
+            <div class="form-group"><label style="font-weight:700;">Address 1 *</label><input type="text" id="edit-address1" value="${escapeHtml(d.address1||'')}" style="direction:ltr;"></div>
+            <div class="form-group"><label style="font-weight:700;">Address 2</label><input type="text" id="edit-address2" value="${escapeHtml(d.address2||'')}" style="direction:ltr;"></div>
+            <div class="form-group"><label style="font-weight:700;">City *</label><input type="text" id="edit-city" value="${escapeHtml(d.city||'')}" style="direction:ltr;"></div>
+            <div class="form-group"><label style="font-weight:700;">County</label><input type="text" id="edit-county" value="${escapeHtml(d.county||'')}" style="direction:ltr;"></div>
+            <div class="form-group"><label style="font-weight:700;">Postcode *</label><input type="text" id="edit-postcode" value="${escapeHtml(d.postcode||'')}" style="direction:ltr;text-transform:uppercase;"></div>
+            <div class="form-group"><label style="font-weight:700;">Package / Item *</label><input type="text" id="edit-packageName" value="${escapeHtml(d.packageName||'')}" style="direction:ltr;"></div>
+            <div style="display:flex;gap:10px;">
+                <div class="form-group" style="flex:1;"><label style="font-weight:700;">Qty</label><input type="number" id="edit-packageQty" value="${escapeHtml(String(d.packageQty||''))}" style="direction:ltr;"></div>
+                <div class="form-group" style="flex:1;"><label style="font-weight:700;">Weight (kg)</label><input type="number" id="edit-packageKg" value="${escapeHtml(String(d.packageKg||''))}" step="0.1" style="direction:ltr;"></div>
+            </div>
+            <div class="form-group"><label style="font-weight:700;">Payment</label><input type="text" id="edit-payment" value="${escapeHtml(d.payment||'')}" style="direction:ltr;"></div>
+            <div class="form-group"><label style="font-weight:700;">Notes</label><textarea id="edit-deliveryNote" rows="3" style="direction:ltr;">${escapeHtml(d.deliveryNote||'')}</textarea></div>
+        `;
+    } else {
+        formFields = `
+            <div class="form-group"><label>ناوی نێردەر *</label><input type="text" id="edit-senderName" value="${escapeHtml(d.senderName||d.name||'')}"></div>
+            <div class="form-group"><label>ژمارەی نێردەر *</label><input type="tel" id="edit-senderMobile" value="${escapeHtml(d.senderMobile||d.mobile||'')}"></div>
+            <div class="form-group"><label>ژمارەی نێردەر ٢</label><input type="tel" id="edit-senderMobile2" value="${escapeHtml(d.senderMobile2||'')}"></div>
+            <div class="form-group"><label>شوێنی نێردەر *</label><input type="text" id="edit-senderLocation" value="${escapeHtml(d.senderLocation||d.address||'')}"></div>
+            <div class="form-group"><label>ناوی وەرگر *</label><input type="text" id="edit-receiverName" value="${escapeHtml(d.receiverName||'')}"></div>
+            <div class="form-group"><label>ژمارەی وەرگر *</label><input type="tel" id="edit-receiverMobile" value="${escapeHtml(d.receiverMobile||'')}"></div>
+            <div class="form-group"><label>ژمارەی وەرگر ٢</label><input type="tel" id="edit-receiverMobile2" value="${escapeHtml(d.receiverMobile2||'')}"></div>
+            <div class="form-group"><label>شوێنی وەرگر *</label><input type="text" id="edit-receiverLocation" value="${escapeHtml(d.receiverLocation||'')}"></div>
+            <div class="form-group"><label>ناوی کەلوپەل *</label><input type="text" id="edit-packageName" value="${escapeHtml(d.packageName||d.details||'')}"></div>
+            <div style="display:flex;gap:10px;">
+                <div class="form-group" style="flex:1;"><label>ژمارەی پارچە</label><input type="number" id="edit-packageQty" value="${escapeHtml(String(d.packageQty||''))}" min="1"></div>
+                <div class="form-group" style="flex:1;"><label>کیلۆ</label><input type="number" id="edit-packageKg" value="${escapeHtml(String(d.packageKg||''))}" step="0.1" min="0"></div>
+            </div>
+            <div class="form-group"><label>تیبینی</label><textarea id="edit-deliveryNote" rows="3">${escapeHtml(d.deliveryNote||'')}</textarea></div>
+        `;
+    }
+
+    const modal = document.createElement('div');
+    modal.className = 'modal show';
+    modal.id = 'editDeliveryModal';
+    modal.style.zIndex = '99999';
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width:500px;${isUk?'direction:ltr;text-align:left;font-family:Segoe UI,Arial,sans-serif;':''}">
+            <div class="modal-header" style="${isUk?'direction:ltr;':''}">
+                <button class="close-modal" onclick="document.getElementById('editDeliveryModal').remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2><i class="fas fa-edit"></i> ${isUk ? 'Edit Label' : 'دەستکاریکردنی لەیبل'}</h2>
+            </div>
+            <div style="padding:16px;max-height:70vh;overflow-y:auto;">
+                ${formFields}
+            </div>
+            <div class="form-actions" style="padding:0 16px 16px;gap:10px;">
+                <button class="btn btn-primary" onclick="saveEditedDelivery('${key}', ${isUk})" style="flex:1;">
+                    <i class="fas fa-save"></i> ${isUk ? 'Save Changes' : 'پاشەکەوتکردن'}
+                </button>
+                <button class="btn btn-secondary" onclick="document.getElementById('editDeliveryModal').remove()" style="flex:1;">
+                    ${isUk ? 'Cancel' : 'داخستن'}
+                </button>
+            </div>
+        </div>`;
+    document.body.appendChild(modal);
+}
+
+function saveEditedDelivery(key, isUk) {
+    const g = (id) => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+    let updates = {};
+    if (isUk) {
+        if (!g('edit-fullName') || !g('edit-address1') || !g('edit-city')) {
+            showNotification('Please fill in required fields!', 'error'); return;
+        }
+        updates = {
+            fullName: g('edit-fullName'), phone: g('edit-phone'),
+            receiverName: g('edit-receiverName'), receiverPhone: g('edit-receiverPhone'),
+            address1: g('edit-address1'), address2: g('edit-address2'),
+            city: g('edit-city'), county: g('edit-county'), postcode: g('edit-postcode'),
+            packageName: g('edit-packageName'), packageQty: g('edit-packageQty'),
+            packageKg: g('edit-packageKg'), payment: g('edit-payment'),
+            deliveryNote: g('edit-deliveryNote')
+        };
+    } else {
+        if (!g('edit-senderName') || !g('edit-senderMobile') || !g('edit-receiverName') || !g('edit-receiverMobile')) {
+            showNotification('تکایە خانەی پێویست پڕبکەوە!', 'error'); return;
+        }
+        updates = {
+            senderName: g('edit-senderName'), senderMobile: g('edit-senderMobile'),
+            senderMobile2: g('edit-senderMobile2'), senderLocation: g('edit-senderLocation'),
+            receiverName: g('edit-receiverName'), receiverMobile: g('edit-receiverMobile'),
+            receiverMobile2: g('edit-receiverMobile2'), receiverLocation: g('edit-receiverLocation'),
+            packageName: g('edit-packageName'), packageQty: g('edit-packageQty'),
+            packageKg: g('edit-packageKg'), deliveryNote: g('edit-deliveryNote')
+        };
+    }
+    database.ref('delivery/' + key).update(updates)
+        .then(() => {
+            showNotification(isUk ? 'Label updated successfully ✅' : 'لەیبل نوێکرایەوە ✅');
+            document.getElementById('editDeliveryModal')?.remove();
+            loadDeliveryRequests();
+        })
+        .catch(() => showNotification(isUk ? 'Error saving!' : 'هەڵە لە پاشەکەوتکردن!', 'error'));
+}
+
+// ==================== Share Delivery Label via WhatsApp ====================
+function shareDeliveryWhatsApp(key) {
+    const item = _allDeliveryItems.find(i => i.key === key);
+    if (!item) { showNotification('زانیاری نەدۆزرایەوە!', 'error'); return; }
+    const d = item;
+    const isUk = !!d.fullName;
+    const card = document.getElementById('label-' + key);
+    const orderNum = card ? (card.querySelector('.label-order-num') || {}).textContent : '';
+
+    // Build message text
+    let msg = '';
+    if (isUk) {
+        msg = `🚚 *UK BAZAR — UK Delivery Label*\n`;
+        msg += `📋 Order: *${orderNum}*\n\n`;
+        msg += `📦 *Recipient:*\n`;
+        msg += `👤 Name: ${d.fullName||'—'}\n`;
+        msg += `📞 Phone: ${d.phone||'—'}\n`;
+        if (d.receiverName) msg += `📬 Receiver: ${d.receiverName}\n`;
+        if (d.receiverPhone) msg += `📞 Receiver Tel: ${d.receiverPhone}\n`;
+        msg += `🏠 Address: ${d.address1||'—'}${d.address2?', '+d.address2:''}\n`;
+        msg += `🏙️ City: ${d.city||'—'}\n`;
+        if (d.county) msg += `County: ${d.county}\n`;
+        msg += `📮 Postcode: ${d.postcode||'—'}\n\n`;
+        msg += `📦 *Package:*\n`;
+        msg += `Item: ${d.packageName||'—'}\n`;
+        if (d.packageQty) msg += `Qty: ${d.packageQty} pcs\n`;
+        if (d.packageKg)  msg += `Weight: ${d.packageKg} kg\n`;
+        if (d.payment)    msg += `💳 Payment: ${d.payment}\n`;
+        if (d.deliveryNote) msg += `📝 Notes: ${d.deliveryNote}\n`;
+        msg += `\n🌐 ukbazar.online`;
+    } else {
+        msg = `🚚 *UK BAZAR — لەیبلی گەیاندن*\n`;
+        msg += `📋 پسولە: *${orderNum}*\n\n`;
+        msg += `📤 *نێردەر:*\n`;
+        msg += `👤 ناو: ${d.senderName||d.name||'—'}\n`;
+        msg += `📞 ژمارە: ${d.senderMobile||d.mobile||'—'}\n`;
+        if (d.senderMobile2) msg += `📞 ژمارە ٢: ${d.senderMobile2}\n`;
+        msg += `📍 شوێن: ${d.senderLocation||d.address||'—'}\n\n`;
+        msg += `📥 *وەرگر:*\n`;
+        msg += `👤 ناو: ${d.receiverName||'—'}\n`;
+        msg += `📞 ژمارە: ${d.receiverMobile||'—'}\n`;
+        if (d.receiverMobile2) msg += `📞 ژمارە ٢: ${d.receiverMobile2}\n`;
+        msg += `📍 شوێن: ${d.receiverLocation||'—'}\n\n`;
+        msg += `📦 *کەلوپەل:*\n`;
+        msg += `${d.packageName||d.details||'—'}`;
+        if (d.packageQty) msg += ` | ${d.packageQty} پارچە`;
+        if (d.packageKg)  msg += ` | ${d.packageKg} کگ`;
+        if (d.driverName) msg += `\n🚗 شۆفیر: ${d.driverName} ${d.driverMobile||''}`;
+        if (d.deliveryNote) msg += `\n📝 تیبینی: ${d.deliveryNote}`;
+        msg += `\n\n🌐 ukbazar.online`;
+    }
+
+    // Ask for phone number
+    const existingShareModal = document.getElementById('whatsappShareModal');
+    if (existingShareModal) existingShareModal.remove();
+
+    const shareModal = document.createElement('div');
+    shareModal.className = 'modal show';
+    shareModal.id = 'whatsappShareModal';
+    shareModal.style.zIndex = '99999';
+    shareModal.innerHTML = `
+        <div class="modal-content" style="max-width:400px;">
+            <div class="modal-header">
+                <button class="close-modal" onclick="document.getElementById('whatsappShareModal').remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2><i class="fab fa-whatsapp" style="color:#25d366;"></i> شێرکردن بە واتسئاپ</h2>
+            </div>
+            <div style="padding:20px;">
+                <div class="form-group">
+                    <label style="font-weight:700;font-size:1rem;">📞 ژمارەی مۆبایلی وەرگر</label>
+                    <p style="font-size:0.8rem;color:#718096;margin-bottom:8px;">ژمارەکە بنووسە — کۆدی وڵات زیادبکە گەرنەخۆش</p>
+                    <input type="tel" id="waSharePhone" placeholder="مەسەلە: 9647701234567 یان +447501234567" 
+                        style="font-size:1rem;direction:ltr;letter-spacing:1px;" autocomplete="off">
+                </div>
+                <div style="display:flex;gap:10px;margin-top:8px;">
+                    <button class="btn btn-primary" onclick="sendWhatsAppLabel('${encodeURIComponent(msg)}')" style="flex:1;background:#25d366;border-color:#25d366;">
+                        <i class="fab fa-whatsapp"></i> ناردن
+                    </button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('whatsappShareModal').remove()" style="flex:1;">داخستن</button>
+                </div>
+            </div>
+        </div>`;
+    document.body.appendChild(shareModal);
+    setTimeout(() => { const el = document.getElementById('waSharePhone'); if(el) el.focus(); }, 100);
+}
+
+function sendWhatsAppLabel(encodedMsg) {
+    let phone = (document.getElementById('waSharePhone') || {value:''}).value.trim().replace(/\s+/g,'').replace(/^\+/,'');
+    if (!phone) { showNotification('تکایە ژمارەکە بنووسە!', 'error'); return; }
+    // Remove leading zeros for international format
+    if (phone.startsWith('0') && phone.length <= 11) {
+        showNotification('کۆدی وڵات زیادبکە — بۆ نموونە: 964 یان 44', 'info'); return;
+    }
+    document.getElementById('whatsappShareModal')?.remove();
+    window.open(`https://wa.me/${phone}?text=${encodedMsg}`, '_blank');
+}
+
 // ==================== Delete Delivery Label ====================
 function deleteDelivery(key) {
     const pass = prompt('🔐 وشەی تێپەڕی بەڕێوەبەر داخڵ بکە بۆ سڕینەوەی لەیبل:\n(Admin password required to delete label)');
@@ -1508,9 +1733,9 @@ function showAdminAddProductForm() {
                         <option value="زەوی">زەوی</option>
                         <option value="باخ">باخ</option>
                         <option value="ئاژەڵ">ئاژەڵ</option>
-                        <option value=" پیاوان"> پیاوان</option>
-                        <option value=" ئافرەتان"> ئافرەتان</option>
-                        <option value=" منداڵان"> منداڵان</option>
+                        <option value="جلوبەرگی پیاوان">جلوبەرگی پیاوان</option>
+                        <option value="جلوبەرگی ئافرەتان">جلوبەرگی ئافرەتان</option>
+                        <option value="جلوبەرگی منداڵان">جلوبەرگی منداڵان</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -1759,9 +1984,9 @@ function createCategoryButtons() {
         'زەوی',
         'باخ',
         'ئاژەڵ',
-        ' پیاوان',
-        ' ئافرەتان',
-        ' منداڵان'
+        'جلوبەرگی پیاوان',
+        'جلوبەرگی ئافرەتان',
+        'جلوبەرگی منداڵان'
     ];
     
     const container = document.getElementById('categoryButtons');
