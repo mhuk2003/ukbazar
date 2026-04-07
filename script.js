@@ -1733,9 +1733,9 @@ function showAdminAddProductForm() {
                         <option value="زەوی">زەوی</option>
                         <option value="باخ">باخ</option>
                         <option value="ئاژەڵ">ئاژەڵ</option>
-                        <option value="جلوبەرگی پیاوان">جلوبەرگی پیاوان</option>
-                        <option value="جلوبەرگی ئافرەتان">جلوبەرگی ئافرەتان</option>
-                        <option value="جلوبەرگی منداڵان">جلوبەرگی منداڵان</option>
+                        <option value=" پیاوان"> پیاوان</option>
+                        <option value=" ئافرەتان"> ئافرەتان</option>
+                        <option value=" منداڵان"> منداڵان</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -1984,9 +1984,9 @@ function createCategoryButtons() {
         'زەوی',
         'باخ',
         'ئاژەڵ',
-        'جلوبەرگی پیاوان',
-        'جلوبەرگی ئافرەتان',
-        'جلوبەرگی منداڵان'
+        ' پیاوان',
+        ' ئافرەتان',
+        ' منداڵان'
     ];
     
     const container = document.getElementById('categoryButtons');
