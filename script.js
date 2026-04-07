@@ -1792,12 +1792,23 @@ function showAdminAddProductForm() {
             if (!preview) return;
             preview.innerHTML = '';
             
-            Array.from(e.target.files).forEach(file => {
+            Array.from(e.target.files).forEach(function(file, i) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
+                    const wrap = document.createElement('div');
+                    wrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:5px;margin:6px 4px;width:110px;';
                     const img = document.createElement('img');
                     img.src = event.target.result;
-                    preview.appendChild(img);
+                    img.style.cssText = 'width:100px;height:100px;object-fit:cover;border-radius:8px;border:2px solid #e2e8f0;';
+                    const inp = document.createElement('input');
+                    inp.type = 'text';
+                    inp.placeholder = 'وردەکاری وێنە ' + (i + 1);
+                    inp.className = 'admin-img-desc-input';
+                    inp.dataset.imgIdx = i;
+                    inp.style.cssText = 'width:100px;font-size:0.72rem;padding:4px 6px;border:1.5px solid #e2e8f0;border-radius:6px;text-align:center;';
+                    wrap.appendChild(img);
+                    wrap.appendChild(inp);
+                    preview.appendChild(wrap);
                 };
                 reader.readAsDataURL(file);
             });
@@ -1820,6 +1831,10 @@ function showAdminAddProductForm() {
                 const url = await snapshot.ref.getDownloadURL();
                 imageUrls.push(url);
             }
+
+            // Collect per-image descriptions
+            const adminDescInputs = document.querySelectorAll('#adminProductPreview .admin-img-desc-input');
+            const imageDescriptions = Array.from(adminDescInputs).map(inp => inp.value.trim());
             
             const productData = {
                 name: document.getElementById('adminProductName').value,
@@ -1828,6 +1843,7 @@ function showAdminAddProductForm() {
                 price: document.getElementById('adminProductPrice').value,
                 currency: document.getElementById('adminProductCurrency').value,
                 images: imageUrls,
+                imageDescriptions: imageDescriptions,
                 sellerName: document.getElementById('adminSellerName').value,
                 sellerMobile: document.getElementById('adminSellerMobile').value,
                 location: document.getElementById('adminProductLocation').value,
@@ -1883,6 +1899,10 @@ document.addEventListener('submit', async function(e) {
             const url = await snapshot.ref.getDownloadURL();
             imageUrls.push(url);
         }
+
+        // Collect per-image descriptions
+        const descInputs = document.querySelectorAll('#imagePreview .img-desc-input');
+        const imageDescriptions = Array.from(descInputs).map(inp => inp.value.trim());
         
         const productData = {
             name: document.getElementById('productName').value,
@@ -1891,6 +1911,7 @@ document.addEventListener('submit', async function(e) {
             price: document.getElementById('productPrice').value,
             currency: document.getElementById('productCurrency').value,
             images: imageUrls,
+            imageDescriptions: imageDescriptions,
             sellerName: document.getElementById('sellerName').value,
             sellerMobile: document.getElementById('sellerMobile').value,
             location: document.getElementById('productLocation').value,
@@ -1943,23 +1964,29 @@ document.addEventListener('submit', async function(e) {
     }
 });
 
-// Image Preview
+// Image Preview — with per-image description inputs
 document.addEventListener('change', function(e) {
     if (e.target && e.target.id === 'productImages') {
         const preview = document.getElementById('imagePreview');
         if (!preview) return;
         preview.innerHTML = '';
-        Array.from(e.target.files).forEach(file => {
+        Array.from(e.target.files).forEach(function(file, i) {
             const reader = new FileReader();
             reader.onload = function(event) {
+                const wrap = document.createElement('div');
+                wrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:5px;margin:6px 4px;width:110px;';
                 const img = document.createElement('img');
                 img.src = event.target.result;
-                img.style.width = '100px';
-                img.style.height = '100px';
-                img.style.objectFit = 'cover';
-                img.style.borderRadius = '8px';
-                img.style.margin = '5px';
-                preview.appendChild(img);
+                img.style.cssText = 'width:100px;height:100px;object-fit:cover;border-radius:8px;border:2px solid #e2e8f0;';
+                const inp = document.createElement('input');
+                inp.type = 'text';
+                inp.placeholder = 'وردەکاری وێنە ' + (i + 1);
+                inp.className = 'img-desc-input';
+                inp.dataset.imgIdx = i;
+                inp.style.cssText = 'width:100px;font-size:0.72rem;padding:4px 6px;border:1.5px solid #e2e8f0;border-radius:6px;text-align:center;';
+                wrap.appendChild(img);
+                wrap.appendChild(inp);
+                preview.appendChild(wrap);
             };
             reader.readAsDataURL(file);
         });
@@ -2047,17 +2074,154 @@ function performSearch() {
 }
 
 // ==================== Product Card & Rendering ====================
+
+// Inject product carousel CSS once
+(function injectProductCarouselCSS() {
+    if (document.getElementById('product-carousel-css')) return;
+    const s = document.createElement('style');
+    s.id = 'product-carousel-css';
+    s.textContent = `
+        .pc-carousel { position:relative; overflow:hidden; background:#f0f2f5; border-radius:12px 12px 0 0; }
+        .pc-slides { display:flex; transition:transform 0.35s cubic-bezier(.4,0,.2,1); will-change:transform; }
+        .pc-slide { min-width:100%; position:relative; }
+        .pc-slide img { width:100%; aspect-ratio:1/1; object-fit:cover; display:block; cursor:zoom-in; }
+        .pc-img-caption { position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.52); color:#fff; font-size:.75rem; padding:5px 10px; text-align:center; pointer-events:none; min-height:0; max-height:56px; overflow:hidden; display:none; }
+        .pc-img-caption.has-text { display:block; }
+        .pc-arrow { position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.85); border:none; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:.8rem; color:#333; z-index:2; box-shadow:0 2px 6px rgba(0,0,0,0.18); }
+        .pc-arrow.left { right:6px; }
+        .pc-arrow.right { left:6px; }
+        .pc-dots { display:flex; justify-content:center; gap:5px; padding:5px 0 3px; background:#f0f2f5; }
+        .pc-dot { width:7px; height:7px; border-radius:50%; background:#ccc; cursor:pointer; transition:background .2s; flex-shrink:0; }
+        .pc-dot.active { background:#667eea; }
+        /* Gallery Modal */
+        .gallery-modal { position:fixed; inset:0; background:rgba(0,0,0,0.94); z-index:99999; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+        .gallery-modal.hidden { display:none; }
+        .gallery-close { position:absolute; top:14px; right:16px; background:rgba(255,255,255,0.15); border:none; color:#fff; font-size:1.3rem; border-radius:50%; width:38px; height:38px; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:2; }
+        .gallery-img-wrap { position:relative; max-width:96vw; max-height:72vh; display:flex; align-items:center; justify-content:center; }
+        .gallery-img-wrap img { max-width:96vw; max-height:72vh; object-fit:contain; border-radius:8px; user-select:none; }
+        .gallery-caption { color:#e2e8f0; font-size:.92rem; text-align:center; padding:10px 20px 4px; max-width:480px; min-height:28px; }
+        .gallery-dots { display:flex; gap:8px; justify-content:center; padding:8px 0; }
+        .gallery-dot { width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,0.3); cursor:pointer; transition:background .2s; }
+        .gallery-dot.active { background:#fff; }
+        .gallery-nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.18); border:none; color:#fff; border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1.2rem; z-index:2; }
+        .gallery-nav.left { right:4px; }
+        .gallery-nav.right { left:4px; }
+        .gallery-counter { position:absolute; top:14px; left:16px; background:rgba(0,0,0,0.45); color:#fff; font-size:.78rem; padding:3px 10px; border-radius:20px; }
+    `;
+    document.head.appendChild(s);
+    // Create gallery modal DOM once
+    const m = document.createElement('div');
+    m.id = 'productGalleryModal';
+    m.className = 'gallery-modal hidden';
+    m.innerHTML = `
+        <span class="gallery-counter" id="gCounter"></span>
+        <button class="gallery-close" onclick="closeProductGallery()"><i class="fas fa-times"></i></button>
+        <div class="gallery-img-wrap" style="position:relative;">
+            <button class="gallery-nav right" onclick="galleryNav(-1)"><i class="fas fa-chevron-right"></i></button>
+            <img id="gMainImg" src="" alt="">
+            <button class="gallery-nav left" onclick="galleryNav(1)"><i class="fas fa-chevron-left"></i></button>
+        </div>
+        <div class="gallery-caption" id="gCaption"></div>
+        <div class="gallery-dots" id="gDots"></div>
+    `;
+    document.body.appendChild(m);
+    m.addEventListener('click', function(e){ if(e.target===m) closeProductGallery(); });
+})();
+
+let _galleryImages = [], _galleryDescs = [], _galleryIdx = 0;
+
+function openProductGallery(images, descs, startIdx) {
+    _galleryImages = images;
+    _galleryDescs  = descs || [];
+    _galleryIdx    = startIdx || 0;
+    const modal = document.getElementById('productGalleryModal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    _renderGallery();
+}
+function closeProductGallery() {
+    const modal = document.getElementById('productGalleryModal');
+    if (modal) modal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+function _renderGallery() {
+    const img = document.getElementById('gMainImg');
+    const cap = document.getElementById('gCaption');
+    const dots = document.getElementById('gDots');
+    const counter = document.getElementById('gCounter');
+    if (!img) return;
+    img.src = _galleryImages[_galleryIdx] || '';
+    cap.textContent = (_galleryDescs[_galleryIdx] || '');
+    counter.textContent = (_galleryIdx + 1) + ' / ' + _galleryImages.length;
+    dots.innerHTML = _galleryImages.map((_, i) =>
+        '<div class="gallery-dot' + (i === _galleryIdx ? ' active' : '') + '" onclick="galleryGoTo(' + i + ')"></div>'
+    ).join('');
+}
+function galleryNav(delta) {
+    _galleryIdx = (_galleryIdx + delta + _galleryImages.length) % _galleryImages.length;
+    _renderGallery();
+}
+function galleryGoTo(i) { _galleryIdx = i; _renderGallery(); }
+
+// Swipe support for gallery
+(function attachGallerySwipe() {
+    let sx = 0;
+    document.addEventListener('touchstart', function(e) {
+        const m = document.getElementById('productGalleryModal');
+        if (m && !m.classList.contains('hidden')) sx = e.touches[0].clientX;
+    }, {passive:true});
+    document.addEventListener('touchend', function(e) {
+        const m = document.getElementById('productGalleryModal');
+        if (m && !m.classList.contains('hidden')) {
+            const dx = e.changedTouches[0].clientX - sx;
+            if (Math.abs(dx) > 40) galleryNav(dx > 0 ? 1 : -1);
+        }
+    }, {passive:true});
+})();
+
 function createProductCard(product) {
-    let firstImage = DEFAULT_PRODUCT_IMAGE;
-    if (product.images && product.images.length > 0 && product.images[0]) firstImage = product.images[0];
+    const images = (product.images && product.images.length > 0) ? product.images : [DEFAULT_PRODUCT_IMAGE];
+    const descs  = product.imageDescriptions || [];
     const productName = product.name && product.name.length > 30 ? product.name.substring(0, 27) + '...' : product.name || 'بێ ناو';
     const sellerName = product.sellerName && product.sellerName.length > 15 ? product.sellerName.substring(0, 12) + '...' : product.sellerName || 'نادیار';
     const location = product.location && product.location.length > 20 ? product.location.substring(0, 17) + '...' : product.location || 'نادیار';
     const safeId = product.firebaseId;
     const safeName = (product.name || '').replace(/'/g, "\\'");
     const safeMobile = (product.sellerMobile || '');
-    return '<div class="product-card" id="card-' + safeId + '">' +
-        '<div class="product-image"><img src="' + firstImage + '" alt="' + (product.name || '') + '" loading="lazy" onclick="openImageModal(\'' + firstImage.replace(/'/g, "\\'") + '\')" style="cursor:zoom-in;" onerror="this.onerror=null;this.src=\'' + DEFAULT_PRODUCT_IMAGE + '\'"></div>' +
+
+    // Build carousel slides
+    const slidesHtml = images.map(function(imgUrl, i) {
+        const safeImgUrl = (imgUrl || DEFAULT_PRODUCT_IMAGE).replace(/'/g, "\\'");
+        const desc = descs[i] || '';
+        const safeDesc = escapeHtml(desc);
+        return '<div class="pc-slide">' +
+            '<img src="' + (imgUrl || DEFAULT_PRODUCT_IMAGE) + '" alt="" loading="lazy" ' +
+            'onclick="openProductGallery(JSON.parse(this.closest(\'.product-card\').dataset.images), JSON.parse(this.closest(\'.product-card\').dataset.descs), ' + i + ')" ' +
+            'onerror="this.onerror=null;this.src=\'' + DEFAULT_PRODUCT_IMAGE + '\'">' +
+            (desc ? '<div class="pc-img-caption has-text">' + safeDesc + '</div>' : '<div class="pc-img-caption"></div>') +
+            '</div>';
+    }).join('');
+
+    const dotsHtml = images.length > 1 ? images.map(function(_, i) {
+        return '<div class="pc-dot' + (i === 0 ? ' active' : '') + '" onclick="pcGoTo(\'' + safeId + '\',' + i + ')"></div>';
+    }).join('') : '';
+
+    const arrowsHtml = images.length > 1 ?
+        '<button class="pc-arrow left" onclick="pcNav(\'' + safeId + '\',-1)"><i class="fas fa-chevron-right"></i></button>' +
+        '<button class="pc-arrow right" onclick="pcNav(\'' + safeId + '\',1)"><i class="fas fa-chevron-left"></i></button>' : '';
+
+    const dotsRow = images.length > 1 ? '<div class="pc-dots" id="pcdots-' + safeId + '">' + dotsHtml + '</div>' : '';
+
+    const safeImagesJson = JSON.stringify(images).replace(/"/g, '&quot;');
+    const safeDescsJson  = JSON.stringify(descs).replace(/"/g, '&quot;');
+
+    return '<div class="product-card" id="card-' + safeId + '" data-images="' + safeImagesJson + '" data-descs="' + safeDescsJson + '" data-pcidx="0">' +
+        '<div class="pc-carousel" id="pc-' + safeId + '">' +
+        '<div class="pc-slides" id="pcslides-' + safeId + '">' + slidesHtml + '</div>' +
+        arrowsHtml +
+        '</div>' +
+        dotsRow +
         '<div class="product-info">' +
         '<div class="product-category">' + (product.category || 'هەموویی') + '</div>' +
         '<h3 class="product-name" title="' + (product.name || '') + '">' + productName + '</h3>' +
@@ -2072,6 +2236,62 @@ function createProductCard(product) {
         '<button class="btn btn-secondary btn-small" onclick="contactSellerWhatsApp(\'' + safeMobile + '\', \'' + safeName + '\')"><i class="fab fa-whatsapp"></i> <span class="btn-text">واتساپ</span></button>' +
         '</div></div></div>';
 }
+
+// Product card carousel navigation helpers
+function _pcGetData(cardId) {
+    const card = document.getElementById('card-' + cardId);
+    if (!card) return null;
+    const slides = document.getElementById('pcslides-' + cardId);
+    const dotsContainer = document.getElementById('pcdots-' + cardId);
+    const total = slides ? slides.children.length : 0;
+    const idx = parseInt(card.dataset.pcidx) || 0;
+    return { card, slides, dotsContainer, total, idx };
+}
+function pcNav(cardId, delta) {
+    const d = _pcGetData(cardId);
+    if (!d || d.total < 2) return;
+    const newIdx = (d.idx + delta + d.total) % d.total;
+    d.card.dataset.pcidx = newIdx;
+    d.slides.style.transform = 'translateX(-' + (newIdx * 100) + '%)';
+    if (d.dotsContainer) {
+        d.dotsContainer.querySelectorAll('.pc-dot').forEach(function(dot, i) {
+            dot.classList.toggle('active', i === newIdx);
+        });
+    }
+}
+function pcGoTo(cardId, idx) {
+    const d = _pcGetData(cardId);
+    if (!d) return;
+    d.card.dataset.pcidx = idx;
+    d.slides.style.transform = 'translateX(-' + (idx * 100) + '%)';
+    if (d.dotsContainer) {
+        d.dotsContainer.querySelectorAll('.pc-dot').forEach(function(dot, i) {
+            dot.classList.toggle('active', i === idx);
+        });
+    }
+}
+
+// Touch swipe on product cards
+(function attachCardSwipe() {
+    let startX = 0, activeCard = null;
+    document.addEventListener('touchstart', function(e) {
+        const card = e.target.closest('.pc-carousel');
+        if (card) { startX = e.touches[0].clientX; activeCard = card; }
+        else activeCard = null;
+    }, {passive:true});
+    document.addEventListener('touchend', function(e) {
+        if (!activeCard) return;
+        const dx = e.changedTouches[0].clientX - startX;
+        if (Math.abs(dx) > 40) {
+            const cardEl = activeCard.closest('.product-card');
+            if (cardEl) {
+                const cardId = cardEl.id.replace('card-', '');
+                pcNav(cardId, dx > 0 ? 1 : -1);
+            }
+        }
+        activeCard = null;
+    }, {passive:true});
+})();
 function showQtySelector(productId) {
     const qtyDiv = document.getElementById('qty-' + productId);
     if (!qtyDiv) return;
@@ -2337,15 +2557,10 @@ function startAutoPlay() {
     autoPlayInterval = setInterval(nextSlide, 4000);
 }
 
-// ==================== Image Modal ====================
+// ==================== Image Modal (kept for backward compat) ====================
 function openImageModal(imageSrc) {
-    const modal = document.getElementById('imageModal');
-    const img = document.getElementById('zoomedImage');
-    if (!modal || !img) return;
-    
-    img.src = imageSrc;
-    modal.classList.add('show');
-    document.body.style.overflow = 'hidden';
+    // Open as a single-image gallery
+    openProductGallery([imageSrc], [], 0);
 }
 
 function closeImageModal() {
