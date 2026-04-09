@@ -647,36 +647,47 @@ function loadAllProducts() {
 function loadRequests() {
     const content = document.getElementById('adminContent');
     if (!content) return;
-    
     content.innerHTML = '<p style="text-align: center;">چاوەڕوانی بکە...</p>';
-    
     database.ref('requests').once('value')
         .then((snapshot) => {
             if (!snapshot.exists()) {
                 content.innerHTML = '<p style="text-align: center; color: var(--gray);">هیچ داواکارییەک نییە</p>';
                 return;
             }
-            
+            const items = [];
+            snapshot.forEach(child => items.push({ key: child.key, ...child.val() }));
+            items.reverse();
             let html = '<div class="pending-items">';
-            
-            snapshot.forEach((child) => {
-                const request = child.val();
-                const key = child.key;
+            items.forEach(request => {
+                const key = request.key;
+                const isCartOrder = request.type === 'cart-order';
+                const badgeBg = isCartOrder ? '#667eea' : '#f59e0b';
+                const badgeText = isCartOrder ? '🛒 داواکاری کڕین' : '📋 داواکاری کاڵا';
+                const waNum = (request.mobile || '').replace(/\D/g,'');
                 html += `
-                    <div class="pending-item" id="request-${key}">
-                        <h4>📋 ${escapeHtml(request.itemName)}</h4>
-                        <p><strong>کەس:</strong> ${escapeHtml(request.name)} - ${escapeHtml(request.mobile)}</p>
-                        <p><strong>وردەکاری:</strong> ${escapeHtml(request.details) || 'بەبەتاڵ'}</p>
-                        <p><strong>بەروار:</strong> ${escapeHtml(request.timestamp)}</p>
+                    <div class="pending-item" id="request-${key}" style="border-right:4px solid ${badgeBg};">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+                            <h4 style="margin:0;color:#2d3748;">📦 ${escapeHtml(request.itemName || '—')}</h4>
+                            <span style="background:${badgeBg};color:#fff;padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:700;">${badgeText}</span>
+                        </div>
+                        <div style="background:#f8f9ff;border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:.88rem;display:grid;gap:5px;">
+                            <div><strong>👤 ناو:</strong> ${escapeHtml(request.name || '—')}</div>
+                            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                                <strong>📞 مۆبایل:</strong> ${escapeHtml(request.mobile || '—')}
+                                ${waNum ? `<a href="https://wa.me/${waNum}" target="_blank" style="background:#25d366;color:#fff;padding:2px 10px;border-radius:10px;font-size:.75rem;text-decoration:none;"><i class="fab fa-whatsapp"></i> پەیوەندی</a>` : ''}
+                            </div>
+                            ${request.address ? `<div><strong>📍 ناونیشان:</strong> ${escapeHtml(request.address)}</div>` : ''}
+                            ${request.qty ? `<div><strong>🔢 دانە:</strong> ${escapeHtml(String(request.qty))} × ${escapeHtml(String(request.price||''))} ${escapeHtml(request.currency||'IQD')}</div>` : ''}
+                            <div><strong>📝 وردەکاری:</strong> ${escapeHtml(request.details || '—')}</div>
+                            <div style="color:#718096;font-size:.78rem;"><strong>⏰ بەروار:</strong> ${escapeHtml(request.timestamp || '—')}</div>
+                        </div>
                         <div class="actions">
                             <button class="btn btn-danger btn-small" onclick="deleteRequest('${key}')">
                                 <i class="fas fa-trash"></i> سڕینەوە
                             </button>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
-            
             html += '</div>';
             content.innerHTML = html;
         })
@@ -1498,9 +1509,11 @@ function shareDeliveryWhatsApp(key) {
         msg += `\n\n🌐 ukbazar.online`;
     }
 
-    // Ask for phone number
+    // Ask for phone number — ئۆتۆماتیکی ژمارەی خاوەنی پۆست دادەنێت
     const existingShareModal = document.getElementById('whatsappShareModal');
     if (existingShareModal) existingShareModal.remove();
+
+    const autoPhone = (d.phone || d.senderMobile || d.mobile || '').replace(/\D/g,'');
 
     const shareModal = document.createElement('div');
     shareModal.className = 'modal show';
@@ -1515,10 +1528,12 @@ function shareDeliveryWhatsApp(key) {
                 <h2><i class="fab fa-whatsapp" style="color:#25d366;"></i> شێرکردن بە واتسئاپ</h2>
             </div>
             <div style="padding:20px;">
+                ${autoPhone ? `<div style="background:#f0fff4;border:1.5px solid #68d391;border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:.85rem;color:#276749;"><i class="fas fa-check-circle"></i> ژمارەی خاوەنی پۆست ئۆتۆماتیکی دانراوە: <strong style="direction:ltr;display:inline-block;">${autoPhone}</strong></div>` : ''}
                 <div class="form-group">
                     <label style="font-weight:700;font-size:1rem;">📞 ژمارەی مۆبایلی وەرگر</label>
                     <p style="font-size:0.8rem;color:#718096;margin-bottom:8px;">ژمارەکە بنووسە — کۆدی وڵات زیادبکە گەرنەخۆش</p>
-                    <input type="tel" id="waSharePhone" placeholder="مەسەلە: 9647701234567 یان +447501234567" 
+                    <input type="tel" id="waSharePhone" placeholder="مەسەلە: 9647701234567 یان +447501234567"
+                        value="${autoPhone}"
                         style="font-size:1rem;direction:ltr;letter-spacing:1px;" autocomplete="off">
                 </div>
                 <div style="display:flex;gap:10px;margin-top:8px;">
@@ -2309,16 +2324,90 @@ function confirmAddToCart(productId, sellerMobile, productName) {
     const qty = valEl ? (parseInt(valEl.textContent) || 1) : 1;
     const product = products.find(p => p.firebaseId === productId);
     if (!product) return;
-    const existingItem = cart.find(item => item.productId === productId);
-    if (existingItem) { existingItem.quantity += qty; } else { cart.push({ productId, name: product.name, price: product.price, currency: product.currency, image: product.images ? product.images[0] : null, quantity: qty, sellerMobile }); }
-    updateCartBadge();
-    showNotification('✅ ' + qty + ' دانە زیادکرا بە سەبەتە!');
+    // داخستنی qty selector
     const qtyDiv = document.getElementById('qty-' + productId);
     if (qtyDiv) qtyDiv.style.display = 'none';
-    if (sellerMobile) {
-        const msg = 'سڵاو، کریارێک داوای کڕینی کاڵاکەت کردووە:\n\n📦 کاڵا: ' + productName + '\n🔢 دانە: ' + qty + '\n💰 نرخ: ' + product.price + ' ' + (product.currency || 'IQD') + '\n\n⏰ داواکاری لە UK BAZAR';
-        window.open('https://wa.me/' + sellerMobile.replace(/\D/g, '') + '?text=' + encodeURIComponent(msg), '_blank');
-    }
+    // نیشاندانی فۆرمی زانیاری کڕیار
+    showBuyerInfoModal(product, qty, sellerMobile);
+}
+
+function showBuyerInfoModal(product, qty, sellerMobile) {
+    const existing = document.getElementById('buyerInfoModal');
+    if (existing) existing.remove();
+    const thumbHtml = (product.images && product.images[0])
+        ? '<img src="' + escapeHtml(product.images[0]) + '" style="width:60px;height:60px;object-fit:cover;border-radius:8px;flex-shrink:0;" onerror="this.style.display=\'none\'">'
+        : '<div style="width:60px;height:60px;background:#667eea;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;">📦</div>';
+    const modal = document.createElement('div');
+    modal.className = 'modal show';
+    modal.id = 'buyerInfoModal';
+    modal.style.zIndex = '99999';
+    modal.innerHTML =
+        '<div class="modal-content" style="max-width:440px;">' +
+        '<div class="modal-header" style="background:linear-gradient(135deg,#667eea,#764ba2);">' +
+        '<button class="close-modal" onclick="document.getElementById(\'buyerInfoModal\').remove()"><i class="fas fa-times"></i></button>' +
+        '<h2 style="color:#fff;"><i class="fas fa-shopping-cart"></i> زانیاری کڕیار</h2>' +
+        '</div>' +
+        '<div style="padding:20px;">' +
+        '<div style="background:#f8f9ff;border-radius:12px;padding:12px;margin-bottom:16px;display:flex;gap:12px;align-items:center;border:1.5px solid #e2e8f0;">' +
+        thumbHtml +
+        '<div><div style="font-weight:700;color:#2d3748;font-size:.95rem;">' + escapeHtml(product.name || '') + '</div>' +
+        '<div style="color:#667eea;font-weight:700;font-size:.9rem;">' + escapeHtml(String(product.price || '')) + ' ' + escapeHtml(product.currency || 'IQD') + ' × ' + qty + ' دانە</div></div></div>' +
+        '<div class="form-group"><label style="font-weight:700;">👤 ناوی تەواو <span style="color:#e53e3e;">*</span></label>' +
+        '<input type="text" id="buyerName" placeholder="ناوت بنووسە..." style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-family:inherit;font-size:.95rem;box-sizing:border-box;"></div>' +
+        '<div class="form-group"><label style="font-weight:700;">📞 ژمارەی مۆبایل <span style="color:#e53e3e;">*</span></label>' +
+        '<input type="tel" id="buyerMobile" placeholder="مەسەلە: 07701234567" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-family:inherit;font-size:.95rem;box-sizing:border-box;direction:ltr;"></div>' +
+        '<div class="form-group"><label style="font-weight:700;">📍 ناونیشان / شوێن <span style="color:#e53e3e;">*</span></label>' +
+        '<input type="text" id="buyerAddress" placeholder="شار، شوێن..." style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-family:inherit;font-size:.95rem;box-sizing:border-box;"></div>' +
+        '<div class="form-group"><label style="font-weight:700;">📝 تێبینی (دڵخواز)</label>' +
+        '<textarea id="buyerNote" placeholder="هەر تێبینییەک..." rows="2" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-family:inherit;font-size:.95rem;box-sizing:border-box;resize:none;"></textarea></div>' +
+        '<div style="display:flex;gap:10px;margin-top:4px;">' +
+        '<button onclick="submitBuyerOrder(\'' + escapeHtml(product.firebaseId) + '\',\'' + (product.name||'').replace(/'/g,"\\'") + '\',\'' + (product.price||'') + '\',\'' + (product.currency||'IQD') + '\',' + qty + ',\'' + (sellerMobile||'') + '\')" ' +
+        'style="flex:1;background:#25d366;color:#fff;border:none;border-radius:50px;padding:13px;font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;">' +
+        '<i class="fab fa-whatsapp"></i> ناردن و پەیوەندی بە فرۆشیار</button>' +
+        '<button onclick="document.getElementById(\'buyerInfoModal\').remove()" ' +
+        'style="flex:1;background:#e2e8f0;color:#2d3748;border:none;border-radius:50px;padding:13px;font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;">✕ پاشگەزبوونەوە</button>' +
+        '</div></div></div>';
+    document.body.appendChild(modal);
+    setTimeout(function() { var el = document.getElementById('buyerName'); if(el) el.focus(); }, 100);
+}
+
+function submitBuyerOrder(productId, productName, price, currency, qty, sellerMobile) {
+    var name    = (document.getElementById('buyerName')    || {value:''}).value.trim();
+    var mobile  = (document.getElementById('buyerMobile')  || {value:''}).value.trim();
+    var address = (document.getElementById('buyerAddress') || {value:''}).value.trim();
+    var note    = (document.getElementById('buyerNote')    || {value:''}).value.trim();
+    if (!name)    { showNotification('تکایە ناوت بنووسە!', 'error'); return; }
+    if (!mobile)  { showNotification('تکایە ژمارەی مۆبایل بنووسە!', 'error'); return; }
+    if (!address) { showNotification('تکایە ناونیشانەکەت بنووسە!', 'error'); return; }
+    var orderData = {
+        itemName:  productName,
+        name:      name,
+        mobile:    mobile,
+        address:   address,
+        details:   'دانە: ' + qty + ' | نرخ: ' + price + ' ' + currency + (note ? ' | تێبینی: ' + note : ''),
+        productId: productId,
+        qty:       qty,
+        price:     price,
+        currency:  currency,
+        type:      'cart-order',
+        status:    'pending',
+        timestamp: new Date().toLocaleString('ku')
+    };
+    database.ref('requests').push(orderData)
+        .then(function() {
+            showNotification('✅ داواکارییەکەت نێردرا! بەریوبەر دەبینێتەوە.');
+            var m = document.getElementById('buyerInfoModal');
+            if (m) m.remove();
+            if (sellerMobile) {
+                var msg = 'سڵاو، کریارێک داوای کڕینی کاڵاکەت کردووە:\n\n📦 کاڵا: ' + productName +
+                    '\n🔢 دانە: ' + qty + '\n💰 نرخ: ' + price + ' ' + currency +
+                    '\n\n👤 کڕیار: ' + name + '\n📞 مۆبایل: ' + mobile +
+                    '\n📍 ناونیشان: ' + address + (note ? '\n📝 تێبینی: ' + note : '') +
+                    '\n\n⏰ داواکاری لە UK BAZAR';
+                window.open('https://wa.me/' + sellerMobile.replace(/\D/g,'') + '?text=' + encodeURIComponent(msg), '_blank');
+            }
+        })
+        .catch(function() { showNotification('هەڵە لە ناردن!', 'error'); });
 }
 
 function renderProducts(productsList) {
