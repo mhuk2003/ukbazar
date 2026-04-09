@@ -2736,18 +2736,28 @@ function getYouTubeThumbnail(url) {
 function loadVideos() {
     const grid = document.getElementById('videosGrid');
     const section = document.getElementById('videosSection');
-    if (!grid) return;
-    database.ref('videos').orderByChild('status').equalTo('approved').once('value')
+    if (!grid || !section) {
+        // DOM هێشتا ئامادە نییە، دووبارە هەوڵ بدە
+        setTimeout(loadVideos, 500);
+        return;
+    }
+    database.ref('videos').once('value')
         .then((snapshot) => {
-            if (!snapshot.exists()) { if (section) section.style.display = 'none'; return; }
+            if (!snapshot.exists()) { section.style.display = 'none'; return; }
             const items = [];
-            snapshot.forEach(child => items.push({ key: child.key, ...child.val() }));
-            items.reverse();
-            if (items.length === 0) { if (section) section.style.display = 'none'; return; }
-            if (section) section.style.display = 'block';
+            snapshot.forEach(child => {
+                const v = child.val();
+                if (v.status === 'approved') items.push({ key: child.key, ...v });
+            });
+            items.sort((a, b) => (b.sortKey || 0) - (a.sortKey || 0));
+            if (items.length === 0) { section.style.display = 'none'; return; }
+            section.style.display = 'block';
             grid.innerHTML = items.map(v => createVideoCard(v)).join('');
         })
-        .catch(() => { if (section) section.style.display = 'none'; });
+        .catch((err) => {
+            console.error('loadVideos error:', err);
+            section.style.display = 'none';
+        });
 }
 
 function createVideoCard(video) {
@@ -3057,29 +3067,52 @@ function switchVideoSource(mode) {
 function loadVideoListAdmin() {
     const container = document.getElementById('videoListAdmin');
     if (!container) return;
+    container.style.maxHeight = 'none';
+    container.style.overflow = 'visible';
+
     database.ref('videos').once('value')
-        .then((snapshot) => {
-            if (!snapshot.exists()) { container.innerHTML = '<p style="text-align:center;color:var(--gray);">هیچ ڤیدیۆیەک نییە</p>'; return; }
+        .then(function(snapshot) {
+            if (!snapshot.exists()) {
+                container.innerHTML = '<p style="text-align:center;color:var(--gray);">هیچ ڤیدیۆیەک نییە</p>';
+                return;
+            }
             const items = [];
-            snapshot.forEach(child => items.push({ key: child.key, ...child.val() }));
-            items.reverse();
-            container.innerHTML = items.map(v => {
+            snapshot.forEach(function(child) {
+                items.push({ key: child.key, ...child.val() });
+            });
+            items.sort(function(a, b) { return (b.sortKey || 0) - (a.sortKey || 0); });
+
+            let html = '<p style="font-size:.82rem;color:#718096;margin-bottom:10px;">کۆی ڤیدیۆکان: <strong>' + items.length + '</strong></p>';
+            items.forEach(function(v) {
                 const thumb = v.thumbUrl || getYouTubeThumbnail(v.videoUrl) || '';
-                const bc = v.type === 'ریکلام' ? '#f56565' : v.type === 'فیرکاری' ? '#48bb78' : '#667eea';
+                const bc = v.type === '\u0695\u06CC\u06A9\u0644\u0627\u0645' ? '#f56565' : v.type === '\u0641\u06CC\u0631\u06A9\u0627\u0631\u06CC' ? '#48bb78' : '#667eea';
                 const isYT = !!getYouTubeId(v.videoUrl);
                 const srcIcon = isYT ? '<i class="fab fa-youtube" style="color:#f56565;"></i>' : '<i class="fas fa-file-video" style="color:#667eea;"></i>';
-                return '<div style="display:flex;gap:12px;align-items:center;background:#f8f9ff;border-radius:12px;padding:12px;margin-bottom:10px;border:1.5px solid #e2e8f0;">' +
-                    (thumb ? '<img src="' + thumb + '" style="width:80px;height:54px;object-fit:cover;border-radius:8px;flex-shrink:0;" onerror="this.style.display=\'none\'">' : '<div style="width:80px;height:54px;background:#e2e8f0;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🎬</div>') +
-                    '<div style="flex:1;min-width:0;">' +
-                    '<div style="font-weight:700;font-size:.9rem;color:#2d3748;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(v.title || 'ڤیدیۆ') + '</div>' +
-                    '<div style="margin-top:3px;display:flex;gap:6px;align-items:center;">' +
-                    '<span style="background:' + bc + ';color:#fff;padding:2px 8px;border-radius:20px;font-size:.72rem;">' + escapeHtml(v.type || '') + '</span>' +
-                    srcIcon + '</div>' +
-                    '<div style="font-size:.75rem;color:#718096;margin-top:3px;">' + escapeHtml(v.uploaderName || '') + ' — ' + escapeHtml(v.timestamp || '') + '</div></div>' +
-                    '<button onclick="deleteVideo(\'' + v.key + '\')" style="background:#fff0f0;color:#e53e3e;border:1.5px solid #fc8181;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:.82rem;flex-shrink:0;"><i class="fas fa-trash"></i></button></div>';
-            }).join('');
+                const statusColor = v.status === 'approved' ? '#48bb78' : '#f59e0b';
+                const statusLabel = v.status === 'approved' ? '✅' : '⏳';
+                html += '<div style="display:flex;gap:12px;align-items:center;background:#f8f9ff;border-radius:12px;padding:12px;margin-bottom:10px;border:1.5px solid #e2e8f0;">';
+                if (thumb) {
+                    html += '<img src="' + thumb + '" style="width:80px;height:54px;object-fit:cover;border-radius:8px;flex-shrink:0;" onerror="this.style.display=\'none\'">';
+                } else {
+                    html += '<div style="width:80px;height:54px;background:#e2e8f0;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🎬</div>';
+                }
+                html += '<div style="flex:1;min-width:0;">';
+                html += '<div style="font-weight:700;font-size:.9rem;color:#2d3748;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(v.title || 'ڤیدیۆ') + '</div>';
+                html += '<div style="margin-top:3px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;">';
+                html += '<span style="background:' + bc + ';color:#fff;padding:2px 8px;border-radius:20px;font-size:.72rem;">' + escapeHtml(v.type || '') + '</span>';
+                html += '<span style="background:' + statusColor + ';color:#fff;padding:2px 6px;border-radius:20px;font-size:.68rem;">' + statusLabel + ' ' + escapeHtml(v.status || 'pending') + '</span>';
+                html += srcIcon + '</div>';
+                html += '<div style="font-size:.75rem;color:#718096;margin-top:3px;">' + escapeHtml(v.uploaderName || '') + ' — ' + escapeHtml(v.timestamp || '') + '</div>';
+                html += '</div>';
+                html += '<button onclick="deleteVideo(\'' + v.key + '\')" style="background:#fff0f0;color:#e53e3e;border:1.5px solid #fc8181;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:.82rem;flex-shrink:0;"><i class="fas fa-trash"></i></button>';
+                html += '</div>';
+            });
+            container.innerHTML = html;
         })
-        .catch(() => { container.innerHTML = '<p style="text-align:center;color:var(--danger);">هەڵە لە بارکردن!</p>'; });
+        .catch(function(err) {
+            console.error('loadVideoListAdmin error:', err);
+            container.innerHTML = '<p style="text-align:center;color:var(--danger);">هەڵە لە بارکردن!</p>';
+        });
 }
 
 function deleteVideo(key) {
