@@ -2823,30 +2823,46 @@ function getYouTubeThumbnail(url) {
 }
 
 function loadVideos() {
-    const grid = document.getElementById('videosGrid');
     const section = document.getElementById('videosSection');
-    if (!grid || !section) {
-        // DOM هێشتا ئامادە نییە، دووبارە هەوڵ بدە
-        setTimeout(loadVideos, 500);
-        return;
-    }
+    if (section) section.style.display = 'none';
+}
+
+function showVideosModal() {
+    const modal = document.getElementById('videosModal');
+    const grid = document.getElementById('videosModalGrid');
+    if (!modal || !grid) return;
+    modal.style.cssText = 'display:flex!important;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);z-index:99999;align-items:center;justify-content:center;padding:16px;';
+    document.body.style.overflow = 'hidden';
+    grid.innerHTML = '<div style="text-align:center;padding:40px;color:#aaa;"><i class="fas fa-spinner fa-spin" style="font-size:2rem;"></i><p style="margin-top:10px;">چاوەڕوان بکە...</p></div>';
     database.ref('videos').once('value')
         .then((snapshot) => {
-            if (!snapshot.exists()) { section.style.display = 'none'; return; }
+            if (!snapshot.exists()) {
+                grid.innerHTML = '<p style="text-align:center;color:#aaa;padding:30px;">هیچ ڤیدیۆیەک نییە</p>';
+                return;
+            }
             const items = [];
             snapshot.forEach(child => {
                 const v = child.val();
                 if (v.status === 'approved') items.push({ key: child.key, ...v });
             });
             items.sort((a, b) => (b.sortKey || 0) - (a.sortKey || 0));
-            if (items.length === 0) { section.style.display = 'none'; return; }
-            section.style.display = 'block';
+            if (!items.length) {
+                grid.innerHTML = '<p style="text-align:center;color:#aaa;padding:30px;">هیچ ڤیدیۆیەک نییە</p>';
+                return;
+            }
             grid.innerHTML = items.map(v => createVideoCard(v)).join('');
         })
         .catch((err) => {
-            console.error('loadVideos error:', err);
-            section.style.display = 'none';
+            grid.innerHTML = '<p style="text-align:center;color:red;padding:30px;">هەڵە: ' + err.message + '</p>';
         });
+}
+
+function closeVideosModal() {
+    const modal = document.getElementById('videosModal');
+    if (!modal) return;
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+    modal.querySelectorAll('video').forEach(v => v.pause());
 }
 
 function createVideoCard(video) {
