@@ -150,20 +150,20 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .header-content {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
     align-items: center;
-    gap: 6px;
+    gap: 10px;
     width: 100%;
+    flex-wrap: nowrap;
 }
 
-/* Logo — center column */
+/* Logo */
 .logo {
-    grid-column: 2;
-    justify-self: center;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 7px;
     cursor: pointer;
     flex-shrink: 0;
 }
@@ -220,14 +220,13 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
 }
 
-/* Navigation Buttons - column 1 (right side in RTL = left visually) */
+/* Navigation Buttons — inline with logo */
 .nav-buttons {
-    grid-column: 1;
-    justify-self: start;
     display: flex;
     gap: 6px;
     flex-wrap: nowrap;
     align-items: center;
+    flex-shrink: 0;
 }
 
 /* Delivery button group */
@@ -2743,49 +2742,41 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 
 /* ==================== MOBILE FIRST IMPROVEMENTS ==================== */
 
-/* Header: grid layout override for mobile */
 @media (max-width: 600px) {
-    .header { padding: 8px 0; }
-    .container { padding: 0 10px; }
+    .header { padding: 9px 0; }
+    .container { padding: 0 12px; }
 
     .header-content {
-        grid-template-columns: auto 1fr auto;
+        justify-content: center;
+        gap: 8px;
     }
 
-    /* Nav buttons go to column 1 (rightmost in RTL) */
-    .nav-buttons {
-        grid-column: 1;
-        justify-self: start;
-        gap: 5px;
-    }
-
-    /* Logo in middle */
-    .logo {
-        grid-column: 2;
-        justify-self: center;
-        gap: 5px;
-    }
-
+    .logo { gap: 5px; }
     .logo-text { font-size: 1.15rem; }
     .logo-icon { width: 34px; height: 34px; }
 
+    .nav-buttons { gap: 6px; }
+
     .btn-delivery-ku,
     .btn-delivery-uk {
-        padding: 7px 10px !important;
-        font-size: 0.76rem !important;
+        padding: 8px 12px !important;
+        font-size: 0.8rem !important;
         border-radius: 10px !important;
     }
 }
 
-@media (max-width: 380px) {
+@media (max-width: 400px) {
+    .header-content { gap: 6px; }
     .logo-text { font-size: 1rem; }
-    .logo-icon { width: 30px; height: 30px; border-radius: 7px; }
+    .logo-icon { width: 30px; height: 30px; }
     .btn-delivery-ku,
     .btn-delivery-uk {
-        padding: 6px 8px !important;
-        font-size: 0.7rem !important;
+        padding: 7px 9px !important;
+        font-size: 0.74rem !important;
     }
-    /* On very small screens hide btn text */
+}
+
+@media (max-width: 340px) {
     .btn-delivery-ku .btn-text,
     .btn-delivery-uk .btn-text { display: none; }
     .btn-delivery-ku i,
