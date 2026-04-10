@@ -150,22 +150,33 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .header-content {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-    flex-wrap: nowrap;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    flex-wrap: nowrap !important;
 }
 
-/* Logo — right side in RTL */
+/* Logo */
 .logo {
     display: flex;
     align-items: center;
     gap: 7px;
     cursor: pointer;
     flex-shrink: 0;
+    order: 1;
+}
+
+/* Nav buttons always on opposite side */
+.nav-buttons {
+    display: flex;
+    gap: 6px;
+    flex-wrap: nowrap;
+    align-items: center;
+    flex-shrink: 0;
+    order: 2;
 }
 
 .logo-icon {
@@ -220,13 +231,14 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
 }
 
-/* Navigation Buttons — inline with logo */
+/* Navigation Buttons */
 .nav-buttons {
-    display: flex;
+    display: flex !important;
     gap: 6px;
     flex-wrap: nowrap;
     align-items: center;
     flex-shrink: 0;
+    order: 2;
 }
 
 /* Delivery button group */
