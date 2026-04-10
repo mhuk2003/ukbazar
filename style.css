@@ -150,15 +150,17 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .header-content {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    gap: 10px;
-    flex-wrap: nowrap;
+    gap: 6px;
+    width: 100%;
 }
 
-/* Logo */
+/* Logo — center column */
 .logo {
+    grid-column: 2;
+    justify-self: center;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -218,14 +220,14 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
 }
 
-/* Navigation Buttons - Optimized */
+/* Navigation Buttons - column 1 (right side in RTL = left visually) */
 .nav-buttons {
+    grid-column: 1;
+    justify-self: start;
     display: flex;
     gap: 6px;
     flex-wrap: nowrap;
-    justify-content: flex-end;
     align-items: center;
-    flex-shrink: 0;
 }
 
 /* Delivery button group */
@@ -422,7 +424,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 
 /* Category Filter - Optimized for Mobile */
 .category-filter-section {
-    padding: 12px 0;
+    padding: 10px 0;
     background: white;
     margin: 10px 0;
     border-radius: 16px;
@@ -432,33 +434,38 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 .category-buttons {
     display: flex;
     flex-wrap: wrap;
-    gap: 7px;
+    gap: 5px;
     justify-content: center;
     padding: 4px 8px;
     direction: rtl;
+    max-height: calc(3 * 36px + 2 * 5px + 8px);
+    overflow: hidden;
 }
 
 .category-btn {
-    padding: 7px 14px;
+    padding: 5px 11px;
     border: 1.5px solid var(--primary);
     border-radius: 30px;
     background: white;
     color: var(--primary);
-    font-size: 0.82rem;
+    font-size: 0.75rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.25s;
+    transition: all 0.22s;
     white-space: nowrap;
-    box-shadow: 0 1px 4px rgba(102,126,234,0.08);
+    box-shadow: 0 1px 3px rgba(102,126,234,0.07);
     flex: 0 1 auto;
     min-width: fit-content;
+    height: 30px;
+    display: flex;
+    align-items: center;
 }
 
 .category-btn:hover, .category-btn.active {
     background: linear-gradient(135deg, var(--primary), #764ba2);
     color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 14px rgba(102, 126, 234, 0.32);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.28);
     border-color: transparent;
 }
 
@@ -2736,86 +2743,49 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 
 /* ==================== MOBILE FIRST IMPROVEMENTS ==================== */
 
-/* Header: prevent logo from disappearing — always show logo + buttons in one row */
-.header-content {
-    flex-wrap: nowrap !important;
-    overflow: visible;
-}
-.logo {
-    flex-shrink: 0 !important;
-    min-width: 0;
-}
-.logo-text {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 130px;
-}
-.nav-buttons {
-    flex-shrink: 0 !important;
-    flex-wrap: nowrap !important;
-}
-
-/* Header mobile fixes */
-@media (max-width: 480px) {
+/* Header: grid layout override for mobile */
+@media (max-width: 600px) {
     .header { padding: 8px 0; }
     .container { padding: 0 10px; }
-    .logo-text { font-size: 1.1rem; max-width: 110px; }
+
+    .header-content {
+        grid-template-columns: auto 1fr auto;
+    }
+
+    /* Nav buttons go to column 1 (rightmost in RTL) */
+    .nav-buttons {
+        grid-column: 1;
+        justify-self: start;
+        gap: 5px;
+    }
+
+    /* Logo in middle */
+    .logo {
+        grid-column: 2;
+        justify-self: center;
+        gap: 5px;
+    }
+
+    .logo-text { font-size: 1.15rem; }
     .logo-icon { width: 34px; height: 34px; }
-    .logo { gap: 5px; }
-    
-    .nav-buttons { gap: 5px; }
-    
+
     .btn-delivery-ku,
     .btn-delivery-uk {
-        padding: 8px 10px !important;
-        font-size: 0.78rem !important;
+        padding: 7px 10px !important;
+        font-size: 0.76rem !important;
         border-radius: 10px !important;
     }
-    
-    /* Search on mobile */
-    .search-box { border-radius: 14px; }
-    .search-box input { font-size: 0.9rem; padding: 9px 4px; }
-    .search-box button { 
-        padding: 9px 14px; 
-        font-size: 0.85rem;
-        border-radius: 10px;
-    }
-    
-    /* Category pills */
-    .category-btn { 
-        padding: 6px 11px; 
-        font-size: 0.78rem;
-    }
-
-    /* Slider */
-    .slider-container { border-radius: 14px; }
-    .slider-arrow { width: 32px; height: 32px; font-size: 13px; }
-    .slider-arrow.prev { right: 10px; }
-    .slider-arrow.next { left: 10px; }
-    
-    /* Products */
-    .products-section { padding: 16px 0; }
-    .section-title { font-size: 1.3rem; margin-bottom: 16px; }
-
-    /* Bottom nav */
-    .bottom-nav-item { 
-        padding: 5px 8px;
-        font-size: 0.63rem;
-        min-width: 44px;
-    }
-    .bottom-nav-item i { font-size: 1.2rem; }
 }
 
 @media (max-width: 380px) {
-    .logo-text { font-size: 1rem; max-width: 95px; }
+    .logo-text { font-size: 1rem; }
     .logo-icon { width: 30px; height: 30px; border-radius: 7px; }
     .btn-delivery-ku,
     .btn-delivery-uk {
-        padding: 7px 8px !important;
-        font-size: 0.72rem !important;
+        padding: 6px 8px !important;
+        font-size: 0.7rem !important;
     }
-    /* On very small screens hide btn text, show only icon */
+    /* On very small screens hide btn text */
     .btn-delivery-ku .btn-text,
     .btn-delivery-uk .btn-text { display: none; }
     .btn-delivery-ku i,
