@@ -2847,3 +2847,126 @@ html { scroll-behavior: smooth; }
     .product-card:hover { transform: none; }
     .category-btn:hover { transform: none; }
 }
+/* ========== HEADER COMPACT & CENTERED ========== */
+.header {
+    background: white;
+    padding: 6px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 120;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: nowrap;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.logo-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    border: 1.5px solid #667eea;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-icon img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.logo-text {
+    font-size: 1.2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea, #b77eff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    white-space: nowrap;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.btn-delivery-ku,
+.btn-delivery-uk {
+    padding: 6px 12px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    border-radius: 40px;
+    gap: 4px;
+    white-space: nowrap;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.btn-delivery-ku {
+    background: linear-gradient(105deg, #ffde9e, #f5b042);
+    color: #2c1a00;
+}
+
+.btn-delivery-uk {
+    background: linear-gradient(105deg, #f3d27a, #e0a620);
+    color: #1e1700;
+}
+
+.btn-delivery-ku i,
+.btn-delivery-uk i {
+    font-size: 0.85rem;
+}
+
+/* لەسەر زۆر بچووکترین شاشە (کەمتر لە 380px) تەنها ئایکۆنەکان پیشان بدرێن */
+@media (max-width: 380px) {
+    .btn-delivery-ku .btn-text,
+    .btn-delivery-uk .btn-text {
+        display: none;
+    }
+    .btn-delivery-ku,
+    .btn-delivery-uk {
+        padding: 6px 10px;
+    }
+    .logo-text {
+        font-size: 1rem;
+    }
+    .logo-icon {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+/* بۆ شاشە گەورەکان */
+@media (min-width: 600px) {
+    .header-content {
+        gap: 20px;
+    }
+    .logo-text {
+        font-size: 1.3rem;
+    }
+    .btn-delivery-ku,
+    .btn-delivery-uk {
+        padding: 7px 16px;
+        font-size: 0.8rem;
+    }
+}
