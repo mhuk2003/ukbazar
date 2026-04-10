@@ -1,3 +1,4 @@
+
 :root {
     --primary: #667eea;
     --primary-dark: #5a67d8;
@@ -2677,7 +2678,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 
 /* ==================== Video Section ==================== */
 .videos-section{padding:10px 0 0;}
-.videos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
+.videos-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
 .video-card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(102,126,234,.10);border:1.5px solid #e2e8f0;position:relative;transition:transform .18s,box-shadow .18s;}
 .video-card:hover{transform:translateY(-3px);box-shadow:0 6px 24px rgba(102,126,234,.18);}
 .video-badge{position:absolute;top:8px;right:8px;z-index:2;color:#fff;font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:20px;}
@@ -2700,8 +2701,12 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 .video-title{font-size:.92rem;font-weight:700;color:#2d3748;margin-bottom:4px;line-height:1.35;}
 .video-desc{font-size:.78rem;color:#718096;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .video-uploader{font-size:.75rem;color:#667eea;font-weight:600;}
-@media(max-width:600px){.videos-grid{grid-template-columns:1fr 1fr;gap:10px;}}
-@media(max-width:380px){.videos-grid{grid-template-columns:1fr;}}
+/* ✅ ڤیدیۆ گرید — هەمیشە ٢ ستوون لە مۆبایل */
+.videos-grid{grid-template-columns:repeat(2,1fr)!important;}
+@media(max-width:600px){.videos-grid{grid-template-columns:repeat(2,1fr)!important;gap:10px;}}
+@media(max-width:380px){.videos-grid{grid-template-columns:repeat(2,1fr)!important;gap:8px;}}
+@media(min-width:900px){.videos-grid{grid-template-columns:repeat(3,1fr)!important;}}
+@media(min-width:1200px){.videos-grid{grid-template-columns:repeat(4,1fr)!important;}}
     const extraStyle = document.createElement('style');
     extraStyle.textContent = `
         .product-image { position: relative; }
@@ -2731,34 +2736,43 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 
 /* ==================== MOBILE FIRST IMPROVEMENTS ==================== */
 
+/* Header: prevent logo from disappearing — always show logo + buttons in one row */
+.header-content {
+    flex-wrap: nowrap !important;
+    overflow: visible;
+}
+.logo {
+    flex-shrink: 0 !important;
+    min-width: 0;
+}
+.logo-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 130px;
+}
+.nav-buttons {
+    flex-shrink: 0 !important;
+    flex-wrap: nowrap !important;
+}
+
 /* Header mobile fixes */
 @media (max-width: 480px) {
     .header { padding: 8px 0; }
     .container { padding: 0 10px; }
-    .logo-text { font-size: 1.2rem; }
-    .logo-icon { width: 36px; height: 36px; }
-    .logo { gap: 6px; }
+    .logo-text { font-size: 1.1rem; max-width: 110px; }
+    .logo-icon { width: 34px; height: 34px; }
+    .logo { gap: 5px; }
     
     .nav-buttons { gap: 5px; }
     
     .btn-delivery-ku,
     .btn-delivery-uk {
-        padding: 8px 9px !important;
-        font-size: 0.75rem !important;
+        padding: 8px 10px !important;
+        font-size: 0.78rem !important;
         border-radius: 10px !important;
     }
     
-    .btn-delivery-ku .btn-text,
-    .btn-delivery-uk .btn-text {
-        display: none;
-    }
-
-    .btn-delivery-ku i,
-    .btn-delivery-uk i {
-        font-size: 1rem;
-        margin: 0;
-    }
-
     /* Search on mobile */
     .search-box { border-radius: 14px; }
     .search-box input { font-size: 0.9rem; padding: 9px 4px; }
@@ -2793,11 +2807,19 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     .bottom-nav-item i { font-size: 1.2rem; }
 }
 
-@media (max-width: 360px) {
-    .logo-text { font-size: 1.1rem; }
-    .btn-delivery-ku, .btn-delivery-uk {
+@media (max-width: 380px) {
+    .logo-text { font-size: 1rem; max-width: 95px; }
+    .logo-icon { width: 30px; height: 30px; border-radius: 7px; }
+    .btn-delivery-ku,
+    .btn-delivery-uk {
         padding: 7px 8px !important;
+        font-size: 0.72rem !important;
     }
+    /* On very small screens hide btn text, show only icon */
+    .btn-delivery-ku .btn-text,
+    .btn-delivery-uk .btn-text { display: none; }
+    .btn-delivery-ku i,
+    .btn-delivery-uk i { font-size: 1rem; margin: 0; }
 }
 
 /* Better product cards on mobile */
