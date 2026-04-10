@@ -152,14 +152,14 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 .header-content {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     width: 100%;
     flex-wrap: nowrap;
 }
 
-/* Logo */
+/* Logo — right side in RTL */
 .logo {
     display: flex;
     align-items: center;
