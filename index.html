@@ -2,68 +2,489 @@
 <html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>UK BAZAR - بازاڕی ئۆنلاین</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>UK BAZAR - بازاڕی ئۆنلاین | دیزاینی نوێ بۆ مۆبایل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- PWA -->
-    <link rel="manifest" href="./manifest.json">
-    <meta name="theme-color" content="#667eea">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="UK BAZAR">
-    <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
-    <link rel="shortcut icon" type="image/png" href="./icon-192.png">
-    <link rel="apple-touch-icon" sizes="192x192" href="./icon-192.png">
-    <link rel="apple-touch-icon" sizes="512x512" href="./icon-512.png">
-    
-        <link rel="stylesheet" href="./style.css">
+    <style>
+        /* ==================== GLOBAL & RESET ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a67d8;
+            --primary-glow: #818cf8;
+            --secondary: #48bb78;
+            --danger: #f56565;
+            --warning: #f6ad55;
+            --dark: #0f172a;
+            --gray-dark: #334155;
+            --gray: #64748b;
+            --light: #f8fafc;
+            --border: #e2e8f0;
+            --radius-xl: 28px;
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --shadow-sm: 0 5px 14px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 12px 24px -8px rgba(102, 126, 234, 0.2);
+        }
+
+        body {
+            background: #f4f7fc;
+            font-family: 'Noto Sans Arabic', 'Segoe UI', Tahoma, system-ui, sans-serif;
+            color: var(--dark);
+            direction: rtl;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* ========== LOADING SPINNER ========== */
+        .loading-spinner {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(145deg, #667eea, #5648c0);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.35s ease;
+        }
+
+        .spinner-banner {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+            border-radius: 48px;
+            padding: 28px 22px;
+            text-align: center;
+            width: 86%;
+            max-width: 320px;
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.25);
+            animation: scaleFade 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        @keyframes scaleFade {
+            from { opacity: 0; transform: scale(0.94); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .banner-logo { width: 70px; margin-bottom: 10px; border-radius: 18px; background: white; padding: 6px; }
+        .banner-title {
+            font-size: 1.9rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .spinner-small {
+            width: 38px; height: 38px;
+            border: 3px solid #e2e8f0;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: 18px auto 8px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ========== HEADER ========== */
+        .header {
+            background: white;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.02);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 120;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+        .header-content {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .logo-icon {
+            width: 44px; height: 44px;
+            background: white;
+            border-radius: 16px;
+            border: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 12px rgba(102,126,234,0.15);
+        }
+        .logo-icon img { width: 100%; height: auto; object-fit: contain; }
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #b77eff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            white-space: nowrap;
+        }
+
+        /* delivery buttons */
+        .nav-buttons { display: flex; gap: 10px; align-items: center; }
+        .btn-delivery-ku, .btn-delivery-uk {
+            border: none;
+            border-radius: 60px;
+            padding: 8px 18px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+        }
+        .btn-delivery-ku { background: linear-gradient(105deg, #ffde9e, #f5b042); color: #2c1a00; }
+        .btn-delivery-uk { background: linear-gradient(105deg, #f3d27a, #e0a620); color: #1e1700; }
+        .btn-delivery-ku:hover, .btn-delivery-uk:hover { transform: translateY(-2px); }
+
+        /* search */
+        .search-section { padding: 12px 0 6px; }
+        .search-box {
+            display: flex;
+            background: white;
+            border-radius: 60px;
+            padding: 4px 4px 4px 18px;
+            box-shadow: var(--shadow-md);
+            border: 1.5px solid rgba(102,126,234,0.25);
+            transition: all 0.2s;
+        }
+        .search-box:focus-within { border-color: var(--primary); box-shadow: 0 8px 24px rgba(102,126,234,0.2); }
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 12px 8px;
+            font-size: 1rem;
+            background: transparent;
+            font-weight: 500;
+        }
+        .search-box button {
+            background: linear-gradient(135deg, var(--primary), #a855f7);
+            border: none;
+            color: white;
+            padding: 0 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        /* category pills */
+        .category-filter-section {
+            background: white;
+            border-radius: 32px;
+            margin: 16px 0;
+            padding: 12px 8px;
+            box-shadow: var(--shadow-sm);
+        }
+        .category-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .category-btn {
+            background: #f1f5f9;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #1e293b;
+            transition: 0.2s;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .category-btn.active, .category-btn:hover {
+            background: linear-gradient(135deg, #667eea, #9f7aea);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102,126,234,0.25);
+        }
+
+        /* slider */
+        .slider-container {
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            height: 200px;
+            position: relative;
+        }
+        @media (min-width: 640px) { .slider-container { height: 280px; } }
+        @media (min-width: 1024px) { .slider-container { height: 380px; } }
+
+        /* products grid */
+        .products-section { padding: 24px 0 32px; }
+        .section-title {
+            font-size: 1.7rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #1e293b, #475569);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+            width: 100%;
+        }
+        .section-title::after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #c084fc);
+            margin: 10px auto 0;
+            border-radius: 4px;
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+            gap: 14px;
+        }
+        @media (min-width: 480px) { .products-grid { gap: 18px; } }
+        @media (min-width: 640px) { .products-grid { grid-template-columns: repeat(3,1fr); } }
+        @media (min-width: 900px) { .products-grid { grid-template-columns: repeat(4,1fr); } }
+        @media (min-width: 1200px) { .products-grid { grid-template-columns: repeat(5,1fr); } }
+
+        .product-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02), 0 1px 2px rgba(0,0,0,0.03);
+            border: 1px solid rgba(102,126,234,0.12);
+        }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 20px 30px -12px rgba(102,126,234,0.25); }
+        .product-image { height: 150px; background: #f1f5f9; position: relative; }
+        .product-image img { width: 100%; height: 100%; object-fit: cover; }
+        .product-info { padding: 12px 12px 14px; }
+        .product-name { font-weight: 800; font-size: 0.9rem; color: #0f172a; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .product-price { font-weight: 800; color: var(--primary); font-size: 1rem; margin: 6px 0; }
+        .btn-small {
+            background: #f1f5f9;
+            border: none;
+            padding: 8px 8px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.7rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .btn-fib { background: #1e3a8a; color: white; }
+
+        /* bottom navigation */
+        .bottom-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid rgba(102,126,234,0.2);
+            padding: 8px 12px 14px;
+            z-index: 100;
+        }
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            max-width: 550px;
+            margin: 0 auto;
+        }
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            color: #64748b;
+            font-size: 0.7rem;
+            font-weight: 700;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 6px 14px;
+            border-radius: 40px;
+            transition: all 0.2s;
+        }
+        .bottom-nav-item i { font-size: 1.35rem; }
+        .bottom-nav-item.active { color: #667eea; background: rgba(102,126,234,0.12); }
+
+        /* footer */
+        .footer {
+            background: linear-gradient(105deg, #0f172a, #111827);
+            color: #e2e8f0;
+            padding: 36px 0 24px;
+            margin-top: 60px;
+            border-top: 3px solid #667eea;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+            gap: 28px;
+            margin-bottom: 30px;
+        }
+        .social-btn {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #1e293b;
+            color: white;
+            margin: 0 5px;
+        }
+        .footer-backtotop-btn {
+            background: #667eea;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 50px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Responsive mobile touches */
+        @media (max-width: 600px) {
+            .search-box button span { display: none; }
+            .search-box button { padding: 0 18px; }
+            .logo-text { font-size: 1.2rem; }
+            .btn-delivery-ku span, .btn-delivery-uk span { display: none; }
+            .btn-delivery-ku, .btn-delivery-uk { padding: 8px 14px !important; }
+            .btn-delivery-ku i, .btn-delivery-uk i { font-size: 1.15rem; margin: 0; }
+            .category-btn { padding: 6px 14px; font-size: 0.75rem; }
+            .product-image { height: 130px; }
+        }
+        @media (max-width: 480px) {
+            .products-grid { gap: 12px; grid-template-columns: repeat(2,1fr); }
+            .product-info { padding: 8px; }
+            .btn-small { font-size: 0.65rem; }
+        }
+        @media (max-width: 380px) {
+            .product-image { height: 115px; }
+            .product-name { font-size: 0.75rem; }
+        }
+
+        /* modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .modal.show { display: flex; }
+        .modal-content {
+            background: white;
+            border-radius: 32px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            background: linear-gradient(135deg, #667eea, #a855f7);
+            padding: 18px 22px;
+            border-radius: 32px 32px 0 0;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .close-modal { background: rgba(255,255,255,0.2); border: none; width: 34px; height: 34px; border-radius: 30px; font-size: 1.2rem; cursor: pointer; }
+        .form-group { margin-bottom: 16px; }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 24px;
+            border: 1.5px solid #e2e8f0;
+            font-size: 0.9rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #a855f7);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 60px;
+            font-weight: 700;
+            width: 100%;
+            cursor: pointer;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-120px);
+            background: #1e293b;
+            color: white;
+            padding: 12px 22px;
+            border-radius: 60px;
+            z-index: 10000;
+            transition: transform 0.25s ease;
+            font-weight: 600;
+        }
+        .notification.show { transform: translateX(-50%) translateY(0); }
+    </style>
 </head>
 <body>
-    <!-- Loading Spinner with Banner -->
-<!-- Loading Spinner with Banner - چاککراو -->
-<div class="loading-spinner" id="loadingSpinner">
-    <div class="spinner-banner">
-        <img src="./logo-ukbazar.png" 
-             alt="UK BAZAR" 
-             class="banner-logo"
-             onerror="this.style.display='none'">
-        
-        <h2 class="banner-title">UK BAZAR</h2>
-        <p class="banner-slogan">World Online Shopping</p>
-        
-        <div class="banner-image" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#667eea,#764ba2);">
-            <span style="font-size:2.5rem;font-weight:900;color:#fff;letter-spacing:2px;text-shadow:0 2px 8px rgba(0,0,0,0.2);">UK BAZAR</span>
+    <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner-banner">
+            <img src="./logo-ukbazar.png" alt="UK BAZAR" class="banner-logo" onerror="this.style.display='none'">
+            <h2 class="banner-title">UK BAZAR</h2>
+            <p class="banner-slogan">بازاڕی جیهانی ئۆنلاین</p>
+            <div class="spinner-small"></div>
+            <p class="loading-text">تکایە چاوەڕێ بکە ...</p>
         </div>
-        
-        <div class="spinner-small"></div>
-        <p class="loading-text">تکایە چاوەڕێ بکە ...</p>
     </div>
-</div>
+
     <header class="header">
         <div class="container">
             <div class="header-content">
                 <div class="logo" onclick="showHomePage()">
-                    <div class="logo-icon">
-                        <img src="./logo-ukbazar.png" alt="UK BAZAR">
-                    </div>
+                    <div class="logo-icon"><img src="./logo-ukbazar.png" alt="UK BAZAR"></div>
                     <div class="logo-text">UK BAZAR</div>
                 </div>
-
                 <div class="nav-buttons">
-    <button class="btn btn-delivery-ku" onclick="showDeliveryModal()">
-        <i class="fas fa-shipping-fast"></i>
-        <span class="btn-text">گەیاندن</span>
-    </button>
-    <button class="btn btn-delivery-uk" onclick="showUkDeliveryModal()">
-        <i class="fas fa-shipping-fast"></i>
-        <span class="btn-text">UK Delivery</span>
-    </button>
-</div>
+                    <button class="btn-delivery-ku" onclick="showDeliveryModal()"><i class="fas fa-shipping-fast"></i><span>گەیاندن</span></button>
+                    <button class="btn-delivery-uk" onclick="showUkDeliveryModal()"><i class="fas fa-shipping-fast"></i><span>UK Delivery</span></button>
+                </div>
             </div>
         </div>
     </header>
@@ -71,122 +492,27 @@
     <section class="search-section">
         <div class="container">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="گەڕان بە کاڵا...">
-                <button onclick="performSearch()">
-                    <i class="fas fa-search"></i> <span>گەڕان</span>
-                </button>
+                <input type="text" id="searchInput" placeholder="گەڕان بە کاڵا... Search...">
+                <button onclick="performSearch()"><i class="fas fa-search"></i> <span>گەڕان</span></button>
             </div>
         </div>
     </section>
 
-    <section class="slider-section">
-        <div class="container">
-            <div class="slider-container" id="sliderContainer">
-                <div class="slides-wrapper" id="slidesWrapper"></div>
-                <button class="slider-arrow prev" onclick="prevSlide()">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-                <button class="slider-arrow next" onclick="nextSlide()">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <div class="slider-dots" id="sliderDots"></div>
-            </div>
-        </div>
-    </section>
+    <section class="slider-section"><div class="container"><div class="slider-container" id="sliderContainer">...</div></div></section>
+    <section class="category-filter-section"><div class="container"><div class="category-buttons" id="categoryButtons"></div></div></section>
+    <section class="videos-section" id="videosSection"><div class="container"><h2 class="section-title"><span style="color:#f56565;">▶</span> ڤیدیۆکان</h2><div class="videos-grid" id="videosGrid"></div></div></section>
+    <section class="products-section"><div class="container"><h2 class="section-title" id="productsTitle">هەموو کاڵاکان</h2><div class="products-grid" id="productsGrid"></div></div></section>
+    <section class="admin-section" id="adminPanel" style="display: none;"><div class="container"><div class="admin-hero-bar"><div><p class="ah-title">🔐 داشبۆردی بەڕێوەبەر</p></div></div><div class="admin-tabs" id="adminTabs"></div><div id="adminContent"></div></div></section>
 
-    <section class="category-filter-section">
-        <div class="container">
-            <div class="category-buttons" id="categoryButtons"></div>
-        </div>
-    </section>
+    <div class="bottom-panel"><div class="container"><div class="bottom-nav">
+        <button class="bottom-nav-item active" onclick="showHomePage()"><i class="fas fa-home"></i><span>ماڵەوە</span></button>
+        <button class="bottom-nav-item" onclick="showRequestModal()"><i class="fas fa-clipboard-list"></i><span>داواکاری</span></button>
+        <button class="bottom-nav-item bottom-nav-add" onclick="showAddProductModal()"><i class="fas fa-plus"></i><span>کاڵا دابنێ</span></button>
+        <button class="bottom-nav-item" onclick="showCartModal()"><i class="fas fa-shopping-cart"></i><span>سەبەتە</span></button>
+        <button class="bottom-nav-item" onclick="showAdminLogin()"><i class="fas fa-user-shield"></i><span>بەڕێوەبەر</span></button>
+    </div></div></div>
 
-    <!-- Video Section -->
-    <section class="videos-section" id="videosSection">
-        <div class="container">
-            <h2 class="section-title" style="display:flex;align-items:center;gap:8px;"><span style="color:#f56565;">&#9654;</span> ڤیدیۆکان</h2>
-            <div class="videos-grid" id="videosGrid"></div>
-        </div>
-    </section>
-
-    <section class="products-section">
-        <div class="container">
-            <h2 class="section-title" id="productsTitle">هەموو کاڵاکان</h2>
-            <div class="products-grid" id="productsGrid"></div>
-        </div>
-    </section>
-
-    <section class="admin-section" id="adminPanel" style="display: none;">
-        <div class="container">
-            <!-- Hero Bar -->
-            <div class="admin-hero-bar">
-                <div>
-                    <p class="ah-title">🔐 داشبۆردی بەڕێوەبەر</p>
-                    <p class="ah-sub">UK BAZAR — Control Panel</p>
-                </div>
-                <span class="ah-badge">⚙️ Admin</span>
-            </div>
-            <!-- Tabs Grid -->
-            <div class="admin-tabs">
-                <button class="admin-tab active" onclick="showAdminTab('products')"><i class="fas fa-clock"></i> چاوەڕوان</button>
-                <button class="admin-tab" onclick="showAdminTab('allProducts')"><i class="fas fa-boxes"></i> کاڵاکان</button>
-                <button class="admin-tab" onclick="showAdminTab('requests')"><i class="fas fa-clipboard-list"></i> داواکاری</button>
-                <button class="admin-tab" onclick="showAdminTab('delivery')"><i class="fas fa-shipping-fast"></i> گەیاندن</button>
-                <button class="admin-tab" onclick="showAdminTab('addSlider')"><i class="fas fa-images"></i> سلایدەر</button>
-                <button class="admin-tab" onclick="showAdminTab('videos')"><i class="fas fa-video"></i> &#x06DA;&#x06CC;&#x062F;&#x06CC;&#x06C6;</button>
-                <button class="admin-tab" onclick="showAdminTab('addProduct')"><i class="fas fa-plus-circle"></i> زیادکردن</button>
-                <button class="admin-tab tab-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> دەرچوون</button>
-            </div>
-            <div id="adminContent"></div>
-        </div>
-    </section>
-
-    <div class="bottom-panel">
-        <div class="container">
-            <div class="bottom-nav">
-                <a href="javascript:void(0)" class="bottom-nav-item active" onclick="showHomePage()">
-                    <i class="fas fa-home"></i><span>ماڵەوە</span>
-                </a>
-                <a href="javascript:void(0)" class="bottom-nav-item" onclick="showRequestModal()">
-                    <i class="fas fa-clipboard-list"></i><span>داواکاری</span>
-                </a>
-                 <a href="javascript:void(0)" class="bottom-nav-item bottom-nav-add" onclick="showAddProductModal()">
-                    <i class="fas fa-plus"></i><span>کاڵا دابنێ</span>
-                </a>
-                <a href="javascript:void(0)" class="bottom-nav-item" onclick="showCartModal()">
-                    <i class="fas fa-shopping-cart"></i><span>سەبەتە</span>
-                </a>
-               
-                <a href="javascript:void(0)" class="bottom-nav-item" onclick="showAdminLogin()">
-                    <i class="fas fa-user-shield"></i><span>بەڕێوەبەر</span>
-                </a>
-            </div>
-        </div>
-    </div>
-    </div> <!-- Closing bottom-panel div -->
-
-    
- 
-    <!-- Footer Section -->
-<footer class="footer">
-    <div class="container">
-
-        <!-- فوتەر تاپ بار: ئیمەیل + Privacy + گەڕانەوە -->
-        <div class="footer-topbar">
-            <!-- ئیمەیل -->
-           <a href="mailto:info@ukbazar.online" class="footer-email-link"><i class="fas fa-envelope"></i> <span>info@ukbazar.online</span></a>
-
-            <!-- Privacy Policy دوگمە -->
-            <button onclick="openPrivacyPage()" class="footer-privacy-btn">
-                <i class="fas fa-shield-alt"></i> Privacy Policy &amp; Terms
-            </button>
-
-            <!-- گەڕانەوە بۆ سەرەوە دوگمە - جوان -->
-            <button id="backToTopBtn" class="footer-backtotop-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="گەڕانەوە بۆ سەرەوە">
-                <i class="fas fa-chevron-up"></i>
-                <span>گەڕانەوە بۆ سەرەوە</span>
-            </button>
-        </div>
-    <footer class="footer">
+  <footer class="footer">
     <div class="container">
         <!-- فوتەر گرید -->
         <div class="footer-grid">
@@ -268,539 +594,29 @@
         </div>
     </div>
 </footer>
-       
 
-<!-- ════════ Privacy Policy Full Page ════════ -->
-<div id="privacyPage" style="display:none; position:fixed; inset:0; z-index:99999; background:#f0f4ff; overflow-y:auto;">
+    <!-- modals -->
+    <div class="modal" id="requestModal"><div class="modal-content"><div class="modal-header"><h2>داواکاری کاڵا</h2><button class="close-modal" onclick="closeModal('requestModal')">✕</button></div><form id="requestForm">...</form></div></div>
+    <div class="modal" id="addProductModal"><div class="modal-content"><div class="modal-header"><h2>کاڵا دابنێ</h2><button class="close-modal" onclick="closeModal('addProductModal')">✕</button></div><form id="addProductForm">...</form></div></div>
+    <div class="modal" id="deliveryModal"><div class="modal-content"><div class="modal-header"><h2>داواکاری گەیاندن</h2><button class="close-modal" onclick="closeModal('deliveryModal')">✕</button></div><form id="deliveryForm">...</form></div></div>
+    <div class="modal" id="ukDeliveryModal"><div class="modal-content"><div class="modal-header"><h2>UK Delivery</h2><button class="close-modal" onclick="closeModal('ukDeliveryModal')">✕</button></div><form id="ukDeliveryForm">...</form></div></div>
+    <div id="notification" class="notification"></div>
 
-    <!-- Top Bar -->
-    <div style="background:linear-gradient(135deg,#667eea,#764ba2); padding:16px 20px; display:flex; align-items:center; gap:14px; position:sticky; top:0; z-index:10; box-shadow:0 2px 12px rgba(0,0,0,0.2);">
-        <button onclick="closePrivacyPage()"
-                style="background:rgba(255,255,255,0.2); border:none; color:#fff; width:38px; height:38px; border-radius:50%; font-size:1.1rem; cursor:pointer; flex-shrink:0;">
-            ← 
-        </button>
-        <div>
-            <div style="color:#fff; font-weight:700; font-size:1rem;">🔒 UK BAZAR — Privacy Policy</div>
-            <div style="color:rgba(255,255,255,0.75); font-size:0.75rem;">Last updated: March 07, 2026</div>
-        </div>
-    </div>
-
-    <!-- Content -->
-    <div style="max-width:800px; margin:0 auto; padding:28px 20px 60px; font-family:'Segoe UI',Arial,sans-serif; direction:ltr; text-align:left; color:#2d3748; line-height:1.8; font-size:0.95rem;">
-
-        <!-- Intro -->
-        <div style="background:#fff; border-radius:14px; padding:24px; margin-bottom:20px; box-shadow:0 2px 12px rgba(102,126,234,0.1); border-left:4px solid #667eea;">
-            <p>This Privacy Notice for <strong>UK POST LTD</strong> (doing business as <strong>UK BAZAR</strong>) describes how and why we might access, collect, store, use, and/or share your personal information when you use our services, including when you:</p>
-            <ul style="margin:12px 0 0 20px; display:flex; flex-direction:column; gap:6px; color:#4a5568;">
-                <li>Visit our website at <a href="https://www.ukbazar.online" style="color:#667eea;">www.ukbazar.online</a></li>
-                <li>Download and use our mobile application (UK BAZAR)</li>
-                <li>Engage with us in other related ways, including marketing or events</li>
-            </ul>
-          <p style="margin-top:14px;">
-    Questions or concerns? Contact us at 
-    <a href="mailto:info@ukbazar.online" style="color:#667eea; font-weight:600; text-decoration: none;">info@ukbazar.online</a>
-    </p>
-        </div>
-
-        <!-- Summary -->
-        <div style="background:#fff; border-radius:14px; padding:24px; margin-bottom:20px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
-            <h2 style="color:#667eea; font-size:1.05rem; margin:0 0 14px; display:flex; align-items:center; gap:8px;">📋 SUMMARY OF KEY POINTS</h2>
-            <div style="display:flex; flex-direction:column; gap:12px;">
-                <div style="background:#f7f9ff; border-radius:8px; padding:12px 16px; border-left:3px solid #667eea;">
-                    <strong>Personal information:</strong> We may process personal information depending on how you interact with our Services.
-                </div>
-                <div style="background:#f7f9ff; border-radius:8px; padding:12px 16px; border-left:3px solid #48bb78;">
-                    <strong>Sensitive information:</strong> We do <u>not</u> process sensitive personal information.
-                </div>
-                <div style="background:#f7f9ff; border-radius:8px; padding:12px 16px; border-left:3px solid #48bb78;">
-                    <strong>Third parties:</strong> We do <u>not</u> collect any information from third parties.
-                </div>
-                <div style="background:#f7f9ff; border-radius:8px; padding:12px 16px; border-left:3px solid #667eea;">
-                    <strong>Processing:</strong> We process your information to provide, improve, and administer our Services, for security and fraud prevention, and to comply with law.
-                </div>
-                <div style="background:#f7f9ff; border-radius:8px; padding:12px 16px; border-left:3px solid #ed8936;">
-                    <strong>Security:</strong> We have adequate processes in place to protect your personal information, but no transmission over the internet can be guaranteed 100% secure.
-                </div>
-            </div>
-        </div>
-
-        <!-- TOC -->
-        <div style="background:#fff; border-radius:14px; padding:24px; margin-bottom:20px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
-            <h2 style="color:#667eea; font-size:1.05rem; margin:0 0 14px;">📑 TABLE OF CONTENTS</h2>
-            <ol style="margin:0 0 0 20px; display:flex; flex-direction:column; gap:8px; color:#4a5568;">
-                <li>What information do we collect?</li>
-                <li>How do we process your information?</li>
-                <li>When and with whom do we share your personal information?</li>
-                <li>Do we use cookies and other tracking technologies?</li>
-                <li>How long do we keep your information?</li>
-                <li>How do we keep your information safe?</li>
-                <li>What are your privacy rights?</li>
-                <li>Controls</li>
-            </ol>
-        </div>
-
-        <!-- Sections -->
-        <div style="display:flex; flex-direction:column; gap:16px;">
-
-            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
-                <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">1. WHAT INFORMATION DO WE COLLECT?</h3>
-                <p style="margin:0; color:#4a5568;">We collect personal information that you voluntarily provide to us when you use our Services, including name, phone number, delivery address, and payment information necessary to process your orders.</p>
-            </div>
-
-            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
-                <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">2. HOW DO WE PROCESS YOUR INFORMATION?</h3>
-                <p style="margin:0; color:#4a5568;">We process your information to fulfil and manage your orders, provide customer support, send you updates about your delivery, and improve our Services. We process your information only when we have a valid legal reason to do so.</p>
-            </div>
-
-            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
-                <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">3. WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?</h3>
-                <p style="margin:0; color:#4a5568;">We may share your information with delivery partners and service providers strictly necessary to complete your order. We do <strong>not</strong> sell your personal data to third parties.</p>
-            </div>
-
-            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
-                <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">4. DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES?</h3>
-                <p style="margin:0; color:#4a5568;">We may use cookies and similar tracking technologies to improve your browsing experience and analyse site traffic. You can control cookies through your browser settings.</p>
-            </div>
-
-            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
-                <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">5. HOW LONG DO WE KEEP YOUR INFORMATION?</h3>
-                <p style="margin:0; color:#4a5568;">We keep your personal information only for as long as necessary to fulfil the purposes outlined in this notice, unless a longer retention period is required by law.</p>
-            </div>
-
-            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
-                <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">6. HOW DO WE KEEP YOUR INFORMATION SAFE?</h3>
-                <p style="margin:0; color:#4a5568;">We have implemented appropriate technical and organisational security measures to protect your personal information. However, no electronic transmission over the internet can be guaranteed 100% secure, so we cannot promise that hackers or other unauthorised third parties will not be able to defeat our security.</p>
-            </div>
-
-            <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
-    <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">7. WHAT ARE YOUR PRIVACY RIGHTS?</h3>
-    <p style="margin:0; color:#4a5568;">
-        Depending on your location, you may have the right to request access to, correction of, or deletion of your personal information. 
-        To exercise your rights, contact us at 
-        <a href="mailto:info@ukbazar.online" class="footer-email-link"><i class="fas fa-envelope"></i> <span>info@ukbazar.online</span></a>
-    </p>
-</div>
-
-<div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
-    <h3 style="color:#667eea; font-size:1rem; margin:0 0 10px;">8. CONTROLS</h3>
-    <p style="margin:0; color:#4a5568;">
-        You may review, change, or terminate your account at any time. 
-        If you have questions or comments about your privacy rights, contact us at 
-  <a href="mailto:info@ukbazar.online" style="color:#667eea; text-decoration: none; font-weight: 500;">info@ukbazar.online</a>
-    </p>
-</div>
-
-        </div>
-
-        <!-- Footer -->
-        <div style="background:#667eea; border-radius:14px; padding:20px; margin-top:28px; text-align:center; color:#fff;">
-    <p style="margin:0 0 6px; font-weight:700; font-size:1rem;">UK POST LTD — UK BAZAR</p>
-    
-    <p style="margin:0; font-size:0.82rem; opacity:.85;">
-        <a href="https://www.ukbazar.online" style="color:#fff;">www.ukbazar.online</a> 
-        &nbsp;|&nbsp; 
-      <a href="mailto:info@ukbazar.online" style="color: #ffffff; text-decoration: none;">info@ukbazar.online</a>
-    </p>
-    
-    <p style="margin:8px 0 0; font-size:0.78rem; opacity:.7;">© 2026 All rights reserved</p>
-</div>
-
-        <!-- Close Button Bottom -->
-        <div style="text-align:center; margin-top:24px;">
-            <button onclick="closePrivacyPage()"
-                    style="background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; border:none; padding:14px 40px; border-radius:50px; font-size:1rem; font-weight:700; cursor:pointer; box-shadow:0 4px 15px rgba(102,126,234,0.4);">
-                ← گەڕانەوە بۆ سایت
-            </button>
-        </div>
-
-    </div>
-</div>
-
-
-
-
-    <!-- Image Modal -->
-    <div class="image-modal" id="imageModal">
-        <button class="image-modal-close" onclick="closeModal('imageModal')"><i class="fas fa-times"></i></button>
-        <img id="zoomedImage" src="" alt="Zoomed Image">
-    </div>
-
-    <!-- Notification -->
-    <div class="notification" id="notification">
-        <span id="notificationIcon" style="font-size:1.3rem;"></span>
-        <span id="notificationMessage" style="color:#ffffff;font-weight:600;"></span>
-    </div>
-
-    <!-- Request Modal -->
-    <div class="modal" id="requestModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button class="close-modal" onclick="closeModal('requestModal')">
-                    <i class="fas fa-times"></i>
-                </button>
-                <h2><i class="fas fa-clipboard-list"></i> داواکاری کاڵا</h2>
-            </div>
-            <form id="requestForm">
-                <div class="form-group">
-                    <label>ناوی کاڵا</label>
-                    <input type="text" id="requestItemName" placeholder="ناوی کاڵاکەی داواکراو" required>
-                </div>
-                <div class="form-group">
-                    <label>وردەکاری</label>
-                    <textarea id="requestDetails" placeholder="وردەکاری زیاتر..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label>ناوت</label>
-                    <input type="text" id="requestName" placeholder="ناوی تەواو" required>
-                </div>
-                <div class="form-group">
-                    <label>ژمارەی مۆبایل</label>
-                    <input type="tel" id="requestMobile" placeholder="07xxxxxxxxx" required>
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">ناردن <i class="fas fa-paper-plane"></i></button>
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('requestModal')">داخستن</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Add Product Modal -->
-    <div class="modal" id="addProductModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button class="close-modal" onclick="closeModal('addProductModal')">
-                    <i class="fas fa-times"></i>
-                </button>
-                <h2><i class="fas fa-plus-circle"></i> کاڵا دابنێ</h2>
-            </div>
-            <form id="addProductForm">
-                <div class="form-group">
-                    <label>ناوی کاڵا</label>
-                    <input type="text" id="productName" placeholder="ناوی کاڵا" required>
-                </div>
-               <div class="form-group">
-    <label>جۆری کاڵا:</label>
-    <select id="adminProductCategory" required>
-        <option value="">هەڵبژێرە...</option>
-        <option value="مۆبایل">مۆبایل</option>
-        <option value="لاپتۆپ">لاپتۆپ</option>
-        <option value="کۆمپیوتەر">کۆمپیوتەر</option>
-        <option value="ئایپاد">ئایپاد</option>
-        <option value="ئوتومبێل">ئوتومبێل</option>
-        <option value="ناوماڵ">ناوماڵ</option>
-        <option value="پاسکیل">پاسکیل</option>
-        <option value="سکۆتەر">سکۆتەر</option>
-        <option value="کامێرا">کامێرا</option>
-        <option value="جوانکاری">جوانکاری</option>
-        <option value="خانوو">خانوو</option>
-        <option value="زەوی">زەوی</option>
-        <option value="باخ">باخ</option>
-        <option value="ئاژەڵ">ئاژەڵ</option>
-        <option value="جلوبەرگی پیاوان">جلوبەرگی پیاوان</option>
-        <option value="جلوبەرگی ئافرەتان">جلوبەرگی ئافرەتان</option>
-        <option value="جلوبەرگی منداڵان">جلوبەرگی منداڵان</option>
-    </select>
-</div>
-                <div class="form-group">
-                    <label>وصف</label>
-                    <textarea id="productDescription" placeholder="وردەکاری کاڵاکە..."></textarea>
-                </div>
-                <div class="form-group" style="display:flex; gap:10px;">
-                    <div style="flex:1;">
-                        <label>نرخ</label>
-                        <input type="number" id="productPrice" placeholder="0" required>
-                    </div>
-                    <div style="flex:1;">
-                        <label>دراو</label>
-                        <select id="productCurrency">
-                            <option value="IQD">دینار</option>
-                            <option value="USD">دۆلار</option>
-                            <option value="GBP">پاوەند</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>ناوی فرۆشیار</label>
-                    <input type="text" id="sellerName" placeholder="ناوت" required>
-                </div>
-                <div class="form-group">
-                    <label>ژمارەی مۆبایل</label>
-                    <input type="tel" id="sellerMobile" placeholder="07xxxxxxxxx" required>
-                </div>
-                <div class="form-group">
-                    <label>شوێن</label>
-                    <input type="text" id="productLocation" placeholder="شار / شوێن">
-                </div>
-                <div class="form-group">
-                    <label>وێنەکان</label>
-                    <input type="file" id="productImages" accept="image/*" multiple>
-                    <div id="imagePreview" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;"></div>
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">ناردن <i class="fas fa-paper-plane"></i></button>
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('addProductModal')">داخستن</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Delivery Modal -->
-    <div class="modal" id="deliveryModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button class="close-modal" onclick="closeModal('deliveryModal')">
-                    <i class="fas fa-times"></i>
-                </button>
-                <h2><i class="fas fa-shipping-fast"></i> داواکاری گەیاندن</h2>
-            </div>
-            <form id="deliveryForm">
-                <div class="delivery-section-title"><i class="fas fa-user-circle"></i> زانیاری نێردەر</div>
-                <div class="form-group">
-                    <label>ناوی نێردەر <span class="required-star">*</span></label>
-                    <input type="text" id="senderName" placeholder="ناوی تەواوی نێردەر" required>
-                </div>
-                <div class="form-group">
-                    <label>ژمارەی نێردەر <span class="required-star">*</span></label>
-                    <input type="tel" id="senderMobile" placeholder="07xxxxxxxxx" required>
-                </div>
-                <div class="form-group">
-                    <label>ژمارەی نێردەر ٢ <span style="font-size:11px;color:#999">(ئەگەر هەبوو)</span></label>
-                    <input type="tel" id="senderMobile2" placeholder="07xxxxxxxxx">
-                </div>
-                <div class="form-group">
-                    <label>شوێنی نێردەر <span class="required-star">*</span></label>
-                    <input type="text" id="senderLocation" placeholder="شار / شوێنی نێردەر" required>
-                </div>
-                <div class="delivery-section-title"><i class="fas fa-user-check"></i> زانیاری وەرگر</div>
-                <div class="form-group">
-                    <label>ناوی وەرگر <span class="required-star">*</span></label>
-                    <input type="text" id="receiverName" placeholder="ناوی تەواوی وەرگر" required>
-                </div>
-                <div class="form-group">
-                    <label>ژمارەی وەرگر <span class="required-star">*</span></label>
-                    <input type="tel" id="receiverMobile" placeholder="07xxxxxxxxx" required>
-                </div>
-                <div class="form-group">
-                    <label>ژمارەی وەرگر ٢ <span style="font-size:11px;color:#999">(ئەگەر هەبوو)</span></label>
-                    <input type="tel" id="receiverMobile2" placeholder="07xxxxxxxxx">
-                </div>
-                <div class="form-group">
-                    <label>شوێنی وەرگر <span class="required-star">*</span></label>
-                    <input type="text" id="receiverLocation" placeholder="شار / شوێنی وەرگر" required>
-                </div>
-                <div class="delivery-section-title"><i class="fas fa-box"></i> زانیاری کەلوپەل</div>
-                <div class="form-group">
-                    <label>ناوی کەلوپەل <span class="required-star">*</span></label>
-                    <input type="text" id="packageName" placeholder="ناوی کاڵا / کەلوپەل" required>
-                </div>
-                <div class="form-group" style="display:flex; gap:10px;">
-                    <div style="flex:1;">
-                        <label>ژمارەی پارچە <span class="required-star">*</span></label>
-                        <input type="number" id="packageQty" placeholder="1" min="1" required>
-                    </div>
-                    <div style="flex:1;">
-                        <label>کیلۆ <span class="required-star">*</span></label>
-                        <input type="number" id="packageKg" placeholder="0.0" min="0" step="0.1" required>
-                    </div>
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">ناردن <i class="fas fa-paper-plane"></i></button>
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('deliveryModal')">داخستن</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- UK Delivery Address Modal — 2 Tabs: Sender / Receiver -->
-    <div class="modal" id="ukDeliveryModal">
-        <div class="modal-content" style="direction:ltr;text-align:left;font-family:'Segoe UI',Arial,sans-serif;max-width:520px;">
-            <div class="modal-header" style="direction:ltr;text-align:left;">
-                <button class="close-modal" onclick="closeModal('ukDeliveryModal')"><i class="fas fa-times"></i></button>
-                <h2 style="direction:ltr;font-size:1.1rem;"><i class="fas fa-shipping-fast"></i> UK Delivery</h2>
-            </div>
-            <!-- Tabs -->
-            <div style="display:flex;border-bottom:2px solid #e2e8f0;margin-bottom:18px;">
-                <button id="ukTab-sender" onclick="ukSwitchTab('sender')"
-                    style="flex:1;padding:11px 0;border:none;background:none;font-weight:700;font-size:.95rem;cursor:pointer;border-bottom:3px solid #667eea;color:#667eea;transition:all .2s;">
-                    📤 Sender
-                </button>
-                <button id="ukTab-receiver" onclick="ukSwitchTab('receiver')"
-                    style="flex:1;padding:11px 0;border:none;background:none;font-weight:700;font-size:.95rem;cursor:pointer;border-bottom:3px solid transparent;color:#718096;transition:all .2s;">
-                    📬 Receiver
-                </button>
-            </div>
-            <form id="ukDeliveryForm">
-                <!-- SENDER -->
-                <div id="ukPanel-sender">
-                    <p style="font-size:.82rem;color:#718096;margin-bottom:14px;background:#f0f4ff;border-radius:8px;padding:8px 12px;">
-                        <i class="fas fa-info-circle" style="color:#667eea;"></i> Enter the <strong>sender's</strong> details — the person sending from the UK.
-                    </p>
-                    <div class="form-group">
-                        <label style="font-weight:700;color:#1a202c;">Full name <span class="required-star">*</span></label>
-                        <input type="text" id="ukFullName" placeholder="Full name" required style="direction:ltr;">
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight:700;color:#1a202c;">Phone number <span class="required-star">*</span></label>
-                        <input type="tel" id="ukPhone" placeholder="+44" required style="direction:ltr;">
-                        <small style="color:#718096;font-size:.78rem;">May be used to assist delivery</small>
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight:700;color:#1a202c;">Company name <span style="font-weight:400;color:#718096;">(optional)</span></label>
-                        <input type="text" id="ukCompany" placeholder="Company name" style="direction:ltr;">
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight:700;color:#1a202c;">Postcode <span class="required-star">*</span></label>
-                        <input type="text" id="ukPostcode" placeholder="Enter your area postcode" required style="direction:ltr;text-transform:uppercase;">
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight:700;color:#1a202c;">Address line 1 <span class="required-star">*</span></label>
-                        <input type="text" id="ukAddress1" placeholder="Start typing your address..." required style="direction:ltr;">
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight:700;color:#1a202c;">Address Line 2 <span style="font-weight:400;color:#718096;">(optional)</span></label>
-                        <input type="text" id="ukAddress2" placeholder="Apartment, suite, unit, floor, etc." style="direction:ltr;">
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight:700;color:#1a202c;">Town / City <span class="required-star">*</span></label>
-                        <input type="text" id="ukCity" placeholder="Town or city" required style="direction:ltr;">
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight:700;color:#1a202c;">County <span style="font-weight:400;color:#718096;">(if applicable)</span></label>
-                        <input type="text" id="ukCounty" placeholder="County" style="direction:ltr;">
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight:700;color:#1a202c;">Delivery instructions <span style="font-weight:400;color:#718096;">(optional)</span></label>
-                        <textarea id="ukDeliveryNote" placeholder="Notes, preferences, access codes..." rows="3" style="direction:ltr;"></textarea>
-                    </div>
-                    <div class="form-actions" style="gap:10px;margin-top:4px;">
-                        <button type="button" class="btn btn-secondary" onclick="closeModal('ukDeliveryModal')"
-                            style="flex:1;background:#e2e8f0;color:#2d3748;border:none;font-weight:700;font-size:1rem;border-radius:50px;padding:12px;cursor:pointer;">
-                            ✕ Cancel
-                        </button>
-                        <button type="button" class="btn btn-primary" onclick="ukGoToReceiver()"
-                            style="flex:1;background:#667eea;color:#fff;border:none;font-weight:700;font-size:1rem;border-radius:50px;padding:12px;cursor:pointer;">
-                            Next →
-                        </button>
-                    </div>
-                </div>
-                <!-- RECEIVER -->
-                <div id="ukPanel-receiver" style="display:none;">
-                    <p style="font-size:.82rem;color:#718096;margin-bottom:14px;background:#fffbeb;border-radius:8px;padding:8px 12px;">
-                        <i class="fas fa-info-circle" style="color:#d97706;"></i> Enter the <strong>receiver's</strong> details — the person receiving the parcel.
-                    </p>
-                    <div class="form-group">
-                        <label style="font-weight:700;color:#1a202c;">Country / Region</label>
-                        <select id="ukReceiverCountry" style="direction:ltr;width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:.95rem;background:#fff;">
-                            <option value="United Kingdom">United Kingdom</option>
-                            <option value="Iraq">Iraq</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight:700;color:#1a202c;">Full name <span class="required-star">*</span></label>
-                        <input type="text" id="ukReceiverName" placeholder="Full name" required style="direction:ltr;">
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight:700;color:#1a202c;">Phone number <span class="required-star">*</span></label>
-                        <input type="tel" id="ukReceiverPhone" placeholder="+44 or +964" required style="direction:ltr;">
-                        <small style="color:#718096;font-size:.78rem;">May be used to assist delivery</small>
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight:700;color:#1a202c;">Company name <span style="font-weight:400;color:#718096;">(optional)</span></label>
-                        <input type="text" id="ukReceiverCompany" placeholder="Company name" style="direction:ltr;">
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight:700;color:#1a202c;">Postcode <span style="font-weight:400;color:#718096;">(if applicable)</span></label>
-                        <input type="text" id="ukReceiverPostcode" placeholder="Enter postcode or area code" style="direction:ltr;text-transform:uppercase;">
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight:700;color:#1a202c;">Address line 1 <span class="required-star">*</span></label>
-                        <input type="text" id="ukReceiverAddress1" placeholder="Start typing your address..." required style="direction:ltr;">
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight:700;color:#1a202c;">Address Line 2 <span style="font-weight:400;color:#718096;">(optional)</span></label>
-                        <input type="text" id="ukReceiverAddress2" placeholder="Apartment, suite, unit, floor, etc." style="direction:ltr;">
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight:700;color:#1a202c;">Town / City <span class="required-star">*</span></label>
-                        <input type="text" id="ukReceiverCity" placeholder="Town or city" required style="direction:ltr;">
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight:700;color:#1a202c;">County / Province <span style="font-weight:400;color:#718096;">(if applicable)</span></label>
-                        <input type="text" id="ukReceiverCounty" placeholder="County or province" style="direction:ltr;">
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight:700;color:#1a202c;">Delivery instructions <span style="font-weight:400;color:#718096;">(optional)</span></label>
-                        <textarea id="ukReceiverNote" placeholder="Notes, preferences, access codes..." rows="3" style="direction:ltr;"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight:700;color:#1a202c;">Package / Item description <span class="required-star">*</span></label>
-                        <input type="text" id="ukPackageName" placeholder="What are you sending?" required style="direction:ltr;">
-                    </div>
-                    <div style="display:flex;gap:10px;">
-                        <div class="form-group" style="flex:1;">
-                            <label style="font-weight:700;color:#1a202c;font-size:.88rem;">Qty (pcs)</label>
-                            <input type="number" id="ukPackageQty" placeholder="1" min="1" style="direction:ltr;">
-                        </div>
-                        <div class="form-group" style="flex:1;">
-                            <label style="font-weight:700;color:#1a202c;font-size:.88rem;">Weight (kg)</label>
-                            <input type="number" id="ukPackageKg" placeholder="0.0" min="0" step="0.1" style="direction:ltr;">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight:700;color:#1a202c;font-size:.88rem;">Payment <span style="font-weight:400;color:#718096;">(optional)</span></label>
-                        <input type="text" id="ukPayment" placeholder="e.g. £50 paid / unpaid" style="direction:ltr;">
-                    </div>
-                    <div class="form-actions" style="gap:10px;margin-top:4px;">
-                        <button type="button" onclick="ukSwitchTab('sender')"
-                            style="flex:1;background:#e2e8f0;color:#2d3748;border:none;font-weight:700;font-size:1rem;border-radius:50px;padding:12px;cursor:pointer;">
-                            ← Back
-                        </button>
-                        <button type="submit" class="btn btn-primary"
-                            style="flex:1;background:#f0c040;color:#1a1a1a;border:none;font-weight:700;font-size:1rem;border-radius:50px;">
-                            ✅ Use this address
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- FIB Modal -->
-    <div class="modal" id="fibModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button class="close-modal" onclick="closeModal('fibModal')">
-                    <i class="fas fa-times"></i>
-                </button>
-                <h2>💳 پارەدان بە FIB کوردستان</h2>
-            </div>
-            <div class="fib-card" style="background: linear-gradient(135deg, #1e3a8a, #1e40af); padding: 30px; border-radius: 12px; text-align: center; color: white; margin-bottom: 20px;">
-                <p>ژمارەی حیساب</p>
-                <h3 style="font-size: 2rem; letter-spacing: 2px;">7769654490</h3>
-            </div>
-            <div class="form-actions" style="display: flex; gap: 10px;">
-                <button class="btn btn-primary" onclick="copyFibNumber()" style="flex: 1;">کۆپی ژمارە</button>
-                <button class="btn btn-secondary" onclick="contactFibWhatsApp()" style="flex: 1;">واتساپ</button>
-            </div>
-        </div>
-    </div>
-
-    
-    
-
-
-    <!-- FIB Modal -->
-
-
-    
-        <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="./script.js"></script>
+    <script>
+        window.addEventListener('load', function() {
+            const spinner = document.getElementById('loadingSpinner');
+            if(spinner) setTimeout(() => { spinner.style.opacity = '0'; setTimeout(() => spinner.style.display = 'none', 400); }, 700);
+        });
+        // stub functions for demo
+        window.showHomePage = function(){ alert('ماڵەوە'); };
+        window.showRequestModal = function(){ document.getElementById('requestModal').classList.add('show'); };
+        window.showAddProductModal = function(){ document.getElementById('addProductModal').classList.add('show'); };
+        window.showCartModal = function(){ alert('سەبەتە'); };
+        window.showAdminLogin = function(){ alert('Admin panel'); };
+        window.closeModal = function(id){ document.getElementById(id).classList.remove('show'); };
+        window.showDeliveryModal = function(){ document.getElementById('deliveryModal').classList.add('show'); };
+        window.showUkDeliveryModal = function(){ document.getElementById('ukDeliveryModal').classList.add('show'); };
+        window.performSearch = function(){ alert('گەڕان: '+document.getElementById('searchInput').value); };
+    </script>
 </body>
 </html>
