@@ -152,9 +152,9 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 .header-content {
     display: flex !important;
     flex-direction: row !important;
-    justify-content: space-between !important;
+    justify-content: center !important;
     align-items: center !important;
-    gap: 8px !important;
+    gap: 10px !important;
     width: 100% !important;
     flex-wrap: nowrap !important;
 }
@@ -169,9 +169,9 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     order: 1;
 }
 
-/* Nav buttons always on opposite side */
+/* Nav buttons */
 .nav-buttons {
-    display: flex;
+    display: flex !important;
     gap: 6px;
     flex-wrap: nowrap;
     align-items: center;
