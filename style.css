@@ -151,31 +151,31 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 
 .header-content {
     display: flex !important;
-    flex-direction: row !important;
+    flex-direction: column !important;
     justify-content: center !important;
     align-items: center !important;
-    gap: 10px !important;
+    gap: 8px !important;
     width: 100% !important;
-    flex-wrap: nowrap !important;
 }
 
-/* Logo */
+/* Logo — ڕیزی یەکەم، سەنتەر */
 .logo {
     display: flex;
     align-items: center;
-    gap: 7px;
+    gap: 8px;
     cursor: pointer;
     flex-shrink: 0;
     order: 1;
 }
 
-/* Nav buttons */
+/* Nav buttons — ڕیزی دووەم، سەنتەر */
 .nav-buttons {
     display: flex !important;
-    gap: 6px;
+    flex-direction: row !important;
+    gap: 10px;
     flex-wrap: nowrap;
     align-items: center;
-    flex-shrink: 0;
+    justify-content: center;
     order: 2;
 }
 
