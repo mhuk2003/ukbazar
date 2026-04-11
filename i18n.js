@@ -22,13 +22,24 @@ function setLanguage(e){
   const n=document.querySelector(".header-content");
   if(n) n.style.direction="rtl";
 
-  // --- Nav buttons: always LTR flex so buttons don't flip ---
+  // --- Nav buttons: سەنتەر + LTR ---
   const o=document.querySelector(".nav-buttons");
   if(o){
     o.style.direction="ltr";
     o.style.display="flex";
     o.style.alignItems="center";
+    o.style.justifyContent="center";
     o.style.flexWrap="nowrap";
+    o.style.width="100%";
+  }
+
+  // --- Videos دوگمە: رەنگی سوور ---
+  const videosBtn=document.querySelector('[onclick="showVideosModal()"]');
+  if(videosBtn){
+    videosBtn.style.background="#e53e3e";
+    videosBtn.style.backgroundColor="#e53e3e";
+    videosBtn.style.color="#fff";
+    videosBtn.style.border="none";
   }
 
   // --- Videos button ---
@@ -166,10 +177,19 @@ function _injectLangSwitcher(){
     const e=document.createElement("style");
     e.id="lang-switcher-css";
     e.textContent=`
-/* ---- Lang Switcher: سەربەخۆ لە هەموو کانتێینەرێک ---- */
+/* ---- Lang Switcher + سەنتەر کردنی هەموو header ---- */
+.header-content{text-align:center !important;}
+.nav-buttons{justify-content:center !important;}
 #langSwitcherWrap{
   display:flex;justify-content:center;align-items:center;
-  width:100%;padding:6px 0 2px 0;direction:ltr;
+  width:100%;padding:8px 0 4px 0;direction:ltr;
+}
+/* دوگمەی ڤیدیۆکان: سوور */
+[onclick="showVideosModal()"]{
+  background:#e53e3e !important;
+  background-color:#e53e3e !important;
+  color:#fff !important;
+  border:none !important;
 }
 #langSwitcher{
   display:inline-flex;align-items:center;gap:0;
