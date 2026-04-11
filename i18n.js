@@ -1,39 +1,307 @@
-const UKBAZAR_TRANSLATIONS={ku:{videos:"ڤیدیۆکان",delivery_ku:"گەیاندن",delivery_uk:"UK گەیاندن",search_placeholder:"گەڕان بە کاڵا...",search_btn:"گەڕان",all_products:"هەموو کاڵاکان",videos_section:"ڤیدیۆکان",no_products:"هیچ کاڵایەک نەدۆزرایەوە",cart_btn:"سەبەتە",whatsapp_btn:"واتساپ",add_to_cart:"زیادکردن بۆ سەبەتە",pieces:"دانە",unknown:"نادیار",no_name:"بێ ناو",cat_all:"هەموو کاڵاکان",cat_mobile:"مۆبایل",cat_laptop:"لاپتۆپ",cat_computer:"کۆمپیوتەر",cat_ipad:"ئایپاد",cat_car:"ئوتومبێل",cat_home:"ناوماڵ",cat_bicycle:"پاسکیل",cat_scooter:"سکۆتەر",cat_camera:"کامێرا",cat_beauty:"جوانکاری",cat_house:"خانوو",cat_land:"زەوی",cat_garden:"باخ",cat_animals:"ئاژەڵ",cat_men:"پیاوان",cat_women:"ئافرەتان",cat_kids:"منداڵان",products_loaded:" کاڵا بارکرا!",loading:"چاوەڕوانی بکە...",no_results:"هیچ کاڵایەک نەدۆزرایەوە",search_results:"ئەنجامەکانی گەڕان بۆ: ",videos_modal_title:"ڤیدیۆکان",no_videos:"هیچ ڤیدیۆیەک نییە",delivery_title:"داواکاری گەیاندن",sender_info:"زانیاری نێردەر",receiver_info:"زانیاری وەرگر",sender_name:"ناوی نێردەر",sender_mobile:"مۆبایلی نێردەر",sender_mobile2:"مۆبایلی دووەم (ئەختیاری)",sender_location:"شوێنی نێردەر",receiver_name:"ناوی وەرگر",receiver_mobile:"مۆبایلی وەرگر",receiver_mobile2:"مۆبایلی دووەم (ئەختیاری)",receiver_location:"شوێنی وەرگر",package_name:"ناوی بستەکە",package_qty:"ژمارەی دانە",package_kg:"کیلۆگرام",submit_delivery:"نێردن ✅",cancel:"داخستن",loading_text:"تکایە چاوەڕێ بکە ...",site_title:"بازاڕی ئۆنلاین",dir:"rtl",lang:"ku"},en:{videos:"Videos",delivery_ku:"KU Delivery",delivery_uk:"UK Delivery",search_placeholder:"Search products...",search_btn:"Search",all_products:"All Products",videos_section:"Videos",no_products:"No products found",cart_btn:"Cart",whatsapp_btn:"WhatsApp",add_to_cart:"Add to Cart",pieces:"pcs",unknown:"Unknown",no_name:"No name",cat_all:"All Products",cat_mobile:"Mobile",cat_laptop:"Laptop",cat_computer:"Computer",cat_ipad:"iPad",cat_car:"Car",cat_home:"Home",cat_bicycle:"Bicycle",cat_scooter:"Scooter",cat_camera:"Camera",cat_beauty:"Beauty",cat_house:"House",cat_land:"Land",cat_garden:"Garden",cat_animals:"Animals",cat_men:"Men",cat_women:"Women",cat_kids:"Kids",products_loaded:" products loaded!",loading:"Please wait...",no_results:"No products found",search_results:"Search results for: ",videos_modal_title:"Videos",no_videos:"No videos available",delivery_title:"Delivery Request",sender_info:"Sender Information",receiver_info:"Receiver Information",sender_name:"Sender Name",sender_mobile:"Sender Mobile",sender_mobile2:"Second Mobile (optional)",sender_location:"Sender Location",receiver_name:"Receiver Name",receiver_mobile:"Receiver Mobile",receiver_mobile2:"Second Mobile (optional)",receiver_location:"Receiver Location",package_name:"Package Name",package_qty:"Quantity",package_kg:"Weight (kg)",submit_delivery:"Submit ✅",cancel:"Cancel",loading_text:"Please wait ...",site_title:"Online Market",dir:"ltr",lang:"en"},ar:{videos:"الفيديوهات",delivery_ku:"توصيل كردستان",delivery_uk:"توصيل UK",search_placeholder:"ابحث عن المنتجات...",search_btn:"بحث",all_products:"جميع المنتجات",videos_section:"الفيديوهات",no_products:"لم يتم العثور على منتجات",cart_btn:"السلة",whatsapp_btn:"واتساب",add_to_cart:"أضف إلى السلة",pieces:"قطع",unknown:"غير معروف",no_name:"بدون اسم",cat_all:"جميع المنتجات",cat_mobile:"الجوال",cat_laptop:"لابتوب",cat_computer:"كمبيوتر",cat_ipad:"آيباد",cat_car:"سيارة",cat_home:"المنزل",cat_bicycle:"دراجة",cat_scooter:"سكوتر",cat_camera:"كاميرا",cat_beauty:"جمال",cat_house:"بيت",cat_land:"أرض",cat_garden:"حديقة",cat_animals:"حيوانات",cat_men:"رجال",cat_women:"نساء",cat_kids:"أطفال",products_loaded:" منتج تم التحميل!",loading:"يرجى الانتظار...",no_results:"لم يتم العثور على منتجات",search_results:"نتائج البحث عن: ",videos_modal_title:"الفيديوهات",no_videos:"لا توجد فيديوهات",delivery_title:"طلب توصيل",sender_info:"معلومات المرسل",receiver_info:"معلومات المستلم",sender_name:"اسم المرسل",sender_mobile:"جوال المرسل",sender_mobile2:"جوال ثانٍ (اختياري)",sender_location:"موقع المرسل",receiver_name:"اسم المستلم",receiver_mobile:"جوال المستلم",receiver_mobile2:"جوال ثانٍ (اختياري)",receiver_location:"موقع المستلم",package_name:"اسم الطرد",package_qty:"الكمية",package_kg:"الوزن (كغ)",submit_delivery:"إرسال ✅",cancel:"إلغاء",loading_text:"يرجى الانتظار ...",site_title:"سوق أونلاين",dir:"rtl",lang:"ar"}};let _currentLang="ku";function _detectBrowserLang(){const e=(navigator.language||navigator.userLanguage||"ku").toLowerCase();return e.startsWith("ar")?"ar":e.startsWith("en")?"en":"ku"}function setLanguage(e){e=UKBAZAR_TRANSLATIONS[e]?e:"ku",_currentLang=e;try{localStorage.setItem("ukbazar_lang",e)}catch(e){}const t=UKBAZAR_TRANSLATIONS[e];document.documentElement.lang=t.lang,document.documentElement.dir=t.dir,document.title="UK BAZAR - "+t.site_title;const n=document.querySelector(".header-row1,.header-content");n&&(n.style.direction="rtl");const o=document.querySelector(".header-row2,.nav-buttons");o&&(o.style.direction="ltr",o.style.display="flex",o.style.flexWrap="nowrap");const hc=document.querySelector(".header-center");hc&&(hc.style.direction="rtl");const s=document.querySelector('[onclick="showVideosModal()"] span,.btn-videos-header span');s&&(s.textContent=t.videos);const a=document.querySelector(".btn-delivery-ku .btn-text");a&&(a.textContent=t.delivery_ku);const r=document.querySelector(".btn-delivery-uk .btn-text");r&&(r.textContent=t.delivery_uk);const l=document.getElementById("searchInput");l&&(l.placeholder=t.search_placeholder);const d=document.querySelector(".search-box button span");d&&(d.textContent=t.search_btn);const i=document.getElementById("productsTitle");i&&(i.textContent=t.all_products);const c=document.querySelector(".videos-section .section-title");c&&(c.innerHTML='<span style="color:#f56565;">&#9654;</span> '+t.videos_section);const u=document.querySelector(".loading-text");u&&(u.textContent=t.loading_text);const m=document.querySelector("#videosModal h2");m&&(m.innerHTML='<span style="color:#f56565;">&#9654;</span> '+t.videos_modal_title);_refreshCategoryButtons(),_refreshProductsLang(),_updateLangSwitcherUI(e),_ensureLangSwitcher()}function _updateLangSwitcherUI(e){document.querySelectorAll(".lang-btn").forEach(t=>{t.classList.toggle("lang-active",t.dataset.lang===e)})}function _ensureLangSwitcher(){document.getElementById("langSwitcher")||_injectLangSwitcher(),_updateLangSwitcherUI(_currentLang)}function _refreshCategoryButtons(){const e=UKBAZAR_TRANSLATIONS[_currentLang],t={"هەموو کاڵاکان":e.cat_all,"All Products":e.cat_all,"جميع المنتجات":e.cat_all,"مۆبایل":e.cat_mobile,"لاپتۆپ":e.cat_laptop,"کۆمپیوتەر":e.cat_computer,"ئایپاد":e.cat_ipad,"ئوتومبێل":e.cat_car,"ناوماڵ":e.cat_home,"پاسکیل":e.cat_bicycle,"سکۆتەر":e.cat_scooter,"کامێرا":e.cat_camera,"جوانکاری":e.cat_beauty,"خانوو":e.cat_house,"زەوی":e.cat_land,"باخ":e.cat_garden,"ئاژەڵ":e.cat_animals," پیاوان":e.cat_men," ئافرەتان":e.cat_women," منداڵان":e.cat_kids,Mobile:e.cat_mobile,Laptop:e.cat_laptop,Computer:e.cat_computer,iPad:e.cat_ipad,Car:e.cat_car,Home:e.cat_home,Bicycle:e.cat_bicycle,Scooter:e.cat_scooter,Camera:e.cat_camera,Beauty:e.cat_beauty,House:e.cat_house,Land:e.cat_land,Garden:e.cat_garden,Animals:e.cat_animal,Men:e.cat_men,Women:e.cat_women,Kids:e.cat_kids,"الجوال":e.cat_mobile,"لابتوب":e.cat_laptop,"كمبيوتر":e.cat_computer,"آيباد":e.cat_ipad,"سيارة":e.cat_car,"المنزل":e.cat_home,"دراجة":e.cat_bicycle,"سكوتر":e.cat_scooter,"كاميرا":e.cat_camera,"جمال":e.cat_beauty,"بيت":e.cat_house,"أرض":e.cat_land,"حديقة":e.cat_garden,"حيوانات":e.cat_animals,"رجال":e.cat_men,"نساء":e.cat_women,"أطفال":e.cat_kids},n=["هەموو کاڵاکان","مۆبایل","لاپتۆپ","کۆمپیوتەر","ئایپاد","ئوتومبێل","ناوماڵ","پاسکیل","سکۆتەر","کامێرا","جوانکاری","خانوو","زەوی","باخ","ئاژەڵ"," پیاوان"," ئافرەتان"," منداڵان"],o=document.getElementById("categoryButtons");if(!o)return;o.innerHTML=n.map(function(n){const o=t[n]||n,s=n==="هەموو کاڵاکان";return'<button class="category-btn'+(s?" active":"")+'" onclick="filterByCategory(\''+n.replace(/'/g,"\\'")+'\')" data-ku-cat="'+n.trim()+'" title="'+o+'">'+o+"</button>"}).join("")}function _refreshProductsLang(){const e=UKBAZAR_TRANSLATIONS[_currentLang];document.querySelectorAll(".btn-text").forEach(t=>{const n=t.closest("button");n&&(n.querySelector(".fa-cart-plus")&&(t.textContent=e.cart_btn),n.querySelector(".fa-whatsapp")&&(t.textContent=e.whatsapp_btn))}),document.querySelectorAll(".qty-label").forEach(t=>{t.textContent=e.pieces}),document.querySelectorAll(".btn-confirm-cart").forEach(t=>{t.innerHTML='<i class="fas fa-check"></i> '+e.add_to_cart});const t=document.getElementById("productsTitle");t&&(t.textContent=e.all_products)}function _injectLangSwitcher(){if(document.getElementById("langSwitcher"))return;if(!document.getElementById("lang-switcher-css")){const e=document.createElement("style");e.id="lang-switcher-css";e.textContent=`
-/* ===== Header Layout ===== */
-.header .container{padding:0 12px;}
-.header-row1{display:flex;align-items:center;justify-content:center;gap:10px;padding:8px 0 4px;position:relative;}
-.header-row1 .logo{display:flex;align-items:center;gap:8px;cursor:pointer;}
-.header-row2{display:flex;align-items:center;justify-content:center;gap:6px;padding:4px 0 8px;flex-wrap:nowrap;}
-/* دوگمەکانی ڕیزی دووەم — بچووکتر */
-.btn-videos-header{display:flex;align-items:center;gap:5px;background:linear-gradient(135deg,#f56565,#e53e3e);color:#fff;border:none;border-radius:50px;padding:7px 13px;font-family:inherit;font-size:.82rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(245,101,101,.35);}
-.btn-delivery-ku,.btn-delivery-uk{padding:7px 12px !important;font-size:.82rem !important;}
-.btn-delivery-ku .btn-text,.btn-delivery-uk .btn-text{font-size:.82rem;}
-/* ===== Lang Switcher ===== */
-#langSwitcher{display:flex !important;align-items:center;gap:2px;background:rgba(255,255,255,0.18);border-radius:50px;padding:3px;border:1.5px solid rgba(255,255,255,0.4);box-shadow:0 1px 8px rgba(0,0,0,0.12);}
-.lang-btn{background:rgba(255,255,255,0.08);border:none;cursor:pointer;font-size:.78rem;font-weight:700;color:rgba(255,255,255,0.9);padding:5px 10px;border-radius:50px;transition:all .18s;font-family:inherit;letter-spacing:.4px;white-space:nowrap;display:block !important;visibility:visible !important;opacity:1 !important;}
-.lang-btn:hover{background:rgba(255,255,255,0.25);color:#fff;}
-.lang-btn.lang-active{background:rgba(255,255,255,0.95);color:#667eea;font-weight:800;}
-/* موبایل */
-@media(max-width:480px){
-  .header-row2{gap:5px;}
-  .btn-videos-header{padding:6px 11px;font-size:.78rem;}
-  .btn-delivery-ku,.btn-delivery-uk{padding:6px 10px !important;font-size:.78rem !important;}
-  .lang-btn{padding:4px 8px;font-size:.73rem;}
+const UKBAZAR_TRANSLATIONS = {
+    ku: {
+        videos: "ڤیدیۆکان",
+        delivery_ku: "گەیاندن",
+        delivery_uk: "UK گەیاندن",
+        search_placeholder: "گەڕان بە کاڵا...",
+        search_btn: "گەڕان",
+        all_products: "هەموو کاڵاکان",
+        videos_section: "ڤیدیۆکان",
+        no_products: "هیچ کاڵایەک نەدۆزرایەوە",
+        cart_btn: "سەبەتە",
+        whatsapp_btn: "واتساپ",
+        add_to_cart: "زیادکردن بۆ سەبەتە",
+        pieces: "دانە",
+        unknown: "نادیار",
+        no_name: "بێ ناو",
+        cat_all: "هەموو کاڵاکان",
+        cat_mobile: "مۆبایل",
+        cat_laptop: "لاپتۆپ",
+        cat_computer: "کۆمپیوتەر",
+        cat_ipad: "ئایپاد",
+        cat_car: "ئوتومبێل",
+        cat_home: "ناوماڵ",
+        cat_bicycle: "پاسکیل",
+        cat_scooter: "سکۆتەر",
+        cat_camera: "کامێرا",
+        cat_beauty: "جوانکاری",
+        cat_house: "خانوو",
+        cat_land: "زەوی",
+        cat_garden: "باخ",
+        cat_animals: "ئاژەڵ",
+        cat_men: "پیاوان",
+        cat_women: "ئافرەتان",
+        cat_kids: "منداڵان",
+        products_loaded: " کاڵا بارکرا!",
+        loading: "چاوەڕوانی بکە...",
+        no_results: "هیچ کاڵایەک نەدۆزرایەوە",
+        search_results: "ئەنجامەکانی گەڕان بۆ: ",
+        videos_modal_title: "ڤیدیۆکان",
+        no_videos: "هیچ ڤیدیۆیەک نییە",
+        delivery_title: "داواکاری گەیاندن",
+        sender_info: "زانیاری نێردەر",
+        receiver_info: "زانیاری وەرگر",
+        sender_name: "ناوی نێردەر",
+        sender_mobile: "مۆبایلی نێردەر",
+        sender_mobile2: "مۆبایلی دووەم (ئەختیاری)",
+        sender_location: "شوێنی نێردەر",
+        receiver_name: "ناوی وەرگر",
+        receiver_mobile: "مۆبایلی وەرگر",
+        receiver_mobile2: "مۆبایلی دووەم (ئەختیاری)",
+        receiver_location: "شوێنی وەرگر",
+        package_name: "ناوی بستەکە",
+        package_qty: "ژمارەی دانە",
+        package_kg: "کیلۆگرام",
+        submit_delivery: "نێردن ✅",
+        cancel: "داخستن",
+        loading_text: "تکایە چاوەڕێ بکە ...",
+        site_title: "UK BAZAR",
+        dir: "rtl",
+        lang: "ku"
+    },
+    en: {
+        videos: "Videos",
+        delivery_ku: "KU Delivery",
+        delivery_uk: "UK Delivery",
+        search_placeholder: "Search products...",
+        search_btn: "Search",
+        all_products: "All Products",
+        videos_section: "Videos",
+        no_products: "No products found",
+        cart_btn: "Cart",
+        whatsapp_btn: "WhatsApp",
+        add_to_cart: "Add to Cart",
+        pieces: "pcs",
+        unknown: "Unknown",
+        no_name: "No name",
+        cat_all: "All Products",
+        cat_mobile: "Mobile",
+        cat_laptop: "Laptop",
+        cat_computer: "Computer",
+        cat_ipad: "iPad",
+        cat_car: "Car",
+        cat_home: "Home",
+        cat_bicycle: "Bicycle",
+        cat_scooter: "Scooter",
+        cat_camera: "Camera",
+        cat_beauty: "Beauty",
+        cat_house: "House",
+        cat_land: "Land",
+        cat_garden: "Garden",
+        cat_animals: "Animals",
+        cat_men: "Men",
+        cat_women: "Women",
+        cat_kids: "Kids",
+        products_loaded: " products loaded!",
+        loading: "Please wait...",
+        no_results: "No products found",
+        search_results: "Search results for: ",
+        videos_modal_title: "Videos",
+        no_videos: "No videos available",
+        delivery_title: "Delivery Request",
+        sender_info: "Sender Information",
+        receiver_info: "Receiver Information",
+        sender_name: "Sender Name",
+        sender_mobile: "Sender Mobile",
+        sender_mobile2: "Second Mobile (optional)",
+        sender_location: "Sender Location",
+        receiver_name: "Receiver Name",
+        receiver_mobile: "Receiver Mobile",
+        receiver_mobile2: "Second Mobile (optional)",
+        receiver_location: "Receiver Location",
+        package_name: "Package Name",
+        package_qty: "Quantity",
+        package_kg: "Weight (kg)",
+        submit_delivery: "Submit ✅",
+        cancel: "Cancel",
+        loading_text: "Please wait ...",
+        site_title: "UK BAZAR",
+        dir: "ltr",
+        lang: "en"
+    },
+    ar: {
+        videos: "الفيديوهات",
+        delivery_ku: "توصيل كردستان",
+        delivery_uk: "توصيل UK",
+        search_placeholder: "ابحث عن المنتجات...",
+        search_btn: "بحث",
+        all_products: "جميع المنتجات",
+        videos_section: "الفيديوهات",
+        no_products: "لم يتم العثور على منتجات",
+        cart_btn: "السلة",
+        whatsapp_btn: "واتساب",
+        add_to_cart: "أضف إلى السلة",
+        pieces: "قطع",
+        unknown: "غير معروف",
+        no_name: "بدون اسم",
+        cat_all: "جميع المنتجات",
+        cat_mobile: "الجوال",
+        cat_laptop: "لابتوب",
+        cat_computer: "كمبيوتر",
+        cat_ipad: "آيباد",
+        cat_car: "سيارة",
+        cat_home: "المنزل",
+        cat_bicycle: "دراجة",
+        cat_scooter: "سكوتر",
+        cat_camera: "كاميرا",
+        cat_beauty: "جمال",
+        cat_house: "بيت",
+        cat_land: "أرض",
+        cat_garden: "حديقة",
+        cat_animals: "حيوانات",
+        cat_men: "رجال",
+        cat_women: "نساء",
+        cat_kids: "أطفال",
+        products_loaded: " منتج تم التحميل!",
+        loading: "يرجى الانتظار...",
+        no_results: "لم يتم العثور على منتجات",
+        search_results: "نتائج البحث عن: ",
+        videos_modal_title: "الفيديوهات",
+        no_videos: "لا توجد فيديوهات",
+        delivery_title: "طلب توصيل",
+        sender_info: "معلومات المرسل",
+        receiver_info: "معلومات المستلم",
+        sender_name: "اسم المرسل",
+        sender_mobile: "جوال المرسل",
+        sender_mobile2: "جوال ثانٍ (اختياري)",
+        sender_location: "موقع المرسل",
+        receiver_name: "اسم المستلم",
+        receiver_mobile: "جوال المستلم",
+        receiver_mobile2: "جوال ثانٍ (اختياري)",
+        receiver_location: "موقع المستلم",
+        package_name: "اسم الطرد",
+        package_qty: "الكمية",
+        package_kg: "الوزن (كغ)",
+        submit_delivery: "إرسال ✅",
+        cancel: "إلغاء",
+        loading_text: "يرجى الانتظار ...",
+        site_title: "UK BAZAR",
+        dir: "rtl",
+        lang: "ar"
+    }
+};
+
+let _currentLang = 'ku';
+
+function _injectStyles() {
+    if (document.getElementById('lsc-fix')) return;
+    var s = document.createElement('style');
+    s.id = 'lsc-fix';
+    s.textContent = `
+        /* ناوەندگیرکردنی هەموو هێدەرەکە */
+        .header-row1, .hrow1 {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            padding: 10px 0 !important;
+            gap: 12px !important;
+            width: 100% !important;
+        }
+
+        /* لۆگۆ هەمیشە لە ناوەڕاست */
+        .logo-container {
+            display: flex !important;
+            justify-content: center !important;
+            width: 100% !important;
+        }
+
+        /* زمانەکان لە ناوەڕاست لە ژێر لۆگۆ */
+        #langSwitcher {
+            display: flex !important;
+            justify-content: center !important;
+            gap: 6px !important;
+            background: rgba(0,0,0,0.1);
+            padding: 4px 8px;
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.2);
+            width: fit-content !important;
+            margin: 0 auto !important;
+        }
+
+        .lang-btn {
+            background: none; border: none; color: #fff; font-size: 11px;
+            font-weight: bold; padding: 5px 12px; border-radius: 50px;
+            cursor: pointer;
+        }
+
+        .lang-btn.lang-active { background: #fff !important; color: #667eea !important; }
+
+        /* دوگمەکانی گەیاندن و ڤیدیۆ لە ناوەڕاست */
+        .header-row2, .hrow2 {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+            align-items: center !important;
+            gap: 8px !important;
+            width: 100% !important;
+            padding: 5px 0 10px 0 !important;
+        }
+
+        /* ستایلی دوگمەی ڤیدیۆ (سوور) */
+        .btn-videos-hdr, button[onclick*="showVideosModal"] {
+            background-color: #ff4d4d !important;
+            color: white !important;
+            border: none !important;
+        }
+    `;
+    document.head.appendChild(s);
 }
-`;document.head.appendChild(e)}
 
-const sw=document.createElement("div");
-sw.id="langSwitcher";
-sw.addEventListener("click",e=>e.stopPropagation());
-[{lang:"ku",label:"KU"},{lang:"en",label:"EN"},{lang:"ar",label:"AR"}].forEach(f=>{
-  const b=document.createElement("button");
-  b.className="lang-btn";b.dataset.lang=f.lang;b.textContent=f.label;
-  b.addEventListener("click",function(){setLanguage(f.lang)});
-  sw.appendChild(b);
-});
+function _injectLangSwitcher() {
+    var exist = document.getElementById('langSwitcher');
+    if (exist) exist.remove();
+    var sw = document.createElement('div');
+    sw.id = 'langSwitcher';
+    ['ku', 'en', 'ar'].forEach(lg => {
+        var b = document.createElement('button');
+        b.className = 'lang-btn' + (lg === _currentLang ? ' lang-active' : '');
+        b.textContent = lg.toUpperCase();
+        b.onclick = (e) => { e.preventDefault(); setLanguage(lg); };
+        sw.appendChild(b);
+    });
+    var target = document.querySelector('.header-row1') || document.querySelector('.hrow1');
+    if (target) target.appendChild(sw);
+}
 
-// زیادکردن بۆ wrap ی ژێری لۆگۆ — یان nav-buttons بە فالبەک
-const wrap=document.getElementById("langSwitcherWrap");
-if(wrap){wrap.appendChild(sw);}
-else{const nb=document.querySelector(".nav-buttons,.header-row2");if(nb)nb.insertBefore(sw,nb.firstChild);}
-}(function(){function e(){_injectLangSwitcher();let t="ku";try{t=localStorage.getItem("ukbazar_lang")||"ku"}catch(e){}localStorage.getItem("ukbazar_lang")||(t=_detectBrowserLang()),setLanguage(t)}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",e):e()})();window.setLanguage=setLanguage;window._refreshCategoryButtons=_refreshCategoryButtons;window.t=function(e){return(UKBAZAR_TRANSLATIONS[_currentLang]||UKBAZAR_TRANSLATIONS.ku)[e]||e};window.currentLang=function(){return _currentLang};
+function setLanguage(lang) {
+    _currentLang = lang;
+    localStorage.setItem('ukbazar_lang', lang);
+    const t = UKBAZAR_TRANSLATIONS[lang];
+
+    document.documentElement.lang = t.lang;
+    document.documentElement.dir = t.dir;
+
+    // وەرگێڕانی دەقە جێگیرەکان
+    const sInput = document.getElementById('searchInput');
+    if (sInput) sInput.placeholder = t.search_placeholder;
+    
+    const pTitle = document.getElementById('productsTitle');
+    if (pTitle) pTitle.textContent = t.all_products;
+
+    // وەرگێڕانی دوگمەکان
+    document.querySelectorAll('.delivery-btn span').forEach((span, idx) => {
+        if (idx === 0) span.textContent = t.delivery_ku;
+        if (idx === 1) span.textContent = t.delivery_uk;
+    });
+
+    const vBtn = document.querySelector('button[onclick*="showVideosModal"] span') || document.querySelector('.btn-videos-hdr span');
+    if (vBtn) vBtn.textContent = t.videos;
+
+    _injectStyles();
+    _injectLangSwitcher();
+
+    // نوێکردنەوەی بەشەکانی تر (ئەگەر هەبن)
+    if (typeof _refreshCategoryButtons === 'function') _refreshCategoryButtons();
+    if (typeof _refreshProductsLang === 'function') _refreshProductsLang();
+}
+
+(function() {
+    const saved = localStorage.getItem('ukbazar_lang') || 'ku';
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", () => setLanguage(saved));
+    } else {
+        setLanguage(saved);
+    }
+})();
