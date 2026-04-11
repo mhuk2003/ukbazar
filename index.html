@@ -46,25 +46,27 @@
 </div>
   <header class="header">
     <div class="container">
-        <div class="header-content">
+        <!-- ڕیزی یەکەم: لۆگۆ + دوگمەی زمان -->
+        <div class="header-row1">
             <div class="logo" onclick="showHomePage()">
                 <div class="logo-icon">
                     <img src="./logo-ukbazar.png" alt="UK BAZAR">
                 </div>
                 <div class="logo-text">UK BAZAR</div>
             </div>
-
-            <div class="nav-buttons">
-                <button onclick="showVideosModal()" style="display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#f56565,#e53e3e);color:#fff;border:none;border-radius:50px;padding:8px 16px;font-family:inherit;font-size:.88rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(245,101,101,.35);"><i class="fas fa-play-circle"></i><span>ڤیدیۆکان</span></button>
-                <button class="btn-delivery-ku" onclick="showDeliveryModal()">
-                    <i class="fas fa-shipping-fast"></i>
-                    <span class="btn-text">گەیاندن</span>
-                </button>
-                <button class="btn-delivery-uk" onclick="showUkDeliveryModal()">
-                    <i class="fas fa-shipping-fast"></i>
-                    <span class="btn-text">UK Delivery</span>
-                </button>
-            </div>
+            <div id="langSwitcherWrap"></div>
+        </div>
+        <!-- ڕیزی دووەم: دوگمەکانی ناڤیگەیشن -->
+        <div class="header-row2">
+            <button onclick="showVideosModal()" class="btn-videos-header"><i class="fas fa-play-circle"></i><span>ڤیدیۆکان</span></button>
+            <button class="btn-delivery-ku" onclick="showDeliveryModal()">
+                <i class="fas fa-shipping-fast"></i>
+                <span class="btn-text">گەیاندن</span>
+            </button>
+            <button class="btn-delivery-uk" onclick="showUkDeliveryModal()">
+                <i class="fas fa-shipping-fast"></i>
+                <span class="btn-text">UK Delivery</span>
+            </button>
         </div>
     </div>
 </header>
@@ -174,10 +176,8 @@
         <!-- فوتەر تاپ بار: ئیمەیل + Privacy + گەڕانەوە -->
         <div class="footer-topbar">
             <!-- ئیمەیل -->
-<a href="mailto:INFO@UKBAZAR.ONLINE" class="footer-email-link">
-  <i class="fas fa-envelope"></i>
-  <span>INFO [at] UKBAZAR [dot] ONLINE</span>
-</a>
+           <a href="/cdn-cgi/l/email-protection#aac3c4ccc5eadfc1c8cbd0cbd884c5c4c6c3c4cf" class="footer-email-link"><i class="fas fa-envelope"></i> <span><span class="__cf_email__" data-cfemail="157c7b737a55607e77746f74673b7a7b797c7b70">[email&#160;protected]</span></span></a>
+
             <!-- Privacy Policy دوگمە -->
             <button onclick="openPrivacyPage()" class="footer-privacy-btn">
                 <i class="fas fa-shield-alt"></i> Privacy Policy &amp; Terms
@@ -202,21 +202,17 @@
                     </div>
                     <p class="footer-slogan">World Online Shopping</p>
                     
-                 <div class="app-download-section">
-    <p class="app-download-title">داونلۆدی ئەپ بکە:</p>
-
-    <div class="download-buttons">
-        <!-- Google Play -->
-        <a href="https://play.google.com/store/apps/details?id=com.ukbazarmobile" target="_blank" class="store-badge">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play">
-        </a>
-
-        <!-- App Store (ئەگەر لینک نیە دەتوانیت دواتر دابنێیت) -->
-        <a href="#" target="_blank" class="store-badge">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store">
-        </a>
-    </div>
-</div>
+                    <div class="app-download-section">
+                        <p class="app-download-title">داونلۆدی ئەپ بکە:</p>
+                        <div class="download-buttons">
+                            <a href="#" target="_blank" class="store-badge">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play">
+                            </a>
+                            <a href="#" target="_blank" class="store-badge">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store">
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="footer-col">
@@ -256,10 +252,8 @@
 
             <!-- فوتەر تاپ بار -->
             <div class="footer-topbar">
-<a href="mailto:INFO@UKBAZAR.ONLINE" class="footer-email-link">
-  <i class="fas fa-envelope"></i>
-  <span>INFO [at] UKBAZAR [dot] ONLINE</span>
-</a>                <button onclick="openPrivacyPage()" class="footer-privacy-btn">
+                <a href="/cdn-cgi/l/email-protection#432a2d252c03362821223922316d2c2d2f2a2d26" class="footer-email-link"><i class="fas fa-envelope"></i> <span><span class="__cf_email__" data-cfemail="82ebece4edc2f7e9e0e3f8e3f0acedeceeebece7">[email&#160;protected]</span></span></a>
+                <button onclick="openPrivacyPage()" class="footer-privacy-btn">
                     <i class="fas fa-shield-alt"></i> Privacy Policy & Terms
                 </button>
                 <button id="backToTopBtn" class="footer-backtotop-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">
@@ -309,10 +303,8 @@
             </ul>
           <p style="margin-top:14px;">
     Questions or concerns? Contact us at 
-<a href="mailto:INFO@UKBAZAR.ONLINE" class="footer-email-link">
-  <i class="fas fa-envelope"></i>
-  <span>INFO [at] UKBAZAR [dot] ONLINE</span>
-</a>    </p>
+    <a href="/cdn-cgi/l/email-protection#97fef9f1f8d7e2fcf5f6edf6e5b9f8f9fbfef9f2" style="color:#667eea; font-weight:600; text-decoration: none;"><span class="__cf_email__" data-cfemail="2c45424a436c59474e4d564d5e02434240454249">[email&#160;protected]</span></a>
+    </p>
         </div>
 
         <!-- Summary -->
@@ -390,10 +382,8 @@
     <p style="margin:0; color:#4a5568;">
         Depending on your location, you may have the right to request access to, correction of, or deletion of your personal information. 
         To exercise your rights, contact us at 
-<a href="mailto:INFO@UKBAZAR.ONLINE" class="footer-email-link">
-  <i class="fas fa-envelope"></i>
-  <span>INFO [at] UKBAZAR [dot] ONLINE</span>
-</a>    </p>
+        <a href="/cdn-cgi/l/email-protection#a3cacdc5cce3d6c8c1c2d9c2d18dcccdcfcacdc6" class="footer-email-link"><i class="fas fa-envelope"></i> <span><span class="__cf_email__" data-cfemail="4e272028210e3b252c2f342f3c6021202227202b">[email&#160;protected]</span></span></a>
+    </p>
 </div>
 
 <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
@@ -401,10 +391,8 @@
     <p style="margin:0; color:#4a5568;">
         You may review, change, or terminate your account at any time. 
         If you have questions or comments about your privacy rights, contact us at 
-<a href="mailto:INFO@UKBAZAR.ONLINE" class="footer-email-link">
-  <i class="fas fa-envelope"></i>
-  <span>INFO [at] UKBAZAR [dot] ONLINE</span>
-</a>    </p>
+  <a href="/cdn-cgi/l/email-protection#2841464e47685d434a4952495a0647464441464d" style="color:#667eea; text-decoration: none; font-weight: 500;"><span class="__cf_email__" data-cfemail="3851565e57784d535a5942594a1657565451565d">[email&#160;protected]</span></a>
+    </p>
 </div>
 
         </div>
@@ -416,10 +404,8 @@
     <p style="margin:0; font-size:0.82rem; opacity:.85;">
         <a href="https://www.ukbazar.online" style="color:#fff;">www.ukbazar.online</a> 
         &nbsp;|&nbsp; 
-<a href="mailto:INFO@UKBAZAR.ONLINE" class="footer-email-link">
-  <i class="fas fa-envelope"></i>
-  <span>INFO [at] UKBAZAR [dot] ONLINE</span>
-</a>    </p>
+      <a href="/cdn-cgi/l/email-protection#5d34333b321d28363f3c273c2f73323331343338" style="color: #ffffff; text-decoration: none;"><span class="__cf_email__" data-cfemail="c4adaaa2ab84b1afa6a5bea5b6eaabaaa8adaaa1">[email&#160;protected]</span></a>
+    </p>
     
     <p style="margin:8px 0 0; font-size:0.78rem; opacity:.7;">© 2026 All rights reserved</p>
 </div>
