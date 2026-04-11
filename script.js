@@ -3032,34 +3032,37 @@ function expandVideo(wrapper, embedUrl) {
 }
 
 function openVideoModal(src, isYoutube) {
-    let overlay = document.getElementById('videoFullscreenOverlay');
+    var vm = document.getElementById('videosModal');
+    if (vm) vm.style.zIndex = '9998';
+    var overlay = document.getElementById('videoFullscreenOverlay');
     if (!overlay) {
         overlay = document.createElement('div');
         overlay.id = 'videoFullscreenOverlay';
-        overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.96);display:flex;align-items:center;justify-content:center;';
-        overlay.innerHTML =
-            '<button onclick="closeVideoModal()" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.15);border:none;color:#fff;width:44px;height:44px;border-radius:50%;font-size:1.4rem;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center;">✕</button>' +
-            '<div id="videoFullscreenInner" style="width:95vw;max-width:960px;"></div>';
+        overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999999;background:rgba(0,0,0,0.96);display:flex;align-items:center;justify-content:center;';
+        overlay.innerHTML = '<button onclick="closeVideoModal()" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.18);border:none;color:#fff;width:48px;height:48px;border-radius:50%;font-size:1.5rem;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center;">&#x2715;</button><div id="videoFullscreenInner" style="width:95vw;max-width:960px;"></div>';
         overlay.addEventListener('click', function(e) { if (e.target === overlay) closeVideoModal(); });
         document.body.appendChild(overlay);
     }
-    const inner = document.getElementById('videoFullscreenInner');
+    var inner = document.getElementById('videoFullscreenInner');
     if (isYoutube) {
-        inner.innerHTML = '<div style="position:relative;padding-top:56.25%;width:100%;"><iframe src="' + src + '&autoplay=1" frameborder="0" allowfullscreen allow="autoplay;encrypted-media" style="position:absolute;inset:0;width:100%;height:100%;border:none;border-radius:8px;"></iframe></div>';
+        inner.innerHTML = '<div style="position:relative;padding-top:56.25%;width:100%;"><iframe src="' + src + '&autoplay=1&rel=0" frameborder="0" allowfullscreen allow="autoplay;encrypted-media;fullscreen" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:8px;"></iframe></div>';
     } else {
-        inner.innerHTML = '<video src="' + src + '" controls autoplay style="width:100%;max-height:85vh;border-radius:8px;display:block;"></video>';
+        inner.innerHTML = '<video src="' + src + '" controls autoplay playsinline style="width:100%;max-height:85vh;border-radius:8px;display:block;background:#000;"></video>';
+        setTimeout(function() { var v = inner.querySelector('video'); if (v) v.play().catch(function(){}); }, 80);
     }
     overlay.style.display = 'flex';
     document.body.style.overflow = 'hidden';
 }
 
 function closeVideoModal() {
-    const overlay = document.getElementById('videoFullscreenOverlay');
+    var overlay = document.getElementById('videoFullscreenOverlay');
     if (!overlay) return;
-    const inner = document.getElementById('videoFullscreenInner');
+    var inner = document.getElementById('videoFullscreenInner');
     if (inner) inner.innerHTML = '';
     overlay.style.display = 'none';
     document.body.style.overflow = '';
+    var vm = document.getElementById('videosModal');
+    if (vm && vm.style.display === 'flex') vm.style.zIndex = '999999';
 }
 
 // ==================== Admin: Video Management ====================
