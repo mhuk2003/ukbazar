@@ -980,6 +980,7 @@ function buildUkLabelHtml(d, key, orderNum, qrUrl) {
                     ${d.county ? `<div class="label-row" style="direction:ltr;"><span>County:</span><strong>${escapeHtml(d.county)}</strong></div>` : ''}
                     <div class="label-row" style="direction:ltr;"><span>Postcode:</span><strong>${escapeHtml(d.postcode||'—')}</strong></div>
                     <div class="label-row" style="direction:ltr;"><span>Country:</span><strong>United Kingdom</strong></div>
+                    ${d.destinationCity ? `<div class="label-row" style="direction:ltr;background:#e0f2fe;border-radius:6px;"><span>🏙️ Destination:</span><strong style="color:#0c5da5;font-size:1rem;">${escapeHtml(d.destinationCity)}</strong></div>` : ''}
                 </div>
                 <div class="label-section sender-section" style="border-right:none; border-left:3px solid #667eea;">
                     <div class="label-section-title" style="color:#667eea;">📬 Package</div>
@@ -1203,6 +1204,7 @@ function printUkLabel(key) {
     const city       = getVal('City:');
     const county     = getVal('County:');
     const postcode   = getVal('Postcode:');
+    const destinationCity = getVal('🏙️ Destination:');
     const item       = getVal('Item:');
     const qty        = getVal('Qty:').replace(' pcs','');
     const kg         = getVal('Weight:').replace(' kg','');
@@ -1269,6 +1271,7 @@ body{font-family:'Segoe UI','Arial',sans-serif;direction:ltr;padding:16px;backgr
         <div class="row"><span>City</span><strong>${city}</strong></div>
         ${county && county !== '—' ? `<div class="row"><span>County</span><strong>${county}</strong></div>` : ''}
         <div class="row"><span>Country</span><strong>United Kingdom</strong></div>
+        ${destinationCity && destinationCity !== '—' ? `<div class="row" style="background:#e0f2fe;border-radius:6px;"><span style="color:#0c5da5;font-weight:700;">🏙️ Destination</span><strong style="color:#0c5da5;font-size:15px;font-weight:900;">${destinationCity}</strong></div>` : ''}
         <div class="postcode-box">${postcode}</div>
       </div>
       <div class="section package">
@@ -1498,7 +1501,9 @@ function shareDeliveryWhatsApp(key) {
         msg += `🏠 Address: ${d.address1||'—'}${d.address2?', '+d.address2:''}\n`;
         msg += `🏙️ City: ${d.city||'—'}\n`;
         if (d.county) msg += `County: ${d.county}\n`;
-        msg += `📮 Postcode: ${d.postcode||'—'}\n\n`;
+        msg += `📮 Postcode: ${d.postcode||'—'}\n`;
+        if (d.destinationCity) msg += `🏙️ *Destination: ${d.destinationCity}*\n`;
+        msg += `\n`;
         msg += `📦 *Package:*\n`;
         msg += `Item: ${d.packageName||'—'}\n`;
         if (d.packageQty) msg += `Qty: ${d.packageQty} pcs\n`;
@@ -2809,10 +2814,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const receiverCounty  = (document.getElementById('ukReceiverCounty')||{value:''}).value.trim();
             const receiverNote    = (document.getElementById('ukReceiverNote')||{value:''}).value.trim();
             const receiverCountry = (document.getElementById('ukReceiverCountry')||{value:'United Kingdom'}).value.trim();
+            const destinationCity = (document.getElementById('ukDestinationCity')||{value:''}).value.trim();
             const packageName     = document.getElementById('ukPackageName').value.trim();
             const packageQty      = (document.getElementById('ukPackageQty')||{value:''}).value.trim();
             const packageKg       = (document.getElementById('ukPackageKg')||{value:''}).value.trim();
             const payment         = (document.getElementById('ukPayment')||{value:''}).value.trim();
+            if (!destinationCity) {
+                const el = document.getElementById('ukDestinationCity');
+                if (el) el.focus();
+                showNotification('تکایە شارەکەی مەبەست هەڵبژێرە / Please select a destination city', 'error');
+                return;
+            }
             const orderNumber = 'UK-' + Date.now().toString().slice(-6);
             const timestamp   = new Date().toLocaleString('en-GB');
             const deliveryData = {
@@ -2820,7 +2832,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 fullName, phone, company, postcode, address1, address2, city, county, deliveryNote: note,
                 receiverName, receiverPhone, receiverCompany,
                 receiverPostcode: receiverPost, receiverAddress1: receiverAddr1, receiverAddress2: receiverAddr2,
-                receiverCity, receiverCounty, receiverNote, receiverCountry,
+                receiverCity, receiverCounty, receiverNote, receiverCountry, destinationCity,
                 packageName, packageQty, packageKg, payment, country: 'United Kingdom', timestamp, sortKey: Date.now()
             };
             showLoading();
