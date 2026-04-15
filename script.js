@@ -67,7 +67,7 @@ const DEFAULT_SLIDER_IMAGE = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.or
         /* ===== Ultra-Compact Delivery Label — Mobile First ===== */
         .delivery-label-card {
             border-radius: 10px !important;
-            overflow: hidden;
+            overflow: visible;
             box-shadow: 0 2px 8px rgba(102,126,234,0.12);
             margin-bottom: 10px !important;
             font-size: 0.82rem;
@@ -167,8 +167,8 @@ const DEFAULT_SLIDER_IMAGE = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.or
             padding: 4px 0 !important;
         }
         .label-qr-img {
-            width: 64px !important;
-            height: 64px !important;
+            width: 100px !important;
+            height: 100px !important;
         }
         .label-qr-hint {
             font-size: 0.65rem !important;
@@ -749,7 +749,7 @@ function renderDeliveryItems(items) {
             const qrText = encodeURIComponent(
                 `پسولە: ${orderNum} | نێردەر: ${d.senderName||d.name||''} ${d.senderMobile||d.mobile||''} (${d.senderLocation||d.address||''}) | وەرگر: ${d.receiverName||''} ${d.receiverMobile||''} (${d.receiverLocation||''}) | کەلوپەل: ${d.packageName||d.details||''} x${d.packageQty||''} - ${d.packageKg||''}کگ`
             );
-            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${qrText}`;
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=4&data=${qrText}`;
             html += buildKurdishLabelHtml(d, key, orderNum, qrUrl);
         });
         html += '</div>';
@@ -763,7 +763,7 @@ function renderDeliveryItems(items) {
             const orderNum = d.orderNumber || '—';
             const fullAddress = [d.address1, d.address2, d.city, d.county, d.postcode, 'United Kingdom'].filter(Boolean).join(', ');
             const qrText = encodeURIComponent(`Order: ${orderNum} | To: ${d.fullName||''} | Tel: ${d.phone||''} | ${fullAddress} | Item: ${d.packageName||''}`);
-            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${qrText}`;
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=4&data=${qrText}`;
             html += buildUkLabelHtml(d, key, orderNum, qrUrl);
         });
         html += '</div>';
@@ -934,7 +934,7 @@ function buildKurdishLabelHtml(d, key, orderNum, qrUrl) {
                 </button>
             </div>
             <div class="label-qr-wrap">
-                <img src="${qrUrl}" alt="QR" class="label-qr-img" loading="lazy">
+                <img src="${qrUrl}" alt="QR" class="label-qr-img" loading="eager">
                 <div class="label-qr-hint">QR کۆد</div>
             </div>
         </div>
@@ -1006,7 +1006,7 @@ function buildUkLabelHtml(d, key, orderNum, qrUrl) {
                 </button>
             </div>
             <div class="label-qr-wrap">
-                <img src="${qrUrl}" alt="QR" class="label-qr-img" loading="lazy">
+                <img src="${qrUrl}" alt="QR" class="label-qr-img" loading="eager">
                 <div class="label-qr-hint">QR Code</div>
             </div>
         </div>
@@ -1171,7 +1171,15 @@ body{font-family:'Tahoma','Arial',sans-serif;direction:rtl;padding:16px;backgrou
 <\/body><\/html>`);
     printWin.document.close();
     printWin.focus();
-    setTimeout(() => printWin.print(), 600);
+    // چاوەڕوانی بار بوونی QR پێش چاپ
+    const qrImgEl = printWin.document.querySelector('.qr-box img');
+    if (qrImgEl && !qrImgEl.complete) {
+        qrImgEl.onload = () => setTimeout(() => printWin.print(), 200);
+        qrImgEl.onerror = () => setTimeout(() => printWin.print(), 200);
+        setTimeout(() => printWin.print(), 2000); // fallback
+    } else {
+        setTimeout(() => printWin.print(), 800);
+    }
 }
 
 
@@ -1294,7 +1302,15 @@ body{font-family:'Segoe UI','Arial',sans-serif;direction:ltr;padding:16px;backgr
 <\/body><\/html>`);
     printWin.document.close();
     printWin.focus();
-    setTimeout(() => printWin.print(), 600);
+    // چاوەڕوانی بار بوونی QR پێش چاپ
+    const qrImgEl2 = printWin.document.querySelector('.qr-box img');
+    if (qrImgEl2 && !qrImgEl2.complete) {
+        qrImgEl2.onload = () => setTimeout(() => printWin.print(), 200);
+        qrImgEl2.onerror = () => setTimeout(() => printWin.print(), 200);
+        setTimeout(() => printWin.print(), 2000); // fallback
+    } else {
+        setTimeout(() => printWin.print(), 800);
+    }
 }
 
 // ==================== Admin Actions ====================
