@@ -1101,85 +1101,133 @@ function printLabel(key) {
     const qrImg = card.querySelector('.label-qr-img');
     const qrSrc = qrImg ? qrImg.src : '';
     const rows = (selector) => Array.from(card.querySelectorAll(selector))
-        .map(r => `<div class="row"><span>${r.querySelector('span').textContent}</span><strong>${r.querySelector('strong').textContent}</strong></div>`)
+        .map(r => `<div class="pr-row"><span>${r.querySelector('span').textContent}</span><strong>${r.querySelector('strong').textContent}</strong></div>`)
         .join('');
     const dateText = card.querySelector('.label-footer span') ? card.querySelector('.label-footer span').textContent : '';
+    const drRow = card.querySelector('.label-driver-row');
+    const nrRow = card.querySelector('.label-note-row');
 
-    const printWin = window.open('', '_blank', 'width=640,height=560');
-    printWin.document.write(`<!DOCTYPE html>
-<html lang="ku" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<title>لەیبلی گەیاندن ${orderNum}</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Tahoma','Arial',sans-serif;direction:rtl;padding:16px;background:#fff;color:#1a202c}
-.wrap{border:3px solid #2d3748;border-radius:12px;padding:16px;max-width:560px;margin:auto}
-.top{display:flex;justify-content:space-between;align-items:center;border-bottom:2px dashed #667eea;padding-bottom:10px;margin-bottom:12px}
-.top-title{font-size:16px;font-weight:bold;color:#667eea}
-.top-num{font-size:22px;font-weight:bold;color:#2d3748;background:#eef2ff;padding:4px 14px;border-radius:8px;border:2px solid #667eea}
-.top-date{font-size:11px;color:#718096;text-align:center;margin-top:3px}
-.body-wrap{display:flex;gap:10px;align-items:flex-start}
-.body-main{flex:1}
-.cols{display:flex;gap:8px;margin-bottom:10px}
-.col{flex:1;border:1.5px solid #e2e8f0;border-radius:8px;padding:9px;background:#f7fafc}
-.col.sender{border-right:3px solid #667eea}
-.col.receiver{border-right:3px solid #48bb78}
-.col-title{font-size:12px;font-weight:bold;color:#667eea;border-bottom:1px solid #e2e8f0;padding-bottom:4px;margin-bottom:7px}
-.col.receiver .col-title{color:#48bb78}
-.row{display:flex;justify-content:space-between;font-size:12px;padding:2px 0;border-bottom:1px dotted #e2e8f0;gap:5px}
-.row span{color:#718096;white-space:nowrap}.row strong{color:#2d3748}
-.pkg{background:#edf2ff;border-radius:8px;padding:9px;margin-bottom:0}
-.qr-box{display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px;border:1.5px solid #e2e8f0;border-radius:8px;background:#f7fafc;min-width:130px}
-.qr-box img{width:120px;height:120px}
-.qr-box small{font-size:11px;color:#718096}
-.foot{text-align:center;font-size:11px;color:#a0aec0;margin-top:10px;border-top:1px dashed #e2e8f0;padding-top:7px}
-.info-box{display:flex;justify-content:space-between;font-size:12px;padding:5px 9px;margin-top:5px;border-radius:6px;gap:5px}
-.driver-box{background:#ebf8ff;border:1px solid #bee3f8}
-.note-box{background:#fefce8;border:1px solid #fde68a}
-.info-box span{color:#718096;white-space:nowrap}
-.info-box strong{color:#1a202c}
-@media print{body{padding:0}}
-</style>
-</head>
-<body>
-<div class="wrap">
-  <div class="top">
-    <div>
-      <div class="top-title">🚚 UK BAZAR — لەیبلی گەیاندن</div>
-      <div class="top-date">${dateText}</div>
-    </div>
-    <div class="top-num">${orderNum}</div>
-  </div>
-  <div class="body-wrap">
-    <div class="body-main">
-      <div class="cols">
-        <div class="col sender"><div class="col-title">📤 نێردەر</div>${rows('.sender-section .label-row')}</div>
-        <div class="col receiver"><div class="col-title">📥 وەرگر</div>${rows('.receiver-section .label-row')}</div>
+    const html = `
+    <div style="font-family:'Tahoma','Arial',sans-serif;direction:rtl;padding:12px;background:#fff;color:#1a202c;">
+    <style>
+    .pr-wrap{border:3px solid #2d3748;border-radius:12px;padding:14px;max-width:100%;}
+    .pr-top{display:flex;justify-content:space-between;align-items:center;border-bottom:2px dashed #667eea;padding-bottom:8px;margin-bottom:10px;}
+    .pr-title{font-size:15px;font-weight:bold;color:#667eea;}
+    .pr-date{font-size:10px;color:#718096;margin-top:2px;}
+    .pr-num{font-size:20px;font-weight:bold;color:#2d3748;background:#eef2ff;padding:3px 12px;border-radius:8px;border:2px solid #667eea;}
+    .pr-body{display:flex;gap:10px;align-items:flex-start;}
+    .pr-main{flex:1;min-width:0;}
+    .pr-cols{display:flex;gap:7px;margin-bottom:8px;}
+    .pr-col{flex:1;border:1.5px solid #e2e8f0;border-radius:8px;padding:8px;background:#f7fafc;min-width:0;}
+    .pr-col.s{border-right:3px solid #667eea;}
+    .pr-col.r{border-right:3px solid #48bb78;}
+    .pr-col-title{font-size:11px;font-weight:bold;color:#667eea;border-bottom:1px solid #e2e8f0;padding-bottom:3px;margin-bottom:5px;}
+    .pr-col.r .pr-col-title{color:#48bb78;}
+    .pr-row{display:flex;justify-content:space-between;font-size:11px;padding:2px 0;border-bottom:1px dotted #e2e8f0;gap:4px;word-break:break-word;}
+    .pr-row span{color:#718096;white-space:nowrap;flex-shrink:0;}
+    .pr-row strong{color:#2d3748;text-align:right;}
+    .pr-pkg{background:#edf2ff;border-radius:8px;padding:8px;}
+    .pr-info{display:flex;justify-content:space-between;font-size:11px;padding:4px 8px;margin-top:4px;border-radius:6px;gap:4px;}
+    .pr-driver{background:#ebf8ff;border:1px solid #bee3f8;}
+    .pr-note{background:#fefce8;border:1px solid #fde68a;}
+    .pr-info span{color:#718096;white-space:nowrap;}
+    .pr-info strong{color:#1a202c;}
+    .pr-qr{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px;border:1.5px solid #e2e8f0;border-radius:8px;background:#f7fafc;flex-shrink:0;}
+    .pr-qr img{width:110px;height:110px;display:block;}
+    .pr-qr small{font-size:10px;color:#718096;}
+    .pr-foot{text-align:center;font-size:10px;color:#a0aec0;margin-top:8px;border-top:1px dashed #e2e8f0;padding-top:6px;}
+    </style>
+    <div class="pr-wrap">
+      <div class="pr-top">
+        <div>
+          <div class="pr-title">🚚 UK BAZAR — لەیبلی گەیاندن</div>
+          <div class="pr-date">${dateText}</div>
+        </div>
+        <div class="pr-num">${orderNum}</div>
       </div>
-      <div class="pkg">${rows('.label-package .label-row:not(.label-driver-row):not(.label-note-row)')}</div>
-      ${(() => { const dr = card.querySelector('.label-driver-row'); return dr ? `<div class="info-box driver-box"><span>🚗 شۆفیر:</span><strong>${dr.querySelector('strong').textContent}</strong></div>` : ''; })()}
-      ${(() => { const nr = card.querySelector('.label-note-row'); return nr ? `<div class="info-box note-box"><span>📝 تیبینی:</span><strong>${nr.querySelector('strong').textContent}</strong></div>` : ''; })()}
+      <div class="pr-body">
+        <div class="pr-main">
+          <div class="pr-cols">
+            <div class="pr-col s"><div class="pr-col-title">📤 نێردەر</div>${rows('.sender-section .label-row')}</div>
+            <div class="pr-col r"><div class="pr-col-title">📥 وەرگر</div>${rows('.receiver-section .label-row')}</div>
+          </div>
+          <div class="pr-pkg">${rows('.label-package .label-row:not(.label-driver-row):not(.label-note-row)')}</div>
+          ${drRow ? `<div class="pr-info pr-driver"><span>🚗 شۆفیر:</span><strong>${drRow.querySelector('strong').textContent}</strong></div>` : ''}
+          ${nrRow ? `<div class="pr-info pr-note"><span>📝 تیبینی:</span><strong>${nrRow.querySelector('strong').textContent}</strong></div>` : ''}
+        </div>
+        <div class="pr-qr">
+          <img src="${qrSrc}" alt="QR" onload="window._qrKuLoaded=true;" onerror="window._qrKuLoaded=true;">
+          <small>QR کۆد</small>
+        </div>
+      </div>
+      <div class="pr-foot">UK BAZAR — World Online Shopping</div>
     </div>
-    <div class="qr-box">
-      <img src="${qrSrc}" alt="QR">
-      <small>QR کۆد</small>
-    </div>
-  </div>
-  <div class="foot">UK BAZAR — World Online Shopping</div>
-</div>
-<\/body><\/html>`);
-    printWin.document.close();
-    printWin.focus();
-    // چاوەڕوانی بار بوونی QR پێش چاپ
-    const qrImgEl = printWin.document.querySelector('.qr-box img');
-    if (qrImgEl && !qrImgEl.complete) {
-        qrImgEl.onload = () => setTimeout(() => printWin.print(), 200);
-        qrImgEl.onerror = () => setTimeout(() => printWin.print(), 200);
-        setTimeout(() => printWin.print(), 2000); // fallback
+    </div>`;
+
+    const printArea = document.getElementById('printArea');
+    if (!printArea) { _printLabelFallback(key); return; }
+
+    printArea.innerHTML = html;
+    printArea.style.display = 'block';
+    window._qrKuLoaded = false;
+
+    const doPrint = () => {
+        // iframe بەکاربهێنە تا مۆدالەکان نەشارێتەوە
+        let iframe = document.getElementById('_printIframe');
+        if (!iframe) {
+            iframe = document.createElement('iframe');
+            iframe.id = '_printIframe';
+            iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;border:0;';
+            document.body.appendChild(iframe);
+        }
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        doc.open();
+        doc.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Tahoma,Arial,sans-serif;margin:0;padding:10px;background:#fff;}img{max-width:100%;}</style></head><body>' + html + '</body></html>');
+        doc.close();
+        // چاوەڕوانی QR لە ناو iframe
+        const iframeQr = doc.querySelector('.pr-qr img');
+        const execPrint = () => {
+            setTimeout(() => {
+                iframe.contentWindow.focus();
+                iframe.contentWindow.print();
+                setTimeout(() => {
+                    printArea.style.display = 'none';
+                    printArea.innerHTML = '';
+                }, 1000);
+            }, 300);
+        };
+        if (iframeQr && !iframeQr.complete) {
+            let done = false;
+            iframeQr.onload = () => { if (!done) { done = true; execPrint(); } };
+            iframeQr.onerror = () => { if (!done) { done = true; execPrint(); } };
+            setTimeout(() => { if (!done) { done = true; execPrint(); } }, 2500);
+        } else {
+            execPrint();
+        }
+    };
+
+    // چاوەڕوانی QR لە printArea پێش iframe
+    const qrEl = printArea.querySelector('.pr-qr img');
+    if (qrEl && !qrEl.complete) {
+        let fired = false;
+        const fire = () => { if (!fired) { fired = true; doPrint(); } };
+        qrEl.onload = fire;
+        qrEl.onerror = fire;
+        setTimeout(fire, 2500);
     } else {
-        setTimeout(() => printWin.print(), 800);
+        doPrint();
     }
+}
+
+function _printLabelFallback(key) {
+    // fallback بۆ ئەگەر #printArea نەبوو
+    const card = document.getElementById('label-' + key);
+    if (!card) return;
+    const pw = window.open('', '_blank', 'width=640,height=560');
+    if (!pw) return;
+    pw.document.write('<html><head><meta charset="UTF-8"></head><body>' + card.outerHTML + '</body></html>');
+    pw.document.close();
+    setTimeout(() => pw.print(), 800);
 }
 
 
@@ -1188,7 +1236,6 @@ function printUkLabel(key) {
     const card = document.getElementById('label-' + key);
     if (!card) return;
 
-    // Read data from the card's label-row elements
     const getVal = (label) => {
         const rows = card.querySelectorAll('.label-row');
         for (const r of rows) {
@@ -1222,95 +1269,133 @@ function printUkLabel(key) {
     const qrImg      = card.querySelector('.label-qr-img');
     const qrSrc      = qrImg ? qrImg.src : '';
 
-    const printWin = window.open('', '_blank', 'width=680,height=620');
-    printWin.document.write(`<!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head>
-<meta charset="UTF-8">
-<title>UK Delivery Label ${orderNum}</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI','Arial',sans-serif;direction:ltr;padding:16px;background:#fff;color:#1a202c}
-.wrap{border:3px solid #d97706;border-radius:12px;padding:16px;max-width:580px;margin:auto}
-.top{display:flex;justify-content:space-between;align-items:center;border-bottom:2px dashed #f0c040;padding-bottom:10px;margin-bottom:14px}
-.top-left{display:flex;flex-direction:column;gap:3px}
-.top-brand{font-size:18px;font-weight:bold;color:#d97706;letter-spacing:1px}
-.top-sub{font-size:12px;color:#92400e;background:#fef3c7;padding:2px 8px;border-radius:10px;display:inline-block}
-.top-num{font-size:24px;font-weight:bold;color:#1a202c;background:#fef3c7;padding:5px 16px;border-radius:8px;border:2px solid #f0c040}
-.body{display:flex;gap:12px;align-items:flex-start}
-.body-main{flex:1;display:flex;flex-direction:column;gap:10px}
-.section{border:1.5px solid #e2e8f0;border-radius:8px;padding:10px;background:#f8fafc}
-.section.recipient{border-left:4px solid #f0c040}
-.section.package{border-left:4px solid #667eea}
-.section-title{font-size:12px;font-weight:700;color:#92400e;border-bottom:1px solid #e2e8f0;padding-bottom:5px;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px}
-.section.package .section-title{color:#667eea}
-.row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px dotted #e2e8f0;gap:8px}
-.row:last-child{border-bottom:none}
-.row span{color:#718096;white-space:nowrap;min-width:70px}
-.row strong{color:#1a202c;text-align:right}
-.postcode-box{background:#1a1a2e;color:#f0c040;font-size:28px;font-weight:900;text-align:center;padding:10px;border-radius:8px;letter-spacing:4px;margin-top:6px}
-.qr-box{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px;border:1.5px solid #e2e8f0;border-radius:8px;background:#f7fafc;min-width:130px}
-.qr-box img{width:120px;height:120px}
-.qr-box small{font-size:10px;color:#718096;text-align:center}
-.foot{text-align:center;font-size:11px;color:#a0aec0;margin-top:12px;border-top:1px dashed #e2e8f0;padding-top:8px}
-@media print{body{padding:0} .no-print{display:none}}
-</style>
-</head>
-<body>
-<div class="wrap">
-  <div class="top">
-    <div class="top-left">
-      <div class="top-brand">🚚 UK POST</div>
-      <div class="top-sub">UK Delivery Label</div>
-    </div>
-    <div class="top-num">${orderNum.replace('#','').trim()}</div>
-  </div>
-  <div class="body">
-    <div class="body-main">
-      <div class="section recipient">
-        <div class="section-title">📦 Recipient</div>
-        <div class="row"><span>Full Name</span><strong>${name}</strong></div>
-        <div class="row"><span>Phone</span><strong>${phone}</strong></div>
-        ${receiverName && receiverName !== '—' ? `<div class="row" style="background:#fffbeb;"><span style="color:#d97706;">📬 Receiver</span><strong style="color:#d97706;">${receiverName}</strong></div>` : ''}
-        ${receiverPhone && receiverPhone !== '—' ? `<div class="row" style="background:#fffbeb;"><span style="color:#d97706;">📞 Rcvr Tel</span><strong style="color:#d97706;">${receiverPhone}</strong></div>` : ''}
-        ${company && company !== '—' ? `<div class="row"><span>Company</span><strong>${company}</strong></div>` : ''}
-        <div class="row"><span>Address 1</span><strong>${address1}</strong></div>
-        ${address2 && address2 !== '—' ? `<div class="row"><span>Address 2</span><strong>${address2}</strong></div>` : ''}
-        <div class="row"><span>City</span><strong>${city}</strong></div>
-        ${county && county !== '—' ? `<div class="row"><span>County</span><strong>${county}</strong></div>` : ''}
-        <div class="row"><span>Country</span><strong>United Kingdom</strong></div>
-        ${destinationCity && destinationCity !== '—' ? `<div class="row" style="background:#e0f2fe;border-radius:6px;"><span style="color:#0c5da5;font-weight:700;">🏙️ Destination</span><strong style="color:#0c5da5;font-size:15px;font-weight:900;">${destinationCity}</strong></div>` : ''}
-        <div class="postcode-box">${postcode}</div>
+    const html = `
+    <div style="font-family:'Segoe UI','Arial',sans-serif;direction:ltr;padding:12px;background:#fff;color:#1a202c;">
+    <style>
+    .pru-wrap{border:3px solid #d97706;border-radius:12px;padding:14px;max-width:100%;}
+    .pru-top{display:flex;justify-content:space-between;align-items:center;border-bottom:2px dashed #f0c040;padding-bottom:8px;margin-bottom:12px;}
+    .pru-brand{font-size:16px;font-weight:bold;color:#d97706;}
+    .pru-sub{font-size:11px;color:#92400e;background:#fef3c7;padding:2px 7px;border-radius:10px;display:inline-block;margin-top:2px;}
+    .pru-num{font-size:22px;font-weight:bold;color:#1a202c;background:#fef3c7;padding:4px 14px;border-radius:8px;border:2px solid #f0c040;}
+    .pru-body{display:flex;gap:10px;align-items:flex-start;}
+    .pru-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;}
+    .pru-sec{border:1.5px solid #e2e8f0;border-radius:8px;padding:9px;background:#f8fafc;}
+    .pru-sec.rec{border-left:4px solid #f0c040;}
+    .pru-sec.pkg{border-left:4px solid #667eea;}
+    .pru-sec-title{font-size:11px;font-weight:700;color:#92400e;border-bottom:1px solid #e2e8f0;padding-bottom:4px;margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px;}
+    .pru-sec.pkg .pru-sec-title{color:#667eea;}
+    .pru-row{display:flex;justify-content:space-between;font-size:11px;padding:2px 0;border-bottom:1px dotted #e2e8f0;gap:6px;word-break:break-word;}
+    .pru-row:last-child{border-bottom:none;}
+    .pru-row span{color:#718096;white-space:nowrap;min-width:60px;flex-shrink:0;}
+    .pru-row strong{color:#1a202c;text-align:right;}
+    .pru-postcode{background:#1a1a2e;color:#f0c040;font-size:24px;font-weight:900;text-align:center;padding:8px;border-radius:8px;letter-spacing:4px;margin-top:5px;}
+    .pru-qr{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px;border:1.5px solid #e2e8f0;border-radius:8px;background:#f7fafc;flex-shrink:0;}
+    .pru-qr img{width:110px;height:110px;display:block;}
+    .pru-qr small{font-size:10px;color:#718096;text-align:center;}
+    .pru-foot{text-align:center;font-size:10px;color:#a0aec0;margin-top:10px;border-top:1px dashed #e2e8f0;padding-top:6px;}
+    </style>
+    <div class="pru-wrap">
+      <div class="pru-top">
+        <div>
+          <div class="pru-brand">🚚 UK POST</div>
+          <div class="pru-sub">UK Delivery Label</div>
+        </div>
+        <div class="pru-num">${orderNum.replace('#','').trim()}</div>
       </div>
-      <div class="section package">
-        <div class="section-title">📬 Package Info</div>
-        <div class="row"><span>Item</span><strong>${item}</strong></div>
-        ${qty && qty !== '—' ? `<div class="row"><span>Qty</span><strong>${qty} pcs</strong></div>` : ''}
-        ${kg  && kg  !== '—' ? `<div class="row"><span>Weight</span><strong>${kg} kg</strong></div>` : ''}
-        ${payment && payment !== '—' ? `<div class="row" style="background:#f0fff4;"><span style="color:#276749;">Payment</span><strong style="color:#276749;">${payment}</strong></div>` : ''}
-        ${notes && notes !== '—' ? `<div class="row"><span>Notes</span><strong>${notes}</strong></div>` : ''}
-        <div class="row"><span>Date</span><strong>${dateText.replace('📅','').trim()}</strong></div>
+      <div class="pru-body">
+        <div class="pru-main">
+          <div class="pru-sec rec">
+            <div class="pru-sec-title">📦 Recipient</div>
+            <div class="pru-row"><span>Full Name</span><strong>${name}</strong></div>
+            <div class="pru-row"><span>Phone</span><strong>${phone}</strong></div>
+            ${receiverName && receiverName !== '—' ? `<div class="pru-row" style="background:#fffbeb;"><span style="color:#d97706;">📬 Receiver</span><strong style="color:#d97706;">${receiverName}</strong></div>` : ''}
+            ${receiverPhone && receiverPhone !== '—' ? `<div class="pru-row" style="background:#fffbeb;"><span style="color:#d97706;">📞 Rcvr Tel</span><strong style="color:#d97706;">${receiverPhone}</strong></div>` : ''}
+            ${company && company !== '—' ? `<div class="pru-row"><span>Company</span><strong>${company}</strong></div>` : ''}
+            <div class="pru-row"><span>Address 1</span><strong>${address1}</strong></div>
+            ${address2 && address2 !== '—' ? `<div class="pru-row"><span>Address 2</span><strong>${address2}</strong></div>` : ''}
+            <div class="pru-row"><span>City</span><strong>${city}</strong></div>
+            ${county && county !== '—' ? `<div class="pru-row"><span>County</span><strong>${county}</strong></div>` : ''}
+            <div class="pru-row"><span>Country</span><strong>United Kingdom</strong></div>
+            ${destinationCity && destinationCity !== '—' ? `<div class="pru-row" style="background:#e0f2fe;border-radius:6px;"><span style="color:#0c5da5;font-weight:700;">🏙️ Destination</span><strong style="color:#0c5da5;font-size:14px;font-weight:900;">${destinationCity}</strong></div>` : ''}
+            <div class="pru-postcode">${postcode}</div>
+          </div>
+          <div class="pru-sec pkg">
+            <div class="pru-sec-title">📬 Package Info</div>
+            <div class="pru-row"><span>Item</span><strong>${item}</strong></div>
+            ${qty && qty !== '—' ? `<div class="pru-row"><span>Qty</span><strong>${qty} pcs</strong></div>` : ''}
+            ${kg  && kg  !== '—' ? `<div class="pru-row"><span>Weight</span><strong>${kg} kg</strong></div>` : ''}
+            ${payment && payment !== '—' ? `<div class="pru-row" style="background:#f0fff4;"><span style="color:#276749;">Payment</span><strong style="color:#276749;">${payment}</strong></div>` : ''}
+            ${notes && notes !== '—' ? `<div class="pru-row"><span>Notes</span><strong>${notes}</strong></div>` : ''}
+            <div class="pru-row"><span>Date</span><strong>${dateText.replace('📅','').trim()}</strong></div>
+          </div>
+        </div>
+        <div class="pru-qr">
+          <img src="${qrSrc}" alt="QR Code">
+          <small>Scan for info</small>
+        </div>
       </div>
+      <div class="pru-foot">UK POST — World Online Shopping | www.ukpost.online</div>
     </div>
-    <div class="qr-box">
-      <img src="${qrSrc}" alt="QR Code">
-      <small>Scan for delivery info</small>
-    </div>
-  </div>
-  <div class="foot">UK POST— World Online Shopping |www. ukpost.online</div>
-</div>
-<\/body><\/html>`);
-    printWin.document.close();
-    printWin.focus();
-    // چاوەڕوانی بار بوونی QR پێش چاپ
-    const qrImgEl2 = printWin.document.querySelector('.qr-box img');
-    if (qrImgEl2 && !qrImgEl2.complete) {
-        qrImgEl2.onload = () => setTimeout(() => printWin.print(), 200);
-        qrImgEl2.onerror = () => setTimeout(() => printWin.print(), 200);
-        setTimeout(() => printWin.print(), 2000); // fallback
+    </div>`;
+
+    const printArea = document.getElementById('printArea');
+    if (!printArea) { _printUkFallback(html); return; }
+
+    printArea.innerHTML = html;
+    printArea.style.display = 'block';
+
+    const doPrint = () => {
+        // iframe بەکاربهێنە تا مۆدالەکان نەشارێتەوە
+        let iframe = document.getElementById('_printIframe');
+        if (!iframe) {
+            iframe = document.createElement('iframe');
+            iframe.id = '_printIframe';
+            iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;border:0;';
+            document.body.appendChild(iframe);
+        }
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        doc.open();
+        doc.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:"Segoe UI",Arial,sans-serif;margin:0;padding:10px;background:#fff;}img{max-width:100%;}</style></head><body>' + html + '</body></html>');
+        doc.close();
+        const iframeQr = doc.querySelector('.pru-qr img');
+        const execPrint = () => {
+            setTimeout(() => {
+                iframe.contentWindow.focus();
+                iframe.contentWindow.print();
+                setTimeout(() => {
+                    printArea.style.display = 'none';
+                    printArea.innerHTML = '';
+                }, 1000);
+            }, 300);
+        };
+        if (iframeQr && !iframeQr.complete) {
+            let done = false;
+            iframeQr.onload = () => { if (!done) { done = true; execPrint(); } };
+            iframeQr.onerror = () => { if (!done) { done = true; execPrint(); } };
+            setTimeout(() => { if (!done) { done = true; execPrint(); } }, 2500);
+        } else {
+            execPrint();
+        }
+    };
+
+    const qrEl = printArea.querySelector('.pru-qr img');
+    if (qrEl && !qrEl.complete) {
+        let fired = false;
+        const fire = () => { if (!fired) { fired = true; doPrint(); } };
+        qrEl.onload = fire;
+        qrEl.onerror = fire;
+        setTimeout(fire, 2500);
     } else {
-        setTimeout(() => printWin.print(), 800);
+        doPrint();
     }
+}
+
+function _printUkFallback(html) {
+    const pw = window.open('', '_blank', 'width=680,height=620');
+    if (!pw) return;
+    pw.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>' + html + '</body></html>');
+    pw.document.close();
+    setTimeout(() => pw.print(), 800);
 }
 
 // ==================== Admin Actions ====================
