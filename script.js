@@ -2264,7 +2264,7 @@ function createProductCard(product) {
         '<button class="btn btn-confirm-cart" onclick="confirmAddToCart(\'' + safeId + '\', \'' + safeMobile + '\', \'' + safeName + '\')"><i class="fas fa-check"></i> ' + (window.t ? window.t('add_to_cart') : 'زیادکردن بۆ سەبەتە') + '</button></div>' +
         '<div class="product-actions">' +
         '<button class="btn btn-primary btn-small" onclick="showQtySelector(\'' + safeId + '\')"><i class="fas fa-cart-plus"></i> <span class="btn-text">' + (window.t ? window.t('cart_btn') : 'سەبەتە') + '</span></button>' +
-        '<button class="btn btn-secondary btn-small" onclick="contactSellerWhatsApp(\'' + safeMobile + '\', \'' + safeMobile + '\')"><i class="fab fa-whatsapp"></i> <span class="btn-text">' + (window.t ? window.t('whatsapp_btn') : 'واتساپ') + '</span></button>' +
+        '<button class="btn btn-secondary btn-small" onclick="showFibModal()"><i class="fas fa-credit-card"></i> <span class="btn-text">FIB پارەدان</span></button>' +
         '</div></div></div>';
 }
 
