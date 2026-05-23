@@ -1066,21 +1066,30 @@
 // ════════ FULL MULTILINGUAL SYSTEM v2 ════════
 
 // Hide any duplicate lang switcher that i18n.js might inject
-// We keep only our own #langBtn-ku/en/ar buttons
-document.addEventListener('DOMContentLoaded', () => {
-  // Remove any extra language switcher elements injected by i18n.js
-  document.querySelectorAll('.lang-switcher, #langSwitcher, [class*="language-switch"]:not([id^="langBtn"])').forEach(el => {
-    // Only remove if it's NOT our own buttons
-    if (!el.id || !el.id.startsWith('langBtn-')) el.remove();
-  });
-  applyTranslations();
-});
 
 const CATEGORY_LABELS = {
   ku: { '': 'هەڵبژێرە...', mobile:'مۆبایل', laptop:'لاپتۆپ', computer:'کۆمپیوتەر', ipad:'ئایپاد', car:'ئوتومبێل', home:'ناوماڵ', bicycle:'پاسکیل', scooter:'سکۆتەر', camera:'کامێرا', beauty:'جوانکاری', house:'خانوو', land:'زەوی', garden:'باخ', animals:'ئاژەڵ', men:'جلوبەرگی پیاوان', women:'جلوبەرگی ئافرەتان', kids:'جلوبەرگی منداڵان' },
-  en: { '': 'Select...', mobile:'Mobile', laptop:'Laptop', computer:'Computer', ipad:'iPad', car:'Car', home:'Home', bicycle:'Bicycle', scooter:'Scooter', camera:'Camera', beauty:'Beauty', house:'House', land:'Land', garden:'Garden', animals:'Animals', men:'Men\'s Clothing', women:'Women\'s Clothing', kids:'Kids\' Clothing' },
-  ar: { '': 'اختر...', mobile:'موبايل', laptop:'لابتوب', computer:'كمبيوتر', ipad:'آيباد', car:'سيارة', home:'المنزل', bicycle:'دراجة', scooter:'سكوتر', camera:'كاميرا', beauty:'جمال', house:'بيت', land:'أرض', garden:'حديقة', animals:'حيوانات', men:'ملابس رجال', women:'ملابس نساء', kids:'ملابس أطفال' }
+  en: { '': 'Select...', mobile:'Mobile', laptop:'Laptop', computer:'Computer', ipad:'iPad', car:'Car', home:'Home', bicycle:'Bicycle', scooter:'Scooter', camera:'Camera', beauty:'Beauty', house:'House', land:'Land', garden:'Garden', animals:'Animals', men:"Men's Clothing", women:"Women's Clothing", kids:"Kids' Clothing" },
+  ar: { '': 'اختر...', mobile:'موبايل', laptop:'لابتوب', computer:'كمبيوتر', ipad:'آيباد', car:'سيارة', home:'المنزل', bicycle:'دراجة', scooter:'سكوتر', camera:'كاميرا', beauty:'جمال', house:'بيت', land:'أرض', garden:'حديقة', animals:'حيوانات', men:'رجال', women:'نساء', kids:'أطفال' }
 };
+
+// Map from the category button text/value used by script.js → our key
+// script.js builds buttons with these English labels by default
+const CAT_KEY_MAP = {
+  'Garden':'garden','Land':'land','House':'house','Beauty':'beauty',
+  'Camera':'camera','Scooter':'scooter','Bicycle':'bicycle','Home':'home',
+  'Car':'car','iPad':'ipad','Computer':'computer','Laptop':'laptop',
+  'Mobile':'mobile','All Products':'all','Kids':'kids','Women':'women',
+  'Men':'men','Animals':'animals',
+  // Kurdish originals (in case script.js uses KU)
+  'باخ':'garden','زەوی':'land','خانوو':'house','جوانکاری':'beauty',
+  'کامێرا':'camera','سکۆتەر':'scooter','پاسکیل':'bicycle','ناوماڵ':'home',
+  'ئوتومبێل':'car','ئایپاد':'ipad','کۆمپیوتەر':'computer','لاپتۆپ':'laptop',
+  'مۆبایل':'mobile','هەموو کاڵاکان':'all','جلوبەرگی منداڵان':'kids',
+  'جلوبەرگی ئافرەتان':'women','جلوبەرگی پیاوان':'men','ئاژەڵ':'animals',
+};
+
+const CAT_ALL_LABELS = { ku:'هەموو کاڵاکان', en:'All Products', ar:'جميع المنتجات' };
 
 const CURRENCY_LABELS = {
   ku: { IQD:'دینار', USD:'دۆلار', GBP:'پاوەند' },
@@ -1324,10 +1333,60 @@ function applyTranslations() {
   // Update search placeholder directly
   const si = document.getElementById('searchInput');
   if (si && t.searchPlaceholder) si.placeholder = t.searchPlaceholder;
+
+  // Translate category filter buttons (built dynamically by script.js)
+  const catLabels = CATEGORY_LABELS[currentLang] || CATEGORY_LABELS.ku;
+  document.querySelectorAll('#categoryButtons button, .category-buttons button').forEach(btn => {
+    // Store the original English/KU text once as a stable key
+    if (!btn.dataset.catKey) {
+      btn.dataset.catKey = btn.textContent.trim();
+    }
+    const rawKey = btn.dataset.catKey.trim();
+    const key = CAT_KEY_MAP[rawKey];
+    if (key === 'all') {
+      btn.textContent = CAT_ALL_LABELS[currentLang];
+    } else if (key && catLabels[key]) {
+      btn.textContent = catLabels[key];
+    } else if (rawKey === 'All Products' || rawKey === 'هەموو کاڵاکان' || rawKey === 'جميع المنتجات') {
+      btn.textContent = CAT_ALL_LABELS[currentLang];
+    }
+  });
 }
 
-// Apply immediately and on DOMContentLoaded
+// Apply immediately
 applyTranslations();
+
+// Watch for category buttons built dynamically by script.js
+// Use body as observer target since #categoryButtons exists in HTML already
+const _catObserver = new MutationObserver((mutations) => {
+  for (const m of mutations) {
+    if (m.addedNodes.length > 0) {
+      applyTranslations();
+      break;
+    }
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Remove any duplicate lang switcher from i18n.js
+  document.querySelectorAll('.lang-switcher, #langSwitcher, [class*="language-switch"]:not([id^="langBtn"])').forEach(el => {
+    if (!el.id || !el.id.startsWith('langBtn-')) el.remove();
+  });
+
+  // Observe both possible category containers
+  const targets = [
+    document.getElementById('categoryButtons'),
+    document.querySelector('.category-buttons')
+  ].filter(Boolean);
+
+  targets.forEach(t => _catObserver.observe(t, { childList: true, subtree: true }));
+
+  // Also re-apply after a short delay as safety net (script.js may load async)
+  setTimeout(applyTranslations, 500);
+  setTimeout(applyTranslations, 1500);
+
+  applyTranslations();
+});
     </script>
     <script src="./script.js"></script>
 </body>
