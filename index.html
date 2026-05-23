@@ -1355,36 +1355,17 @@ function applyTranslations() {
 // Apply immediately
 applyTranslations();
 
-// Watch for category buttons built dynamically by script.js
-// Use body as observer target since #categoryButtons exists in HTML already
-const _catObserver = new MutationObserver((mutations) => {
-  for (const m of mutations) {
-    if (m.addedNodes.length > 0) {
-      applyTranslations();
-      break;
-    }
-  }
-});
-
 document.addEventListener('DOMContentLoaded', () => {
   // Remove any duplicate lang switcher from i18n.js
   document.querySelectorAll('.lang-switcher, #langSwitcher, [class*="language-switch"]:not([id^="langBtn"])').forEach(el => {
     if (!el.id || !el.id.startsWith('langBtn-')) el.remove();
   });
 
-  // Observe both possible category containers
-  const targets = [
-    document.getElementById('categoryButtons'),
-    document.querySelector('.category-buttons')
-  ].filter(Boolean);
-
-  targets.forEach(t => _catObserver.observe(t, { childList: true, subtree: true }));
-
-  // Also re-apply after a short delay as safety net (script.js may load async)
-  setTimeout(applyTranslations, 500);
-  setTimeout(applyTranslations, 1500);
-
   applyTranslations();
+
+  // Re-apply after script.js builds category buttons from Firebase
+  setTimeout(applyTranslations, 800);
+  setTimeout(applyTranslations, 2000);
 });
     </script>
     <script src="./script.js"></script>
