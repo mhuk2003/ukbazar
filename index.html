@@ -1552,39 +1552,59 @@ document.addEventListener('DOMContentLoaded', () => {
       '<script>window.onload=function(){window.print();}<\/script>' +
       '</body></html>';
 
-    // Use iframe like script.js does
-    var printArea = document.getElementById('printArea');
-    if (printArea) {
-      printArea.innerHTML = '<div>' + html + '</div>';
-      printArea.style.display = 'block';
-    }
-    var iframe = document.getElementById('_printIframe');
-    if (!iframe) {
-      iframe = document.createElement('iframe');
-      iframe.id = '_printIframe';
-      iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;border:0;';
-      document.body.appendChild(iframe);
-    }
-    var doc = iframe.contentDocument || iframe.contentWindow.document;
-    doc.open();
-    doc.write('<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0;padding:0;background:#fff;">' + html + '</body></html>');
-    doc.close();
+    // ── Mobile-compatible print: window.open works on all devices ──
+    var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 
-    var iQr = doc.querySelector('.qr-col img');
-    var execPrint = function() {
-      setTimeout(function() {
-        iframe.contentWindow.focus();
-        iframe.contentWindow.print();
-        if (printArea) { setTimeout(function() { printArea.style.display = 'none'; printArea.innerHTML = ''; }, 1000); }
-      }, 300);
-    };
-    if (iQr && !iQr.complete) {
-      var done = false;
-      iQr.onload = function() { if (!done) { done = true; execPrint(); } };
-      iQr.onerror = function() { if (!done) { done = true; execPrint(); } };
-      setTimeout(function() { if (!done) { done = true; execPrint(); } }, 2500);
+    if (isMobile) {
+      // Mobile: open new tab, user taps Share → Print
+      var win = window.open('', '_blank');
+      if (win) {
+        win.document.write(html);
+        win.document.close();
+        // Wait for QR image then auto-trigger print dialog
+        var iQrM = win.document.querySelector('.qr-col img');
+        var execM = function() {
+          setTimeout(function() { win.focus(); win.print(); }, 500);
+        };
+        if (iQrM && !iQrM.complete) {
+          var doneM = false;
+          iQrM.onload  = function() { if (!doneM) { doneM = true; execM(); } };
+          iQrM.onerror = function() { if (!doneM) { doneM = true; execM(); } };
+          setTimeout(function() { if (!doneM) { doneM = true; execM(); } }, 2500);
+        } else { execM(); }
+      }
     } else {
-      execPrint();
+      // Desktop: use iframe (silent print, no new tab)
+      var printArea = document.getElementById('printArea');
+      if (printArea) {
+        printArea.innerHTML = '<div>' + html + '</div>';
+        printArea.style.display = 'block';
+      }
+      var iframe = document.getElementById('_printIframe');
+      if (!iframe) {
+        iframe = document.createElement('iframe');
+        iframe.id = '_printIframe';
+        iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;border:0;';
+        document.body.appendChild(iframe);
+      }
+      var doc = iframe.contentDocument || iframe.contentWindow.document;
+      doc.open();
+      doc.write('<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0;padding:0;background:#fff;">' + html + '</body></html>');
+      doc.close();
+      var iQr = doc.querySelector('.qr-col img');
+      var execPrint = function() {
+        setTimeout(function() {
+          iframe.contentWindow.focus();
+          iframe.contentWindow.print();
+          if (printArea) { setTimeout(function() { printArea.style.display = 'none'; printArea.innerHTML = ''; }, 1000); }
+        }, 300);
+      };
+      if (iQr && !iQr.complete) {
+        var done = false;
+        iQr.onload  = function() { if (!done) { done = true; execPrint(); } };
+        iQr.onerror = function() { if (!done) { done = true; execPrint(); } };
+        setTimeout(function() { if (!done) { done = true; execPrint(); } }, 2500);
+      } else { execPrint(); }
     }
   }
 
