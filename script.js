@@ -1137,6 +1137,9 @@ function printLabel(key) {
     .pr-qr small{font-size:10px;color:#718096;}
     .pr-foot{text-align:center;font-size:10px;color:#a0aec0;margin-top:8px;border-top:1px dashed #e2e8f0;padding-top:6px;}
     </style>
+    <div style="display:flex;justify-content:flex-end;padding:4px 8px 0;">
+      <button onclick="try{window.close();}catch(e){} history.length>1?history.back():(window.location.href='about:blank');" style="background:#fee2e2;border:2px solid #fca5a5;color:#dc2626;border-radius:50%;width:34px;height:34px;font-size:1.1rem;font-weight:900;cursor:pointer;touch-action:manipulation;">✕</button>
+    </div>
     <div class="pr-wrap">
       <div class="pr-top">
         <div>
@@ -1172,23 +1175,50 @@ function printLabel(key) {
     window._qrKuLoaded = false;
 
     const doPrint = () => {
-        window.print();
-        setTimeout(() => {
-            printArea.style.display = 'none';
-            printArea.innerHTML = '';
-        }, 1000);
+        // iframe بەکاربهێنە تا مۆدالەکان نەشارێتەوە
+        let iframe = document.getElementById('_printIframe');
+        if (!iframe) {
+            iframe = document.createElement('iframe');
+            iframe.id = '_printIframe';
+            iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;border:0;';
+            document.body.appendChild(iframe);
+        }
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        doc.open();
+        doc.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Tahoma,Arial,sans-serif;margin:0;padding:10px;background:#fff;}img{max-width:100%;}</style></head><body>' + html + '</body></html>');
+        doc.close();
+        // چاوەڕوانی QR لە ناو iframe
+        const iframeQr = doc.querySelector('.pr-qr img');
+        const execPrint = () => {
+            setTimeout(() => {
+                iframe.contentWindow.focus();
+                iframe.contentWindow.print();
+                setTimeout(() => {
+                    printArea.style.display = 'none';
+                    printArea.innerHTML = '';
+                }, 1000);
+            }, 300);
+        };
+        if (iframeQr && !iframeQr.complete) {
+            let done = false;
+            iframeQr.onload = () => { if (!done) { done = true; execPrint(); } };
+            iframeQr.onerror = () => { if (!done) { done = true; execPrint(); } };
+            setTimeout(() => { if (!done) { done = true; execPrint(); } }, 2500);
+        } else {
+            execPrint();
+        }
     };
 
-    // چاوەڕوانی QR — زیاتر نەبێت لە 2.5 چرکە
+    // چاوەڕوانی QR لە printArea پێش iframe
     const qrEl = printArea.querySelector('.pr-qr img');
     if (qrEl && !qrEl.complete) {
         let fired = false;
-        const fire = () => { if (!fired) { fired = true; setTimeout(doPrint, 150); } };
+        const fire = () => { if (!fired) { fired = true; doPrint(); } };
         qrEl.onload = fire;
         qrEl.onerror = fire;
         setTimeout(fire, 2500);
     } else {
-        setTimeout(doPrint, 300);
+        doPrint();
     }
 }
 
@@ -1267,6 +1297,9 @@ function printUkLabel(key) {
     .pru-qr small{font-size:10px;color:#718096;text-align:center;}
     .pru-foot{text-align:center;font-size:10px;color:#a0aec0;margin-top:10px;border-top:1px dashed #e2e8f0;padding-top:6px;}
     </style>
+    <div style="display:flex;justify-content:flex-end;padding:4px 8px 0;">
+      <button onclick="try{window.close();}catch(e){} history.length>1?history.back():(window.location.href='about:blank');" style="background:#fee2e2;border:2px solid #fca5a5;color:#dc2626;border-radius:50%;width:34px;height:34px;font-size:1.1rem;font-weight:900;cursor:pointer;touch-action:manipulation;">✕</button>
+    </div>
     <div class="pru-wrap">
       <div class="pru-top">
         <div>
@@ -1318,22 +1351,48 @@ function printUkLabel(key) {
     printArea.style.display = 'block';
 
     const doPrint = () => {
-        window.print();
-        setTimeout(() => {
-            printArea.style.display = 'none';
-            printArea.innerHTML = '';
-        }, 1000);
+        // iframe بەکاربهێنە تا مۆدالەکان نەشارێتەوە
+        let iframe = document.getElementById('_printIframe');
+        if (!iframe) {
+            iframe = document.createElement('iframe');
+            iframe.id = '_printIframe';
+            iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;border:0;';
+            document.body.appendChild(iframe);
+        }
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        doc.open();
+        doc.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:"Segoe UI",Arial,sans-serif;margin:0;padding:10px;background:#fff;}img{max-width:100%;}</style></head><body>' + html + '</body></html>');
+        doc.close();
+        const iframeQr = doc.querySelector('.pru-qr img');
+        const execPrint = () => {
+            setTimeout(() => {
+                iframe.contentWindow.focus();
+                iframe.contentWindow.print();
+                setTimeout(() => {
+                    printArea.style.display = 'none';
+                    printArea.innerHTML = '';
+                }, 1000);
+            }, 300);
+        };
+        if (iframeQr && !iframeQr.complete) {
+            let done = false;
+            iframeQr.onload = () => { if (!done) { done = true; execPrint(); } };
+            iframeQr.onerror = () => { if (!done) { done = true; execPrint(); } };
+            setTimeout(() => { if (!done) { done = true; execPrint(); } }, 2500);
+        } else {
+            execPrint();
+        }
     };
 
     const qrEl = printArea.querySelector('.pru-qr img');
     if (qrEl && !qrEl.complete) {
         let fired = false;
-        const fire = () => { if (!fired) { fired = true; setTimeout(doPrint, 150); } };
+        const fire = () => { if (!fired) { fired = true; doPrint(); } };
         qrEl.onload = fire;
         qrEl.onerror = fire;
         setTimeout(fire, 2500);
     } else {
-        setTimeout(doPrint, 300);
+        doPrint();
     }
 }
 
