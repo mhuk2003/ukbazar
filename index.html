@@ -618,6 +618,16 @@
                         <input type="number" id="packageKg" placeholder="0.0" min="0" step="0.1" required>
                     </div>
                 </div>
+                <div class="form-group" style="display:flex; gap:10px;">
+                    <div style="flex:1;">
+                        <label data-i18n="itemPrice">نرخی کاڵا</label>
+                        <input type="text" id="itemPrice" data-i18n-placeholder="itemPricePlaceholder" placeholder="نرخی کاڵا (IQD / $)" style="">
+                    </div>
+                    <div style="flex:1;">
+                        <label data-i18n="deliveryPricePerKg">نرخی گەیاندن / کیلۆ</label>
+                        <input type="text" id="deliveryPricePerKg" data-i18n-placeholder="deliveryPricePlaceholder" placeholder="نرخ بۆ هەر کیلۆیەک" style="">
+                    </div>
+                </div>
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary"><span data-i18n="send">ناردن</span> <i class="fas fa-paper-plane"></i></button>
                     <button type="button" class="btn btn-secondary" onclick="closeModal('deliveryModal')" data-i18n="close">داخستن</button>
@@ -1005,6 +1015,16 @@
                             <input type="number" id="ukPackageKg" placeholder="0.0" min="0" step="0.1" style="direction:ltr;">
                         </div>
                     </div>
+                    <div style="display:flex;gap:10px;">
+                        <div class="form-group" style="flex:1;">
+                            <label style="font-weight:700;color:#1a202c;font-size:.88rem;">Item Price / نرخی کاڵا</label>
+                            <input type="text" id="ukItemPrice" placeholder="e.g. £50 / $60" style="direction:ltr;">
+                        </div>
+                        <div class="form-group" style="flex:1;">
+                            <label style="font-weight:700;color:#1a202c;font-size:.88rem;">Delivery / kg · نرخی گەیاندن/کیلۆ</label>
+                            <input type="text" id="ukDeliveryPerKg" placeholder="e.g. £5/kg" style="direction:ltr;">
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label style="font-weight:700;color:#1a202c;font-size:.88rem;">Payment <span style="font-weight:400;color:#718096;">(optional)</span></label>
                         <input type="text" id="ukPayment" placeholder="e.g. £50 paid / unpaid" style="direction:ltr;">
@@ -1152,6 +1172,10 @@ const TRANSLATIONS = {
     packageNamePlaceholder: 'ناوی کاڵا / کەلوپەل',
     piecesCount: 'ژمارەی پارچە',
     weight: 'کیلۆ',
+    itemPrice: 'نرخی کاڵا',
+    itemPricePlaceholder: 'نرخی کاڵا (دینار / دۆلار)',
+    deliveryPricePerKg: 'نرخی گەیاندن / کیلۆ',
+    deliveryPricePlaceholder: 'نرخ بۆ هەر کیلۆیەک',
   },
   en: {
     dir: 'ltr', lang: 'en',
@@ -1208,6 +1232,10 @@ const TRANSLATIONS = {
     packageNamePlaceholder: 'Product / Package name',
     piecesCount: 'Number of pieces',
     weight: 'Weight (kg)',
+    itemPrice: 'Item Price',
+    itemPricePlaceholder: 'Item price (IQD / USD)',
+    deliveryPricePerKg: 'Delivery Price / kg',
+    deliveryPricePlaceholder: 'Price per kilogram',
   },
   ar: {
     dir: 'rtl', lang: 'ar',
@@ -1264,6 +1292,10 @@ const TRANSLATIONS = {
     packageNamePlaceholder: 'اسم المنتج / الطرد',
     piecesCount: 'عدد القطع',
     weight: 'الوزن (كغ)',
+    itemPrice: 'سعر البضاعة',
+    itemPricePlaceholder: 'سعر البضاعة (دينار / دولار)',
+    deliveryPricePerKg: 'سعر التوصيل / كغ',
+    deliveryPricePlaceholder: 'السعر لكل كيلوغرام',
   }
 };
 
@@ -1352,6 +1384,7 @@ function applyTranslations() {
   });
 }
 
+
 // Apply immediately
 applyTranslations();
 
@@ -1369,5 +1402,217 @@ document.addEventListener('DOMContentLoaded', () => {
 });
     </script>
     <script src="./script.js"></script>
+    <script>
+// ════════ KU DELIVERY LABEL — FINAL OVERRIDE ════════
+// Reads from the SAME DOM card that script.js uses — guaranteed correct data
+
+(function() {
+
+  function kuPrintLabel(key) {
+    var card = document.getElementById('label-' + key);
+    if (!card) return;
+
+    // ── Read data from the card DOM (exact same source as script.js) ──
+    function getRow(section, labelText) {
+      var rows = card.querySelectorAll(section + ' .label-row');
+      for (var i = 0; i < rows.length; i++) {
+        var sp = rows[i].querySelector('span');
+        var st = rows[i].querySelector('strong');
+        if (sp && st && sp.textContent.trim().indexOf(labelText) !== -1) {
+          return st.textContent.trim();
+        }
+      }
+      return '';
+    }
+
+    function getPkgRow(labelText) {
+      var rows = card.querySelectorAll('.label-package .label-row');
+      for (var i = 0; i < rows.length; i++) {
+        var sp = rows[i].querySelector('span');
+        var st = rows[i].querySelector('strong');
+        if (sp && st && sp.textContent.trim().indexOf(labelText) !== -1) {
+          return st.textContent.trim();
+        }
+      }
+      return '';
+    }
+
+    var orderNum      = card.querySelector('.label-order-num') ? card.querySelector('.label-order-num').textContent.trim().replace(/^#\s*/, '') : ('KU-' + Date.now().toString().slice(-6));
+    var senderName    = getRow('.sender-section', 'ناو');
+    var senderPhone   = getRow('.sender-section', 'ژمارە:');
+    var senderPhone2  = getRow('.sender-section', 'ژمارە ٢');
+    var senderLoc     = getRow('.sender-section', 'شوێن');
+    var receiverName  = getRow('.receiver-section', 'ناو');
+    var receiverPhone = getRow('.receiver-section', 'ژمارە:');
+    var receiverPhone2= getRow('.receiver-section', 'ژمارە ٢');
+    var receiverLoc   = getRow('.receiver-section', 'شوێن');
+    var packageName   = getPkgRow('کەلوپەل');
+    var qty           = getPkgRow('پارچە');
+    var kg            = getPkgRow('کیلۆ');
+    var driverRow     = card.querySelector('.label-driver-row strong');
+    var noteRow       = card.querySelector('.label-note-row strong');
+    var footerDate    = card.querySelector('.label-footer span') ? card.querySelector('.label-footer span').textContent.trim() : '';
+    var qrImg         = card.querySelector('.label-qr-img');
+    var qrSrc         = qrImg ? qrImg.src : '';
+
+    // Also try extra price fields from form (if just submitted)
+    var extra = window._deliveryExtraFields || {};
+    var itemPrice    = extra.itemPrice || '';
+    var deliveryPerKg= extra.deliveryPricePerKg || '';
+
+    function row(label, value) {
+      if (!value || value === '—') return '';
+      return '<tr><td class="lbl">' + label + '</td><td class="val">' + value + '</td></tr>';
+    }
+
+    var css =
+      '@import url(\'https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600;700;900&display=swap\');' +
+      '*{box-sizing:border-box;margin:0;padding:0;}' +
+      'body{font-family:\'Noto Sans Arabic\',Arial,sans-serif;background:#f0f0f0;display:flex;justify-content:center;padding:20px;}' +
+      '.page{background:#fff;border:2px dashed #e0a800;border-radius:8px;width:148mm;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.13);}' +
+      '.hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #eee;}' +
+      '.hdr-left{display:flex;align-items:center;gap:10px;}' +
+      '.hdr-title{font-size:1rem;font-weight:900;color:#c7920a;}' +
+      '.hdr-sub{font-size:.68rem;color:#aaa;}' +
+      '.hdr-id{font-size:1.15rem;font-weight:900;color:#c7920a;border:2.5px solid #e0a800;border-radius:6px;padding:4px 12px;letter-spacing:1px;}' +
+      '.body-wrap{display:flex;}' +
+      '.info-col{flex:1;min-width:0;padding-bottom:8px;}' +
+      '.qr-col{width:106px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:14px 8px 8px;border-right:1px dashed #ccc;gap:4px;}' +
+      '.qr-col img{width:88px;height:88px;border:1px solid #ddd;border-radius:4px;display:block;}' +
+      '.qr-col .scan-lbl{font-size:.58rem;color:#aaa;text-align:center;line-height:1.4;margin-top:3px;}' +
+      '.sec-bar{background:#f5f5f5;border-top:1px solid #eaeaea;border-bottom:1px solid #eaeaea;padding:5px 14px;display:flex;align-items:center;gap:6px;font-size:.72rem;font-weight:700;color:#555;}' +
+      'table{width:100%;border-collapse:collapse;}' +
+      'tr{border-bottom:1px solid #f0f0f0;}tr:last-child{border-bottom:none;}' +
+      'td{padding:4px 14px;font-size:.8rem;line-height:1.5;vertical-align:top;}' +
+      'td.lbl{color:#999;font-weight:400;width:40%;white-space:nowrap;}' +
+      'td.val{color:#111;font-weight:600;word-break:break-word;}' +
+      'td.val.hi{color:#e67e00;font-weight:800;}' +
+      '.dest-bar{text-align:center;font-size:1.4rem;font-weight:900;color:#e67e00;letter-spacing:3px;padding:7px 0;border-top:1px dashed #eee;border-bottom:1px dashed #eee;margin:2px 0;}' +
+      '.ftr{background:#fafafa;border-top:1px solid #eee;padding:5px 14px;display:flex;justify-content:space-between;}' +
+      '.ftr span{font-size:.6rem;color:#bbb;}' +
+      '@media print{body{background:#fff;padding:0;}.page{box-shadow:none;border:2px dashed #e0a800;width:148mm;}@page{margin:4mm;size:160mm auto;}}';
+
+    var html =
+      '<!DOCTYPE html><html dir="rtl" lang="ku"><head><meta charset="UTF-8">' +
+      '<title>لەیبڵی گەیاندن</title><style>' + css + '</style></head><body>' +
+      '<div class="page">' +
+
+      '<div class="hdr">' +
+        '<div class="hdr-left"><span style="font-size:1.5rem">📦</span>' +
+        '<div><div class="hdr-title">UK BAZAR</div>' +
+        '<div class="hdr-sub">لەیبڵی گەیاندن · Kurdistan Delivery Label</div></div></div>' +
+        '<div class="hdr-id">' + orderNum + '</div>' +
+      '</div>' +
+
+      '<div class="body-wrap">' +
+        '<div class="info-col">' +
+
+          '<div class="sec-bar">📤 نێردەر · Sender</div>' +
+          '<table>' +
+            row('ناوی تەواو', senderName) +
+            row('📞 ژمارە', senderPhone) +
+            row('📞 ژمارە ٢', senderPhone2) +
+            row('📍 شوێن', senderLoc) +
+          '</table>' +
+
+          '<div class="sec-bar">📬 وەرگر · Receiver</div>' +
+          '<table>' +
+            '<tr><td class="lbl">ناوی تەواو</td><td class="val hi">' + (receiverName || '—') + '</td></tr>' +
+            '<tr><td class="lbl">📞 ژمارە</td><td class="val hi">' + (receiverPhone || '—') + '</td></tr>' +
+            row('📞 ژمارە ٢', receiverPhone2) +
+            row('📍 شوێن', receiverLoc) +
+          '</table>' +
+
+          (receiverLoc ? '<div class="dest-bar">' + receiverLoc.toUpperCase().slice(0, 14) + '</div>' : '') +
+
+          '<div class="sec-bar">📦 زانیاری کەلوپەل · Package Info</div>' +
+          '<table>' +
+            row('کەلوپەل', packageName) +
+            row('ژمارەی پارچە', qty) +
+            row('کیلۆگرام', kg) +
+            row('نرخی کاڵا', itemPrice) +
+            row('گەیاندن/کیلۆ', deliveryPerKg) +
+            (driverRow ? row('🚗 شۆفیر', driverRow.textContent.trim()) : '') +
+            (noteRow ? row('📝 تیبینی', noteRow.textContent.trim()) : '') +
+            row('بەروار', footerDate) +
+          '</table>' +
+
+        '</div>' +
+        '<div class="qr-col">' +
+          '<img src="' + qrSrc + '" alt="QR">' +
+          '<div class="scan-lbl">کیوئار کۆد<br>Scan for info</div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="ftr">' +
+        '<span>UK BAZAR — Kurdistan Delivery</span>' +
+        '<span>ukbazar.online</span>' +
+      '</div>' +
+      '</div>' +
+      '<script>window.onload=function(){window.print();}<\/script>' +
+      '</body></html>';
+
+    // Use iframe like script.js does
+    var printArea = document.getElementById('printArea');
+    if (printArea) {
+      printArea.innerHTML = '<div>' + html + '</div>';
+      printArea.style.display = 'block';
+    }
+    var iframe = document.getElementById('_printIframe');
+    if (!iframe) {
+      iframe = document.createElement('iframe');
+      iframe.id = '_printIframe';
+      iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;border:0;';
+      document.body.appendChild(iframe);
+    }
+    var doc = iframe.contentDocument || iframe.contentWindow.document;
+    doc.open();
+    doc.write('<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0;padding:0;background:#fff;">' + html + '</body></html>');
+    doc.close();
+
+    var iQr = doc.querySelector('.qr-col img');
+    var execPrint = function() {
+      setTimeout(function() {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+        if (printArea) { setTimeout(function() { printArea.style.display = 'none'; printArea.innerHTML = ''; }, 1000); }
+      }, 300);
+    };
+    if (iQr && !iQr.complete) {
+      var done = false;
+      iQr.onload = function() { if (!done) { done = true; execPrint(); } };
+      iQr.onerror = function() { if (!done) { done = true; execPrint(); } };
+      setTimeout(function() { if (!done) { done = true; execPrint(); } }, 2500);
+    } else {
+      execPrint();
+    }
+  }
+
+  // ── Override printLabel after script.js loads ──
+  setTimeout(function() {
+    try { window.printLabel = kuPrintLabel; } catch(e1) {
+      try {
+        Object.defineProperty(window, 'printLabel', { configurable: true, writable: true, value: kuPrintLabel });
+      } catch(e2) {
+        try { delete window.printLabel; window.printLabel = kuPrintLabel; } catch(e3) {}
+      }
+    }
+  }, 200);
+
+  // Also capture extra price fields on form submit
+  document.addEventListener('DOMContentLoaded', function() {
+    var form = document.getElementById('deliveryForm');
+    if (form) {
+      form.addEventListener('submit', function() {
+        window._deliveryExtraFields = {
+          itemPrice:        (document.getElementById('itemPrice') || {}).value || '',
+          deliveryPricePerKg: (document.getElementById('deliveryPricePerKg') || {}).value || ''
+        };
+      }, true);
+    }
+  });
+
+})();
+    </script>
 </body>
 </html>
