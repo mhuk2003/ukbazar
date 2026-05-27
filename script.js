@@ -1137,6 +1137,9 @@ function printLabel(key) {
     .pr-qr small{font-size:10px;color:#718096;}
     .pr-foot{text-align:center;font-size:10px;color:#a0aec0;margin-top:8px;border-top:1px dashed #e2e8f0;padding-top:6px;}
     </style>
+    <div style="display:flex;justify-content:flex-end;padding:4px 6px 0;">
+      <button onclick="window.close()" style="background:#fee2e2;border:1.5px solid #fca5a5;color:#dc2626;border-radius:50%;width:30px;height:30px;font-size:1rem;font-weight:900;cursor:pointer;line-height:1;">✕</button>
+    </div>
     <div class="pr-wrap">
       <div class="pr-top">
         <div>
@@ -1294,6 +1297,9 @@ function printUkLabel(key) {
     .pru-qr small{font-size:10px;color:#718096;text-align:center;}
     .pru-foot{text-align:center;font-size:10px;color:#a0aec0;margin-top:10px;border-top:1px dashed #e2e8f0;padding-top:6px;}
     </style>
+    <div style="display:flex;justify-content:flex-end;padding:4px 6px 0;">
+      <button onclick="window.close()" style="background:#fee2e2;border:1.5px solid #fca5a5;color:#dc2626;border-radius:50%;width:30px;height:30px;font-size:1rem;font-weight:900;cursor:pointer;line-height:1;">✕</button>
+    </div>
     <div class="pru-wrap">
       <div class="pru-top">
         <div>
