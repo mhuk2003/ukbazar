@@ -22,27 +22,15 @@
     <link rel="apple-touch-icon" sizes="512x512" href="./icon-512.png">
     
         <link rel="stylesheet" href="./style.css">
-<style>
-/* ===== PRINT STYLES — لەیبلی چاپ ===== */
-@media print {
-    body > *:not(#printArea) { display: none !important; }
-    #printArea {
-        display: block !important;
-        position: fixed !important;
-        inset: 0 !important;
-        z-index: 99999 !important;
-        background: #fff !important;
-        padding: 10px !important;
-    }
-    #printArea * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-    .no-print { display: none !important; }
-}
-#printArea { display: none; }
-</style>
+    <style>
+      /* Hide any language switcher injected by i18n.js to avoid duplicates */
+      .lang-switcher-external, #i18nLangBar, [data-i18n-bar],
+      body > div.lang-bar:not([id]),
+      header .lang-bar-auto { display: none !important; }
+    </style>
+
 </head>
 <body>
-<!-- Print Area — بۆ چاپکردنی لەیبل لە موبایل -->
-<div id="printArea"></div>
     <!-- Loading Spinner with Banner -->
 <!-- Loading Spinner with Banner - چاککراو -->
 <div class="loading-spinner" id="loadingSpinner">
@@ -65,6 +53,12 @@
 </div>
   <header class="header">
     <div class="container">
+        <!-- Language Switcher -->
+        <div style="display:flex;justify-content:center;gap:6px;padding:6px 0 2px;">
+            <button onclick="setLang('ku')" id="langBtn-ku" style="padding:4px 14px;border-radius:20px;border:1.5px solid #667eea;background:#667eea;color:#fff;font-weight:700;font-size:.82rem;cursor:pointer;">KU</button>
+            <button onclick="setLang('en')" id="langBtn-en" style="padding:4px 14px;border-radius:20px;border:1.5px solid #ccc;background:#fff;color:#555;font-weight:700;font-size:.82rem;cursor:pointer;">EN</button>
+            <button onclick="setLang('ar')" id="langBtn-ar" style="padding:4px 14px;border-radius:20px;border:1.5px solid #ccc;background:#fff;color:#555;font-weight:700;font-size:.82rem;cursor:pointer;">AR</button>
+        </div>
         <div class="header-content">
             <div class="logo" onclick="showHomePage()">
                 <div class="logo-icon">
@@ -74,14 +68,14 @@
             </div>
 
             <div class="nav-buttons">
-                <button onclick="showVideosModal()" style="display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#f56565,#e53e3e);color:#fff;border:none;border-radius:50px;padding:8px 16px;font-family:inherit;font-size:.88rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(245,101,101,.35);"><i class="fas fa-play-circle"></i><span>ڤیدیۆکان</span></button>
+                <button onclick="showVideosModal()" style="display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#f56565,#e53e3e);color:#fff;border:none;border-radius:50px;padding:8px 16px;font-family:inherit;font-size:.88rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(245,101,101,.35);"><i class="fas fa-play-circle"></i><span data-i18n="videos">ڤیدیۆکان</span></button>
                 <button class="btn-delivery-ku" onclick="showDeliveryModal()">
                     <i class="fas fa-shipping-fast"></i>
-                    <span class="btn-text">گەیاندن</span>
+                    <span class="btn-text" data-i18n="kuDelivery">گەیاندن</span>
                 </button>
                 <button class="btn-delivery-uk" onclick="showUkDeliveryModal()">
                     <i class="fas fa-shipping-fast"></i>
-                    <span class="btn-text">UK Delivery</span>
+                    <span class="btn-text" data-i18n="ukDelivery">UK Delivery</span>
                 </button>
             </div>
         </div>
@@ -91,9 +85,9 @@
     <section class="search-section">
         <div class="container">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="گەڕان بە کاڵا...">
+                <input type="text" id="searchInput" data-i18n-placeholder="searchPlaceholder" placeholder="گەڕان بە کاڵا...">
                 <button onclick="performSearch()">
-                    <i class="fas fa-search"></i> <span>گەڕان</span>
+                    <i class="fas fa-search"></i> <span data-i18n="search">گەڕان</span>
                 </button>
             </div>
         </div>
@@ -130,7 +124,7 @@
 
     <section class="products-section">
         <div class="container">
-            <h2 class="section-title" id="productsTitle">هەموو کاڵاکان</h2>
+            <h2 class="section-title" id="productsTitle" data-i18n="allProducts">هەموو کاڵاکان</h2>
             <div class="products-grid" id="productsGrid"></div>
         </div>
     </section>
@@ -164,20 +158,20 @@
         <div class="container">
             <div class="bottom-nav">
                 <a href="javascript:void(0)" class="bottom-nav-item active" onclick="showHomePage()">
-                    <i class="fas fa-home"></i><span>ماڵەوە</span>
+                    <i class="fas fa-home"></i><span data-i18n="home">ماڵەوە</span>
                 </a>
                 <a href="javascript:void(0)" class="bottom-nav-item" onclick="showRequestModal()">
-                    <i class="fas fa-clipboard-list"></i><span>داواکاری</span>
+                    <i class="fas fa-clipboard-list"></i><span data-i18n="request">داواکاری</span>
                 </a>
                  <a href="javascript:void(0)" class="bottom-nav-item bottom-nav-add" onclick="showAddProductModal()">
-                    <i class="fas fa-plus"></i><span>کاڵا دابنێ</span>
+                    <i class="fas fa-plus"></i><span data-i18n="addProduct">کاڵا دابنێ</span>
                 </a>
                 <a href="javascript:void(0)" class="bottom-nav-item" onclick="showCartModal()">
-                    <i class="fas fa-shopping-cart"></i><span>سەبەتە</span>
+                    <i class="fas fa-shopping-cart"></i><span data-i18n="cart">سەبەتە</span>
                 </a>
                
                 <a href="javascript:void(0)" class="bottom-nav-item" onclick="showAdminLogin()">
-                    <i class="fas fa-user-shield"></i><span>بەڕێوەبەر</span>
+                    <i class="fas fa-user-shield"></i><span data-i18n="admin">بەڕێوەبەر</span>
                 </a>
             </div>
         </div>
@@ -458,28 +452,28 @@
                 <button class="close-modal" onclick="closeModal('requestModal')">
                     <i class="fas fa-times"></i>
                 </button>
-                <h2><i class="fas fa-clipboard-list"></i> داواکاری کاڵا</h2>
+                <h2><i class="fas fa-clipboard-list"></i> <span data-i18n="requestTitle">داواکاری کاڵا</span></h2>
             </div>
             <form id="requestForm">
                 <div class="form-group">
-                    <label>ناوی کاڵا</label>
-                    <input type="text" id="requestItemName" placeholder="ناوی کاڵاکەی داواکراو" required>
+                    <label data-i18n="productName">ناوی کاڵا</label>
+                    <input type="text" id="requestItemName" data-i18n-placeholder="requestItemPlaceholder" placeholder="ناوی کاڵاکەی داواکراو" required>
                 </div>
                 <div class="form-group">
-                    <label>وردەکاری</label>
-                    <textarea id="requestDetails" placeholder="وردەکاری زیاتر..."></textarea>
+                    <label data-i18n="details">وردەکاری</label>
+                    <textarea id="requestDetails" data-i18n-placeholder="detailsPlaceholder" placeholder="وردەکاری زیاتر..."></textarea>
                 </div>
                 <div class="form-group">
-                    <label>ناوت</label>
-                    <input type="text" id="requestName" placeholder="ناوی تەواو" required>
+                    <label data-i18n="yourName">ناوت</label>
+                    <input type="text" id="requestName" data-i18n-placeholder="fullNamePlaceholder" placeholder="ناوی تەواو" required>
                 </div>
                 <div class="form-group">
-                    <label>ژمارەی مۆبایل</label>
+                    <label data-i18n="mobileNumber">ژمارەی مۆبایل</label>
                     <input type="tel" id="requestMobile" placeholder="07xxxxxxxxx" required>
                 </div>
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">ناردن <i class="fas fa-paper-plane"></i></button>
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('requestModal')">داخستن</button>
+                    <button type="submit" class="btn btn-primary"><span data-i18n="send">ناردن</span> <i class="fas fa-paper-plane"></i></button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('requestModal')" data-i18n="close">داخستن</button>
                 </div>
             </form>
         </div>
@@ -492,48 +486,48 @@
                 <button class="close-modal" onclick="closeModal('addProductModal')">
                     <i class="fas fa-times"></i>
                 </button>
-                <h2><i class="fas fa-plus-circle"></i> کاڵا دابنێ</h2>
+                <h2><i class="fas fa-plus-circle"></i> <span data-i18n="addProductTitle">کاڵا دابنێ</span></h2>
             </div>
             <form id="addProductForm">
                 <div class="form-group">
-                    <label>ناوی کاڵا</label>
-                    <input type="text" id="productName" placeholder="ناوی کاڵا" required>
+                    <label data-i18n="productName">ناوی کاڵا</label>
+                    <input type="text" id="productName" data-i18n-placeholder="productNamePlaceholder" placeholder="ناوی کاڵا" required>
                 </div>
                <div class="form-group">
-    <label>جۆری کاڵا:</label>
-    <select id="adminProductCategory" required>
+    <label data-i18n="productType">جۆری کاڵا:</label>
+    <select id="adminProductCategory" data-i18n-select="category" required>
         <option value="">هەڵبژێرە...</option>
-        <option value="مۆبایل">مۆبایل</option>
-        <option value="لاپتۆپ">لاپتۆپ</option>
-        <option value="کۆمپیوتەر">کۆمپیوتەر</option>
-        <option value="ئایپاد">ئایپاد</option>
-        <option value="ئوتومبێل">ئوتومبێل</option>
-        <option value="ناوماڵ">ناوماڵ</option>
-        <option value="پاسکیل">پاسکیل</option>
-        <option value="سکۆتەر">سکۆتەر</option>
-        <option value="کامێرا">کامێرا</option>
-        <option value="جوانکاری">جوانکاری</option>
-        <option value="خانوو">خانوو</option>
-        <option value="زەوی">زەوی</option>
-        <option value="باخ">باخ</option>
-        <option value="ئاژەڵ">ئاژەڵ</option>
-        <option value="جلوبەرگی پیاوان">جلوبەرگی پیاوان</option>
-        <option value="جلوبەرگی ئافرەتان">جلوبەرگی ئافرەتان</option>
-        <option value="جلوبەرگی منداڵان">جلوبەرگی منداڵان</option>
+        <option value="mobile">مۆبایل</option>
+        <option value="laptop">لاپتۆپ</option>
+        <option value="computer">کۆمپیوتەر</option>
+        <option value="ipad">ئایپاد</option>
+        <option value="car">ئوتومبێل</option>
+        <option value="home">ناوماڵ</option>
+        <option value="bicycle">پاسکیل</option>
+        <option value="scooter">سکۆتەر</option>
+        <option value="camera">کامێرا</option>
+        <option value="beauty">جوانکاری</option>
+        <option value="house">خانوو</option>
+        <option value="land">زەوی</option>
+        <option value="garden">باخ</option>
+        <option value="animals">ئاژەڵ</option>
+        <option value="men">جلوبەرگی پیاوان</option>
+        <option value="women">جلوبەرگی ئافرەتان</option>
+        <option value="kids">جلوبەرگی منداڵان</option>
     </select>
 </div>
                 <div class="form-group">
-                    <label>وصف</label>
-                    <textarea id="productDescription" placeholder="وردەکاری کاڵاکە..."></textarea>
+                    <label data-i18n="description">وصف</label>
+                    <textarea id="productDescription" data-i18n-placeholder="descPlaceholder" placeholder="وردەکاری کاڵاکە..."></textarea>
                 </div>
                 <div class="form-group" style="display:flex; gap:10px;">
                     <div style="flex:1;">
-                        <label>نرخ</label>
+                        <label data-i18n="price">نرخ</label>
                         <input type="number" id="productPrice" placeholder="0" required>
                     </div>
                     <div style="flex:1;">
-                        <label>دراو</label>
-                        <select id="productCurrency">
+                        <label data-i18n="currency">دراو</label>
+                        <select id="productCurrency" data-i18n-select="currency">
                             <option value="IQD">دینار</option>
                             <option value="USD">دۆلار</option>
                             <option value="GBP">پاوەند</option>
@@ -541,25 +535,25 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>ناوی فرۆشیار</label>
-                    <input type="text" id="sellerName" placeholder="ناوت" required>
+                    <label data-i18n="sellerName">ناوی فرۆشیار</label>
+                    <input type="text" id="sellerName" data-i18n-placeholder="yourNamePlaceholder" placeholder="ناوت" required>
                 </div>
                 <div class="form-group">
-                    <label>ژمارەی مۆبایل</label>
+                    <label data-i18n="mobileNumber">ژمارەی مۆبایل</label>
                     <input type="tel" id="sellerMobile" placeholder="07xxxxxxxxx" required>
                 </div>
                 <div class="form-group">
-                    <label>شوێن</label>
-                    <input type="text" id="productLocation" placeholder="شار / شوێن">
+                    <label data-i18n="location">شوێن</label>
+                    <input type="text" id="productLocation" data-i18n-placeholder="locationPlaceholder" placeholder="شار / شوێن">
                 </div>
                 <div class="form-group">
-                    <label>وێنەکان</label>
+                    <label data-i18n="images">وێنەکان</label>
                     <input type="file" id="productImages" accept="image/*" multiple>
                     <div id="imagePreview" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;"></div>
                 </div>
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">ناردن <i class="fas fa-paper-plane"></i></button>
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('addProductModal')">داخستن</button>
+                    <button type="submit" class="btn btn-primary"><span data-i18n="send">ناردن</span> <i class="fas fa-paper-plane"></i></button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addProductModal')" data-i18n="close">داخستن</button>
                 </div>
             </form>
         </div>
@@ -572,61 +566,71 @@
                 <button class="close-modal" onclick="closeModal('deliveryModal')">
                     <i class="fas fa-times"></i>
                 </button>
-                <h2><i class="fas fa-shipping-fast"></i> داواکاری گەیاندن</h2>
+                <h2><i class="fas fa-shipping-fast"></i> <span data-i18n="deliveryTitle">داواکاری گەیاندن</span></h2>
             </div>
             <form id="deliveryForm">
-                <div class="delivery-section-title"><i class="fas fa-user-circle"></i> زانیاری نێردەر</div>
+                <div class="delivery-section-title"><i class="fas fa-user-circle"></i> <span data-i18n="senderInfo">زانیاری نێردەر</span></div>
                 <div class="form-group">
-                    <label>ناوی نێردەر <span class="required-star">*</span></label>
-                    <input type="text" id="senderName" placeholder="ناوی تەواوی نێردەر" required>
+                    <label data-i18n="senderName">ناوی نێردەر <span class="required-star">*</span></label>
+                    <input type="text" id="senderName" data-i18n-placeholder="senderNamePlaceholder" placeholder="ناوی تەواوی نێردەر" required>
                 </div>
                 <div class="form-group">
-                    <label>ژمارەی نێردەر <span class="required-star">*</span></label>
+                    <label data-i18n="senderPhone">ژمارەی نێردەر <span class="required-star">*</span></label>
                     <input type="tel" id="senderMobile" placeholder="07xxxxxxxxx" required>
                 </div>
                 <div class="form-group">
-                    <label>ژمارەی نێردەر ٢ <span style="font-size:11px;color:#999">(ئەگەر هەبوو)</span></label>
+                    <label data-i18n="senderPhone2">ژمارەی نێردەر ٢ <span style="font-size:11px;color:#999">(ئەگەر هەبوو)</span></label>
                     <input type="tel" id="senderMobile2" placeholder="07xxxxxxxxx">
                 </div>
                 <div class="form-group">
-                    <label>شوێنی نێردەر <span class="required-star">*</span></label>
-                    <input type="text" id="senderLocation" placeholder="شار / شوێنی نێردەر" required>
+                    <label data-i18n="senderLocation">شوێنی نێردەر <span class="required-star">*</span></label>
+                    <input type="text" id="senderLocation" data-i18n-placeholder="senderLocationPlaceholder" placeholder="شار / شوێنی نێردەر" required>
                 </div>
-                <div class="delivery-section-title"><i class="fas fa-user-check"></i> زانیاری وەرگر</div>
+                <div class="delivery-section-title"><i class="fas fa-user-check"></i> <span data-i18n="receiverInfo">زانیاری وەرگر</span></div>
                 <div class="form-group">
-                    <label>ناوی وەرگر <span class="required-star">*</span></label>
-                    <input type="text" id="receiverName" placeholder="ناوی تەواوی وەرگر" required>
+                    <label data-i18n="receiverName">ناوی وەرگر <span class="required-star">*</span></label>
+                    <input type="text" id="receiverName" data-i18n-placeholder="receiverNamePlaceholder" placeholder="ناوی تەواوی وەرگر" required>
                 </div>
                 <div class="form-group">
-                    <label>ژمارەی وەرگر <span class="required-star">*</span></label>
+                    <label data-i18n="receiverPhone">ژمارەی وەرگر <span class="required-star">*</span></label>
                     <input type="tel" id="receiverMobile" placeholder="07xxxxxxxxx" required>
                 </div>
                 <div class="form-group">
-                    <label>ژمارەی وەرگر ٢ <span style="font-size:11px;color:#999">(ئەگەر هەبوو)</span></label>
+                    <label data-i18n="receiverPhone2">ژمارەی وەرگر ٢ <span style="font-size:11px;color:#999">(ئەگەر هەبوو)</span></label>
                     <input type="tel" id="receiverMobile2" placeholder="07xxxxxxxxx">
                 </div>
                 <div class="form-group">
-                    <label>شوێنی وەرگر <span class="required-star">*</span></label>
-                    <input type="text" id="receiverLocation" placeholder="شار / شوێنی وەرگر" required>
+                    <label data-i18n="receiverLocation">شوێنی وەرگر <span class="required-star">*</span></label>
+                    <input type="text" id="receiverLocation" data-i18n-placeholder="receiverLocationPlaceholder" placeholder="شار / شوێنی وەرگر" required>
                 </div>
-                <div class="delivery-section-title"><i class="fas fa-box"></i> زانیاری کەلوپەل</div>
+                <div class="delivery-section-title"><i class="fas fa-box"></i> <span data-i18n="packageInfo">زانیاری کەلوپەل</span></div>
                 <div class="form-group">
-                    <label>ناوی کەلوپەل <span class="required-star">*</span></label>
-                    <input type="text" id="packageName" placeholder="ناوی کاڵا / کەلوپەل" required>
+                    <label data-i18n="packageName">ناوی کەلوپەل <span class="required-star">*</span></label>
+                    <input type="text" id="packageName" data-i18n-placeholder="packageNamePlaceholder" placeholder="ناوی کاڵا / کەلوپەل" required>
                 </div>
                 <div class="form-group" style="display:flex; gap:10px;">
                     <div style="flex:1;">
-                        <label>ژمارەی پارچە <span class="required-star">*</span></label>
+                        <label data-i18n="piecesCount">ژمارەی پارچە <span class="required-star">*</span></label>
                         <input type="number" id="packageQty" placeholder="1" min="1" required>
                     </div>
                     <div style="flex:1;">
-                        <label>کیلۆ <span class="required-star">*</span></label>
+                        <label data-i18n="weight">کیلۆ <span class="required-star">*</span></label>
                         <input type="number" id="packageKg" placeholder="0.0" min="0" step="0.1" required>
                     </div>
                 </div>
+                <div class="form-group" style="display:flex; gap:10px;">
+                    <div style="flex:1;">
+                        <label data-i18n="itemPrice">نرخی کاڵا</label>
+                        <input type="text" id="itemPrice" data-i18n-placeholder="itemPricePlaceholder" placeholder="نرخی کاڵا (IQD / $)" style="">
+                    </div>
+                    <div style="flex:1;">
+                        <label data-i18n="deliveryPricePerKg">نرخی گەیاندن / کیلۆ</label>
+                        <input type="text" id="deliveryPricePerKg" data-i18n-placeholder="deliveryPricePlaceholder" placeholder="نرخ بۆ هەر کیلۆیەک" style="">
+                    </div>
+                </div>
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">ناردن <i class="fas fa-paper-plane"></i></button>
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('deliveryModal')">داخستن</button>
+                    <button type="submit" class="btn btn-primary"><span data-i18n="send">ناردن</span> <i class="fas fa-paper-plane"></i></button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('deliveryModal')" data-i18n="close">داخستن</button>
                 </div>
             </form>
         </div>
@@ -712,24 +716,252 @@
                     <div class="form-group">
                         <label style="font-weight:700;color:#1a202c;">Country / Region</label>
                         <select id="ukReceiverCountry" style="direction:ltr;width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:.95rem;background:#fff;">
-                            <option value="United Kingdom">United Kingdom</option>
-                            <option value="Iraq">Iraq</option>
-                            <option value="Other">Other</option>
+<option value="United Kingdom">🇬🇧 United Kingdom</option>
+<option value="Iraq">🇮🇶 Iraq</option>
+<option value="">— Other Countries —</option>
+<option value="Afghanistan">Afghanistan</option>
+<option value="Albania">Albania</option>
+<option value="Algeria">Algeria</option>
+<option value="Andorra">Andorra</option>
+<option value="Angola">Angola</option>
+<option value="Antigua and Barbuda">Antigua and Barbuda</option>
+<option value="Argentina">Argentina</option>
+<option value="Armenia">Armenia</option>
+<option value="Australia">Australia</option>
+<option value="Austria">Austria</option>
+<option value="Azerbaijan">Azerbaijan</option>
+<option value="Bahamas">Bahamas</option>
+<option value="Bahrain">Bahrain</option>
+<option value="Bangladesh">Bangladesh</option>
+<option value="Barbados">Barbados</option>
+<option value="Belarus">Belarus</option>
+<option value="Belgium">Belgium</option>
+<option value="Belize">Belize</option>
+<option value="Benin">Benin</option>
+<option value="Bhutan">Bhutan</option>
+<option value="Bolivia">Bolivia</option>
+<option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
+<option value="Botswana">Botswana</option>
+<option value="Brazil">Brazil</option>
+<option value="Brunei">Brunei</option>
+<option value="Bulgaria">Bulgaria</option>
+<option value="Burkina Faso">Burkina Faso</option>
+<option value="Burundi">Burundi</option>
+<option value="Cambodia">Cambodia</option>
+<option value="Cameroon">Cameroon</option>
+<option value="Canada">Canada</option>
+<option value="Cape Verde">Cape Verde</option>
+<option value="Central African Republic">Central African Republic</option>
+<option value="Chad">Chad</option>
+<option value="Chile">Chile</option>
+<option value="China">China</option>
+<option value="Colombia">Colombia</option>
+<option value="Comoros">Comoros</option>
+<option value="Congo">Congo</option>
+<option value="Costa Rica">Costa Rica</option>
+<option value="Croatia">Croatia</option>
+<option value="Cuba">Cuba</option>
+<option value="Cyprus">Cyprus</option>
+<option value="Czech Republic">Czech Republic</option>
+<option value="Denmark">Denmark</option>
+<option value="Djibouti">Djibouti</option>
+<option value="Dominica">Dominica</option>
+<option value="Dominican Republic">Dominican Republic</option>
+<option value="East Timor">East Timor</option>
+<option value="Ecuador">Ecuador</option>
+<option value="Egypt">Egypt</option>
+<option value="El Salvador">El Salvador</option>
+<option value="Equatorial Guinea">Equatorial Guinea</option>
+<option value="Eritrea">Eritrea</option>
+<option value="Estonia">Estonia</option>
+<option value="Eswatini">Eswatini</option>
+<option value="Ethiopia">Ethiopia</option>
+<option value="Fiji">Fiji</option>
+<option value="Finland">Finland</option>
+<option value="France">France</option>
+<option value="Gabon">Gabon</option>
+<option value="Gambia">Gambia</option>
+<option value="Georgia">Georgia</option>
+<option value="Germany">Germany</option>
+<option value="Ghana">Ghana</option>
+<option value="Greece">Greece</option>
+<option value="Grenada">Grenada</option>
+<option value="Guatemala">Guatemala</option>
+<option value="Guinea">Guinea</option>
+<option value="Guinea-Bissau">Guinea-Bissau</option>
+<option value="Guyana">Guyana</option>
+<option value="Haiti">Haiti</option>
+<option value="Honduras">Honduras</option>
+<option value="Hungary">Hungary</option>
+<option value="Iceland">Iceland</option>
+<option value="India">India</option>
+<option value="Indonesia">Indonesia</option>
+<option value="Iran">Iran</option>
+<option value="Ireland">Ireland</option>
+<option value="Israel">Israel</option>
+<option value="Italy">Italy</option>
+<option value="Jamaica">Jamaica</option>
+<option value="Japan">Japan</option>
+<option value="Jordan">Jordan</option>
+<option value="Kazakhstan">Kazakhstan</option>
+<option value="Kenya">Kenya</option>
+<option value="Kiribati">Kiribati</option>
+<option value="Kuwait">Kuwait</option>
+<option value="Kyrgyzstan">Kyrgyzstan</option>
+<option value="Laos">Laos</option>
+<option value="Latvia">Latvia</option>
+<option value="Lebanon">Lebanon</option>
+<option value="Lesotho">Lesotho</option>
+<option value="Liberia">Liberia</option>
+<option value="Libya">Libya</option>
+<option value="Liechtenstein">Liechtenstein</option>
+<option value="Lithuania">Lithuania</option>
+<option value="Luxembourg">Luxembourg</option>
+<option value="Madagascar">Madagascar</option>
+<option value="Malawi">Malawi</option>
+<option value="Malaysia">Malaysia</option>
+<option value="Maldives">Maldives</option>
+<option value="Mali">Mali</option>
+<option value="Malta">Malta</option>
+<option value="Marshall Islands">Marshall Islands</option>
+<option value="Mauritania">Mauritania</option>
+<option value="Mauritius">Mauritius</option>
+<option value="Mexico">Mexico</option>
+<option value="Micronesia">Micronesia</option>
+<option value="Moldova">Moldova</option>
+<option value="Monaco">Monaco</option>
+<option value="Mongolia">Mongolia</option>
+<option value="Montenegro">Montenegro</option>
+<option value="Morocco">Morocco</option>
+<option value="Mozambique">Mozambique</option>
+<option value="Myanmar">Myanmar</option>
+<option value="Namibia">Namibia</option>
+<option value="Nauru">Nauru</option>
+<option value="Nepal">Nepal</option>
+<option value="Netherlands">Netherlands</option>
+<option value="New Zealand">New Zealand</option>
+<option value="Nicaragua">Nicaragua</option>
+<option value="Niger">Niger</option>
+<option value="Nigeria">Nigeria</option>
+<option value="North Korea">North Korea</option>
+<option value="North Macedonia">North Macedonia</option>
+<option value="Norway">Norway</option>
+<option value="Oman">Oman</option>
+<option value="Pakistan">Pakistan</option>
+<option value="Palau">Palau</option>
+<option value="Palestine">Palestine</option>
+<option value="Panama">Panama</option>
+<option value="Papua New Guinea">Papua New Guinea</option>
+<option value="Paraguay">Paraguay</option>
+<option value="Peru">Peru</option>
+<option value="Philippines">Philippines</option>
+<option value="Poland">Poland</option>
+<option value="Portugal">Portugal</option>
+<option value="Qatar">Qatar</option>
+<option value="Romania">Romania</option>
+<option value="Russia">Russia</option>
+<option value="Rwanda">Rwanda</option>
+<option value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
+<option value="Saint Lucia">Saint Lucia</option>
+<option value="Saint Vincent and the Grenadines">Saint Vincent and the Grenadines</option>
+<option value="Samoa">Samoa</option>
+<option value="San Marino">San Marino</option>
+<option value="Sao Tome and Principe">Sao Tome and Principe</option>
+<option value="Saudi Arabia">Saudi Arabia</option>
+<option value="Senegal">Senegal</option>
+<option value="Serbia">Serbia</option>
+<option value="Seychelles">Seychelles</option>
+<option value="Sierra Leone">Sierra Leone</option>
+<option value="Singapore">Singapore</option>
+<option value="Slovakia">Slovakia</option>
+<option value="Slovenia">Slovenia</option>
+<option value="Solomon Islands">Solomon Islands</option>
+<option value="Somalia">Somalia</option>
+<option value="South Africa">South Africa</option>
+<option value="South Korea">South Korea</option>
+<option value="South Sudan">South Sudan</option>
+<option value="Spain">Spain</option>
+<option value="Sri Lanka">Sri Lanka</option>
+<option value="Sudan">Sudan</option>
+<option value="Suriname">Suriname</option>
+<option value="Sweden">Sweden</option>
+<option value="Switzerland">Switzerland</option>
+<option value="Syria">Syria</option>
+<option value="Taiwan">Taiwan</option>
+<option value="Tajikistan">Tajikistan</option>
+<option value="Tanzania">Tanzania</option>
+<option value="Thailand">Thailand</option>
+<option value="Togo">Togo</option>
+<option value="Tonga">Tonga</option>
+<option value="Trinidad and Tobago">Trinidad and Tobago</option>
+<option value="Tunisia">Tunisia</option>
+<option value="Turkey">Turkey</option>
+<option value="Turkmenistan">Turkmenistan</option>
+<option value="Tuvalu">Tuvalu</option>
+<option value="Uganda">Uganda</option>
+<option value="Ukraine">Ukraine</option>
+<option value="United Arab Emirates">United Arab Emirates</option>
+<option value="United States">United States</option>
+<option value="Uruguay">Uruguay</option>
+<option value="Uzbekistan">Uzbekistan</option>
+<option value="Vanuatu">Vanuatu</option>
+<option value="Vatican City">Vatican City</option>
+<option value="Venezuela">Venezuela</option>
+<option value="Vietnam">Vietnam</option>
+<option value="Yemen">Yemen</option>
+<option value="Zambia">Zambia</option>
+<option value="Zimbabwe">Zimbabwe</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label style="font-weight:700;color:#1a202c;">🏙️ Destination City / شارەکە <span class="required-star">*</span></label>
                         <select id="ukDestinationCity" required style="direction:ltr;width:100%;padding:10px 14px;border:2px solid #667eea;border-radius:10px;font-size:.95rem;background:#fff;font-weight:600;">
-                            <option value="">— Select destination city —</option>
-                            <option value="Sulaymaniyah">Sulaymaniyah / سلێمانی</option>
-                            <option value="Erbil (Hawler)">Erbil (Hawler) / هەولێر</option>
-                            <option value="Dohuk">Dohuk / دهۆک</option>
-                            <option value="Kirkuk">Kirkuk / کەرکووک</option>
-                            <option value="Halabje">Halabje / هەڵەبجە</option>
-                            <option value="Zaxo">Zaxo / زاخۆ</option>
-                             <option value="iraq">iraq / عیراق</option>
-                            <option value="Iran">Iran / ئێران</option>
-                            <option value="Syria">Syria / سووریا</option>
+                           <option value="">— Select destination city —</option>
+
+<!-- سەرەکی -->
+<option value="Sulaymaniyah">Sulaymaniyah / سلێمانی</option>
+<option value="Erbil">Erbil (Hawler) / هەولێر</option>
+<option value="Duhok">Duhok / دهۆک</option>
+<option value="Kirkuk">Kirkuk / کەرکووک</option>
+<option value="Halabja">Halabja / هەڵەبجە</option>
+
+<!-- سلێمانی و ناوچەکانی -->
+<option value="Slemani Center">قەزای ناوەندیی سلێمانی</option>
+<option value="Said Sadiq">سەید سادق</option>
+<option value="Sharazur">شارەزوور</option>
+<option value="Dukan">دووکان</option>
+<option value="Darbandikhan">دەربەندیخان</option>
+<option value="Chamchamal">چەمچەماڵ</option>
+<option value="Qaradagh">قەرەداغ</option>
+<option value="Penjwen">پێنجوێن</option>
+<option value="Sharbazher">شارباژێڕ</option>
+<option value="Mawat">قەزای ماوەت</option>
+<option value="Bazyan">قەزای بازیان</option>
+
+<!-- گەرمیان -->
+<option value="Garmian">ئیدارەی گەرمیان</option>
+<option value="Kalar">قەزای کەلار</option>
+<option value="Kifri">قەزای کفری</option>
+<option value="Khanaqin">قەزای خانەقین</option>
+<option value="Rizgari">قەزای ڕزگاری</option>
+
+<!-- ڕاپەڕین -->
+<option value="Raparin">ئیدارەی ڕاپەڕین</option>
+<option value="Ranya">قەزای ڕانیە</option>
+<option value="Haji Awa">قەزای حاجیاوا</option>
+<option value="Pshdar">قەزای پشدەر</option>
+
+<!-- ھەڵەبجە -->
+<option value="Halabja">هەڵەبجە</option>
+<option value="Khurmal">خورماڵ</option>
+
+<!-- دهۆک -->
+<option value="Zakho">زاخۆ</option>
+
+<!-- وڵات -->
+<option value="Iraq">Iraq / عیراق</option>
+<option value="Iran">Iran / ئێران</option>
+<option value="Syria">Syria / سووریا</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -781,6 +1013,16 @@
                         <div class="form-group" style="flex:1;">
                             <label style="font-weight:700;color:#1a202c;font-size:.88rem;">Weight (kg)</label>
                             <input type="number" id="ukPackageKg" placeholder="0.0" min="0" step="0.1" style="direction:ltr;">
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:10px;">
+                        <div class="form-group" style="flex:1;">
+                            <label style="font-weight:700;color:#1a202c;font-size:.88rem;">Item Price / نرخی کاڵا</label>
+                            <input type="text" id="ukItemPrice" placeholder="e.g. £50 / $60" style="direction:ltr;">
+                        </div>
+                        <div class="form-group" style="flex:1;">
+                            <label style="font-weight:700;color:#1a202c;font-size:.88rem;">Delivery / kg · نرخی گەیاندن/کیلۆ</label>
+                            <input type="text" id="ukDeliveryPerKg" placeholder="e.g. £5/kg" style="direction:ltr;">
                         </div>
                     </div>
                     <div class="form-group">
@@ -839,7 +1081,492 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
-    <script src="./i18n.js"></script>
+    <script>
+// ════════ FULL MULTILINGUAL SYSTEM v2 ════════
+
+// Hide any duplicate lang switcher that i18n.js might inject
+
+const CATEGORY_LABELS = {
+  ku: { '': 'هەڵبژێرە...', mobile:'مۆبایل', laptop:'لاپتۆپ', computer:'کۆمپیوتەر', ipad:'ئایپاد', car:'ئوتومبێل', home:'ناوماڵ', bicycle:'پاسکیل', scooter:'سکۆتەر', camera:'کامێرا', beauty:'جوانکاری', house:'خانوو', land:'زەوی', garden:'باخ', animals:'ئاژەڵ', men:'جلوبەرگی پیاوان', women:'جلوبەرگی ئافرەتان', kids:'جلوبەرگی منداڵان' },
+  en: { '': 'Select...', mobile:'Mobile', laptop:'Laptop', computer:'Computer', ipad:'iPad', car:'Car', home:'Home', bicycle:'Bicycle', scooter:'Scooter', camera:'Camera', beauty:'Beauty', house:'House', land:'Land', garden:'Garden', animals:'Animals', men:"Men's Clothing", women:"Women's Clothing", kids:"Kids' Clothing" },
+  ar: { '': 'اختر...', mobile:'موبايل', laptop:'لابتوب', computer:'كمبيوتر', ipad:'آيباد', car:'سيارة', home:'المنزل', bicycle:'دراجة', scooter:'سكوتر', camera:'كاميرا', beauty:'جمال', house:'بيت', land:'أرض', garden:'حديقة', animals:'حيوانات', men:'رجال', women:'نساء', kids:'أطفال' }
+};
+
+// Map from the category button text/value used by script.js → our key
+// script.js builds buttons with these English labels by default
+const CAT_KEY_MAP = {
+  'Garden':'garden','Land':'land','House':'house','Beauty':'beauty',
+  'Camera':'camera','Scooter':'scooter','Bicycle':'bicycle','Home':'home',
+  'Car':'car','iPad':'ipad','Computer':'computer','Laptop':'laptop',
+  'Mobile':'mobile','All Products':'all','Kids':'kids','Women':'women',
+  'Men':'men','Animals':'animals',
+  // Kurdish originals (in case script.js uses KU)
+  'باخ':'garden','زەوی':'land','خانوو':'house','جوانکاری':'beauty',
+  'کامێرا':'camera','سکۆتەر':'scooter','پاسکیل':'bicycle','ناوماڵ':'home',
+  'ئوتومبێل':'car','ئایپاد':'ipad','کۆمپیوتەر':'computer','لاپتۆپ':'laptop',
+  'مۆبایل':'mobile','هەموو کاڵاکان':'all','جلوبەرگی منداڵان':'kids',
+  'جلوبەرگی ئافرەتان':'women','جلوبەرگی پیاوان':'men','ئاژەڵ':'animals',
+};
+
+const CAT_ALL_LABELS = { ku:'هەموو کاڵاکان', en:'All Products', ar:'جميع المنتجات' };
+
+const CURRENCY_LABELS = {
+  ku: { IQD:'دینار', USD:'دۆلار', GBP:'پاوەند' },
+  en: { IQD:'Dinar (IQD)', USD:'Dollar (USD)', GBP:'Pound (GBP)' },
+  ar: { IQD:'دينار (IQD)', USD:'دولار (USD)', GBP:'جنيه (GBP)' }
+};
+
+const TRANSLATIONS = {
+  ku: {
+    dir: 'rtl', lang: 'ku',
+    videos: 'ڤیدیۆکان',
+    kuDelivery: 'گەیاندن',
+    ukDelivery: 'گەیاندنی UK',
+    search: 'گەڕان',
+    searchPlaceholder: 'گەڕان بە کاڵا...',
+    home: 'ماڵەوە',
+    request: 'داواکاری',
+    addProduct: 'کاڵا دابنێ',
+    cart: 'سەبەتە',
+    admin: 'بەڕێوەبەر',
+    allProducts: 'هەموو کاڵاکان',
+    requestTitle: 'داواکاری کاڵا',
+    productName: 'ناوی کاڵا',
+    requestItemPlaceholder: 'ناوی کاڵاکەی داواکراو',
+    details: 'وردەکاری',
+    detailsPlaceholder: 'وردەکاری زیاتر...',
+    yourName: 'ناوت',
+    fullNamePlaceholder: 'ناوی تەواو',
+    mobileNumber: 'ژمارەی مۆبایل',
+    send: 'ناردن',
+    close: 'داخستن',
+    addProductTitle: 'کاڵا دابنێ',
+    productNamePlaceholder: 'ناوی کاڵا',
+    productType: 'جۆری کاڵا:',
+    description: 'وردەکاری',
+    descPlaceholder: 'وردەکاری کاڵاکە...',
+    price: 'نرخ',
+    currency: 'دراو',
+    sellerName: 'ناوی فرۆشیار',
+    yourNamePlaceholder: 'ناوت',
+    location: 'شوێن',
+    locationPlaceholder: 'شار / شوێن',
+    images: 'وێنەکان',
+    deliveryTitle: 'داواکاری گەیاندن',
+    senderInfo: 'زانیاری نێردەر',
+    senderName: 'ناوی نێردەر',
+    senderNamePlaceholder: 'ناوی تەواوی نێردەر',
+    senderPhone: 'ژمارەی نێردەر',
+    senderPhone2: 'ژمارەی نێردەر ٢',
+    senderLocation: 'شوێنی نێردەر',
+    senderLocationPlaceholder: 'شار / شوێنی نێردەر',
+    receiverInfo: 'زانیاری وەرگر',
+    receiverName: 'ناوی وەرگر',
+    receiverNamePlaceholder: 'ناوی تەواوی وەرگر',
+    receiverPhone: 'ژمارەی وەرگر',
+    receiverPhone2: 'ژمارەی وەرگر ٢',
+    receiverLocation: 'شوێنی وەرگر',
+    receiverLocationPlaceholder: 'شار / شوێنی وەرگر',
+    packageInfo: 'زانیاری کەلوپەل',
+    packageName: 'ناوی کەلوپەل',
+    packageNamePlaceholder: 'ناوی کاڵا / کەلوپەل',
+    piecesCount: 'ژمارەی پارچە',
+    weight: 'کیلۆ',
+    itemPrice: 'نرخی کاڵا',
+    itemPricePlaceholder: 'نرخی کاڵا (دینار / دۆلار)',
+    deliveryPricePerKg: 'نرخی گەیاندن / کیلۆ',
+    deliveryPricePlaceholder: 'نرخ بۆ هەر کیلۆیەک',
+  },
+  en: {
+    dir: 'ltr', lang: 'en',
+    videos: 'Videos',
+    kuDelivery: 'KU Delivery',
+    ukDelivery: 'UK Delivery',
+    search: 'Search',
+    searchPlaceholder: 'Search products...',
+    home: 'Home',
+    request: 'Request',
+    addProduct: 'Add Product',
+    cart: 'Cart',
+    admin: 'Admin',
+    allProducts: 'All Products',
+    requestTitle: 'Product Request',
+    productName: 'Product Name',
+    requestItemPlaceholder: 'Name of the requested product',
+    details: 'Details',
+    detailsPlaceholder: 'More details...',
+    yourName: 'Your Name',
+    fullNamePlaceholder: 'Full name',
+    mobileNumber: 'Mobile Number',
+    send: 'Send',
+    close: 'Close',
+    addProductTitle: 'Add Product',
+    productNamePlaceholder: 'Product name',
+    productType: 'Product Type:',
+    description: 'Description',
+    descPlaceholder: 'Product details...',
+    price: 'Price',
+    currency: 'Currency',
+    sellerName: 'Seller Name',
+    yourNamePlaceholder: 'Your name',
+    location: 'Location',
+    locationPlaceholder: 'City / Location',
+    images: 'Images',
+    deliveryTitle: 'Delivery Request',
+    senderInfo: 'Sender Information',
+    senderName: 'Sender Name',
+    senderNamePlaceholder: 'Full name of sender',
+    senderPhone: 'Sender Phone',
+    senderPhone2: 'Sender Phone 2',
+    senderLocation: 'Sender Location',
+    senderLocationPlaceholder: 'City / Sender location',
+    receiverInfo: 'Receiver Information',
+    receiverName: 'Receiver Name',
+    receiverNamePlaceholder: 'Full name of receiver',
+    receiverPhone: 'Receiver Phone',
+    receiverPhone2: 'Receiver Phone 2',
+    receiverLocation: 'Receiver Location',
+    receiverLocationPlaceholder: 'City / Receiver location',
+    packageInfo: 'Package Information',
+    packageName: 'Package Name',
+    packageNamePlaceholder: 'Product / Package name',
+    piecesCount: 'Number of pieces',
+    weight: 'Weight (kg)',
+    itemPrice: 'Item Price',
+    itemPricePlaceholder: 'Item price (IQD / USD)',
+    deliveryPricePerKg: 'Delivery Price / kg',
+    deliveryPricePlaceholder: 'Price per kilogram',
+  },
+  ar: {
+    dir: 'rtl', lang: 'ar',
+    videos: 'الفيديوهات',
+    kuDelivery: 'التوصيل كردستان',
+    ukDelivery: 'التوصيل UK',
+    search: 'بحث',
+    searchPlaceholder: 'ابحث عن المنتجات...',
+    home: 'الرئيسية',
+    request: 'الطلبات',
+    addProduct: 'أضف منتجاً',
+    cart: 'السلة',
+    admin: 'الإدارة',
+    allProducts: 'جميع المنتجات',
+    requestTitle: 'طلب منتج',
+    productName: 'اسم المنتج',
+    requestItemPlaceholder: 'اسم المنتج المطلوب',
+    details: 'التفاصيل',
+    detailsPlaceholder: 'تفاصيل إضافية...',
+    yourName: 'اسمك',
+    fullNamePlaceholder: 'الاسم الكامل',
+    mobileNumber: 'رقم الهاتف',
+    send: 'إرسال',
+    close: 'إغلاق',
+    addProductTitle: 'إضافة منتج',
+    productNamePlaceholder: 'اسم المنتج',
+    productType: 'نوع المنتج:',
+    description: 'الوصف',
+    descPlaceholder: 'تفاصيل المنتج...',
+    price: 'السعر',
+    currency: 'العملة',
+    sellerName: 'اسم البائع',
+    yourNamePlaceholder: 'اسمك',
+    location: 'الموقع',
+    locationPlaceholder: 'المدينة / الموقع',
+    images: 'الصور',
+    deliveryTitle: 'طلب توصيل',
+    senderInfo: 'معلومات المُرسِل',
+    senderName: 'اسم المُرسِل',
+    senderNamePlaceholder: 'الاسم الكامل للمُرسِل',
+    senderPhone: 'هاتف المُرسِل',
+    senderPhone2: 'هاتف المُرسِل 2',
+    senderLocation: 'موقع المُرسِل',
+    senderLocationPlaceholder: 'المدينة / موقع المُرسِل',
+    receiverInfo: 'معلومات المستلم',
+    receiverName: 'اسم المستلم',
+    receiverNamePlaceholder: 'الاسم الكامل للمستلم',
+    receiverPhone: 'هاتف المستلم',
+    receiverPhone2: 'هاتف المستلم 2',
+    receiverLocation: 'موقع المستلم',
+    receiverLocationPlaceholder: 'المدينة / موقع المستلم',
+    packageInfo: 'معلومات الطرد',
+    packageName: 'اسم الطرد',
+    packageNamePlaceholder: 'اسم المنتج / الطرد',
+    piecesCount: 'عدد القطع',
+    weight: 'الوزن (كغ)',
+    itemPrice: 'سعر البضاعة',
+    itemPricePlaceholder: 'سعر البضاعة (دينار / دولار)',
+    deliveryPricePerKg: 'سعر التوصيل / كغ',
+    deliveryPricePlaceholder: 'السعر لكل كيلوغرام',
+  }
+};
+
+let currentLang = localStorage.getItem('ukbazar_lang') || 'ku';
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('ukbazar_lang', lang);
+  applyTranslations();
+}
+
+function applyTranslations() {
+  const t = TRANSLATIONS[currentLang];
+  if (!t) return;
+
+  // Set document direction and lang
+  document.documentElement.lang = t.lang;
+  document.documentElement.dir = t.dir;
+
+  // Translate all [data-i18n] elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) el.textContent = t[key];
+  });
+
+  // Translate all [data-i18n-placeholder] elements
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (t[key] !== undefined) el.placeholder = t[key];
+  });
+
+  // Translate category select options
+  const catSel = document.getElementById('adminProductCategory');
+  if (catSel) {
+    const labels = CATEGORY_LABELS[currentLang] || CATEGORY_LABELS.ku;
+    catSel.querySelectorAll('option').forEach(opt => {
+      const v = opt.value;
+      if (labels[v] !== undefined) opt.textContent = labels[v];
+    });
+  }
+
+  // Translate currency select options
+  const curSel = document.getElementById('productCurrency');
+  if (curSel) {
+    const labels = CURRENCY_LABELS[currentLang] || CURRENCY_LABELS.ku;
+    curSel.querySelectorAll('option').forEach(opt => {
+      if (labels[opt.value] !== undefined) opt.textContent = labels[opt.value];
+    });
+  }
+
+  // Update active language button styling
+  ['ku','en','ar'].forEach(l => {
+    const btn = document.getElementById('langBtn-' + l);
+    if (!btn) return;
+    if (l === currentLang) {
+      btn.style.background = '#667eea';
+      btn.style.color = '#fff';
+      btn.style.borderColor = '#667eea';
+    } else {
+      btn.style.background = '#fff';
+      btn.style.color = '#555';
+      btn.style.borderColor = '#ccc';
+    }
+  });
+
+  // Update search placeholder directly
+  const si = document.getElementById('searchInput');
+  if (si && t.searchPlaceholder) si.placeholder = t.searchPlaceholder;
+
+  // Translate category filter buttons (built dynamically by script.js)
+  const catLabels = CATEGORY_LABELS[currentLang] || CATEGORY_LABELS.ku;
+  document.querySelectorAll('#categoryButtons button, .category-buttons button').forEach(btn => {
+    // Store the original English/KU text once as a stable key
+    if (!btn.dataset.catKey) {
+      btn.dataset.catKey = btn.textContent.trim();
+    }
+    const rawKey = btn.dataset.catKey.trim();
+    const key = CAT_KEY_MAP[rawKey];
+    if (key === 'all') {
+      btn.textContent = CAT_ALL_LABELS[currentLang];
+    } else if (key && catLabels[key]) {
+      btn.textContent = catLabels[key];
+    } else if (rawKey === 'All Products' || rawKey === 'هەموو کاڵاکان' || rawKey === 'جميع المنتجات') {
+      btn.textContent = CAT_ALL_LABELS[currentLang];
+    }
+  });
+}
+
+
+// Apply immediately
+applyTranslations();
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Remove any duplicate lang switcher from i18n.js
+  document.querySelectorAll('.lang-switcher, #langSwitcher, [class*="language-switch"]:not([id^="langBtn"])').forEach(el => {
+    if (!el.id || !el.id.startsWith('langBtn-')) el.remove();
+  });
+
+  applyTranslations();
+
+  // Re-apply after script.js builds category buttons from Firebase
+  setTimeout(applyTranslations, 800);
+  setTimeout(applyTranslations, 2000);
+});
+    </script>
     <script src="./script.js"></script>
+    <script>
+// ══ KU DELIVERY LABEL OVERRIDE (after script.js) ══
+(function() {
+
+  function kuPrint(key) {
+    var card = document.getElementById('label-' + key);
+    if (!card) return;
+
+    // Read data from the same DOM card script.js uses
+    function getRow(section, label) {
+      var rows = card.querySelectorAll(section + ' .label-row');
+      for (var i = 0; i < rows.length; i++) {
+        var sp = rows[i].querySelector('span');
+        var st = rows[i].querySelector('strong');
+        if (sp && st && sp.textContent.indexOf(label) !== -1)
+          return st.textContent.trim();
+      }
+      return '';
+    }
+    function getPkg(label) {
+      var rows = card.querySelectorAll('.label-package .label-row');
+      for (var i = 0; i < rows.length; i++) {
+        var sp = rows[i].querySelector('span');
+        var st = rows[i].querySelector('strong');
+        if (sp && st && sp.textContent.indexOf(label) !== -1)
+          return st.textContent.trim();
+      }
+      return '';
+    }
+
+    var orderNum   = (card.querySelector('.label-order-num') || {}).textContent || '';
+    orderNum = orderNum.replace(/^#\s*/, '').trim() || ('KU-' + Date.now().toString().slice(-6));
+
+    var senderName   = getRow('.sender-section',   'ناو:');
+    var senderPhone  = getRow('.sender-section',   'ژمارە:');
+    var senderPhone2 = getRow('.sender-section',   'ژمارە ٢');
+    var senderLoc    = getRow('.sender-section',   'شوێن');
+    var recvName     = getRow('.receiver-section', 'ناو:');
+    var recvPhone    = getRow('.receiver-section', 'ژمارە:');
+    var recvPhone2   = getRow('.receiver-section', 'ژمارە ٢');
+    var recvLoc      = getRow('.receiver-section', 'شوێن');
+    var pkgName      = getPkg('کەلوپەل');
+    var qty          = getPkg('پارچە');
+    var kg           = getPkg('کیلۆ');
+    var driver       = card.querySelector('.label-driver-row strong');
+    var note         = card.querySelector('.label-note-row strong');
+    var dateText     = (card.querySelector('.label-footer span') || {}).textContent || '';
+    var qrImg        = card.querySelector('.label-qr-img');
+    var qrSrc        = qrImg ? qrImg.src : '';
+
+    function row(l, v) {
+      if (!v || v === '—') return '';
+      return '<tr><td class="lb">' + l + '</td><td class="vl">' + v + '</td></tr>';
+    }
+
+    var css =
+      'body{font-family:Arial,sans-serif;background:#f0f0f0;margin:0;padding:16px;display:flex;justify-content:center;}' +
+      '.page{background:#fff;border:2px dashed #e0a800;border-radius:8px;width:148mm;overflow:hidden;}' +
+      '.close-btn{display:flex;justify-content:flex-end;padding:6px 8px 0;}' +
+      '.close-btn button{background:#fee2e2;border:2px solid #fca5a5;color:#dc2626;border-radius:50%;width:34px;height:34px;font-size:1.1rem;font-weight:900;cursor:pointer;touch-action:manipulation;}' +
+      '.hdr{display:flex;align-items:center;justify-content:space-between;padding:8px 14px 10px;border-bottom:1px solid #eee;}' +
+      '.hdr-l{display:flex;align-items:center;gap:8px;}' +
+      '.hdr-title{font-size:1rem;font-weight:900;color:#c7920a;}' +
+      '.hdr-sub{font-size:.66rem;color:#aaa;}' +
+      '.hdr-id{font-size:1.1rem;font-weight:900;color:#c7920a;border:2.5px solid #e0a800;border-radius:6px;padding:3px 11px;letter-spacing:1px;}' +
+      '.body{display:flex;}' +
+      '.info{flex:1;min-width:0;padding-bottom:8px;}' +
+      '.qrc{width:104px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;padding:12px 8px 8px;border-right:1px dashed #ccc;gap:4px;}' +
+      '.qrc img{width:86px;height:86px;border:1px solid #ddd;border-radius:4px;}' +
+      '.qrc small{font-size:.58rem;color:#aaa;text-align:center;margin-top:2px;}' +
+      '.sec{background:#f5f5f5;border-top:1px solid #eaeaea;border-bottom:1px solid #eaeaea;padding:4px 14px;font-size:.72rem;font-weight:700;color:#555;}' +
+      'table{width:100%;border-collapse:collapse;}' +
+      'tr{border-bottom:1px solid #f0f0f0;}tr:last-child{border-bottom:none;}' +
+      'td{padding:4px 14px;font-size:.8rem;line-height:1.5;vertical-align:top;}' +
+      'td.lb{color:#999;width:40%;white-space:nowrap;}' +
+      'td.vl{color:#111;font-weight:600;word-break:break-word;}' +
+      'td.vl.hi{color:#e67e00;font-weight:800;}' +
+      '.dest{text-align:center;font-size:1.35rem;font-weight:900;color:#e67e00;letter-spacing:3px;padding:6px 0;border-top:1px dashed #eee;border-bottom:1px dashed #eee;margin:2px 0;}' +
+      '.ftr{background:#fafafa;border-top:1px solid #eee;padding:5px 14px;display:flex;justify-content:space-between;}' +
+      '.ftr span{font-size:.6rem;color:#bbb;}' +
+      '@media print{' +
+        'body{background:#fff;padding:0;}' +
+        '.page{box-shadow:none;border:2px dashed #e0a800;width:148mm;}' +
+        '.close-btn{display:none!important;}' +
+        '@page{margin:4mm;size:160mm auto;}' +
+      '}';
+
+    var closeJs = "try{window.close();}catch(e){} history.length>1?history.back():(window.location.href='about:blank');";
+
+    var html =
+      '<!DOCTYPE html><html dir="rtl" lang="ku"><head><meta charset="UTF-8">' +
+      '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+      '<title>لەیبڵی گەیاندن</title><style>' + css + '</style></head><body>' +
+      '<div class="page">' +
+        '<div class="close-btn"><button onclick="' + closeJs + '">✕</button></div>' +
+        '<div class="hdr">' +
+          '<div class="hdr-l"><span style="font-size:1.4rem">📦</span>' +
+          '<div><div class="hdr-title">UK BAZAR</div>' +
+          '<div class="hdr-sub">لەیبڵی گەیاندن · Kurdistan Delivery Label</div></div></div>' +
+          '<div class="hdr-id">' + orderNum + '</div>' +
+        '</div>' +
+        '<div class="body">' +
+          '<div class="info">' +
+            '<div class="sec">📤 نێردەر · Sender</div>' +
+            '<table>' +
+              row('ناوی تەواو', senderName) +
+              row('📞 ژمارە', senderPhone) +
+              row('📞 ژمارە ٢', senderPhone2) +
+              row('📍 شوێن', senderLoc) +
+            '</table>' +
+            '<div class="sec">📬 وەرگر · Receiver</div>' +
+            '<table>' +
+              '<tr><td class="lb">ناوی تەواو</td><td class="vl hi">' + (recvName||'—') + '</td></tr>' +
+              '<tr><td class="lb">📞 ژمارە</td><td class="vl hi">' + (recvPhone||'—') + '</td></tr>' +
+              row('📞 ژمارە ٢', recvPhone2) +
+              row('📍 شوێن', recvLoc) +
+            '</table>' +
+            (recvLoc ? '<div class="dest">' + recvLoc.toUpperCase().slice(0,14) + '</div>' : '') +
+            '<div class="sec">📦 زانیاری کەلوپەل · Package Info</div>' +
+            '<table>' +
+              row('کەلوپەل', pkgName) +
+              row('ژمارەی پارچە', qty) +
+              row('کیلۆگرام', kg) +
+              (driver ? row('🚗 شۆفیر', driver.textContent.trim()) : '') +
+              (note   ? row('📝 تیبینی', note.textContent.trim())   : '') +
+              row('بەروار', dateText) +
+            '</table>' +
+          '</div>' +
+          '<div class="qrc">' +
+            '<img src="' + qrSrc + '" alt="QR">' +
+            '<small>کیوئار کۆد<br>Scan for info</small>' +
+          '</div>' +
+        '</div>' +
+        '<div class="ftr"><span>UK BAZAR — Kurdistan Delivery</span><span>ukbazar.online</span></div>' +
+      '</div>' +
+      '<script>window.onload=function(){window.print();}<\/script>' +
+      '</body></html>';
+
+    // Open in new tab (works on desktop + mobile)
+    var win = window.open('', '_blank');
+    if (win) {
+      win.document.write(html);
+      win.document.close();
+    } else {
+      // Popup blocked: overlay fallback
+      var ov = document.createElement('div');
+      ov.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#fff;z-index:99999;overflow:auto;';
+      ov.innerHTML = html;
+      document.body.appendChild(ov);
+      var ps = document.createElement('style');
+      ps.innerHTML = '@media print{body>*:not(#_kuOv){display:none!important;}}';
+      document.head.appendChild(ps);
+      ov.id = '_kuOv';
+      setTimeout(function(){ window.print(); }, 600);
+    }
+  }
+
+  // Override printLabel after script.js
+  setTimeout(function() {
+    try { window.printLabel = kuPrint; } catch(e) {
+      try { Object.defineProperty(window,'printLabel',{configurable:true,writable:true,value:kuPrint}); } catch(e2) {}
+    }
+  }, 200);
+
+})();
+    </script>
 </body>
 </html>
