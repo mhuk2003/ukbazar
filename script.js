@@ -1108,42 +1108,41 @@ function printLabel(key) {
     const nrRow = card.querySelector('.label-note-row');
 
     const html = `
-    <div style="font-family:'Tahoma','Arial',sans-serif;direction:rtl;padding:12px;background:#fff;color:#1a202c;">
+    <div style="font-family:'Tahoma','Arial',sans-serif;direction:rtl;background:#fff;color:#1a202c;width:100mm;padding:4px;box-sizing:border-box;">
     <style>
-    .pr-wrap{border:3px solid #2d3748;border-radius:12px;padding:14px;max-width:100%;}
-    .pr-top{display:flex;justify-content:space-between;align-items:center;border-bottom:2px dashed #667eea;padding-bottom:8px;margin-bottom:10px;}
-    .pr-title{font-size:15px;font-weight:bold;color:#667eea;}
-    .pr-date{font-size:10px;color:#718096;margin-top:2px;}
-    .pr-num{font-size:20px;font-weight:bold;color:#2d3748;background:#eef2ff;padding:3px 12px;border-radius:8px;border:2px solid #667eea;}
-    .pr-body{display:flex;gap:10px;align-items:flex-start;}
+    *{box-sizing:border-box;}
+    .pr-wrap{border:2px solid #2d3748;border-radius:5px;padding:5px;width:100%;}
+    .pr-top{display:flex;justify-content:space-between;align-items:center;border-bottom:1.5px dashed #667eea;padding-bottom:3px;margin-bottom:4px;}
+    .pr-title{font-size:8.5px;font-weight:bold;color:#667eea;line-height:1.3;}
+    .pr-date{font-size:7px;color:#718096;margin-top:1px;}
+    .pr-num{font-size:12px;font-weight:bold;color:#2d3748;background:#eef2ff;padding:2px 6px;border-radius:4px;border:1.5px solid #667eea;}
+    .pr-body{display:flex;gap:4px;align-items:flex-start;}
     .pr-main{flex:1;min-width:0;}
-    .pr-cols{display:flex;gap:7px;margin-bottom:8px;}
-    .pr-col{flex:1;border:1.5px solid #e2e8f0;border-radius:8px;padding:8px;background:#f7fafc;min-width:0;}
-    .pr-col.s{border-right:3px solid #667eea;}
-    .pr-col.r{border-right:3px solid #48bb78;}
-    .pr-col-title{font-size:11px;font-weight:bold;color:#667eea;border-bottom:1px solid #e2e8f0;padding-bottom:3px;margin-bottom:5px;}
+    .pr-cols{display:flex;gap:3px;margin-bottom:3px;}
+    .pr-col{flex:1;border:1px solid #e2e8f0;border-radius:4px;padding:3px;background:#f7fafc;min-width:0;}
+    .pr-col.s{border-right:2px solid #667eea;}
+    .pr-col.r{border-right:2px solid #48bb78;}
+    .pr-col-title{font-size:7px;font-weight:bold;color:#667eea;border-bottom:1px solid #e2e8f0;padding-bottom:2px;margin-bottom:2px;}
     .pr-col.r .pr-col-title{color:#48bb78;}
-    .pr-row{display:flex;justify-content:space-between;font-size:11px;padding:2px 0;border-bottom:1px dotted #e2e8f0;gap:4px;word-break:break-word;}
+    .pr-row{display:flex;justify-content:space-between;font-size:7px;padding:1px 0;border-bottom:1px dotted #e2e8f0;gap:2px;}
+    .pr-row:last-child{border-bottom:none;}
     .pr-row span{color:#718096;white-space:nowrap;flex-shrink:0;}
-    .pr-row strong{color:#2d3748;text-align:right;}
-    .pr-pkg{background:#edf2ff;border-radius:8px;padding:8px;}
-    .pr-info{display:flex;justify-content:space-between;font-size:11px;padding:4px 8px;margin-top:4px;border-radius:6px;gap:4px;}
+    .pr-row strong{color:#2d3748;text-align:right;word-break:break-word;}
+    .pr-pkg{background:#edf2ff;border-radius:4px;padding:3px;}
+    .pr-info{display:flex;justify-content:space-between;font-size:7px;padding:2px 3px;margin-top:2px;border-radius:3px;gap:2px;}
     .pr-driver{background:#ebf8ff;border:1px solid #bee3f8;}
     .pr-note{background:#fefce8;border:1px solid #fde68a;}
     .pr-info span{color:#718096;white-space:nowrap;}
     .pr-info strong{color:#1a202c;}
-    .pr-qr{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px;border:1.5px solid #e2e8f0;border-radius:8px;background:#f7fafc;flex-shrink:0;}
-    .pr-qr img{width:110px;height:110px;display:block;}
-    .pr-qr small{font-size:10px;color:#718096;}
-    .pr-foot{text-align:center;font-size:10px;color:#a0aec0;margin-top:8px;border-top:1px dashed #e2e8f0;padding-top:6px;}
+    .pr-qr{display:flex;flex-direction:column;align-items:center;gap:2px;padding:3px;border:1px solid #e2e8f0;border-radius:4px;background:#f7fafc;flex-shrink:0;width:60px;}
+    .pr-qr img{width:54px;height:54px;display:block;}
+    .pr-qr small{font-size:6px;color:#718096;text-align:center;}
+    .pr-foot{text-align:center;font-size:6.5px;color:#a0aec0;margin-top:3px;border-top:1px dashed #e2e8f0;padding-top:2px;}
     </style>
-    <div style="display:flex;justify-content:flex-end;padding:4px 8px 0;">
-      <button onclick="try{window.close();}catch(e){} history.length>1?history.back():(window.location.href='about:blank');" style="background:#fee2e2;border:2px solid #fca5a5;color:#dc2626;border-radius:50%;width:34px;height:34px;font-size:1.1rem;font-weight:900;cursor:pointer;touch-action:manipulation;">✕</button>
-    </div>
     <div class="pr-wrap">
       <div class="pr-top">
         <div>
-          <div class="pr-title">🚚 UK BAZAR — لەیبلی گەیاندن</div>
+          <div class="pr-title">🚚 UK BAZAR — لەیبلی گەیاندن · Kurdistan Delivery</div>
           <div class="pr-date">${dateText}</div>
         </div>
         <div class="pr-num">${orderNum}</div>
@@ -1151,8 +1150,8 @@ function printLabel(key) {
       <div class="pr-body">
         <div class="pr-main">
           <div class="pr-cols">
-            <div class="pr-col s"><div class="pr-col-title">📤 نێردەر</div>${rows('.sender-section .label-row')}</div>
-            <div class="pr-col r"><div class="pr-col-title">📥 وەرگر</div>${rows('.receiver-section .label-row')}</div>
+            <div class="pr-col s"><div class="pr-col-title">📤 نێردەر · Sender</div>${rows('.sender-section .label-row')}</div>
+            <div class="pr-col r"><div class="pr-col-title">📥 وەرگر · Receiver</div>${rows('.receiver-section .label-row')}</div>
           </div>
           <div class="pr-pkg">${rows('.label-package .label-row:not(.label-driver-row):not(.label-note-row)')}</div>
           ${drRow ? `<div class="pr-info pr-driver"><span>🚗 شۆفیر:</span><strong>${drRow.querySelector('strong').textContent}</strong></div>` : ''}
@@ -1160,10 +1159,10 @@ function printLabel(key) {
         </div>
         <div class="pr-qr">
           <img src="${qrSrc}" alt="QR" onload="window._qrKuLoaded=true;" onerror="window._qrKuLoaded=true;">
-          <small>QR کۆد</small>
+          <small>Scan for info</small>
         </div>
       </div>
-      <div class="pr-foot">UK BAZAR — World Online Shopping</div>
+      <div class="pr-foot">ukbazar.online · UK BAZAR — Kurdistan Delivery</div>
     </div>
     </div>`;
 
@@ -1185,7 +1184,7 @@ function printLabel(key) {
         }
         const doc = iframe.contentDocument || iframe.contentWindow.document;
         doc.open();
-        doc.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Tahoma,Arial,sans-serif;margin:0;padding:10px;background:#fff;}img{max-width:100%;}</style></head><body>' + html + '</body></html>');
+        doc.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><style>@page{size:100mm 150mm;margin:0;}html,body{margin:0;padding:0;width:100mm;}body{font-family:Tahoma,Arial,sans-serif;background:#fff;}img{max-width:100%;}</style></head><body>' + html + '</body></html>');
         doc.close();
         // چاوەڕوانی QR لە ناو iframe
         const iframeQr = doc.querySelector('.pr-qr img');
@@ -1273,38 +1272,36 @@ function printUkLabel(key) {
     const qrSrc      = qrImg ? qrImg.src : '';
 
     const html = `
-    <div style="font-family:'Segoe UI','Arial',sans-serif;direction:ltr;padding:12px;background:#fff;color:#1a202c;">
+    <div style="font-family:'Segoe UI','Arial',sans-serif;direction:ltr;background:#fff;color:#1a202c;width:100mm;padding:4px;box-sizing:border-box;">
     <style>
-    .pru-wrap{border:3px solid #d97706;border-radius:12px;padding:14px;max-width:100%;}
-    .pru-top{display:flex;justify-content:space-between;align-items:center;border-bottom:2px dashed #f0c040;padding-bottom:8px;margin-bottom:12px;}
-    .pru-brand{font-size:16px;font-weight:bold;color:#d97706;}
-    .pru-sub{font-size:11px;color:#92400e;background:#fef3c7;padding:2px 7px;border-radius:10px;display:inline-block;margin-top:2px;}
-    .pru-num{font-size:22px;font-weight:bold;color:#1a202c;background:#fef3c7;padding:4px 14px;border-radius:8px;border:2px solid #f0c040;}
-    .pru-body{display:flex;gap:10px;align-items:flex-start;}
-    .pru-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;}
-    .pru-sec{border:1.5px solid #e2e8f0;border-radius:8px;padding:9px;background:#f8fafc;}
-    .pru-sec.rec{border-left:4px solid #f0c040;}
-    .pru-sec.pkg{border-left:4px solid #667eea;}
-    .pru-sec-title{font-size:11px;font-weight:700;color:#92400e;border-bottom:1px solid #e2e8f0;padding-bottom:4px;margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px;}
+    *{box-sizing:border-box;}
+    .pru-wrap{border:2px solid #d97706;border-radius:5px;padding:5px;width:100%;}
+    .pru-top{display:flex;justify-content:space-between;align-items:center;border-bottom:1.5px dashed #f0c040;padding-bottom:3px;margin-bottom:4px;}
+    .pru-brand{font-size:8.5px;font-weight:bold;color:#d97706;line-height:1.3;}
+    .pru-sub{font-size:6.5px;color:#92400e;background:#fef3c7;padding:1px 4px;border-radius:5px;display:inline-block;margin-top:1px;}
+    .pru-num{font-size:12px;font-weight:bold;color:#1a202c;background:#fef3c7;padding:2px 6px;border-radius:4px;border:1.5px solid #f0c040;}
+    .pru-body{display:flex;gap:4px;align-items:flex-start;}
+    .pru-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;}
+    .pru-sec{border:1px solid #e2e8f0;border-radius:4px;padding:3px;background:#f8fafc;}
+    .pru-sec.rec{border-left:2px solid #f0c040;}
+    .pru-sec.pkg{border-left:2px solid #667eea;}
+    .pru-sec-title{font-size:7px;font-weight:700;color:#92400e;border-bottom:1px solid #e2e8f0;padding-bottom:2px;margin-bottom:2px;text-transform:uppercase;letter-spacing:.3px;}
     .pru-sec.pkg .pru-sec-title{color:#667eea;}
-    .pru-row{display:flex;justify-content:space-between;font-size:11px;padding:2px 0;border-bottom:1px dotted #e2e8f0;gap:6px;word-break:break-word;}
+    .pru-row{display:flex;justify-content:space-between;font-size:7px;padding:1px 0;border-bottom:1px dotted #e2e8f0;gap:3px;}
     .pru-row:last-child{border-bottom:none;}
-    .pru-row span{color:#718096;white-space:nowrap;min-width:60px;flex-shrink:0;}
-    .pru-row strong{color:#1a202c;text-align:right;}
-    .pru-postcode{background:#1a1a2e;color:#f0c040;font-size:24px;font-weight:900;text-align:center;padding:8px;border-radius:8px;letter-spacing:4px;margin-top:5px;}
-    .pru-qr{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px;border:1.5px solid #e2e8f0;border-radius:8px;background:#f7fafc;flex-shrink:0;}
-    .pru-qr img{width:110px;height:110px;display:block;}
-    .pru-qr small{font-size:10px;color:#718096;text-align:center;}
-    .pru-foot{text-align:center;font-size:10px;color:#a0aec0;margin-top:10px;border-top:1px dashed #e2e8f0;padding-top:6px;}
+    .pru-row span{color:#718096;white-space:nowrap;min-width:38px;flex-shrink:0;font-size:6.5px;}
+    .pru-row strong{color:#1a202c;text-align:right;word-break:break-word;}
+    .pru-postcode{background:#1a1a2e;color:#f0c040;font-size:13px;font-weight:900;text-align:center;padding:3px;border-radius:4px;letter-spacing:2px;margin-top:2px;}
+    .pru-qr{display:flex;flex-direction:column;align-items:center;gap:2px;padding:3px;border:1px solid #e2e8f0;border-radius:4px;background:#f7fafc;flex-shrink:0;width:60px;}
+    .pru-qr img{width:54px;height:54px;display:block;}
+    .pru-qr small{font-size:6px;color:#718096;text-align:center;}
+    .pru-foot{text-align:center;font-size:6.5px;color:#a0aec0;margin-top:3px;border-top:1px dashed #e2e8f0;padding-top:2px;}
     </style>
-    <div style="display:flex;justify-content:flex-end;padding:4px 8px 0;">
-      <button onclick="try{window.close();}catch(e){} history.length>1?history.back():(window.location.href='about:blank');" style="background:#fee2e2;border:2px solid #fca5a5;color:#dc2626;border-radius:50%;width:34px;height:34px;font-size:1.1rem;font-weight:900;cursor:pointer;touch-action:manipulation;">✕</button>
-    </div>
     <div class="pru-wrap">
       <div class="pru-top">
         <div>
-          <div class="pru-brand">🚚 UK POST</div>
-          <div class="pru-sub">UK Delivery Label</div>
+          <div class="pru-brand">🚚 UK BAZAR — UK Delivery Label</div>
+          <div class="pru-sub">Kurdistan Delivery</div>
         </div>
         <div class="pru-num">${orderNum.replace('#','').trim()}</div>
       </div>
@@ -1312,17 +1309,17 @@ function printUkLabel(key) {
         <div class="pru-main">
           <div class="pru-sec rec">
             <div class="pru-sec-title">📦 Recipient</div>
-            <div class="pru-row"><span>Full Name</span><strong>${name}</strong></div>
+            <div class="pru-row"><span>Name</span><strong>${name}</strong></div>
             <div class="pru-row"><span>Phone</span><strong>${phone}</strong></div>
             ${receiverName && receiverName !== '—' ? `<div class="pru-row" style="background:#fffbeb;"><span style="color:#d97706;">📬 Receiver</span><strong style="color:#d97706;">${receiverName}</strong></div>` : ''}
-            ${receiverPhone && receiverPhone !== '—' ? `<div class="pru-row" style="background:#fffbeb;"><span style="color:#d97706;">📞 Rcvr Tel</span><strong style="color:#d97706;">${receiverPhone}</strong></div>` : ''}
+            ${receiverPhone && receiverPhone !== '—' ? `<div class="pru-row" style="background:#fffbeb;"><span style="color:#d97706;">📞 Tel</span><strong style="color:#d97706;">${receiverPhone}</strong></div>` : ''}
             ${company && company !== '—' ? `<div class="pru-row"><span>Company</span><strong>${company}</strong></div>` : ''}
-            <div class="pru-row"><span>Address 1</span><strong>${address1}</strong></div>
-            ${address2 && address2 !== '—' ? `<div class="pru-row"><span>Address 2</span><strong>${address2}</strong></div>` : ''}
+            <div class="pru-row"><span>Address</span><strong>${address1}</strong></div>
+            ${address2 && address2 !== '—' ? `<div class="pru-row"><span>Addr 2</span><strong>${address2}</strong></div>` : ''}
             <div class="pru-row"><span>City</span><strong>${city}</strong></div>
             ${county && county !== '—' ? `<div class="pru-row"><span>County</span><strong>${county}</strong></div>` : ''}
             <div class="pru-row"><span>Country</span><strong>United Kingdom</strong></div>
-            ${destinationCity && destinationCity !== '—' ? `<div class="pru-row" style="background:#e0f2fe;border-radius:6px;"><span style="color:#0c5da5;font-weight:700;">🏙️ Destination</span><strong style="color:#0c5da5;font-size:14px;font-weight:900;">${destinationCity}</strong></div>` : ''}
+            ${destinationCity && destinationCity !== '—' ? `<div class="pru-row" style="background:#e0f2fe;border-radius:3px;"><span style="color:#0c5da5;font-weight:700;">🏙️ Dest.</span><strong style="color:#0c5da5;font-size:8px;font-weight:900;">${destinationCity}</strong></div>` : ''}
             <div class="pru-postcode">${postcode}</div>
           </div>
           <div class="pru-sec pkg">
@@ -1340,7 +1337,7 @@ function printUkLabel(key) {
           <small>Scan for info</small>
         </div>
       </div>
-      <div class="pru-foot">UK POST — World Online Shopping | www.ukpost.online</div>
+      <div class="pru-foot">ukbazar.online · UK BAZAR — Kurdistan Delivery</div>
     </div>
     </div>`;
 
@@ -1361,7 +1358,7 @@ function printUkLabel(key) {
         }
         const doc = iframe.contentDocument || iframe.contentWindow.document;
         doc.open();
-        doc.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:"Segoe UI",Arial,sans-serif;margin:0;padding:10px;background:#fff;}img{max-width:100%;}</style></head><body>' + html + '</body></html>');
+        doc.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><style>@page{size:100mm 150mm;margin:0;}html,body{margin:0;padding:0;width:100mm;}body{font-family:"Segoe UI",Arial,sans-serif;background:#fff;}img{max-width:100%;}</style></head><body>' + html + '</body></html>');
         doc.close();
         const iframeQr = doc.querySelector('.pru-qr img');
         const execPrint = () => {
