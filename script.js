@@ -405,6 +405,8 @@ function showAdminTab(tab) {
         loadRequests();
     } else if (tab === 'delivery') {
         loadDeliveryRequests();
+    } else if (tab === 'intlPost') {
+        loadIntlPost();
     } else if (tab === 'addSlider') {
         showAddSliderForm();
     } else if (tab === 'videos') {
@@ -3475,4 +3477,300 @@ function deleteVideo(key) {
     database.ref('videos/' + key).remove()
         .then(() => { showNotification('ڤیدیۆ سڕایەوە 🗑️'); loadVideoListAdmin(); loadVideos(); })
         .catch(() => showNotification('هەڵە لە سڕینەوە!', 'error'));
+}
+
+// ==================== International Post ====================
+
+const INTL_COUNTRIES = [
+  {name:'United Kingdom', flag:'🇬🇧', code:'gb'}, {name:'Germany', flag:'🇩🇪', code:'de'}, {name:'France', flag:'🇫🇷', code:'fr'},
+  {name:'Netherlands', flag:'🇳🇱', code:'nl'}, {name:'Belgium', flag:'🇧🇪', code:'be'}, {name:'Sweden', flag:'🇸🇪', code:'se'},
+  {name:'Norway', flag:'🇳🇴', code:'no'}, {name:'Denmark', flag:'🇩🇰', code:'dk'}, {name:'Finland', flag:'🇫🇮', code:'fi'},
+  {name:'Austria', flag:'🇦🇹', code:'at'}, {name:'Switzerland', flag:'🇨🇭', code:'ch'}, {name:'Italy', flag:'🇮🇹', code:'it'},
+  {name:'Spain', flag:'🇪🇸', code:'es'}, {name:'Poland', flag:'🇵🇱', code:'pl'}, {name:'Czech Republic', flag:'🇨🇿', code:'cz'},
+  {name:'USA', flag:'🇺🇸', code:'us'}, {name:'Canada', flag:'🇨🇦', code:'ca'}, {name:'Australia', flag:'🇦🇺', code:'au'},
+  {name:'UAE', flag:'🇦🇪', code:'ae'}, {name:'Turkey', flag:'🇹🇷', code:'tr'}, {name:'Kuwait', flag:'🇰🇼', code:'kw'},
+  {name:'Saudi Arabia', flag:'🇸🇦', code:'sa'}, {name:'Qatar', flag:'🇶🇦', code:'qa'}, {name:'Bahrain', flag:'🇧🇭', code:'bh'},
+  {name:'Jordan', flag:'🇯🇴', code:'jo'}, {name:'Lebanon', flag:'🇱🇧', code:'lb'}, {name:'Egypt', flag:'🇪🇬', code:'eg'},
+  {name:'Iraq', flag:'🇮🇶', code:'iq'}, {name:'Iran', flag:'🇮🇷', code:'ir'}, {name:'Greece', flag:'🇬🇷', code:'gr'},
+  {name:'Portugal', flag:'🇵🇹', code:'pt'}, {name:'Romania', flag:'🇷🇴', code:'ro'}, {name:'Hungary', flag:'🇭🇺', code:'hu'},
+  {name:'Japan', flag:'🇯🇵', code:'jp'}, {name:'South Korea', flag:'🇰🇷', code:'kr'}, {name:'China', flag:'🇨🇳', code:'cn'},
+  {name:'India', flag:'🇮🇳', code:'in'}, {name:'Pakistan', flag:'🇵🇰', code:'pk'}, {name:'Bangladesh', flag:'🇧🇩', code:'bd'},
+  {name:'Malaysia', flag:'🇲🇾', code:'my'}, {name:'Singapore', flag:'🇸🇬', code:'sg'}, {name:'New Zealand', flag:'🇳🇿', code:'nz'},
+  {name:'South Africa', flag:'🇿🇦', code:'za'}, {name:'Brazil', flag:'🇧🇷', code:'br'}, {name:'Mexico', flag:'🇲🇽', code:'mx'}
+];
+
+function loadIntlPost() {
+    const content = document.getElementById('adminContent');
+    if (!content) return;
+    content.innerHTML = '<p style="text-align:center;">چاوەڕوانی بکە...</p>';
+
+    const IS = 'width:100%;padding:5px 8px;border:1px solid #e2e8f0;border-radius:5px;font-size:.8rem;margin-bottom:6px;box-sizing:border-box;';
+
+    const countryOptions = INTL_COUNTRIES.map(c =>
+        '<option value="' + c.flag + ' ' + c.name + '">' + c.flag + ' ' + c.name + '</option>'
+    ).join('');
+
+    const formHtml = '<div id="intl-form-box" style="background:#fff;border:1.5px solid #bee3f8;border-radius:10px;padding:14px;margin-bottom:16px;">'
+        + '<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #bee3f8;padding-bottom:6px;margin-bottom:12px;">'
+        + '<h4 style="color:#2b6cb0;margin:0;">✉️ New Shipment — بارناستەی تازە</h4>'
+        + '<button onclick="toggleIntlForm()" id="intl-form-toggle" style="background:#ebf8ff;color:#2b6cb0;border:1.5px solid #bee3f8;border-radius:6px;padding:4px 12px;font-size:.8rem;cursor:pointer;">🔽 داخستن</button>'
+        + '</div>'
+        + '<div id="intl-form-fields">'
+        + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">'
+        + '<div style="border:1.5px solid #e2e8f0;border-radius:8px;padding:10px;background:#f7fafc;">'
+        + '<div style="font-weight:700;color:#2d3748;margin-bottom:8px;font-size:.9rem;">📤 SENDER — نێردەر</div>'
+        + '<label style="font-size:.75rem;color:#718096;">NAME</label><input id="ip-s-name" type="text" placeholder="Sender name" style="' + IS + '">'
+        + '<label style="font-size:.75rem;color:#718096;">KALA/</label><input id="ip-s-kala" type="text" placeholder="Item / کاڵا" style="' + IS + '">'
+        + '<label style="font-size:.75rem;color:#718096;">POST CODE + CITY</label><input id="ip-s-postcode" type="text" placeholder="Post code + City" style="' + IS + '">'
+        + '<label style="font-size:.75rem;color:#718096;">TEL</label><input id="ip-s-tel" type="tel" placeholder="Phone number" style="' + IS + '">'
+        + '<label style="font-size:.75rem;color:#718096;">ADDRESS</label><input id="ip-s-address" type="text" placeholder="Full address" style="' + IS + '">'
+        + '<label style="font-size:.75rem;color:#718096;">WEIGHT + BOX</label><input id="ip-s-weight" type="text" placeholder="e.g. 2kg / Box 30x20x10" style="' + IS + '">'
+        + '<label style="font-size:.75rem;color:#718096;">Notes and payments</label><input id="ip-s-notes" type="text" placeholder="Notes / Amount paid" style="' + IS + '">'
+        + '</div>'
+        + '<div style="border:1.5px solid #e2e8f0;border-radius:8px;padding:10px;background:#f7fafc;">'
+        + '<div style="font-weight:700;color:#2d3748;margin-bottom:8px;font-size:.9rem;">📬 RECIPIENT — وەرگر</div>'
+        + '<label style="font-size:.75rem;color:#718096;">NAME</label><input id="ip-r-name" type="text" placeholder="Recipient name" style="' + IS + '">'
+        + '<label style="font-size:.75rem;color:#718096;">KALA/</label><input id="ip-r-kala" type="text" placeholder="Item / کاڵا" style="' + IS + '">'
+        + '<label style="font-size:.75rem;color:#718096;">POST CODE + CITY</label><input id="ip-r-postcode" type="text" placeholder="Post code + City" style="' + IS + '">'
+        + '<label style="font-size:.75rem;color:#718096;">TEL</label><input id="ip-r-tel" type="tel" placeholder="Phone number" style="' + IS + '">'
+        + '<label style="font-size:.75rem;color:#718096;">ADDRESS</label><input id="ip-r-address" type="text" placeholder="Full address" style="' + IS + '">'
+        + '<label style="font-size:.75rem;color:#718096;">WEIGHT + BOX</label><input id="ip-r-weight" type="text" placeholder="e.g. 2kg / Box 30x20x10" style="' + IS + '">'
+        + '<label style="font-size:.75rem;color:#718096;">Notes and payments</label><input id="ip-r-notes" type="text" placeholder="Notes / Amount paid" style="' + IS + '">'
+        + '</div></div>'
+        + '<div style="margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">'
+        + '<label style="font-weight:700;color:#2d3748;">🌍 Destination Country:</label>'
+        + '<select id="ip-country" style="padding:6px 10px;border:1.5px solid #bee3f8;border-radius:6px;font-size:.9rem;background:#fff;">'
+        + '<option value="">-- Select Country --</option>'
+        + countryOptions
+        + '</select></div>'
+        + '<div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end;">'
+        + '<button onclick="saveIntlPost()" style="background:#2b6cb0;color:#fff;border:none;border-radius:7px;padding:8px 20px;font-size:.9rem;font-weight:700;cursor:pointer;">💾 پاشەکەوتکردن</button>'
+        + '<button onclick="clearIntlForm()" style="background:#e2e8f0;color:#2d3748;border:none;border-radius:7px;padding:8px 16px;font-size:.85rem;cursor:pointer;">🗑️ سڕینەوە</button>'
+        + '</div></div></div>';
+
+    database.ref('intlPost').once('value').then(snapshot => {
+        let listHtml = '';
+        if (!snapshot.exists()) {
+            listHtml = '<p style="text-align:center;color:#aaa;padding:20px;">هیچ تۆمارێک نییە.</p>';
+        } else {
+            const items = [];
+            snapshot.forEach(function(ch) {
+                var v = ch.val();
+                if (v && typeof v === 'object') {
+                    items.push(Object.assign({key: ch.key}, v));
+                }
+            });
+            console.log('items after forEach:', items.length);
+            listHtml = '<h3 style="color:#2b6cb0;border-bottom:2px solid #bee3f8;padding-bottom:6px;margin:0 0 12px;">🌍 تۆمارەکان (' + items.length + ')</h3>';
+            listHtml += '<div style="display:flex;flex-direction:column;gap:10px;">';
+            items.forEach(function(d) {
+                var flag = d.country ? d.country.split(' ')[0] : '🌍';
+                var cname = d.country ? d.country.split(' ').slice(1).join(' ') : '—';
+                var orderNum = d.orderNumber || '—';
+                listHtml += '<div style="border:1.5px solid #bee3f8;border-radius:8px;background:#fff;overflow:hidden;font-family:\'Segoe UI\',Arial,sans-serif;direction:ltr;">'
+                  + '<div style="background:#2b6cb0;color:#fff;padding:6px 12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">'
+                  + '<span style="font-weight:900;font-size:.95rem;letter-spacing:1px;"># ' + orderNum + '</span>'
+                  + '<span style="font-weight:700;font-size:.8rem;">' + flag + ' ' + cname + ' — ' + (d.timestamp||'') + '</span>'
+                  + '<div style="display:flex;gap:6px;">'
+                  + '<button onclick="printIntlPost(\'' + d.key + '\')" style="background:#fff;color:#2b6cb0;border:none;border-radius:5px;padding:3px 10px;font-size:.75rem;font-weight:700;cursor:pointer;">🖨️ Print</button>'
+                  + '<button onclick="deleteIntlPost(\'' + d.key + '\')" style="background:#fed7d7;color:#c53030;border:none;border-radius:5px;padding:3px 8px;font-size:.75rem;cursor:pointer;">🗑️</button>'
+                  + '</div></div>'
+                  + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">'
+                  + intlSideHtml('📤 SENDER', d.sender)
+                  + intlSideHtml('📬 RECIPIENT', d.recipient)
+                  + '</div></div>';
+            });
+            listHtml += '</div>';
+        }
+
+        content.innerHTML = '<div id="intl-form-top" style="direction:ltr;font-family:\'Segoe UI\',Arial,sans-serif;padding:10px;">'
+            + '<h3 style="text-align:center;color:#1a365d;margin-bottom:16px;">🌍 International Post — پۆستی نێودەوڵەتی</h3>'
+            + formHtml
+            + '<div id="intl-list">' + listHtml + '</div>'
+            + '</div>';
+
+    }).catch(err => {
+        console.error('loadIntlPost error:', err);
+        content.innerHTML = '<p style="text-align:center;color:red;">هەڵە لە بارکردن!</p>';
+    });
+}
+
+function toggleIntlForm() {
+    const fields = document.getElementById('intl-form-fields');
+    const btn = document.getElementById('intl-form-toggle');
+    if (!fields || !btn) return;
+    if (fields.style.display === 'none') {
+        fields.style.display = 'block';
+        btn.textContent = '🔼 داخستن';
+        const top = document.getElementById('intl-form-top');
+        if (top) top.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+        fields.style.display = 'none';
+        btn.textContent = '➕ تۆماری تازە';
+    }
+}
+
+
+function ipInput() {
+    return 'width:100%;padding:5px 8px;border:1px solid #e2e8f0;border-radius:5px;font-size:.8rem;margin-bottom:6px;box-sizing:border-box;';
+}
+
+function clearIntlForm() {
+    ['ip-s-name','ip-s-kala','ip-s-postcode','ip-s-tel','ip-s-address','ip-s-weight','ip-s-notes',
+     'ip-r-name','ip-r-kala','ip-r-postcode','ip-r-tel','ip-r-address','ip-r-weight','ip-r-notes']
+    .forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+    const ct = document.getElementById('ip-country'); if(ct) ct.value='';
+}
+
+function g(id) { return (document.getElementById(id)||{value:''}).value.trim(); }
+
+function saveIntlPost() {
+    const data = {
+        sender:    { name:g('ip-s-name'), kala:g('ip-s-kala'), postcode:g('ip-s-postcode'), tel:g('ip-s-tel'), address:g('ip-s-address'), weight:g('ip-s-weight'), notes:g('ip-s-notes') },
+        recipient: { name:g('ip-r-name'), kala:g('ip-r-kala'), postcode:g('ip-r-postcode'), tel:g('ip-r-tel'), address:g('ip-r-address'), weight:g('ip-r-weight'), notes:g('ip-r-notes') },
+        country:   g('ip-country'),
+        timestamp: new Date().toLocaleString(),
+        sortKey:   Date.now()
+    };
+    if (!data.sender.name && !data.recipient.name) { showNotification('تکایە زانیاری بنووسە!', 'error'); return; }
+
+    // ژمارەی پسولە
+    database.ref('intlCounter').transaction((current) => {
+        return (current || 0) + 1;
+    }).then((result) => {
+        data.orderNumber = 'IP-' + String(result.snapshot.val()).padStart(3, '0');
+        return database.ref('intlPost').push(data);
+    }).then(() => {
+            showNotification('پاشەکەوت کرا ✅');
+            clearIntlForm();
+            loadIntlPost();
+            setTimeout(() => {
+                const list = document.getElementById('intl-list');
+                if (list) list.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 600);
+        })
+        .catch(() => showNotification('هەڵە!', 'error'));
+}
+
+function loadIntlList() {
+    const container = document.getElementById('intl-list');
+    if (!container) return;
+    container.innerHTML = '<p style="text-align:center;color:#718096;">بارکردن...</p>';
+    database.ref('intlPost').once('value', snap => {
+        if (!snap.exists()) {
+            container.innerHTML = '<p style="text-align:center;color:#aaa;padding:20px;">هیچ تۆمارێک نییە.</p>';
+            return;
+        }
+        const items = [];
+        snap.forEach(ch => items.push({key: ch.key, ...ch.val()}));
+        items.sort((a,b) => {
+            const na = parseInt((a.orderNumber||'').replace(/[^0-9]/g,'')) || 0;
+            const nb = parseInt((b.orderNumber||'').replace(/[^0-9]/g,'')) || 0;
+            return nb - na || (b.sortKey||0) - (a.sortKey||0);
+        });
+        console.log('intlPost records loaded:', items.length);
+        items.forEach((d,i) => console.log(`  [${i}] key=${d.key} order=${d.orderNumber} sender=${JSON.stringify(d.sender)} recipient=${JSON.stringify(d.recipient)}`));
+
+        let html = `<h3 style="color:#2b6cb0;border-bottom:2px solid #bee3f8;padding-bottom:6px;margin:0 0 12px;">🌍 تۆمارەکان (${items.length})</h3>`;
+        html += '<div style="display:flex;flex-direction:column;gap:10px;">';
+        items.forEach(d => {
+            const flag = d.country ? d.country.split(' ')[0] : '🌍';
+            const cname = d.country ? d.country.split(' ').slice(1).join(' ') : '—';
+            const orderNum = d.orderNumber || '—';
+            html += `
+            <div style="border:1.5px solid #bee3f8;border-radius:8px;background:#fff;overflow:hidden;font-family:'Segoe UI',Arial,sans-serif;direction:ltr;">
+              <div style="background:#2b6cb0;color:#fff;padding:6px 12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
+                <span style="font-weight:900;font-size:.95rem;letter-spacing:1px;"># ${orderNum}</span>
+                <span style="font-weight:700;font-size:.8rem;">${flag} ${cname} — ${d.timestamp||''}</span>
+                <div style="display:flex;gap:6px;">
+                  <button onclick="printIntlPost('${d.key}')" style="background:#fff;color:#2b6cb0;border:none;border-radius:5px;padding:3px 10px;font-size:.75rem;font-weight:700;cursor:pointer;">🖨️ Print</button>
+                  <button onclick="deleteIntlPost('${d.key}')" style="background:#fed7d7;color:#c53030;border:none;border-radius:5px;padding:3px 8px;font-size:.75rem;cursor:pointer;">🗑️</button>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+                ${intlSideHtml('📤 SENDER', d.sender)}
+                ${intlSideHtml('📬 RECIPIENT', d.recipient)}
+              </div>
+            </div>`;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+    });
+}
+
+function intlSideHtml(title, s) {
+    if (!s || typeof s !== 'object') return `<div style="padding:8px 12px;border-right:1px solid #e2e8f0;"><b style="color:#2b6cb0;font-size:.8rem;">${title}</b><p style="color:#aaa;font-size:.75rem;margin:4px 0;">—</p></div>`;
+    const row = (l,v) => v ? `<div style="display:flex;border-bottom:1px dotted #e2e8f0;font-size:.75rem;padding:2px 0;"><span style="color:#718096;width:110px;flex-shrink:0;">${l}</span><span style="color:#1a202c;font-weight:600;">${v}</span></div>` : '';
+    return `<div style="padding:8px 12px;border-right:1px solid #e2e8f0;">
+      <div style="font-weight:700;color:#2b6cb0;margin-bottom:6px;font-size:.8rem;">${title}</div>
+      ${row('NAME:', s.name)} ${row('KALA/', s.kala)} ${row('POST CODE+CITY:', s.postcode)}
+      ${row('TEL:', s.tel)} ${row('ADDRESS:', s.address)} ${row('WEIGHT+BOX:', s.weight)} ${row('Notes/Pay:', s.notes)}
+    </div>`;
+}
+
+function deleteIntlPost(key) {
+    if (!confirm('دڵنیایت لە سڕینەوە؟')) return;
+    database.ref('intlPost/' + key).remove()
+        .then(() => { showNotification('سڕایەوە 🗑️'); loadIntlPost(); })
+        .catch(() => showNotification('هەڵە!', 'error'));
+}
+
+function printIntlPost(key) {
+    database.ref('intlPost/' + key).once('value', snap => {
+        if (!snap.exists()) return;
+        const d = snap.val();
+        const s = d.sender || {};
+        const r = d.recipient || {};
+        const flag = d.country ? d.country.split(' ')[0] : '🌍';
+        const cname = d.country ? d.country.split(' ').slice(1).join(' ') : '';
+
+        // دۆزینەوەی country code بۆ وینەی ئەلا
+        const countryObj = INTL_COUNTRIES.find(c => c.name === cname || c.flag === flag);
+        const code = countryObj ? countryObj.code : '';
+        const flagImg = code
+            ? '<img src="https://flagcdn.com/h80/' + code + '.png" style="height:52px;width:auto;border-radius:3px;border:1px solid rgba(255,255,255,.3);" alt="' + cname + '">'
+            : '<span style="font-size:2.8rem;line-height:1;">' + flag + '</span>';
+
+        const row = (l, v) => '<tr><td style="padding:4px 8px;color:#555;border:1px solid #ccc;width:40%;font-size:.8rem;">' + l + '</td><td style="padding:4px 8px;border:1px solid #ccc;font-size:.8rem;font-weight:600;">' + (v||'') + '</td></tr>';
+
+        const box = (title, person) => '<div style="border:2px solid #1a365d;border-radius:6px;margin-bottom:14px;overflow:hidden;">'
+          + '<div style="background:#1a365d;color:#fff;padding:7px 14px;font-size:.95rem;font-weight:900;display:flex;justify-content:space-between;align-items:center;">'
+          + '<span>' + title + '</span>'
+          + '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;">'
+          + flagImg
+          + '<span style="font-size:.65rem;color:#bee3f8;letter-spacing:.5px;font-weight:700;">' + cname.toUpperCase() + '</span>'
+          + '</div></div>'
+          + '<table style="width:100%;border-collapse:collapse;">'
+          + row('NAME:', person.name)
+          + row('KALA/', person.kala)
+          + row('POST CODE +CITY', person.postcode)
+          + row('TEL', person.tel)
+          + row('ADDRESS', person.address)
+          + row('WEIGHT+BOX', person.weight)
+          + row('Notes and payments', person.notes)
+          + '</table>'
+          + '<div style="background:#1a365d;color:#fff;padding:5px 14px;font-size:.72rem;display:flex;justify-content:space-between;align-items:center;">'
+          + '<span>KING STREET - UK POST &nbsp;&nbsp; 07755436275 / 07507472656</span>'
+          + (code ? '<img src="https://flagcdn.com/h20/gb.png" style="height:14px;" alt="GB">' : '<span>🇬🇧</span>')
+          + '</div></div>';
+
+        const html = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
+          + '<style>@page{size:A5;margin:10mm;} body{font-family:\'Segoe UI\',Arial,sans-serif;margin:0;padding:0;} img{display:inline-block;}</style>'
+          + '</head><body>'
+          + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;border-bottom:2px solid #1a365d;padding-bottom:8px;">'
+          + '<span style="font-size:1.1rem;font-weight:900;color:#1a365d;"># ' + (d.orderNumber||'—') + '</span>'
+          + '<div style="display:flex;align-items:center;gap:8px;">'
+          + (code ? '<img src="https://flagcdn.com/h40/' + code + '.png" style="height:32px;border-radius:2px;" alt="' + cname + '">' : '<span style="font-size:2rem;">' + flag + '</span>')
+          + '<div style="text-align:right;">'
+          + '<div style="font-size:.95rem;font-weight:900;color:#1a365d;">' + cname + '</div>'
+          + '<div style="font-size:.7rem;color:#718096;">' + (d.timestamp||'') + '</div>'
+          + '</div></div></div>'
+          + box('SENDER &nbsp;—&nbsp; نێردەر', s)
+          + box('recipient &nbsp;--&nbsp; وەرگر', r)
+          + '<script>window.onload=function(){window.print();}<\/script>'
+          + '</body></html>';
+
+        const win = window.open('','_blank');
+        if (win) { win.document.write(html); win.document.close(); }
+    });
 }
