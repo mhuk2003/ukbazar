@@ -1446,6 +1446,8 @@ document.addEventListener('DOMContentLoaded', () => {
     var pkgName      = getPkg('کەلوپەل');
     var qty          = getPkg('پارچە');
     var kg           = getPkg('کیلۆ');
+    var itemPrice    = getPkg('نرخی کاڵا');
+    var deliveryPpkg = getPkg('نرخی گەیاندن');
     var driver       = card.querySelector('.label-driver-row strong');
     var note         = card.querySelector('.label-note-row strong');
     var dateText     = (card.querySelector('.label-footer span') || {}).textContent || '';
@@ -1458,35 +1460,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     var css =
-      'body{font-family:Arial,sans-serif;background:#f0f0f0;margin:0;padding:16px;display:flex;justify-content:center;}' +
-      '.page{background:#fff;border:2px dashed #e0a800;border-radius:8px;width:148mm;overflow:hidden;}' +
-      '.close-btn{display:flex;justify-content:flex-end;padding:6px 8px 0;}' +
-      '.close-btn button{background:#fee2e2;border:2px solid #fca5a5;color:#dc2626;border-radius:50%;width:34px;height:34px;font-size:1.1rem;font-weight:900;cursor:pointer;touch-action:manipulation;}' +
-      '.hdr{display:flex;align-items:center;justify-content:space-between;padding:8px 14px 10px;border-bottom:1px solid #eee;}' +
-      '.hdr-l{display:flex;align-items:center;gap:8px;}' +
-      '.hdr-title{font-size:1rem;font-weight:900;color:#c7920a;}' +
-      '.hdr-sub{font-size:.66rem;color:#aaa;}' +
-      '.hdr-id{font-size:1.1rem;font-weight:900;color:#c7920a;border:2.5px solid #e0a800;border-radius:6px;padding:3px 11px;letter-spacing:1px;}' +
+      '@page{size:100mm 150mm;margin:0;}' +
+      '*{box-sizing:border-box;}' +
+      'body{font-family:Arial,sans-serif;background:#fff;margin:0;padding:0;width:100mm;}' +
+      '.page{background:#fff;border:2px dashed #e0a800;border-radius:6px;width:100mm;overflow:hidden;}' +
+      '.close-btn{display:flex;justify-content:flex-end;padding:3px 5px 0;}' +
+      '.close-btn button{background:#fee2e2;border:2px solid #fca5a5;color:#dc2626;border-radius:50%;width:26px;height:26px;font-size:.9rem;font-weight:900;cursor:pointer;touch-action:manipulation;}' +
+      '.hdr{display:flex;align-items:center;justify-content:space-between;padding:4px 8px 5px;border-bottom:1px solid #eee;}' +
+      '.hdr-l{display:flex;align-items:center;gap:5px;}' +
+      '.hdr-title{font-size:.75rem;font-weight:900;color:#c7920a;}' +
+      '.hdr-sub{font-size:.55rem;color:#aaa;}' +
+      '.hdr-id{font-size:.85rem;font-weight:900;color:#c7920a;border:2px solid #e0a800;border-radius:4px;padding:2px 7px;letter-spacing:1px;}' +
       '.body{display:flex;}' +
-      '.info{flex:1;min-width:0;padding-bottom:8px;}' +
-      '.qrc{width:104px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;padding:12px 8px 8px;border-right:1px dashed #ccc;gap:4px;}' +
-      '.qrc img{width:86px;height:86px;border:1px solid #ddd;border-radius:4px;}' +
-      '.qrc small{font-size:.58rem;color:#aaa;text-align:center;margin-top:2px;}' +
-      '.sec{background:#f5f5f5;border-top:1px solid #eaeaea;border-bottom:1px solid #eaeaea;padding:4px 14px;font-size:.72rem;font-weight:700;color:#555;}' +
+      '.info{flex:1;min-width:0;padding-bottom:4px;}' +
+      '.qrc{width:68px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;padding:6px 4px 4px;border-right:1px dashed #ccc;gap:3px;}' +
+      '.qrc img{width:58px;height:58px;border:1px solid #ddd;border-radius:3px;}' +
+      '.qrc small{font-size:.48rem;color:#aaa;text-align:center;margin-top:1px;}' +
+      '.sec{background:#f5f5f5;border-top:1px solid #eaeaea;border-bottom:1px solid #eaeaea;padding:2px 8px;font-size:.6rem;font-weight:700;color:#555;}' +
       'table{width:100%;border-collapse:collapse;}' +
       'tr{border-bottom:1px solid #f0f0f0;}tr:last-child{border-bottom:none;}' +
-      'td{padding:4px 14px;font-size:.8rem;line-height:1.5;vertical-align:top;}' +
-      'td.lb{color:#999;width:40%;white-space:nowrap;}' +
+      'td{padding:2px 8px;font-size:.65rem;line-height:1.4;vertical-align:top;}' +
+      'td.lb{color:#999;width:38%;white-space:nowrap;}' +
       'td.vl{color:#111;font-weight:600;word-break:break-word;}' +
       'td.vl.hi{color:#e67e00;font-weight:800;}' +
-      '.dest{text-align:center;font-size:1.35rem;font-weight:900;color:#e67e00;letter-spacing:3px;padding:6px 0;border-top:1px dashed #eee;border-bottom:1px dashed #eee;margin:2px 0;}' +
-      '.ftr{background:#fafafa;border-top:1px solid #eee;padding:5px 14px;display:flex;justify-content:space-between;}' +
-      '.ftr span{font-size:.6rem;color:#bbb;}' +
+      '.ftr{background:#fafafa;border-top:1px solid #eee;padding:3px 8px;display:flex;justify-content:space-between;}' +
+      '.ftr span{font-size:.5rem;color:#bbb;}' +
       '@media print{' +
-        'body{background:#fff;padding:0;}' +
-        '.page{box-shadow:none;border:2px dashed #e0a800;width:148mm;}' +
+        'body{background:#fff;padding:0;width:100mm;}' +
+        '.page{box-shadow:none;border:2px dashed #e0a800;width:100mm;}' +
         '.close-btn{display:none!important;}' +
-        '@page{margin:4mm;size:160mm auto;}' +
       '}';
 
     var closeJs = "try{window.close();}catch(e){} history.length>1?history.back():(window.location.href='about:blank');";
@@ -1498,8 +1500,8 @@ document.addEventListener('DOMContentLoaded', () => {
       '<div class="page">' +
         '<div class="close-btn"><button onclick="' + closeJs + '">✕</button></div>' +
         '<div class="hdr">' +
-          '<div class="hdr-l"><span style="font-size:1.4rem">📦</span>' +
-          '<div><div class="hdr-title">UK BAZAR</div>' +
+          '<div class="hdr-l"><span style="font-size:1.1rem">📦</span>' +
+          '<div><div class="hdr-title">KING STREET</div>' +
           '<div class="hdr-sub">لەیبڵی گەیاندن · Kurdistan Delivery Label</div></div></div>' +
           '<div class="hdr-id">' + orderNum + '</div>' +
         '</div>' +
@@ -1523,6 +1525,8 @@ document.addEventListener('DOMContentLoaded', () => {
               row('کەلوپەل', pkgName) +
               row('ژمارەی پارچە', qty) +
               row('کیلۆگرام', kg) +
+              (itemPrice    ? row('💰 نرخی کاڵا',    itemPrice)    : '') +
+              (deliveryPpkg ? row('🚚 نرخی گەیاندن', deliveryPpkg) : '') +
               (driver ? row('🚗 شۆفیر', driver.textContent.trim()) : '') +
               (note   ? row('📝 تیبینی', note.textContent.trim())   : '') +
               row('بەروار', dateText) +
