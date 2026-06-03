@@ -3754,7 +3754,7 @@ function printIntlPost(key) {
           + (code ? '<img src="https://flagcdn.com/h20/gb.png" style="height:14px;" alt="GB">' : '<span>🇬🇧</span>')
           + '</div></div>';
 
-        const html = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
+      const html = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
           + '<style>@page{size:A5;margin:10mm;} body{font-family:\'Segoe UI\',Arial,sans-serif;margin:0;padding:0;} img{display:inline-block;}</style>'
           + '</head><body>'
           + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;border-bottom:2px solid #1a365d;padding-bottom:8px;">'
@@ -3762,7 +3762,8 @@ function printIntlPost(key) {
           + '<div style="display:flex;align-items:center;gap:8px;">'
           + (code ? '<img src="https://flagcdn.com/h40/' + code + '.png" style="height:32px;border-radius:2px;" alt="' + cname + '">' : '<span style="font-size:2rem;">' + flag + '</span>')
           + '<div style="text-align:right;">'
-          + '<div style="font-size:.95rem;font-weight:900;color:#1a365d;">' + cname + '</div>'
+          // 🛠️ لێرەدا لە جیاتی cname بە ڕەقی ناوی نوێمان جێگیر کرد:
+          + '<div style="font-size:.95rem;font-weight:900;color:#1a365d; white-space: nowrap;">UK POST - KING STREET</div>'
           + '<div style="font-size:.7rem;color:#718096;">' + (d.timestamp||'') + '</div>'
           + '</div></div></div>'
           + box('SENDER &nbsp;—&nbsp; نێردەر', s)
