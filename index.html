@@ -1500,13 +1500,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     var closeJs = "try{window.close();}catch(e){} history.length>1?history.back():(window.location.href='about:blank');";
 
-    var html =
+ var html =
       '<!DOCTYPE html><html dir="rtl" lang="ku"><head><meta charset="UTF-8">' +
       '<meta name="viewport" content="width=device-width,initial-scale=1">' +
       '<title>لەیبڵی گەیاندن</title><style>' + css + '</style></head><body>' +
       '<div class="page">' +
         '<div class="close-btn"><button onclick="' + closeJs + '">✕</button></div>' +
-     /* Header */
+       /* Header — کوردی: تەنها King Street */
 
         '<div class="hdr">' +
 
@@ -1601,7 +1601,6 @@ document.addEventListener('DOMContentLoaded', () => {
 })();
     </script>
 
-    <!-- ══ IP / INTL POST LABEL — FULL A4 OVERRIDE ══ -->
     <script>
 (function() {
 
@@ -1725,6 +1724,12 @@ document.addEventListener('DOMContentLoaded', () => {
       recvWeight  = card.dataset.recvWeight  || card.dataset.weight || '';
     }
 
+    // 🌟 چارەسەری کێشەکە لێرەدایە: ئەگەر ناوی نێردەر UK POST بوو، بە زۆر بیکە بە هەردوو ناوەکە
+    var displayCountry = "United Kingdom";
+    if (senderName.toUpperCase().trim() === "UK POST") {
+       displayCountry = "UK POST - KING STREET";
+    }
+
     var now = new Date();
     var dateStr = dateText || (now.getDate() + '/' + (now.getMonth()+1) + '/' + now.getFullYear()
       + ', ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0'));
@@ -1784,12 +1789,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }).join('');
       return '<div class="section">'
         + '<div class="sec-head">'
-          + '<div class="sec-label">'
-            + '<span class="sec-en">' + titleEn + '</span>'
-            + '<span class="sec-dash">—</span>'
-            + '<span class="sec-ku">' + titleKu + '</span>'
-          + '</div>'
-          + flagSvg
+        + '<div class="sec-label">'
+          + '<span class="sec-en">' + titleEn + '</span>'
+          + '<span class="sec-dash">—</span>'
+          + '<span class="sec-ku">' + titleKu + '</span>'
+        + '</div>'
+        + flagSvg
         + '</div>'
         + '<table class="sec-table">' + rowsHtml + '</table>'
         + '</div>';
@@ -1827,12 +1832,13 @@ document.addEventListener('DOMContentLoaded', () => {
         + 'font-weight:900;cursor:pointer;z-index:9999;">✕</button>'
       + '<div class="page">'
         /* ─── Header: IP number left, flag+country+date right ─── */
+       /* ─── Header: IP number left, flag+country+date right ─── */
         + '<div class="hdr">'
           + '<div class="hdr-id"># ' + ipLabel + '</div>'
           + '<div class="hdr-right">'
             + '<div style="display:flex;align-items:center;gap:10px;">'
               + flagSvg
-              + '<div class="hdr-country">United Kingdom</div>'
+              + '<div class="hdr-country" style="font-size: 1.1rem; white-space: nowrap; font-weight: bold;">UK POST - KING STREET</div>'
             + '</div>'
             + '<div class="hdr-date">' + dateStr + '</div>'
           + '</div>'
@@ -1885,5 +1891,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
 })();
     </script>
-</body>
-</html>
