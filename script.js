@@ -1313,7 +1313,7 @@ function printUkLabel(key) {
     <div class="pru-wrap">
       <div class="pru-top">
         <div>
-          <div class="pru-brand">🚚 UK POST</div>
+          <div class="pru-brand">🚚 UK POST / KING STREET</div>
           <div class="pru-sub">UK Delivery Label</div>
         </div>
         <div class="pru-num">${orderNum.replace('#','').trim()}</div>
@@ -1352,6 +1352,52 @@ function printUkLabel(key) {
       </div>
       <div class="pru-foot">UK POST — World Online Shopping | www.ukpost.online</div>
     </div>
+
+    <!-- ───── Kurdish / Local Delivery Section ───── -->
+    <div style="margin-top:14px;border:3px solid #2d3748;border-radius:12px;padding:14px;font-family:'Tahoma','Arial',sans-serif;direction:rtl;background:#fff;color:#1a202c;">
+      <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px dashed #667eea;padding-bottom:8px;margin-bottom:10px;">
+        <div>
+          <div style="font-size:15px;font-weight:bold;color:#667eea;">🚚 لەیبلی گەیاندن / KING STREET</div>
+          <div style="font-size:10px;color:#d97706;font-weight:700;margin-top:2px;">UK POST / KING STREET</div>
+          <div style="font-size:10px;color:#718096;margin-top:2px;">${dateText.replace('📅','').trim()}</div>
+        </div>
+        <div style="font-size:20px;font-weight:bold;color:#2d3748;background:#eef2ff;padding:3px 12px;border-radius:8px;border:2px solid #667eea;">${orderNum.replace('#','').trim()}</div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;gap:7px;margin-bottom:8px;">
+            <!-- Sender col -->
+            <div style="flex:1;border:1.5px solid #e2e8f0;border-right:3px solid #667eea;border-radius:8px;padding:8px;background:#f7fafc;min-width:0;">
+              <div style="font-size:11px;font-weight:bold;color:#667eea;border-bottom:1px solid #e2e8f0;padding-bottom:3px;margin-bottom:5px;">📤 نێردەر / SENDER</div>
+              <div style="font-size:11px;padding:2px 0;border-bottom:1px dotted #e2e8f0;display:flex;justify-content:space-between;gap:4px;"><span style="color:#718096;white-space:nowrap;">ناو:</span><strong>${name}</strong></div>
+              <div style="font-size:11px;padding:2px 0;border-bottom:1px dotted #e2e8f0;display:flex;justify-content:space-between;gap:4px;"><span style="color:#718096;white-space:nowrap;">تەلەفۆن:</span><strong>${phone}</strong></div>
+              <div style="font-size:11px;padding:2px 0;display:flex;justify-content:space-between;gap:4px;"><span style="color:#718096;white-space:nowrap;">کاڵا:</span><strong>${item}</strong></div>
+            </div>
+            <!-- Receiver col -->
+            <div style="flex:1;border:1.5px solid #e2e8f0;border-right:3px solid #48bb78;border-radius:8px;padding:8px;background:#f7fafc;min-width:0;">
+              <div style="font-size:11px;font-weight:bold;color:#48bb78;border-bottom:1px solid #e2e8f0;padding-bottom:3px;margin-bottom:5px;">📥 وەرگر / RECIPIENT</div>
+              ${receiverName && receiverName !== '—' ? `<div style="font-size:11px;padding:2px 0;border-bottom:1px dotted #e2e8f0;display:flex;justify-content:space-between;gap:4px;"><span style="color:#718096;white-space:nowrap;">ناو:</span><strong>${receiverName}</strong></div>` : `<div style="font-size:11px;padding:2px 0;border-bottom:1px dotted #e2e8f0;display:flex;justify-content:space-between;gap:4px;"><span style="color:#718096;white-space:nowrap;">ناو:</span><strong>${name}</strong></div>`}
+              ${receiverPhone && receiverPhone !== '—' ? `<div style="font-size:11px;padding:2px 0;border-bottom:1px dotted #e2e8f0;display:flex;justify-content:space-between;gap:4px;"><span style="color:#718096;white-space:nowrap;">تەلەفۆن:</span><strong>${receiverPhone}</strong></div>` : `<div style="font-size:11px;padding:2px 0;border-bottom:1px dotted #e2e8f0;display:flex;justify-content:space-between;gap:4px;"><span style="color:#718096;white-space:nowrap;">تەلەفۆن:</span><strong>${phone}</strong></div>`}
+              ${destinationCity && destinationCity !== '—' ? `<div style="font-size:11px;padding:2px 0;display:flex;justify-content:space-between;gap:4px;"><span style="color:#718096;white-space:nowrap;">شار:</span><strong style="color:#0c5da5;font-weight:900;">${destinationCity}</strong></div>` : ''}
+            </div>
+          </div>
+          <!-- Package info Kurdish -->
+          <div style="background:#edf2ff;border-radius:8px;padding:8px;">
+            <div style="display:flex;justify-content:space-between;font-size:11px;padding:2px 0;border-bottom:1px dotted #c7d2fe;gap:4px;"><span style="color:#718096;">📦 کاڵا:</span><strong>${item}</strong></div>
+            ${qty && qty !== '—' ? `<div style="display:flex;justify-content:space-between;font-size:11px;padding:2px 0;border-bottom:1px dotted #c7d2fe;gap:4px;"><span style="color:#718096;">🔢 ژمارە:</span><strong>${qty} دانە</strong></div>` : ''}
+            ${kg && kg !== '—' ? `<div style="display:flex;justify-content:space-between;font-size:11px;padding:2px 0;border-bottom:1px dotted #c7d2fe;gap:4px;"><span style="color:#718096;">⚖️ کێش:</span><strong>${kg} کگ</strong></div>` : ''}
+            ${payment && payment !== '—' ? `<div style="display:flex;justify-content:space-between;font-size:11px;padding:2px 0;gap:4px;background:#f0fff4;border-radius:4px;padding:3px 5px;"><span style="color:#276749;">💳 پارەدان:</span><strong style="color:#276749;">${payment}</strong></div>` : ''}
+          </div>
+        </div>
+        <!-- QR code repeated -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px;border:1.5px solid #e2e8f0;border-radius:8px;background:#f7fafc;flex-shrink:0;">
+          <img src="${qrSrc}" alt="QR" style="width:90px;height:90px;display:block;">
+          <small style="font-size:10px;color:#718096;">QR کۆد</small>
+        </div>
+      </div>
+      <div style="text-align:center;font-size:10px;color:#a0aec0;margin-top:8px;border-top:1px dashed #e2e8f0;padding-top:6px;">KING STREET — UK POST &nbsp;|&nbsp; 07755436275 / 07507472656</div>
+    </div>
+
     </div>`;
 
     const printArea = document.getElementById('printArea');
