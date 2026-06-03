@@ -1463,32 +1463,38 @@ document.addEventListener('DOMContentLoaded', () => {
     var css =
       '@page{size:100mm 150mm;margin:0;}' +
       '*{box-sizing:border-box;}' +
-      'body{font-family:Arial,sans-serif;background:#fff;margin:0;padding:0;width:100mm;}' +
-      '.page{background:#fff;border:2px dashed #e0a800;border-radius:6px;width:100mm;overflow:hidden;}' +
-      '.close-btn{display:flex;justify-content:flex-end;padding:3px 5px 0;}' +
-      '.close-btn button{background:#fee2e2;border:2px solid #fca5a5;color:#dc2626;border-radius:50%;width:26px;height:26px;font-size:.9rem;font-weight:900;cursor:pointer;touch-action:manipulation;}' +
-      '.hdr{display:flex;align-items:center;justify-content:space-between;padding:4px 8px 5px;border-bottom:1px solid #eee;}' +
-      '.hdr-l{display:flex;align-items:center;gap:5px;}' +
-      '.hdr-title{font-size:.75rem;font-weight:900;color:#c7920a;}' +
-      '.hdr-sub{font-size:.55rem;color:#aaa;}' +
-      '.hdr-id{font-size:.85rem;font-weight:900;color:#c7920a;border:2px solid #e0a800;border-radius:4px;padding:2px 7px;letter-spacing:1px;}' +
-      '.body{display:flex;}' +
-      '.info{flex:1;min-width:0;padding-bottom:4px;}' +
-      '.qrc{width:68px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;padding:6px 4px 4px;border-right:1px dashed #ccc;gap:3px;}' +
-      '.qrc img{width:58px;height:58px;border:1px solid #ddd;border-radius:3px;}' +
-      '.qrc small{font-size:.48rem;color:#aaa;text-align:center;margin-top:1px;}' +
-      '.sec{background:#f5f5f5;border-top:1px solid #eaeaea;border-bottom:1px solid #eaeaea;padding:2px 8px;font-size:.6rem;font-weight:700;color:#555;}' +
+      'body{font-family:"Segoe UI",Arial,sans-serif;background:#fff;margin:0;padding:0;width:100mm;direction:rtl;}' +
+      '.page{background:#fff;border:2.5px dashed #c8a000;width:100mm;min-height:148mm;overflow:hidden;display:flex;flex-direction:column;}' +
+      '.close-btn{display:flex;justify-content:flex-start;padding:2px 4px 0;}' +
+      '.close-btn button{background:#fee2e2;border:1.5px solid #fca5a5;color:#dc2626;border-radius:50%;width:22px;height:22px;font-size:.8rem;font-weight:900;cursor:pointer;}' +
+      /* Header */
+      '.hdr{display:flex;align-items:center;justify-content:space-between;padding:3px 7px 4px;border-bottom:2px solid #1a1a1a;background:#fff;}' +
+      '.hdr-l{display:flex;align-items:center;gap:4px;}' +
+      '.hdr-title{font-size:1rem;font-weight:900;color:#000;letter-spacing:.5px;}' +
+      '.hdr-sub{font-size:.6rem;font-weight:700;color:#444;}' +
+      '.hdr-id{font-size:1.05rem;font-weight:900;color:#000;border:2.5px solid #000;border-radius:4px;padding:2px 8px;letter-spacing:1px;}' +
+      /* Body */
+      '.body{display:flex;flex:1;}' +
+      '.qrc{width:22mm;flex-shrink:0;display:flex;flex-direction:column;align-items:center;padding:5px 3px 4px;border-left:1.5px dashed #bbb;gap:3px;}' +
+      '.qrc img{width:18mm;height:18mm;border:1px solid #ddd;border-radius:2px;}' +
+      '.qrc small{font-size:.42rem;color:#888;text-align:center;margin-top:2px;font-weight:700;}' +
+      '.info{flex:1;min-width:0;}' +
+      /* Section headers */
+      '.sec{background:#1a1a1a;color:#fff;padding:3px 7px;font-size:.72rem;font-weight:900;letter-spacing:.3px;display:flex;align-items:center;gap:4px;}' +
+      /* Table */
       'table{width:100%;border-collapse:collapse;}' +
-      'tr{border-bottom:1px solid #f0f0f0;}tr:last-child{border-bottom:none;}' +
-      'td{padding:2px 8px;font-size:.65rem;line-height:1.4;vertical-align:top;}' +
-      'td.lb{color:#999;width:38%;white-space:nowrap;}' +
-      'td.vl{color:#111;font-weight:600;word-break:break-word;}' +
-      'td.vl.hi{color:#e67e00;font-weight:800;}' +
-      '.ftr{background:#fafafa;border-top:1px solid #eee;padding:3px 8px;display:flex;justify-content:space-between;}' +
-      '.ftr span{font-size:.5rem;color:#bbb;}' +
+      'tr{border-bottom:1px solid #e0e0e0;}' +
+      'tr:last-child{border-bottom:none;}' +
+      'td{padding:3.5px 7px;vertical-align:middle;line-height:1.35;}' +
+      'td.lb{font-size:.7rem;font-weight:900;color:#555;width:36%;white-space:nowrap;}' +
+      'td.vl{font-size:.82rem;font-weight:900;color:#000;word-break:break-word;}' +
+      'td.vl.hi{font-size:.9rem;font-weight:900;color:#000;}' +
+      /* Footer */
+      '.ftr{border-top:1.5px solid #ccc;padding:2px 7px;display:flex;justify-content:space-between;align-items:center;background:#f5f5f5;}' +
+      '.ftr span{font-size:.52rem;font-weight:700;color:#666;}' +
       '@media print{' +
         'body{background:#fff;padding:0;width:100mm;}' +
-        '.page{box-shadow:none;border:2px dashed #e0a800;width:100mm;}' +
+        '.page{box-shadow:none;border:2.5px dashed #c8a000;width:100mm;}' +
         '.close-btn{display:none!important;}' +
       '}';
 
@@ -1500,45 +1506,58 @@ document.addEventListener('DOMContentLoaded', () => {
       '<title>لەیبڵی گەیاندن</title><style>' + css + '</style></head><body>' +
       '<div class="page">' +
         '<div class="close-btn"><button onclick="' + closeJs + '">✕</button></div>' +
+        /* Header */
         '<div class="hdr">' +
-          '<div class="hdr-l"><span style="font-size:1.1rem">📦</span>' +
-          '<div><div class="hdr-title">KING STREET</div>' +
-          '<div class="hdr-sub">لەیبڵی گەیاندن · Kurdistan Delivery Label</div></div></div>' +
           '<div class="hdr-id">' + orderNum + '</div>' +
+          '<div style="text-align:center;">' +
+            '<div class="hdr-title">📦 KING STREET</div>' +
+            '<div class="hdr-sub">Kurdistan Delivery Label · لەیبڵی گەیاندن</div>' +
+          '</div>' +
+          '<span style="font-size:.9rem;">🏠</span>' +
         '</div>' +
+        /* Body: QR left + info right */
         '<div class="body">' +
+          /* Info section */
           '<div class="info">' +
-            '<div class="sec">📤 نێردەر · Sender</div>' +
+            /* Sender */
+            '<div class="sec">📤 Sender · نێردەر</div>' +
             '<table>' +
               row('ناوی تەواو', senderName) +
               row('📞 ژمارە', senderPhone) +
               row('📞 ژمارە ٢', senderPhone2) +
               row('📍 شوێن', senderLoc) +
             '</table>' +
-            '<div class="sec">📬 وەرگر · Receiver</div>' +
+            /* Receiver */
+            '<div class="sec">📬 Receiver · وەرگر</div>' +
             '<table>' +
               '<tr><td class="lb">ناوی تەواو</td><td class="vl hi">' + (recvName||'—') + '</td></tr>' +
               '<tr><td class="lb">📞 ژمارە</td><td class="vl hi">' + (recvPhone||'—') + '</td></tr>' +
               row('📞 ژمارە ٢', recvPhone2) +
+              row('📍 شوێن', recvLoc) +
             '</table>' +
-            '<div class="sec">📦 زانیاری کەلوپەل · Package Info</div>' +
+            /* Package */
+            '<div class="sec">📦 Package Info · زانیاری کەلوپەل</div>' +
             '<table>' +
               row('کەلوپەل', pkgName) +
               row('ژمارەی پارچە', qty) +
-              row('کیلۆگرام', kg) +
+              row('💪 کیلۆگرام', kg) +
               (itemPrice    ? row('💰 نرخی کاڵا',    itemPrice)    : '') +
               (deliveryPpkg ? row('🚚 نرخی گەیاندن', deliveryPpkg) : '') +
               (driver ? row('🚗 شۆفیر', driver.textContent.trim()) : '') +
               (note   ? row('📝 تیبینی', note.textContent.trim())   : '') +
-              row('بەروار', dateText) +
+              row('📅 بەروار', dateText) +
             '</table>' +
           '</div>' +
+          /* QR code */
           '<div class="qrc">' +
-            '<img src="' + qrSrc + '" alt="QR">' +
+            (qrSrc ? '<img src="' + qrSrc + '" alt="QR">' : '<div style="width:18mm;height:18mm;background:#eee;border:1px solid #ccc;border-radius:2px;"></div>') +
             '<small>کیوئار کۆد<br>Scan for info</small>' +
           '</div>' +
         '</div>' +
-        '<div class="ftr"><span>UK BAZAR — Kurdistan Delivery</span><span>ukbazar.online</span></div>' +
+        '<div class="ftr">' +
+          '<span>ukbazar.online</span>' +
+          '<span>UK POST &amp; King Street— Kurdistan Delivery</span>' +
+        '</div>' +
       '</div>' +
       '<script>window.onload=function(){window.print();}<\/script>' +
       '</body></html>';
@@ -1568,6 +1587,291 @@ document.addEventListener('DOMContentLoaded', () => {
       try { Object.defineProperty(window,'printLabel',{configurable:true,writable:true,value:kuPrint}); } catch(e2) {}
     }
   }, 200);
+
+})();
+    </script>
+
+    <!-- ══ IP / INTL POST LABEL — FULL A4 OVERRIDE ══ -->
+    <script>
+(function() {
+
+  // UK flag SVG inline
+  var UK_FLAG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" style="width:72px;height:36px;border:1px solid #ccc;border-radius:3px;">'
+    + '<clipPath id="a"><path d="M0,0v30h60v-30z"/></clipPath>'
+    + '<clipPath id="b"><path d="M30,15h30v15zv15h-30zv-15h-30zh30v-15z"/></clipPath>'
+    + '<g clip-path="url(#a)">'
+    + '<path d="M0,0v30h60v-30z" fill="#012169"/>'
+    + '<path d="M0,0l60,30M60,0l-60,30" stroke="#fff" stroke-width="6"/>'
+    + '<path d="M0,0l60,30M60,0l-60,30" clip-path="url(#b)" stroke="#c8102e" stroke-width="4"/>'
+    + '<path d="M30,0v30M0,15h60" stroke="#fff" stroke-width="10"/>'
+    + '<path d="M30,0v30M0,15h60" stroke="#c8102e" stroke-width="6"/>'
+    + '</g></svg>';
+
+  function ipPrint(key) {
+    // Try to find the intl post card in the DOM
+    var card = document.getElementById('intl-label-' + key)
+           || document.getElementById('ip-label-' + key)
+           || document.querySelector('[data-ip-key="' + key + '"]')
+           || document.querySelector('[data-intl-key="' + key + '"]');
+
+    // Generic field extractor from any card
+    function getText(card, selectors) {
+      for (var i = 0; i < selectors.length; i++) {
+        var el = card.querySelector(selectors[i]);
+        if (el && el.textContent.trim()) return el.textContent.trim();
+      }
+      return '';
+    }
+
+    function getFieldByLabel(card, label) {
+      var all = card.querySelectorAll('td, .field-value, .label-row strong, .info-value');
+      for (var i = 0; i < all.length; i++) {
+        var el = all[i];
+        var prev = el.previousElementSibling || (el.parentElement && el.parentElement.previousElementSibling);
+        if (prev && prev.textContent.indexOf(label) !== -1) return el.textContent.trim();
+        var parent = el.closest('tr');
+        if (parent) {
+          var cells = parent.querySelectorAll('td');
+          if (cells.length >= 2 && cells[0].textContent.indexOf(label) !== -1) return cells[1].textContent.trim();
+        }
+      }
+      return '';
+    }
+
+    // Read data — try multiple strategies
+    var orderNum = '', senderName = '', senderPhone = '', senderCity = '', senderAddr = '', senderKala = '', senderWeight = '';
+    var recvName = '', recvPhone = '', recvCity = '', recvAddr = '', recvKala = '', recvWeight = '';
+    var notes = '', dateText = '', ipNum = '';
+
+    if (card) {
+      // Try reading from the card DOM
+      var allTds = card.querySelectorAll('td');
+      var dataMap = {};
+      for (var i = 0; i + 1 < allTds.length; i += 2) {
+        var lbl = allTds[i].textContent.replace(/[:\-]/g,'').trim();
+        var val = allTds[i+1].textContent.trim();
+        dataMap[lbl] = val;
+      }
+      orderNum   = getText(card, ['.ip-num','.order-num','.label-order-num','.ip-id']) || dataMap['IP'] || key;
+      senderName = dataMap['NAME'] || dataMap['ناو'] || getText(card, ['.sender-name','.s-name']);
+      senderPhone= dataMap['TEL'] || dataMap['ژمارە'] || getText(card, ['.sender-tel','.s-tel']);
+      senderCity = dataMap['POST CODE +CITY'] || dataMap['POST CODE+CITY'] || getText(card, ['.sender-city']);
+      senderAddr = dataMap['ADDRESS'] || dataMap['ناونیشان'] || getText(card, ['.sender-addr']);
+      senderKala = dataMap['KALA'] || dataMap['کاڵا'] || dataMap['KALA/'] || getText(card, ['.sender-kala']);
+      senderWeight=dataMap['WEIGHT+BOX'] || dataMap['کیلۆ'] || getText(card, ['.sender-weight']);
+      recvName   = dataMap['RECVNAME'] || getText(card, ['.recv-name','.r-name','.receiver-name']);
+      recvPhone  = dataMap['RECVTEL']  || getText(card, ['.recv-tel','.r-tel','.receiver-tel']);
+      recvCity   = dataMap['RECVCITY'] || getText(card, ['.recv-city','.r-city']);
+      recvAddr   = dataMap['RECVADDR'] || getText(card, ['.recv-addr','.r-addr']);
+      recvKala   = dataMap['RECVKALA'] || getText(card, ['.recv-kala']);
+      recvWeight = dataMap['RECVWEIGHT']|| getText(card, ['.recv-weight']);
+      notes      = getText(card, ['.notes-payments','.label-note','.note-value']);
+      dateText   = getText(card, ['.label-date','.print-date','.ip-date']);
+      ipNum      = getText(card, ['.ip-number','.ip-num-badge']) || orderNum;
+
+      // If still missing, try reading all rows from sender/receiver sections
+      var rows = card.querySelectorAll('tr');
+      var inSender = false, inRecv = false;
+      rows.forEach(function(row) {
+        var text = row.textContent;
+        if (text.indexOf('SENDER') !== -1 || text.indexOf('نێردەر') !== -1) { inSender = true; inRecv = false; return; }
+        if (text.indexOf('recipient') !== -1 || text.indexOf('وەرگر') !== -1 || text.indexOf('RECIPIENT') !== -1) { inSender = false; inRecv = true; return; }
+        var tds = row.querySelectorAll('td');
+        if (tds.length < 2) return;
+        var l = tds[0].textContent.replace(/[:/]/g,'').trim().toUpperCase();
+        var v = tds[1].textContent.trim();
+        if (!v) return;
+        if (inSender) {
+          if (l === 'NAME') senderName = senderName || v;
+          else if (l === 'KALA' || l === 'KALA') senderKala = senderKala || v;
+          else if (l.indexOf('POST') !== -1) senderCity = senderCity || v;
+          else if (l === 'TEL') senderPhone = senderPhone || v;
+          else if (l === 'ADDRESS') senderAddr = senderAddr || v;
+          else if (l.indexOf('WEIGHT') !== -1) senderWeight = senderWeight || v;
+        } else if (inRecv) {
+          if (l === 'NAME') recvName = recvName || v;
+          else if (l === 'KALA' || l === 'KALA') recvKala = recvKala || v;
+          else if (l.indexOf('POST') !== -1) recvCity = recvCity || v;
+          else if (l === 'TEL') recvPhone = recvPhone || v;
+          else if (l === 'ADDRESS') recvAddr = recvAddr || v;
+          else if (l.indexOf('WEIGHT') !== -1) recvWeight = recvWeight || v;
+        }
+      });
+    }
+
+    // Fallback: pull from Firebase-rendered admin card if script.js stored data in dataset
+    if (!senderName && card) {
+      senderName  = card.dataset.senderName  || '';
+      recvName    = card.dataset.recvName    || '';
+      senderPhone = card.dataset.senderPhone || '';
+      recvPhone   = card.dataset.recvPhone   || '';
+      senderCity  = card.dataset.senderCity  || '';
+      recvCity    = card.dataset.recvCity    || '';
+      senderAddr  = card.dataset.senderAddr  || '';
+      recvAddr    = card.dataset.recvAddr    || '';
+      senderKala  = card.dataset.kala        || '';
+      recvKala    = card.dataset.recvKala    || card.dataset.kala || '';
+      senderWeight= card.dataset.weight      || '';
+      recvWeight  = card.dataset.recvWeight  || card.dataset.weight || '';
+    }
+
+    var now = new Date();
+    var dateStr = dateText || (now.getDate() + '/' + (now.getMonth()+1) + '/' + now.getFullYear()
+      + ', ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0'));
+    var ipLabel = ipNum || orderNum || key || ('IP-' + Date.now().toString().slice(-3));
+
+    var flagSvg = UK_FLAG;
+
+    var css = [
+      '@page{size:A4 portrait;margin:0;}',
+      '*{box-sizing:border-box;margin:0;padding:0;}',
+      'html,body{width:210mm;height:297mm;font-family:"Segoe UI",Arial,sans-serif;background:#fff;color:#000;}',
+      '.page{width:210mm;height:297mm;padding:10mm 12mm;display:flex;flex-direction:column;gap:6mm;}',
+      /* ── Header ── */
+      '.hdr{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #000;padding-bottom:5mm;flex-shrink:0;}',
+      '.hdr-id{font-size:2.4rem;font-weight:900;color:#000;letter-spacing:2px;}',
+      '.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}',
+      '.hdr-country{font-size:1.5rem;font-weight:900;color:#000;}',
+      '.hdr-date{font-size:.9rem;font-weight:700;color:#444;}',
+      /* ── Section box ── */
+      '.section{border:2px solid #999;border-radius:4px;overflow:hidden;flex:1;}',
+      '.sec-head{display:flex;align-items:center;justify-content:space-between;background:#f0f0f0;border-bottom:2px solid #999;padding:4mm 8mm;}',
+      '.sec-label{display:flex;align-items:baseline;gap:8px;}',
+      '.sec-en{font-size:1.3rem;font-weight:900;color:#000;text-transform:uppercase;letter-spacing:1px;}',
+      '.sec-dash{font-size:1.2rem;font-weight:400;color:#666;margin:0 4px;}',
+      '.sec-ku{font-size:1.1rem;font-weight:900;color:#333;}',
+      /* ── Table ── */
+      '.sec-table{width:100%;border-collapse:collapse;}',
+      '.sec-table tr{border-bottom:1.5px solid #e0e0e0;}',
+      '.sec-table tr:last-child{border-bottom:none;}',
+      '.sec-table td{padding:3.5mm 8mm;vertical-align:middle;}',
+      '.sec-table td.lbl{font-size:1rem;font-weight:900;color:#777;width:34%;white-space:nowrap;text-transform:uppercase;letter-spacing:.4px;}',
+      '.sec-table td.val{font-size:1.3rem;font-weight:900;color:#000;word-break:break-word;}',
+      '.sec-table td.val.hi{font-size:1.5rem;font-weight:900;color:#000;}',
+      '.sec-table tr.notes-row td{font-size:.9rem;font-weight:600;color:#aaa;padding:2.5mm 8mm;}',
+      /* ── Footer bar ── */
+      '.ftr{flex-shrink:0;border-top:2px solid #bbb;padding-top:3mm;display:flex;justify-content:space-between;align-items:center;}',
+      '.ftr-text{font-size:.95rem;font-weight:900;color:#555;letter-spacing:.3px;}',
+      /* ── Flag ── */
+      '.flag{width:60px;height:30px;flex-shrink:0;}',
+      '@media print{',
+        '.no-print{display:none!important;}',
+        'html,body{width:210mm;height:297mm;}',
+        'body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}',
+      '}'
+    ].join('');
+
+    function buildSection(titleEn, titleKu, dataRows) {
+      var rowsHtml = dataRows.map(function(r) {
+        if (r[0] === 'Notes and payments') {
+          return '<tr class="notes-row"><td colspan="2">Notes and payments</td></tr>';
+        }
+        if (!r[1]) return '';
+        return '<tr>'
+          + '<td class="lbl">' + r[0] + '</td>'
+          + '<td class="val' + (r[2] ? ' hi' : '') + '">' + r[1] + '</td>'
+          + '</tr>';
+      }).join('');
+      return '<div class="section">'
+        + '<div class="sec-head">'
+          + '<div class="sec-label">'
+            + '<span class="sec-en">' + titleEn + '</span>'
+            + '<span class="sec-dash">—</span>'
+            + '<span class="sec-ku">' + titleKu + '</span>'
+          + '</div>'
+          + flagSvg
+        + '</div>'
+        + '<table class="sec-table">' + rowsHtml + '</table>'
+        + '</div>';
+    }
+
+    var senderSection = buildSection('SENDER', 'نێردەر', [
+      ['NAME',            senderName,   false],
+      ['KALA/',           senderKala,   false],
+      ['POST CODE +CITY', senderCity,   false],
+      ['TEL',             senderPhone,  false],
+      ['ADDRESS',         senderAddr,   false],
+      ['WEIGHT+BOX',      senderWeight, false],
+      ['Notes and payments', '',        false],
+    ]);
+
+    var recvSection = buildSection('recipient', 'وەرگر', [
+      ['NAME',            recvName,    true],
+      ['KALA/',           recvKala || senderKala, false],
+      ['POST CODE +CITY', recvCity,    true],
+      ['TEL',             recvPhone,   true],
+      ['ADDRESS',         recvAddr,    true],
+      ['WEIGHT+BOX',      recvWeight || senderWeight, false],
+      ['Notes and payments', '',       false],
+    ]);
+
+    var closeJs = "try{window.close();}catch(e){} history.length>1?history.back():(window.location.href='about:blank');";
+
+    var html = '<!DOCTYPE html><html dir="ltr" lang="en"><head><meta charset="UTF-8">'
+      + '<meta name="viewport" content="width=device-width,initial-scale=1">'
+      + '<title>IP Label — ' + ipLabel + '</title>'
+      + '<style>' + css + '</style></head><body>'
+      + '<button class="no-print" onclick="' + closeJs + '" '
+        + 'style="position:fixed;top:6px;right:6px;background:#fee2e2;border:2px solid #fca5a5;'
+        + 'color:#dc2626;border-radius:50%;width:32px;height:32px;font-size:1rem;'
+        + 'font-weight:900;cursor:pointer;z-index:9999;">✕</button>'
+      + '<div class="page">'
+        /* ─── Header: IP number left, flag+country+date right ─── */
+        + '<div class="hdr">'
+          + '<div class="hdr-id"># ' + ipLabel + '</div>'
+          + '<div class="hdr-right">'
+            + '<div style="display:flex;align-items:center;gap:10px;">'
+              + flagSvg
+              + '<div class="hdr-country">United Kingdom</div>'
+            + '</div>'
+            + '<div class="hdr-date">' + dateStr + '</div>'
+          + '</div>'
+        + '</div>'
+        /* ─── SENDER section ─── */
+        + senderSection
+        /* ─── recipient section ─── */
+        + recvSection
+        /* ─── Footer ─── */
+        + '<div class="ftr">'
+          + '<span class="ftr-text">KING STREET — UK POST &nbsp;|&nbsp; 07755436275 / 07507472656</span>'
+          + flagSvg
+        + '</div>'
+      + '</div>'
+      + '<script>window.onload=function(){window.print();}<\/script>'
+      + '</body></html>';
+
+    var win = window.open('', '_blank');
+    if (win) {
+      win.document.write(html);
+      win.document.close();
+    } else {
+      var ov = document.createElement('div');
+      ov.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#fff;z-index:99999;overflow:auto;';
+      ov.innerHTML = html;
+      document.body.appendChild(ov);
+      var ps = document.createElement('style');
+      ps.innerHTML = '@media print{body>*:not(#_ipOv){display:none!important;}}';
+      document.head.appendChild(ps);
+      ov.id = '_ipOv';
+      setTimeout(function(){ window.print(); }, 600);
+    }
+  }
+
+  // Override printIntlLabel / printIPLabel after script.js loads
+  setTimeout(function() {
+    var names = ['printIntlLabel','printIPLabel','printIpLabel','printIntlPostLabel','printInternationalLabel'];
+    names.forEach(function(n) {
+      try { window[n] = ipPrint; } catch(e) {}
+    });
+    // Also patch the existing printLabel to handle IP keys (IP- prefix)
+    var origPrint = window.printLabel;
+    if (origPrint) {
+      window.printLabel = function(key) {
+        var card = document.getElementById('intl-label-' + key) || document.getElementById('ip-label-' + key);
+        if (card) { ipPrint(key); } else { origPrint(key); }
+      };
+    }
+  }, 400);
 
 })();
     </script>
