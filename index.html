@@ -2022,14 +2022,23 @@ document.addEventListener('DOMContentLoaded', () => {
       <div style="font-size:.9rem;font-weight:800;color:#1a365d;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
         <span style="font-size:1.2rem;">📷</span> بە QR زانیاری کاڵا بخوێنەرەوە
       </div>
-      <div style="display:flex;gap:8px;margin-bottom:10px;">
+      <!-- ٣ دوگمە: کامێرا / وێنە / دەستی -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;">
         <button onclick="startDriverQrScan()" id="driverQrScanBtn"
-          style="flex:1;padding:12px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:12px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:inherit;">
-          <i class="fas fa-qrcode"></i> QR بخوێنەرەوە
+          style="padding:11px 6px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:12px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <i class="fas fa-video" style="font-size:1.1rem;"></i>
+          <span>کامێرا</span>
         </button>
-        <button onclick="driverManualEntry()" 
-          style="padding:12px 16px;background:#f7fafc;color:#4a5568;border:2px solid #e2e8f0;border-radius:12px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;">
-          <i class="fas fa-keyboard"></i> دەستی
+        <label for="driverQrImageInput"
+          style="padding:11px 6px;background:linear-gradient(135deg,#ed8936,#dd6b20);color:#fff;border:none;border-radius:12px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;">
+          <i class="fas fa-image" style="font-size:1.1rem;"></i>
+          <span>وێنەی QR</span>
+        </label>
+        <input type="file" id="driverQrImageInput" accept="image/*" style="display:none;" onchange="scanQrFromImage(this)">
+        <button onclick="driverManualEntry()"
+          style="padding:11px 6px;background:#f7fafc;color:#4a5568;border:2px solid #e2e8f0;border-radius:12px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <i class="fas fa-keyboard" style="font-size:1.1rem;"></i>
+          <span>دەستی</span>
         </button>
       </div>
       <div id="driverQrReader" style="display:none;border-radius:12px;overflow:hidden;"></div>
@@ -2128,11 +2137,15 @@ function loadDriverDeliveries() {
   kuList.innerHTML = '<div style="text-align:center;padding:20px;color:#718096;">بارکردن...</div>';
   ukList.innerHTML = '<div style="text-align:center;padding:20px;color:#718096;">بارکردن...</div>';
 
-  database.ref('delivery').once('value').then(function(snap) {
-    var kuItems = [], ukItems = [], kuBalance = 0;
-    if (snap.exists()) {
-      snap.forEach(function(ch) {
-        var d = Object.assign({ key: ch.key }, ch.val());
+  Promise.all([
+    database.ref('delivery').once('value'),
+    database.ref('intlPost').once('value')
+  ]).then(function(results) {
+    var kuItems = [], ukItems = [], intlItems = [], kuBalance = 0;
+    // delivery node
+    if (results[0].exists()) {
+      results[0].forEach(function(ch) {
+        var d = Object.assign({ key: ch.key, _node: 'delivery' }, ch.val());
         if ((d.driverName || '').trim() === (_currentDriver.name || '').trim() ||
             (d.driverMobile || '').replace(/\D/g,'') === (_currentDriver.mobile || '').replace(/\D/g,'')) {
           if (d.fullName) { ukItems.push(d); }
@@ -2140,8 +2153,18 @@ function loadDriverDeliveries() {
         }
       });
     }
-    kuItems.sort(function(a,b){ return (b.sortKey||0)-(a.sortKey||0); });
-    ukItems.sort(function(a,b){ return (b.sortKey||0)-(a.sortKey||0); });
+    // intlPost node — پۆستی نێودەولەتی
+    if (results[1].exists()) {
+      results[1].forEach(function(ch) {
+        var d = Object.assign({ key: ch.key, _node: 'intlPost' }, ch.val());
+        if ((d.driverName || '').trim() === (_currentDriver.name || '').trim() ||
+            (d.driverMobile || '').replace(/\D/g,'') === (_currentDriver.mobile || '').replace(/\D/g,'')) {
+          ukItems.push(d);
+        }
+      });
+    }
+    kuItems.sort(function(a,b){ return (b.sortKey||b.createdAt||0)-(a.sortKey||a.createdAt||0); });
+    ukItems.sort(function(a,b){ return (b.sortKey||b.createdAt||0)-(a.sortKey||a.createdAt||0); });
 
     // Save balance to Firebase if changed
     var storedBalance = parseFloat(_currentDriver.kuBalance) || 0;
@@ -2280,6 +2303,42 @@ function _initDriverQrScanner() {
   }
 }
 
+// ── وێنەی QR بخوێنەرەوە (بەبێ کامێرا — بۆ مۆبایل و file://) ──────────
+function scanQrFromImage(input) {
+  if (!input.files || !input.files[0]) return;
+  var file = input.files[0];
+  input.value = ''; // reset بۆ ئەوەی دووبارە هەمان وێنە هەڵبژێردرێت
+
+  var resultDiv = document.getElementById('driverQrResult');
+  resultDiv.style.display = 'block';
+  resultDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> وێنەکە پرۆسەس دەکرێت...';
+
+  function loadAndScan() {
+    if (typeof Html5Qrcode !== 'undefined') {
+      Html5Qrcode.scanFile(file, true).then(function(text) {
+        resultDiv.style.display = 'none';
+        handleDriverQrResult(text);
+      }).catch(function(err) {
+        resultDiv.innerHTML = '<div style="color:#e53e3e;">❌ QR لە وێنەکەدا نەدۆزرایەوە — وێنەیەکی ڕوونتر بەکاربهێنە</div>';
+      });
+    } else {
+      resultDiv.innerHTML = '<div style="color:#e53e3e;">❌ QR library بارنەبوو</div>';
+    }
+  }
+
+  if (typeof Html5Qrcode === 'undefined') {
+    var script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js';
+    script.onload = loadAndScan;
+    script.onerror = function() {
+      resultDiv.innerHTML = '<div style="color:#e53e3e;">❌ نەتوانرا library بارکرێت — ئینتەرنێت چیک بکە</div>';
+    };
+    document.head.appendChild(script);
+  } else {
+    loadAndScan();
+  }
+}
+
 function stopDriverQrScan() {
   var btn = document.getElementById('driverQrScanBtn');
   var readerDiv = document.getElementById('driverQrReader');
@@ -2295,49 +2354,65 @@ function handleDriverQrResult(text) {
   resultDiv.style.display = 'block';
   resultDiv.textContent = 'زانیاری دۆزرایەوە، چاوەڕێ بکە...';
 
-  // Parse order number from QR text
-  // QR text format: "پسولە: KU-0001 | ..." or "Order: UK-0001 | ..."
-  var orderMatch = text.match(/(?:پسولە|Order):\s*([A-Z]+-\d+)/i);
+  var orderMatch = text.match(/(?:پسولە|Order|#)[\s:]*([A-Z]+-\d+)/i) || text.match(/([A-Z]{2,}-\d+)/);
   if (!orderMatch) {
     resultDiv.innerHTML = '<div style="color:#e53e3e;">❌ فۆرماتی QR ناشناسراو</div><div style="margin-top:6px;font-size:.75rem;color:#718096;word-break:break-all;">' + escapeHtml(text.substring(0,200)) + '</div>';
     return;
   }
-  var orderNum = orderMatch[1];
-  
-  // Find in Firebase
-  database.ref('delivery').orderByChild('orderNumber').equalTo(orderNum).once('value').then(function(snap) {
-    if (!snap.exists()) {
-      resultDiv.innerHTML = '<div style="color:#e53e3e;">❌ تۆمار نەدۆزرایەوە: ' + escapeHtml(orderNum) + '</div>';
-      return;
-    }
-    snap.forEach(function(ch) {
-      var d = Object.assign({ key: ch.key }, ch.val());
-      resultDiv.style.display = 'none';
-      openDriverDeliveryDetail(d);
+  var orderNum = orderMatch[1].toUpperCase();
+
+  Promise.all([
+    database.ref('delivery').orderByChild('orderNumber').equalTo(orderNum).once('value'),
+    database.ref('intlPost').orderByChild('orderNumber').equalTo(orderNum).once('value')
+  ]).then(function(results) {
+    var found = false;
+    results.forEach(function(snap, idx) {
+      if (snap.exists()) {
+        snap.forEach(function(ch) {
+          var d = Object.assign({ key: ch.key, _node: idx === 1 ? 'intlPost' : 'delivery' }, ch.val());
+          found = true;
+          resultDiv.style.display = 'none';
+          openDriverDeliveryDetail(d);
+        });
+      }
     });
+    if (!found) {
+      resultDiv.innerHTML = '<div style="color:#e53e3e;">❌ تۆمار نەدۆزرایەوە: <strong>' + escapeHtml(orderNum) + '</strong></div>';
+    }
   }).catch(function() {
     resultDiv.innerHTML = '<div style="color:#e53e3e;">❌ هەڵەی پەیوەندی</div>';
   });
 }
 
 function driverManualEntry() {
-  var orderNum = prompt('ژمارەی پسولە بنووسە (مەسەلە: KU-0001):');
+  var orderNum = prompt('ژمارەی پسولە بنووسە (مەسەلە: KU-0001 یان IP-0001):');
   if (!orderNum) return;
   orderNum = orderNum.trim().toUpperCase();
   showNotification('گەڕانی: ' + orderNum, 'info');
-  database.ref('delivery').orderByChild('orderNumber').equalTo(orderNum).once('value').then(function(snap) {
-    if (!snap.exists()) { showNotification('تۆمار نەدۆزرایەوە!', 'error'); return; }
-    snap.forEach(function(ch) {
-      var d = Object.assign({ key: ch.key }, ch.val());
-      openDriverDeliveryDetail(d);
+
+  Promise.all([
+    database.ref('delivery').orderByChild('orderNumber').equalTo(orderNum).once('value'),
+    database.ref('intlPost').orderByChild('orderNumber').equalTo(orderNum).once('value')
+  ]).then(function(results) {
+    var found = false;
+    results.forEach(function(snap, idx) {
+      if (snap.exists()) {
+        snap.forEach(function(ch) {
+          var d = Object.assign({ key: ch.key, _node: idx === 1 ? 'intlPost' : 'delivery' }, ch.val());
+          found = true;
+          openDriverDeliveryDetail(d);
+        });
+      }
     });
+    if (!found) showNotification('تۆمار نەدۆزرایەوە: ' + orderNum, 'error');
   }).catch(function() { showNotification('هەڵەی پەیوەندی', 'error'); });
 }
 
 function driverScanOrViewDelivery(key, type) {
-  database.ref('delivery/' + key).once('value').then(function(snap) {
+  var node = (type === 'intl') ? 'intlPost' : 'delivery';
+  database.ref(node + '/' + key).once('value').then(function(snap) {
     if (!snap.exists()) { showNotification('تۆمار نەدۆزرایەوە', 'error'); return; }
-    var d = Object.assign({ key: key }, snap.val());
+    var d = Object.assign({ key: key, _node: node }, snap.val());
     openDriverDeliveryDetail(d);
   });
 }
