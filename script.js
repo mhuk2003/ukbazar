@@ -344,6 +344,307 @@ function showHomePage() {
 function showRequestModal() { showModal('requestModal'); }
 function showAddProductModal() { showModal('addProductModal'); }
 function showDeliveryModal() { showModal('deliveryModal'); }
+
+// ═══════════════════════════════════════════════════════════
+//  TRACKING WIDGET — چاودێری کاڵا (inline section)
+// ═══════════════════════════════════════════════════════════
+
+function toggleTrackingWidget() {
+    const body = document.getElementById('trackingWidgetBody');
+    const chevron = document.getElementById('trackingChevron');
+    if (!body) return;
+    const isOpen = body.style.display !== 'none';
+    body.style.display = isOpen ? 'none' : 'block';
+    if (chevron) chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
+    if (!isOpen) {
+        setTimeout(() => {
+            const inp = document.getElementById('trackingPhoneInput');
+            if (inp) inp.focus();
+        }, 200);
+    }
+}
+
+function showDeliveryChoiceModal() { showModal('deliveryModal'); }
+function openDeliveryAdmin()       { showModal('deliveryModal'); }
+function openCustomerTracking()    {
+    const body = document.getElementById('trackingWidgetBody');
+    const chevron = document.getElementById('trackingChevron');
+    if (body) { body.style.display = 'block'; }
+    if (chevron) chevron.style.transform = 'rotate(180deg)';
+    const section = document.getElementById('trackingSection');
+    if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => {
+        const inp = document.getElementById('trackingPhoneInput');
+        if (inp) inp.focus();
+    }, 400);
+}
+function checkDeliveryAdminPass()  {}
+
+// ───────────────────────────────────────────────────────────
+//  CUSTOMER ORDER SEARCH — گەڕان بە ژمارەی مۆبایل
+// ───────────────────────────────────────────────────────────
+function searchCustomerOrders() {
+    const phoneInp  = document.getElementById('trackingPhoneInput');
+    const codeInp   = document.getElementById('trackingCodeInput');
+    const resultsEl = document.getElementById('trackingResults');
+    const errEl     = document.getElementById('trackingErr');
+    if (!phoneInp || !resultsEl) return;
+
+    const phone   = phoneInp.value.trim().replace(/\s+/g, '');
+    const codeVal = codeInp ? codeInp.value.trim().toUpperCase() : '';
+
+    if (!phone || phone.length < 7) {
+        if (errEl) { errEl.textContent = 'تکایە ژمارەی مۆبایلێکی دروست بنووسە'; errEl.style.display = 'block'; }
+        return;
+    }
+    if (!codeVal) {
+        if (errEl) { errEl.textContent = 'تکایە کۆد بنووسە (نموونە: ABCD1234)'; errEl.style.display = 'block'; }
+        return;
+    }
+    if (errEl) errEl.style.display = 'none';
+
+    resultsEl.innerHTML = '<div style="text-align:center;padding:20px;color:#667eea;"><i class="fas fa-spinner fa-spin"></i> چاوەڕوانی بکە...</div>';
+
+    // گەڕان لە delivery، uk، و intlPost داتابەیس
+    var noSnap = { exists: function(){ return false; }, forEach: function(){} };
+    var safeOnce = function(ref) { return database.ref(ref).once('value').catch(function(){ return noSnap; }); };
+    Promise.all([
+        safeOnce('delivery'),
+        safeOnce('intlPost')
+    ]).then(([deliverySnap, intlSnap]) => {
+        const matches = [];
+
+        // KU + UK گەیاندن — هەردووکیان لە delivery/ نۆددایە
+        if (deliverySnap.exists()) {
+            deliverySnap.forEach(child => {
+                const d = child.val();
+                const isUk = d.type === 'uk';
+                const phones = isUk
+                    ? [d.phone, d.receiverPhone, d.receiverTel]
+                    : [d.senderMobile, d.senderMobile2, d.receiverMobile, d.receiverMobile2];
+                const phoneList = phones.filter(Boolean).map(p => p.replace(/\s+/g,''));
+                const phoneOk = phoneList.some(p => p.includes(phone) || phone.includes(p));
+                const codeOk  = (d.orderNumber || '').toUpperCase() === codeVal;
+                if (phoneOk && codeOk) matches.push({ key: child.key, type: isUk ? 'uk' : 'ku', ...d });
+            });
+        }
+
+        // پۆستی نێودەوڵەتی
+        if (intlSnap.exists()) {
+            intlSnap.forEach(child => {
+                const d = child.val();
+                const s = d.sender || {};
+                const r = d.recipient || {};
+                const phones = [s.tel, r.tel, d.driverMobile]
+                    .filter(Boolean).map(p => p.replace(/\s+/g,''));
+                const phoneOk = phones.some(p => p.includes(phone) || phone.includes(p));
+                const codeOk  = (d.orderNumber || '').toUpperCase() === codeVal;
+                if (phoneOk && codeOk) matches.push({ key: child.key, type: 'intl', ...d });
+            });
+        }
+
+        if (matches.length === 0) {
+            resultsEl.innerHTML = `
+                <div style="text-align:center;padding:24px;background:#fff8f8;border-radius:14px;border:2px dashed #fca5a5;">
+                    <div style="font-size:2rem;margin-bottom:8px;">🔍</div>
+                    <div style="font-weight:700;color:#e53e3e;margin-bottom:4px;">هیچ کاڵایەک نەدۆزرایەوە</div>
+                    <div style="font-size:.82rem;color:#718096;margin-bottom:4px;">ژمارەی مۆبایل یان کۆدی پسولە هەڵەیە</div>
+                    <div style="font-size:.78rem;color:#a0aec0;">دووبارە بپشکنە: <strong>${phone}</strong> + <strong>${codeVal}</strong></div>
+                </div>`;
+            return;
+        }
+
+        // ستاتەسەکان بە ترتیب
+        const STATUS_LIST = [
+            { key: 'registered',  label: 'تۆماركراو',       en: 'Registered',        icon: '📋', color: '#667eea' },
+            { key: 'picked_up',   label: 'وەرگیراو',        en: 'Picked Up',         icon: '🚗', color: '#ed8936' },
+            { key: 'loading',     label: 'بارکردنی کاڵا',  en: 'Loading Warehouse', icon: '🏭', color: '#d69e2e' },
+            { key: 'in_transit',  label: 'لە ڕێگادایە',     en: 'In Transit',        icon: '🚛', color: '#3182ce' },
+            { key: 'sorting',     label: 'کاڵا دابەشکردن',en: 'Sorting Warehouse', icon: '📦', color: '#805ad5' },
+            { key: 'delivered',   label: 'گەیشتووە',        en: 'Delivered',         icon: '✅', color: '#38a169' },
+        ];
+
+        let html = `<div style="font-size:.82rem;color:#718096;margin-bottom:10px;text-align:center;">${matches.length} کاڵا دۆزرایەوە</div>`;
+
+        matches.forEach(d => {
+            // ── International Post ──────────────────────────────────────────
+            if (d.type === 'intl') {
+                const s = d.sender || {};
+                const r = d.recipient || {};
+                const orderNum = d.orderNumber || d.key || '—';
+                const flagPart = d.country ? d.country.split(' ')[0] : '🌍';
+                const cname = d.country ? d.country.split(' ').slice(1).join(' ') : '—';
+                const date = d.timestamp || '';
+                const hasDriver = d.driverName || d.driverMobile;
+
+                html += `
+                <div style="border:2px solid #2b6cb022;border-radius:16px;overflow:hidden;margin-bottom:14px;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.07);">
+                    <!-- Header -->
+                    <div style="background:linear-gradient(135deg,#2b6cb0,#1a365d);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
+                        <div style="color:#fff;font-weight:800;font-size:.95rem;">🌍 پۆستی نێودەوڵەتی</div>
+                        <div style="color:#fff;font-size:.75rem;background:rgba(255,255,255,.2);padding:3px 10px;border-radius:20px;font-weight:700;">${flagPart} ${cname} — ${orderNum}</div>
+                    </div>
+                    <!-- Shipment date -->
+                    ${date ? `<div style="background:#ebf8ff;padding:7px 14px;font-size:.78rem;color:#2b6cb0;font-weight:700;border-bottom:1px solid #bee3f8;display:flex;align-items:center;gap:6px;"><span>📅 بەرواری ناردن:</span><strong>${date}</strong></div>` : ''}
+                    <!-- Intl Status Steps -->
+                    ${(function(){
+                        var ISTEPS = [
+                            { key:'registered', ku:'تۆماركراوە',   icon:'📋', color:'#667eea' },
+                            { key:'loading',    ku:'بارکراوە',      icon:'🏭', color:'#d69e2e' },
+                            { key:'in_transit', ku:'لەڕێگادایە',   icon:'🚛', color:'#3182ce' },
+                            { key:'delivered',  ku:'گەیشتووە',     icon:'✅', color:'#38a169' },
+                            { key:'sorting',    ku:'دابەشکردن',    icon:'📦', color:'#805ad5' },
+                        ];
+                        var ist = d.status || 'registered';
+                        var isi = ISTEPS.findIndex(function(s){ return s.key === ist; });
+                        if (isi < 0) isi = 0;
+                        var stepsH = ISTEPS.map(function(s, i) {
+                            var done = i <= isi; var active = i === isi;
+                            return '<div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;">'
+                              + '<div style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;'
+                              + 'background:' + (done ? s.color : '#e2e8f0') + ';color:' + (done ? '#fff' : '#a0aec0') + ';'
+                              + 'border:' + (active ? '3px solid ' + s.color : '2px solid ' + (done ? s.color : '#e2e8f0')) + ';'
+                              + 'box-shadow:' + (active ? '0 0 0 4px ' + s.color + '22' : 'none') + ';'
+                              + 'font-weight:' + (active ? '900' : '600') + ';transition:all .3s;">'
+                              + (done ? (active ? s.icon : '✓') : (i+1))
+                              + '</div>'
+                              + '<div style="font-size:.52rem;color:' + (done ? s.color : '#a0aec0') + ';text-align:center;font-weight:' + (active ? '700':'400') + ';line-height:1.2;max-width:38px;">' + s.ku + '</div>'
+                              + '</div>';
+                        }).join('<div style="flex:1;height:2px;background:linear-gradient(90deg,' + (ISTEPS[isi]||ISTEPS[0]).color + ',#e2e8f0);margin-top:13px;border-radius:2px;"></div>');
+                        var curS = ISTEPS[isi] || ISTEPS[0];
+                        var badgeDots = ISTEPS.map(function(s,i){ return '<span style="width:8px;height:8px;border-radius:50%;background:' + (i<=isi?s.color:'#e2e8f0') + ';display:inline-block;' + (i===isi?'box-shadow:0 0 0 3px '+s.color+'33;':'') + '"></span>'; }).join('');
+                        var badgeBar = '<div style="background:#fff;padding:10px 14px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;gap:8px;"><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:.78rem;font-weight:700;color:#718096;">📊 ستاتەسی کاڵا:</span><span style="background:'+curS.color+';color:#fff;padding:5px 14px;border-radius:20px;font-size:.82rem;font-weight:800;">'+curS.icon+' '+curS.ku+'</span></div><div style="display:flex;gap:6px;">' + badgeDots + '</div></div>';
+                        return badgeBar + '<div style="padding:12px 8px 10px;background:#f8fafc;border-bottom:1px solid #e2e8f0;"><div style="display:flex;align-items:flex-start;justify-content:space-between;">' + stepsH + '</div></div>';
+                    })()}
+                    <!-- Sender & Recipient -->
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid #e2e8f0;">
+                        <div style="padding:10px 12px;border-left:1px solid #e2e8f0;">
+                            <div style="font-size:.7rem;font-weight:800;color:#718096;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;">📤 نێردەر</div>
+                            ${s.name ? `<div style="font-size:.82rem;font-weight:700;color:#1a202c;margin-bottom:2px;">👤 ${s.name}</div>` : ''}
+                            ${s.tel  ? `<div style="font-size:.78rem;color:#4a5568;margin-bottom:2px;">📞 ${s.tel}</div>` : ''}
+                            ${s.kala ? `<div style="font-size:.75rem;color:#718096;">📦 ${s.kala}</div>` : ''}
+                            ${s.postcode ? `<div style="font-size:.75rem;color:#718096;">🏙️ ${s.postcode}</div>` : ''}
+                        </div>
+                        <div style="padding:10px 12px;">
+                            <div style="font-size:.7rem;font-weight:800;color:#718096;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;">📬 وەرگر</div>
+                            ${r.name ? `<div style="font-size:.82rem;font-weight:700;color:#1a202c;margin-bottom:2px;">👤 ${r.name}</div>` : ''}
+                            ${r.tel  ? `<div style="font-size:.78rem;color:#4a5568;margin-bottom:2px;">📞 ${r.tel}</div>` : ''}
+                            ${r.kala ? `<div style="font-size:.75rem;color:#718096;">📦 ${r.kala}</div>` : ''}
+                            ${r.postcode ? `<div style="font-size:.75rem;color:#718096;">🏙️ ${r.postcode}</div>` : ''}
+                        </div>
+                    </div>
+                    <!-- Weight -->
+                    ${(s.weight || r.weight) ? `
+                    <div style="padding:7px 14px;background:#f7fafc;border-bottom:1px solid #e2e8f0;font-size:.78rem;color:#4a5568;display:flex;gap:14px;">
+                        ${s.weight ? `<span>⚖️ کێشی نێردەر: <strong>${s.weight}</strong></span>` : ''}
+                        ${r.weight ? `<span>⚖️ کێشی وەرگر: <strong>${r.weight}</strong></span>` : ''}
+                    </div>` : ''}
+                    <!-- Driver info -->
+                    ${hasDriver ? `
+                    <div style="background:linear-gradient(135deg,#f0fff4,#e6fffa);padding:10px 14px;border-top:2px dashed #68d391;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                        <div style="font-size:1.4rem;">🚗</div>
+                        <div>
+                            <div style="font-size:.72rem;font-weight:800;color:#276749;letter-spacing:.5px;margin-bottom:2px;">شۆفیری گەیاندن</div>
+                            ${d.driverName ? `<div style="font-size:.88rem;font-weight:700;color:#1a202c;">👤 ${d.driverName}</div>` : ''}
+                            ${d.driverMobile ? `<div style="font-size:.85rem;color:#2b6cb0;font-weight:700;">📞 <a href="tel:${d.driverMobile}" style="color:#2b6cb0;text-decoration:none;">${d.driverMobile}</a></div>` : ''}
+                        </div>
+                    </div>` : `
+                    <div style="background:#fffaf0;padding:8px 14px;border-top:1px solid #fbd38d;font-size:.75rem;color:#c05621;text-align:center;">
+                        ⏳ هێشتا شۆفیر دیاری نەکراوە
+                    </div>`}
+                </div>`;
+                return;
+            }
+
+            // ── KU / UK delivery ─────────────────────────────────────────
+            const status = (d.status || 'registered').toLowerCase().replace(/\s+/g, '_');
+            const si = STATUS_LIST.findIndex(s => s.key === status);
+            const curStatus = STATUS_LIST[si] || STATUS_LIST[0];
+
+            const isUk = d.type === 'uk';
+            const orderNum = d.orderNumber || d.key || '—';
+            const name = isUk
+                ? (d.fullName || d.name || '—')
+                : (d.senderName || d.name || '—');
+            const dest = isUk
+                ? (d.destinationCity || d.city || '—')
+                : (d.receiverLocation || '—');
+            const item = isUk
+                ? (d.item || '—')
+                : (d.packageName || '—');
+            const kg = isUk ? (d.weight || '—') : (d.packageKg ? d.packageKg + ' کگ' : '—');
+            const date = d.timestamp || d.date || '';
+            const hasDriver = d.driverName || d.driverMobile;
+
+            const stepsHtml = STATUS_LIST.map((s, i) => {
+                const done = i <= si;
+                const active = i === si;
+                return `<div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;">
+                    <div style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;
+                        background:${done ? s.color : '#e2e8f0'};color:${done ? '#fff' : '#a0aec0'};
+                        border:${active ? '3px solid ' + s.color : '2px solid ' + (done ? s.color : '#e2e8f0')};
+                        box-shadow:${active ? '0 0 0 4px ' + s.color + '22' : 'none'};
+                        font-weight:${active ? '900' : '600'};transition:all .3s;">
+                        ${done ? (i === si ? s.icon : '✓') : (i + 1)}
+                    </div>
+                    <div style="font-size:.55rem;color:${done ? s.color : '#a0aec0'};text-align:center;font-weight:${active ? '700' : '400'};line-height:1.2;max-width:40px;">${s.label}</div>
+                </div>`;
+            }).join(`<div style="flex:1;height:2px;background:linear-gradient(90deg,${si >= 0 ? curStatus.color : '#e2e8f0'},#e2e8f0);margin-top:13px;border-radius:2px;"></div>`);
+
+            html += `
+            <div style="border:2px solid ${curStatus.color}22;border-radius:16px;overflow:hidden;margin-bottom:14px;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.07);">
+                <!-- Header -->
+                <div style="background:${curStatus.color};padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+                    <div style="color:#fff;font-weight:800;font-size:.95rem;">${curStatus.icon} ${curStatus.label}</div>
+                    <div style="color:#fff;font-size:.75rem;background:rgba(255,255,255,.2);padding:3px 10px;border-radius:20px;font-weight:700;">${isUk ? '🇬🇧 UK' : '🇮🇶 کوردستان'} — ${orderNum}</div>
+                </div>
+                <!-- Status Badge Bar -->
+                <div style="background:#fff;padding:10px 14px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:.78rem;font-weight:700;color:#718096;">📊 ستاتەسی کاڵا:</span>
+                        <span style="background:${curStatus.color};color:#fff;padding:5px 14px;border-radius:20px;font-size:.82rem;font-weight:800;display:flex;align-items:center;gap:5px;box-shadow:0 2px 8px ${curStatus.color}44;">
+                            ${curStatus.icon} ${curStatus.label}
+                        </span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                        ${STATUS_LIST.map((s, i) => `<span style="width:8px;height:8px;border-radius:50%;background:${i <= si ? s.color : '#e2e8f0'};display:inline-block;${i === si ? 'box-shadow:0 0 0 3px ' + s.color + '33;' : ''}"></span>`).join('')}
+                    </div>
+                </div>
+                <!-- Steps -->
+                <div style="padding:14px 10px 10px;background:#f8fafc;">
+                    <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+                        ${stepsHtml}
+                    </div>
+                </div>
+                <!-- Info -->
+                <div style="padding:12px 14px;border-top:1px solid #e2e8f0;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                        <div style="font-size:.8rem;"><span style="color:#718096;">👤 ناو:</span> <strong>${name}</strong></div>
+                        <div style="font-size:.8rem;"><span style="color:#718096;">📍 شوێن:</span> <strong>${dest}</strong></div>
+                        <div style="font-size:.8rem;"><span style="color:#718096;">📦 کاڵا:</span> <strong>${item}</strong></div>
+                        <div style="font-size:.8rem;"><span style="color:#718096;">⚖️ کێش:</span> <strong>${kg}</strong></div>
+                    </div>
+                    ${date ? `<div style="font-size:.72rem;color:#a0aec0;margin-top:6px;text-align:center;">📅 ${date}</div>` : ''}
+                </div>
+                <!-- Driver info -->
+                ${hasDriver ? `
+                <div style="background:linear-gradient(135deg,#f0fff4,#e6fffa);padding:10px 14px;border-top:2px dashed #68d391;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <div style="font-size:1.4rem;">🚗</div>
+                    <div>
+                        <div style="font-size:.72rem;font-weight:800;color:#276749;letter-spacing:.5px;margin-bottom:2px;">شۆفیری گەیاندن</div>
+                        ${d.driverName ? `<div style="font-size:.88rem;font-weight:700;color:#1a202c;">👤 ${d.driverName}</div>` : ''}
+                        ${d.driverMobile ? `<div style="font-size:.85rem;color:#2b6cb0;font-weight:700;">📞 <a href="tel:${d.driverMobile}" style="color:#2b6cb0;text-decoration:none;">${d.driverMobile}</a></div>` : ''}
+                    </div>
+                </div>` : ''}
+            </div>`;
+        });
+
+        resultsEl.innerHTML = html;
+    }).catch(err => {
+        console.error(err);
+        resultsEl.innerHTML = '<div style="text-align:center;color:#e53e3e;padding:16px;">هەڵە لە بارکردن، دووبارە هەوڵ بدە</div>';
+    });
+}
 function showFibModal() { showModal('fibModal'); }
 
 // ==================== Admin Functions ====================
@@ -413,6 +714,8 @@ function showAdminTab(tab) {
         showVideoAdminForm();
     } else if (tab === 'addProduct') {
         showAdminAddProductForm();
+    } else if (tab === 'drivers') {
+        loadDriversAdmin();
     }
 }
 
@@ -926,6 +1229,21 @@ function buildKurdishLabelHtml(d, key, orderNum, qrUrl) {
             </div>
             <div class="label-admin-edit">
                 <div class="admin-edit-title"><i class="fas fa-pen"></i> شۆفیر و تیبینی</div>
+                <!-- Status Changer -->
+                <div style="margin-bottom:10px;background:#f0f4ff;border-radius:10px;padding:10px;">
+                    <label style="font-size:.82rem;font-weight:700;color:#667eea;display:block;margin-bottom:6px;">📊 ستاتەسی کاڵا:</label>
+                    <div style="display:flex;gap:6px;align-items:center;">
+                        <select id="status-select-${key}" onchange="updateDeliveryStatus('${key}', this.value, 'delivery')"
+                            style="flex:1;padding:8px 10px;border:2px solid #667eea;border-radius:10px;font-family:inherit;font-size:.88rem;background:#fff;color:#2d3748;cursor:pointer;outline:none;">
+                            <option value="registered"  ${(d.status||'registered')==='registered'  ? 'selected':''}>📋 تۆماركراو — Registered</option>
+                            <option value="picked_up"   ${(d.status||'')==='picked_up'   ? 'selected':''}>🚗 وەرگیراو — Picked Up</option>
+                            <option value="loading"     ${(d.status||'')==='loading'     ? 'selected':''}>🏭 بارکردنی کەلەک — Loading Warehouse</option>
+                            <option value="in_transit"  ${(d.status||'')==='in_transit'  ? 'selected':''}>🚛 لە ڕێگادایە — In Transit</option>
+                            <option value="sorting"     ${(d.status||'')==='sorting'     ? 'selected':''}>📦 کەلەکی دابەشکردن — Sorting Warehouse</option>
+                            <option value="delivered"   ${(d.status||'')==='delivered'   ? 'selected':''}>✅ گەیشتووە — Delivered</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="admin-edit-fields">
                     <div class="admin-edit-inputs">
                         <input type="text" id="driver-name-${key}" placeholder="👤 ناوی شۆفیر" value="${escapeHtml(d.driverName||'')}">
@@ -957,7 +1275,10 @@ function buildUkLabelHtml(d, key, orderNum, qrUrl) {
     <div class="pending-item delivery-label-card" id="label-${key}" style="direction:ltr; text-align:left; font-family:'Segoe UI',Arial,sans-serif;">
         <div class="label-header" style="direction:ltr;">
             <span class="label-order-num"># ${orderNum}</span>
-            <span class="label-title-center" style="background:#fef3c7; color:#92400e; padding:4px 10px; border-radius:20px; font-size:13px;">UK Delivery</span>
+            <span class="label-title-center" style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;justify-content:center;">
+                <span style="background:#fef3c7;color:#92400e;padding:4px 10px;border-radius:20px;font-size:13px;">UK Delivery</span>
+                <span id="status-badge-${key}" style="padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;color:#fff;background:${({'registered':'#667eea','picked_up':'#ed8936','loading':'#d69e2e','in_transit':'#3182ce','sorting':'#805ad5','delivered':'#38a169'})[d.status||'registered']||'#667eea'}">${({'registered':'📋 Registered','picked_up':'🚗 Picked Up','loading':'🏭 Loading','in_transit':'🚛 In Transit','sorting':'📦 Sorting','delivered':'✅ Delivered'})[d.status||'registered']||'📋 Registered'}</span>
+            </span>
             <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
                 <button class="btn btn-sm btn-primary" onclick="printUkLabel('${key}')" style="padding:5px 10px;font-size:0.8rem;">
                     <i class="fas fa-print"></i> Print
@@ -1002,6 +1323,19 @@ function buildUkLabelHtml(d, key, orderNum, qrUrl) {
             </div>
             <div class="label-admin-edit" style="direction:ltr; text-align:left;">
                 <div class="admin-edit-title" style="text-align:left;"><i class="fas fa-pen"></i> Driver & Notes</div>
+                <!-- Status Changer UK -->
+                <div style="margin-bottom:10px;background:#fff8e7;border-radius:10px;padding:10px;border:1px solid #f0c040;">
+                    <label style="font-size:.82rem;font-weight:700;color:#d97706;display:block;margin-bottom:6px;">📊 Package Status:</label>
+                    <select id="status-select-${key}" onchange="updateDeliveryStatus('${key}', this.value, 'uk')"
+                        style="width:100%;padding:8px 10px;border:2px solid #f0c040;border-radius:10px;font-family:inherit;font-size:.88rem;background:#fff;color:#2d3748;cursor:pointer;outline:none;direction:ltr;">
+                        <option value="registered"  ${(d.status||'registered')==='registered'  ? 'selected':''}>📋 Registered — تۆماركراو</option>
+                        <option value="picked_up"   ${(d.status||'')==='picked_up'   ? 'selected':''}>🚗 Picked Up — وەرگیراو</option>
+                        <option value="loading"     ${(d.status||'')==='loading'     ? 'selected':''}>🏭 Loading Warehouse — بارکردن</option>
+                        <option value="in_transit"  ${(d.status||'')==='in_transit'  ? 'selected':''}>🚛 In Transit — لە ڕێگادایە</option>
+                        <option value="sorting"     ${(d.status||'')==='sorting'     ? 'selected':''}>📦 Sorting Warehouse — دابەشکردن</option>
+                        <option value="delivered"   ${(d.status||'')==='delivered'   ? 'selected':''}>✅ Delivered — گەیشتووە</option>
+                    </select>
+                </div>
                 <div class="admin-edit-fields">
                     <div class="admin-edit-inputs">
                         <input type="text" id="driver-name-${key}" placeholder="👤 Driver name" value="${escapeHtml(d.driverName||'')}">
@@ -1085,6 +1419,43 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+// ==================== Update Delivery Status ====================
+
+function updateIntlStatus(key, status) {
+    database.ref('intlPost/' + key).update({ status: status, statusUpdated: new Date().toLocaleString() })
+        .then(function() { showNotification('ستاتەس نوێ کرایەوە ✅'); })
+        .catch(function() { showNotification('هەڵە لە نوێکردنەوەی ستاتەس!', 'error'); });
+}
+
+function saveIntlDriverInfo(key) {
+    var driverName   = (document.getElementById('ip-driver-name-' + key) || {value:''}).value.trim();
+    var driverMobile = (document.getElementById('ip-driver-mobile-' + key) || {value:''}).value.trim();
+    database.ref('intlPost/' + key).update({ driverName: driverName, driverMobile: driverMobile })
+        .then(function() {
+            showNotification('زانیاری شۆفیر پاشەکەوت کرا ✅');
+            loadIntlPost();
+        })
+        .catch(function() { showNotification('هەڵە لە پاشەکەوتکردن!', 'error'); });
+}
+
+function updateDeliveryStatus(key, status, dbPath) {
+    // هەموو UK + KU delivery داتا لە delivery/ نۆددایە
+    const ref = database.ref('delivery/' + key);
+    ref.update({ status })
+        .then(() => {
+            showNotification('ستاتەس نوێ کرایەوە ✅');
+            // نوێکردنەوەی بادگەی سەرووەکە بە جێجێ
+            var STATUS_COLORS = {registered:'#667eea',picked_up:'#ed8936',loading:'#d69e2e',in_transit:'#3182ce',sorting:'#805ad5',delivered:'#38a169'};
+            var STATUS_LABELS = {registered:'📋 Registered',picked_up:'🚗 Picked Up',loading:'🏭 Loading',in_transit:'🚛 In Transit',sorting:'📦 Sorting',delivered:'✅ Delivered'};
+            var badge = document.getElementById('status-badge-' + key);
+            if (badge) {
+                badge.style.background = STATUS_COLORS[status] || '#667eea';
+                badge.textContent = STATUS_LABELS[status] || status;
+            }
+        })
+        .catch(() => showNotification('هەڵە لە نوێکردنەوەی ستاتەس!', 'error'));
 }
 
 // ==================== Save Driver Info ====================
@@ -2140,7 +2511,7 @@ document.addEventListener('submit', async function(e) {
         database.ref('deliveryCounter').transaction((current) => {
             return (current || 0) + 1;
         }).then((result) => {
-            const orderNum = String(result.snapshot.val()).padStart(2, '0');
+            const orderNum = 'KU-' + String(result.snapshot.val()).padStart(4, '0');
             const deliveryData = {
                 orderNumber:      orderNum,
                 senderName:       document.getElementById('senderName').value,
@@ -3609,12 +3980,28 @@ function loadIntlPost() {
             console.log('items after forEach:', items.length);
             listHtml = '<h3 style="color:#2b6cb0;border-bottom:2px solid #bee3f8;padding-bottom:6px;margin:0 0 12px;">🌍 تۆمارەکان (' + items.length + ')</h3>';
             listHtml += '<div style="display:flex;flex-direction:column;gap:10px;">';
+            var INTL_STATUS_FORM = [
+                { key: 'registered',  ku: 'تۆماركراوە',      icon: '📋', color: '#667eea' },
+                { key: 'loading',     ku: 'بارکراوە',         icon: '🏭', color: '#d69e2e' },
+                { key: 'in_transit',  ku: 'لەڕێگادایە',      icon: '🚛', color: '#3182ce' },
+                { key: 'delivered',   ku: 'گەیشتووە',        icon: '✅', color: '#38a169' },
+                { key: 'sorting',     ku: 'دابەشکردن',       icon: '📦', color: '#805ad5' },
+            ];
+
             items.forEach(function(d) {
                 var flag = d.country ? d.country.split(' ')[0] : '🌍';
                 var cname = d.country ? d.country.split(' ').slice(1).join(' ') : '—';
                 var orderNum = d.orderNumber || '—';
-                listHtml += '<div style="border:1.5px solid #bee3f8;border-radius:8px;background:#fff;overflow:hidden;font-family:\'Segoe UI\',Arial,sans-serif;direction:ltr;">'
-                  + '<div style="background:#2b6cb0;color:#fff;padding:6px 12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">'
+                var curStatus = d.status || 'registered';
+                var si = INTL_STATUS_FORM.findIndex(function(s){ return s.key === curStatus; });
+                if (si < 0) si = 0;
+                var st = INTL_STATUS_FORM[si];
+                var statusOptions = INTL_STATUS_FORM.map(function(s) {
+                    return '<option value="' + s.key + '"' + (s.key === curStatus ? ' selected' : '') + '>' + s.icon + ' ' + s.ku + '</option>';
+                }).join('');
+
+                listHtml += '<div style="border:2px solid ' + st.color + '44;border-radius:10px;background:#fff;overflow:hidden;font-family:\'Segoe UI\',Arial,sans-serif;direction:ltr;">'
+                  + '<div style="background:' + st.color + ';color:#fff;padding:6px 12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">'
                   + '<span style="font-weight:900;font-size:.95rem;letter-spacing:1px;"># ' + orderNum + '</span>'
                   + '<span style="font-weight:700;font-size:.8rem;">' + flag + ' ' + cname + ' — ' + (d.timestamp||'') + '</span>'
                   + '<div style="display:flex;gap:6px;">'
@@ -3624,7 +4011,21 @@ function loadIntlPost() {
                   + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">'
                   + intlSideHtml('📤 SENDER', d.sender)
                   + intlSideHtml('📬 RECIPIENT', d.recipient)
-                  + '</div></div>';
+                  + '</div>'
+                  + '<div style="padding:8px 12px;border-top:1px solid #e2e8f0;background:#f7fafc;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">'
+                  + '<span style="font-size:.78rem;font-weight:700;color:#4a5568;">📊 ستاتەسی کاڵا:</span>'
+                  + '<select onchange="updateIntlStatus(\'' + d.key + '\', this.value)" style="flex:1;min-width:180px;padding:6px 10px;border:2px solid ' + st.color + ';border-radius:8px;font-size:.82rem;cursor:pointer;font-family:inherit;background:#fff;color:#2d3748;font-weight:600;">'
+                  + statusOptions
+                  + '</select>'
+                  + '</div>'
+                  + '<div style="padding:8px 12px;border-top:1px solid #e2e8f0;background:#f0fff4;">'
+                  + '<div style="font-size:.75rem;font-weight:800;color:#276749;margin-bottom:5px;">🚗 شۆفیر و گەیاندن</div>'
+                  + '<div style="display:flex;gap:6px;flex-wrap:wrap;">'
+                  + '<input id="ip-driver-name-' + d.key + '" type="text" placeholder="👤 ناوی شۆفیر" value="' + (d.driverName||'') + '" style="flex:1;min-width:120px;padding:5px 8px;border:1.5px solid #9ae6b4;border-radius:7px;font-size:.78rem;">'
+                  + '<input id="ip-driver-mobile-' + d.key + '" type="tel" placeholder="📞 ژمارەی مۆبایل" value="' + (d.driverMobile||'') + '" style="flex:1;min-width:120px;padding:5px 8px;border:1.5px solid #9ae6b4;border-radius:7px;font-size:.78rem;">'
+                  + '<button onclick="saveIntlDriverInfo(\'' + d.key + '\')" style="padding:5px 14px;background:#38a169;color:#fff;border:none;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;">💾 پاشەکەوت</button>'
+                  + '</div></div>'
+                  + '</div>';
             });
             listHtml += '</div>';
         }
@@ -3699,45 +4100,75 @@ function saveIntlPost() {
 }
 
 function loadIntlList() {
-    const container = document.getElementById('intl-list');
+    var container = document.getElementById('intl-list');
     if (!container) return;
     container.innerHTML = '<p style="text-align:center;color:#718096;">بارکردن...</p>';
-    database.ref('intlPost').once('value', snap => {
+    database.ref('intlPost').once('value', function(snap) {
         if (!snap.exists()) {
             container.innerHTML = '<p style="text-align:center;color:#aaa;padding:20px;">هیچ تۆمارێک نییە.</p>';
             return;
         }
-        const items = [];
-        snap.forEach(ch => items.push({key: ch.key, ...ch.val()}));
-        items.sort((a,b) => {
-            const na = parseInt((a.orderNumber||'').replace(/[^0-9]/g,'')) || 0;
-            const nb = parseInt((b.orderNumber||'').replace(/[^0-9]/g,'')) || 0;
+        var items = [];
+        snap.forEach(function(ch) { items.push(Object.assign({key: ch.key}, ch.val())); });
+        items.sort(function(a,b) {
+            var na = parseInt((a.orderNumber||'').replace(/[^0-9]/g,'')) || 0;
+            var nb = parseInt((b.orderNumber||'').replace(/[^0-9]/g,'')) || 0;
             return nb - na || (b.sortKey||0) - (a.sortKey||0);
         });
-        console.log('intlPost records loaded:', items.length);
-        items.forEach((d,i) => console.log(`  [${i}] key=${d.key} order=${d.orderNumber} sender=${JSON.stringify(d.sender)} recipient=${JSON.stringify(d.recipient)}`));
 
-        let html = `<h3 style="color:#2b6cb0;border-bottom:2px solid #bee3f8;padding-bottom:6px;margin:0 0 12px;">🌍 تۆمارەکان (${items.length})</h3>`;
+        var INTL_STATUS = [
+            { key: 'registered',   ku: 'تۆماركراوە',      icon: '📋', color: '#667eea' },
+            { key: 'loading',      ku: 'بارکراوە',         icon: '🏭', color: '#d69e2e' },
+            { key: 'in_transit',   ku: 'لەڕێگادایە',      icon: '🚛', color: '#3182ce' },
+            { key: 'delivered',    ku: 'گەیشتووە',        icon: '✅', color: '#38a169' },
+            { key: 'sorting',      ku: 'دابەشکردن',       icon: '📦', color: '#805ad5' },
+        ];
+
+        var html = '<h3 style="color:#2b6cb0;border-bottom:2px solid #bee3f8;padding-bottom:6px;margin:0 0 12px;">🌍 تۆمارەکان (' + items.length + ')</h3>';
         html += '<div style="display:flex;flex-direction:column;gap:10px;">';
-        items.forEach(d => {
-            const flag = d.country ? d.country.split(' ')[0] : '🌍';
-            const cname = d.country ? d.country.split(' ').slice(1).join(' ') : '—';
-            const orderNum = d.orderNumber || '—';
-            html += `
-            <div style="border:1.5px solid #bee3f8;border-radius:8px;background:#fff;overflow:hidden;font-family:'Segoe UI',Arial,sans-serif;direction:ltr;">
-              <div style="background:#2b6cb0;color:#fff;padding:6px 12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
-                <span style="font-weight:900;font-size:.95rem;letter-spacing:1px;"># ${orderNum}</span>
-                <span style="font-weight:700;font-size:.8rem;">${flag} ${cname} — ${d.timestamp||''}</span>
-                <div style="display:flex;gap:6px;">
-                  <button onclick="printIntlPost('${d.key}')" style="background:#fff;color:#2b6cb0;border:none;border-radius:5px;padding:3px 10px;font-size:.75rem;font-weight:700;cursor:pointer;">🖨️ Print</button>
-                  <button onclick="deleteIntlPost('${d.key}')" style="background:#fed7d7;color:#c53030;border:none;border-radius:5px;padding:3px 8px;font-size:.75rem;cursor:pointer;">🗑️</button>
-                </div>
-              </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
-                ${intlSideHtml('📤 SENDER', d.sender)}
-                ${intlSideHtml('📬 RECIPIENT', d.recipient)}
-              </div>
-            </div>`;
+        items.forEach(function(d) {
+            var flag = d.country ? d.country.split(' ')[0] : '🌍';
+            var cname = d.country ? d.country.split(' ').slice(1).join(' ') : '—';
+            var orderNum = d.orderNumber || '—';
+            var curStatus = d.status || 'registered';
+            var si = INTL_STATUS.findIndex(function(s){ return s.key === curStatus; });
+            if (si < 0) si = 0;
+            var st = INTL_STATUS[si];
+
+            var statusOptions = INTL_STATUS.map(function(s) {
+                return '<option value="' + s.key + '"' + (s.key === curStatus ? ' selected' : '') + '>' + s.icon + ' ' + s.ku + '</option>';
+            }).join('');
+
+            html += '<div style="border:2px solid ' + st.color + '44;border-radius:10px;background:#fff;overflow:hidden;font-family:\'Segoe UI\',Arial,sans-serif;direction:ltr;margin-bottom:2px;">'
+              // Header
+              + '<div style="background:' + st.color + ';color:#fff;padding:7px 12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">'
+              + '<span style="font-weight:900;font-size:.95rem;letter-spacing:1px;"># ' + orderNum + '</span>'
+              + '<span style="font-weight:700;font-size:.8rem;">' + flag + ' ' + cname + ' — ' + (d.timestamp||'') + '</span>'
+              + '<div style="display:flex;gap:6px;">'
+              + '<button onclick="printIntlPost(\'' + d.key + '\')" style="background:#fff;color:#2b6cb0;border:none;border-radius:5px;padding:3px 10px;font-size:.75rem;font-weight:700;cursor:pointer;">🖨️ Print</button>'
+              + '<button onclick="deleteIntlPost(\'' + d.key + '\')" style="background:#fed7d7;color:#c53030;border:none;border-radius:5px;padding:3px 8px;font-size:.75rem;cursor:pointer;">🗑️</button>'
+              + '</div></div>'
+              // Sender / Recipient
+              + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">'
+              + intlSideHtml('📤 SENDER', d.sender)
+              + intlSideHtml('📬 RECIPIENT', d.recipient)
+              + '</div>'
+              // Status selector
+              + '<div style="padding:8px 12px;border-top:1px solid #e2e8f0;background:#f7fafc;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">'
+              + '<span style="font-size:.78rem;font-weight:700;color:#4a5568;">📍 ستاتەس:</span>'
+              + '<select onchange="updateIntlStatus(\'' + d.key + '\', this.value)" style="flex:1;min-width:160px;padding:5px 8px;border:1.5px solid #bee3f8;border-radius:7px;font-size:.8rem;cursor:pointer;font-family:inherit;">'
+              + statusOptions
+              + '</select>'
+              + '</div>'
+              // Driver
+              + '<div style="padding:8px 12px;border-top:1px solid #e2e8f0;background:#f0fff4;">'
+              + '<div style="font-size:.75rem;font-weight:800;color:#276749;margin-bottom:5px;">🚗 شۆفیر و گەیاندن</div>'
+              + '<div style="display:flex;gap:6px;flex-wrap:wrap;">'
+              + '<input id="ip-driver-name-' + d.key + '" type="text" placeholder="👤 ناوی شۆفیر" value="' + (d.driverName||'') + '" style="flex:1;min-width:120px;padding:5px 8px;border:1.5px solid #9ae6b4;border-radius:7px;font-size:.78rem;">'
+              + '<input id="ip-driver-mobile-' + d.key + '" type="tel" placeholder="📞 ژمارەی مۆبایل" value="' + (d.driverMobile||'') + '" style="flex:1;min-width:120px;padding:5px 8px;border:1.5px solid #9ae6b4;border-radius:7px;font-size:.78rem;">'
+              + '<button onclick="saveIntlDriverInfo(\'' + d.key + '\')" style="padding:5px 14px;background:#38a169;color:#fff;border:none;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;">💾 پاشەکەوت</button>'
+              + '</div></div>'
+              + '</div>';
         });
         html += '</div>';
         container.innerHTML = html;
@@ -3820,4 +4251,109 @@ function printIntlPost(key) {
         const win = window.open('','_blank');
         if (win) { win.document.write(html); win.document.close(); }
     });
+}
+
+// ============================================================
+//  ADMIN: Driver Management — بەڕێوەبردنی شۆفیرەکان
+// ============================================================
+function loadDriversAdmin() {
+    var content = document.getElementById('adminContent');
+    if (!content) return;
+    content.innerHTML = '<p style="text-align:center;padding:20px;color:#718096;">بارکردن...</p>';
+
+    function renderDriversPage(drivers) {
+
+        var formHtml = `
+        <div style="background:#fff;border-radius:14px;padding:18px;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,.07);border:2px solid #bee3f8;">
+          <h3 style="color:#1a365d;margin:0 0 14px;font-size:1rem;display:flex;align-items:center;gap:8px;"><i class="fas fa-user-plus"></i> زیادکردنی شۆفیری نوێ</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+            <div>
+              <label style="font-size:.75rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px;">👤 ناوی شۆفیر</label>
+              <input type="text" id="newDriverName" placeholder="ناوی تەواو..." style="width:100%;padding:9px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.85rem;font-family:inherit;outline:none;box-sizing:border-box;">
+            </div>
+            <div>
+              <label style="font-size:.75rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px;">📱 ژمارەی مۆبایل</label>
+              <input type="tel" id="newDriverMobile" placeholder="07xxxxxxxxx" style="width:100%;padding:9px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.85rem;font-family:inherit;outline:none;direction:ltr;box-sizing:border-box;">
+            </div>
+            <div>
+              <label style="font-size:.75rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px;">🔑 ناوی بەکارهێنەر (username)</label>
+              <input type="text" id="newDriverUsername" placeholder="driver1..." style="width:100%;padding:9px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.85rem;font-family:inherit;outline:none;direction:ltr;box-sizing:border-box;">
+            </div>
+            <div>
+              <label style="font-size:.75rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px;">🔒 وشەی تێپەڕ</label>
+              <input type="text" id="newDriverPassword" placeholder="وشەی تێپەڕ..." style="width:100%;padding:9px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.85rem;font-family:inherit;outline:none;direction:ltr;box-sizing:border-box;">
+            </div>
+          </div>
+          <button onclick="saveNewDriver()" style="padding:10px 20px;background:linear-gradient(135deg,#1a365d,#2b6cb0);color:#fff;border:none;border-radius:10px;font-size:.88rem;font-weight:700;cursor:pointer;font-family:inherit;">
+            <i class="fas fa-save"></i> زیادکردن
+          </button>
+        </div>`;
+
+        var listHtml = '<h3 style="color:#2b6cb0;margin:0 0 12px;font-size:.95rem;border-bottom:2px solid #bee3f8;padding-bottom:8px;">🚗 شۆفیرەکان (' + drivers.length + ')</h3>';
+        if (drivers.length === 0) {
+            listHtml += '<div style="text-align:center;padding:24px;color:#a0aec0;">هیچ شۆفیرێک تۆمار نەکراوە</div>';
+        } else {
+            listHtml += '<div style="display:flex;flex-direction:column;gap:10px;">';
+            drivers.forEach(function(d) {
+                listHtml += '<div style="background:#fff;border-radius:12px;padding:14px;border:1.5px solid #e2e8f0;box-shadow:0 1px 6px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">'
+                  + '<div style="display:flex;align-items:center;gap:12px;">'
+                    + '<div style="width:40px;height:40px;background:linear-gradient(135deg,#1a365d,#2b6cb0);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;flex-shrink:0;">🚗</div>'
+                    + '<div>'
+                      + '<div style="font-weight:800;font-size:.9rem;color:#1a202c;">' + escapeHtml(d.name || '—') + '</div>'
+                      + '<div style="font-size:.75rem;color:#718096;">📱 ' + escapeHtml(d.mobile || '—') + ' &nbsp;|&nbsp; 👤 ' + escapeHtml(d.username || '—') + '</div>'
+                    + '</div>'
+                  + '</div>'
+                  + '<div style="display:flex;gap:6px;">'
+                    + '<button onclick="resetDriverPassword(\'' + d.key + '\')" style="padding:5px 12px;background:#fffbeb;color:#d97706;border:1.5px solid #f0c040;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;"><i class="fas fa-key"></i> وشە</button>'
+                    + '<button onclick="deleteDriver(\'' + d.key + '\')" style="padding:5px 12px;background:#fff5f5;color:#c53030;border:1.5px solid #fed7d7;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;"><i class="fas fa-trash"></i></button>'
+                  + '</div>'
+                + '</div>';
+            });
+            listHtml += '</div>';
+        }
+
+        content.innerHTML = '<div style="padding:4px;">' + formHtml + listHtml + '</div>';
+    }
+
+    // بە هەر حاڵێک فۆرمەکە پیشان بدە — ئەگەر Firebase کار نەکرد لیستی بەتاڵ نیشان بدە
+    try {
+        database.ref('drivers').once('value').then(function(snap) {
+            var drivers = [];
+            if (snap.exists()) snap.forEach(function(ch) { drivers.push(Object.assign({ key: ch.key }, ch.val())); });
+            renderDriversPage(drivers);
+        }).catch(function() {
+            renderDriversPage([]); // فۆرمەکە پیشان بدە حتی ئەگەر هەڵە هەبوو
+        });
+    } catch(e) {
+        renderDriversPage([]);
+    }
+}
+
+function saveNewDriver() {
+    var name     = ((document.getElementById('newDriverName') || {}).value || '').trim();
+    var mobile   = ((document.getElementById('newDriverMobile') || {}).value || '').trim();
+    var username = ((document.getElementById('newDriverUsername') || {}).value || '').trim();
+    var password = ((document.getElementById('newDriverPassword') || {}).value || '').trim();
+    if (!name || !username || !password) { showNotification('تکایە هەموو خانەکان پڕبکەرەوە!', 'error'); return; }
+    database.ref('drivers').push({ name: name, mobile: mobile, username: username, password: password, kuBalance: 0, createdAt: new Date().toLocaleString() })
+        .then(function() {
+            showNotification('شۆفیر زیادکرا ✅');
+            loadDriversAdmin();
+        })
+        .catch(function() { showNotification('هەڵە لە زیادکردن!', 'error'); });
+}
+
+function deleteDriver(key) {
+    if (!confirm('دڵنیایت لە سڕینەوەی شۆفیر؟')) return;
+    database.ref('drivers/' + key).remove()
+        .then(function() { showNotification('سڕایەوە 🗑️'); loadDriversAdmin(); })
+        .catch(function() { showNotification('هەڵە!', 'error'); });
+}
+
+function resetDriverPassword(key) {
+    var newPass = prompt('وشەی تێپەڕی نوێ:');
+    if (!newPass) return;
+    database.ref('drivers/' + key).update({ password: newPass.trim() })
+        .then(function() { showNotification('وشەی تێپەڕ گۆڕایەوە ✅'); })
+        .catch(function() { showNotification('هەڵە!', 'error'); });
 }
