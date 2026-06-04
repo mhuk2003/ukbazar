@@ -77,18 +77,62 @@
                     <i class="fas fa-shipping-fast"></i>
                     <span class="btn-text" data-i18n="ukDelivery">UK Delivery</span>
                 </button>
+                <button onclick="showDriverLoginModal()" id="driverNavBtn" style="display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#1a365d,#2b6cb0);color:#fff;border:none;border-radius:50px;padding:8px 16px;font-family:inherit;font-size:.88rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(43,108,176,.4);">
+                    <i class="fas fa-truck"></i>
+                    <span class="btn-text">شۆفیر</span>
+                </button>
             </div>
         </div>
     </div>
 </header>
 
-    <section class="search-section">
+    <!-- ═══════════════════════════════════════════════════
+         TRACKING SECTION — بەشی چاودێری کاڵا (گەورە، سەرەوە)
+    ═══════════════════════════════════════════════════ -->
+    <section id="trackingSection" style="padding:12px 0 6px;">
         <div class="container">
-            <div class="search-box">
-                <input type="text" id="searchInput" data-i18n-placeholder="searchPlaceholder" placeholder="گەڕان بە کاڵا...">
-                <button onclick="performSearch()">
-                    <i class="fas fa-search"></i> <span data-i18n="search">گەڕان</span>
-                </button>
+            <div id="trackingWidget" style="border-radius:22px;overflow:hidden;box-shadow:0 6px 32px rgba(56,161,105,.22);border:2.5px solid #48bb78;">
+                <!-- Header — هەمیشە کراوەیە، کلیک دەبێت بداخرێت -->
+                <div style="background:linear-gradient(135deg,#2f855a,#276749);padding:20px 20px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="toggleTrackingWidget()">
+                    <div style="display:flex;align-items:center;gap:14px;">
+                        <div style="width:52px;height:52px;background:rgba(255,255,255,.18);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.15);">📦</div>
+                        <div>
+                            <div style="color:#fff;font-weight:900;font-size:1.15rem;letter-spacing:.3px;">چاودێری کاڵاکەم</div>
+                            <div style="color:rgba(255,255,255,.85);font-size:.82rem;margin-top:3px;">ژمارەی مۆبایلت بنووسە — کاڵاکانت ببینە</div>
+                        </div>
+                    </div>
+                    <div id="trackingChevron" style="color:#fff;font-size:1.3rem;transition:transform .3s;transform:rotate(180deg);"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <!-- Body — کراوە بە پێشکەوت -->
+                <div id="trackingWidgetBody" style="background:#f7fff9;">
+                    <div style="padding:20px 16px 10px;">
+                        <!-- ژمارەی مۆبایل -->
+                        <div style="margin-bottom:10px;">
+                            <div style="font-size:.75rem;font-weight:700;color:#276749;margin-bottom:5px;padding-right:4px;">📱 ژمارەی مۆبایل</div>
+                            <input type="tel" id="trackingPhoneInput" placeholder="07xxxxxxxxx"
+                                style="width:100%;padding:13px 16px;border:2.5px solid #68d391;border-radius:14px;font-size:1rem;outline:none;direction:ltr;font-family:inherit;background:#fff;box-sizing:border-box;"
+                                onkeydown="if(event.key==='Enter')document.getElementById('trackingCodeInput').focus()"
+                                onfocus="this.style.borderColor='#2f855a'" onblur="this.style.borderColor='#68d391'">
+                        </div>
+                        <!-- کۆد -->
+                        <div style="display:flex;gap:8px;">
+                            <div style="flex:1;">
+                                <div style="font-size:.75rem;font-weight:700;color:#276749;margin-bottom:5px;padding-right:4px;">🔑  (وشەی نهێنی)</div>
+                                <input type="text" id="trackingCodeInput" placeholder="ABCD1234"
+                                    style="width:100%;padding:13px 16px;border:2.5px solid #68d391;border-radius:14px;font-size:1rem;outline:none;direction:ltr;font-family:inherit;background:#fff;text-transform:uppercase;box-sizing:border-box;"
+                                    onkeydown="if(event.key==='Enter')searchCustomerOrders()"
+                                    onfocus="this.style.borderColor='#2f855a'" onblur="this.style.borderColor='#68d391'">
+                            </div>
+                            <div style="display:flex;align-items:flex-end;">
+                                <button onclick="searchCustomerOrders()" style="padding:13px 22px;border:none;border-radius:14px;background:linear-gradient(135deg,#38a169,#276749);color:#fff;font-weight:800;cursor:pointer;font-family:inherit;font-size:1rem;white-space:nowrap;box-shadow:0 3px 12px rgba(56,161,105,.4);">
+                                    <i class="fas fa-lock-open"></i> داخلبوون
+                                </button>
+                            </div>
+                        </div>
+                        <p id="trackingErr" style="color:#e53e3e;font-size:.82rem;margin:8px 0 0;text-align:center;display:none;"></p>
+                    </div>
+                    <div id="trackingResults" style="padding:0 16px 16px;"></div>
+                </div>
             </div>
         </div>
     </section>
@@ -104,6 +148,17 @@
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <div class="slider-dots" id="sliderDots"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="search-section">
+        <div class="container">
+            <div class="search-box">
+                <input type="text" id="searchInput" data-i18n-placeholder="searchPlaceholder" placeholder="گەڕان بە کاڵا...">
+                <button onclick="performSearch()">
+                    <i class="fas fa-search"></i> <span data-i18n="search">گەڕان</span>
+                </button>
             </div>
         </div>
     </section>
@@ -149,6 +204,7 @@
                 <button class="admin-tab" onclick="showAdminTab('addSlider')"><i class="fas fa-images"></i> سلایدەر</button>
                 <button class="admin-tab" onclick="showAdminTab('videos')"><i class="fas fa-video"></i> &#x06DA;&#x06CC;&#x062F;&#x06CC;&#x06C6;</button>
                 <button class="admin-tab" onclick="showAdminTab('addProduct')"><i class="fas fa-plus-circle"></i> زیادکردن</button>
+                <button class="admin-tab" onclick="showAdminTab('drivers')" style="background:linear-gradient(135deg,#1a365d,#2b6cb0);color:#fff;"><i class="fas fa-truck"></i> شۆفیرەکان</button>
                 <button class="admin-tab tab-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> دەرچوون</button>
             </div>
             <div id="adminContent"></div>
@@ -1891,3 +1947,513 @@ document.addEventListener('DOMContentLoaded', () => {
 
 })();
     </script>
+
+<!-- ═══════════════════════════════════════════════════
+     DRIVER LOGIN MODAL — مۆدالی داخلبوونی شۆفیر
+═══════════════════════════════════════════════════ -->
+<div id="driverLoginModal" class="modal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:20px;max-width:380px;width:92%;padding:0;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3);animation:driverModalIn .3s ease;">
+    <div style="background:linear-gradient(135deg,#1a365d,#2b6cb0);padding:24px 20px 20px;text-align:center;position:relative;">
+      <button onclick="closeDriverLoginModal()" style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+      <div style="width:64px;height:64px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:2rem;">🚗</div>
+      <h2 style="color:#fff;font-size:1.2rem;font-weight:900;margin:0 0 4px;">پۆرتاڵی شۆفیر</h2>
+      <p style="color:rgba(255,255,255,0.8);font-size:.82rem;margin:0;">ئەکاونتەکەت داخل بکە</p>
+    </div>
+    <div style="padding:24px 20px;">
+      <div style="margin-bottom:14px;">
+        <div style="font-size:.78rem;font-weight:700;color:#4a5568;margin-bottom:6px;">👤 ناوی کارمەند</div>
+        <input type="text" id="driverLoginUsername" placeholder="ناوی بەکارهێنەر..." 
+          style="width:100%;padding:12px 14px;border:2px solid #e2e8f0;border-radius:12px;font-size:.95rem;font-family:inherit;outline:none;box-sizing:border-box;"
+          onfocus="this.style.borderColor='#2b6cb0'" onblur="this.style.borderColor='#e2e8f0'"
+          onkeydown="if(event.key==='Enter')document.getElementById('driverLoginPassword').focus()">
+      </div>
+      <div style="margin-bottom:18px;">
+        <div style="font-size:.78rem;font-weight:700;color:#4a5568;margin-bottom:6px;">🔑 وشەی تێپەڕ</div>
+        <input type="password" id="driverLoginPassword" placeholder="وشەی تێپەڕ..." 
+          style="width:100%;padding:12px 14px;border:2px solid #e2e8f0;border-radius:12px;font-size:.95rem;font-family:inherit;outline:none;box-sizing:border-box;"
+          onfocus="this.style.borderColor='#2b6cb0'" onblur="this.style.borderColor='#e2e8f0'"
+          onkeydown="if(event.key==='Enter')driverLogin()">
+      </div>
+      <p id="driverLoginErr" style="color:#e53e3e;font-size:.82rem;text-align:center;margin:0 0 12px;display:none;"></p>
+      <button onclick="driverLogin()" style="width:100%;padding:14px;background:linear-gradient(135deg,#1a365d,#2b6cb0);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:800;cursor:pointer;font-family:inherit;">
+        <i class="fas fa-sign-in-alt"></i> داخلبوون
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     DRIVER DASHBOARD MODAL — داشبۆردی شۆفیر
+═══════════════════════════════════════════════════ -->
+<div id="driverDashboard" style="display:none;position:fixed;inset:0;z-index:99998;background:#f0f4ff;overflow-y:auto;direction:rtl;font-family:'Noto Sans Arabic',sans-serif;">
+  <!-- Dashboard Header -->
+  <div style="background:linear-gradient(135deg,#1a365d,#2b6cb0);padding:16px 16px 12px;position:sticky;top:0;z-index:10;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+    <div style="display:flex;align-items:center;justify-content:space-between;max-width:600px;margin:0 auto;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:44px;height:44px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;">🚗</div>
+        <div>
+          <div id="driverWelcomeName" style="color:#fff;font-weight:900;font-size:1rem;"></div>
+          <div style="color:rgba(255,255,255,.75);font-size:.75rem;">پۆرتاڵی شۆفیر</div>
+        </div>
+      </div>
+      <button onclick="driverLogout()" style="background:rgba(255,255,255,0.2);border:none;color:#fff;padding:8px 14px;border-radius:20px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;">
+        <i class="fas fa-sign-out-alt"></i> دەرچوون
+      </button>
+    </div>
+  </div>
+
+  <div style="max-width:600px;margin:0 auto;padding:16px;">
+    <!-- Balance Cards -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+      <div style="background:linear-gradient(135deg,#276749,#38a169);border-radius:16px;padding:16px;color:#fff;text-align:center;">
+        <div style="font-size:.75rem;opacity:.85;margin-bottom:6px;">💰 بالانسی ناوخۆ</div>
+        <div id="driverKuBalance" style="font-size:1.6rem;font-weight:900;">٠</div>
+        <div style="font-size:.7rem;opacity:.75;margin-top:4px;">دینار کوردستانی</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#1a365d,#2c5282);border-radius:16px;padding:16px;color:#fff;text-align:center;">
+        <div style="font-size:.75rem;opacity:.85;margin-bottom:6px;">🇬🇧 گەیاندنی دەرەوە</div>
+        <div id="driverUkCount" style="font-size:1.6rem;font-weight:900;">٠</div>
+        <div style="font-size:.7rem;opacity:.75;margin-top:4px;">تۆماری UK</div>
+      </div>
+    </div>
+
+    <!-- QR Scanner Section -->
+    <div style="background:#fff;border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,0.07);border:2px solid #e2e8f0;">
+      <div style="font-size:.9rem;font-weight:800;color:#1a365d;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+        <span style="font-size:1.2rem;">📷</span> بە QR زانیاری کاڵا بخوێنەرەوە
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:10px;">
+        <button onclick="startDriverQrScan()" id="driverQrScanBtn"
+          style="flex:1;padding:12px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:12px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:inherit;">
+          <i class="fas fa-qrcode"></i> QR بخوێنەرەوە
+        </button>
+        <button onclick="driverManualEntry()" 
+          style="padding:12px 16px;background:#f7fafc;color:#4a5568;border:2px solid #e2e8f0;border-radius:12px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;">
+          <i class="fas fa-keyboard"></i> دەستی
+        </button>
+      </div>
+      <div id="driverQrReader" style="display:none;border-radius:12px;overflow:hidden;"></div>
+      <div id="driverQrResult" style="display:none;margin-top:10px;padding:12px;background:#f0fff4;border-radius:10px;border:2px solid #68d391;font-size:.85rem;color:#276749;"></div>
+    </div>
+
+    <!-- Tabs: KU / UK -->
+    <div style="display:flex;background:#fff;border-radius:14px;padding:4px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+      <button onclick="switchDriverTab('ku')" id="driverTabKu"
+        style="flex:1;padding:10px;border:none;border-radius:10px;font-family:inherit;font-size:.88rem;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#276749,#38a169);color:#fff;transition:all .2s;">
+        🇮🇶 پۆستی ناوخۆ
+      </button>
+      <button onclick="switchDriverTab('uk')" id="driverTabUk"
+        style="flex:1;padding:10px;border:none;border-radius:10px;font-family:inherit;font-size:.88rem;font-weight:700;cursor:pointer;background:transparent;color:#718096;transition:all .2s;">
+        🇬🇧 پۆستی دەرەوە
+      </button>
+    </div>
+
+    <!-- Delivery Lists -->
+    <div id="driverKuList" style="display:block;"></div>
+    <div id="driverUkList" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- Driver QR Detail Modal -->
+<div id="driverQrDetailModal" style="display:none;position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;padding:16px;">
+  <div style="background:#fff;border-radius:20px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+    <div id="driverQrDetailContent"></div>
+  </div>
+</div>
+
+<style>
+@keyframes driverModalIn {
+  from { transform: scale(0.92) translateY(20px); opacity: 0; }
+  to   { transform: scale(1) translateY(0); opacity: 1; }
+}
+</style>
+
+<script>
+// ============================================================
+//  DRIVER PORTAL — پۆرتاڵی شۆفیر
+// ============================================================
+var _currentDriver = null; // { key, name, mobile, password, kuBalance, ukBalance }
+var _driverQrScanner = null;
+
+function showDriverLoginModal() {
+  var m = document.getElementById('driverLoginModal');
+  m.style.display = 'flex';
+  setTimeout(function() { document.getElementById('driverLoginUsername').focus(); }, 100);
+}
+function closeDriverLoginModal() {
+  document.getElementById('driverLoginModal').style.display = 'none';
+  document.getElementById('driverLoginErr').style.display = 'none';
+}
+
+function driverLogin() {
+  var username = (document.getElementById('driverLoginUsername').value || '').trim();
+  var password = (document.getElementById('driverLoginPassword').value || '').trim();
+  var errEl = document.getElementById('driverLoginErr');
+  if (!username || !password) { errEl.textContent = 'تکایە هەموو خانەکان پڕبکەرەوە'; errEl.style.display = 'block'; return; }
+  errEl.style.display = 'none';
+
+  database.ref('drivers').once('value').then(function(snap) {
+    if (!snap.exists()) { errEl.textContent = 'هیچ ئەکاونتی شۆفیر تۆمار نەکراوە'; errEl.style.display = 'block'; return; }
+    var found = null;
+    snap.forEach(function(ch) {
+      var d = ch.val();
+      if ((d.username || '').toLowerCase() === username.toLowerCase() && d.password === password) {
+        found = Object.assign({ key: ch.key }, d);
+      }
+    });
+    if (!found) { errEl.textContent = '❌ ناو یان وشەی تێپەڕ هەڵەیە'; errEl.style.display = 'block'; return; }
+    _currentDriver = found;
+    closeDriverLoginModal();
+    openDriverDashboard();
+  }).catch(function() { errEl.textContent = 'هەڵەی پەیوەندی'; errEl.style.display = 'block'; });
+}
+
+function driverLogout() {
+  _currentDriver = null;
+  stopDriverQrScan();
+  document.getElementById('driverDashboard').style.display = 'none';
+}
+
+function openDriverDashboard() {
+  if (!_currentDriver) return;
+  document.getElementById('driverDashboard').style.display = 'block';
+  document.getElementById('driverWelcomeName').textContent = '👋 ' + (_currentDriver.name || _currentDriver.username);
+  loadDriverDeliveries();
+}
+
+function loadDriverDeliveries() {
+  if (!_currentDriver) return;
+  var kuList = document.getElementById('driverKuList');
+  var ukList = document.getElementById('driverUkList');
+  kuList.innerHTML = '<div style="text-align:center;padding:20px;color:#718096;">بارکردن...</div>';
+  ukList.innerHTML = '<div style="text-align:center;padding:20px;color:#718096;">بارکردن...</div>';
+
+  database.ref('delivery').once('value').then(function(snap) {
+    var kuItems = [], ukItems = [], kuBalance = 0;
+    if (snap.exists()) {
+      snap.forEach(function(ch) {
+        var d = Object.assign({ key: ch.key }, ch.val());
+        if ((d.driverName || '').trim() === (_currentDriver.name || '').trim() ||
+            (d.driverMobile || '').replace(/\D/g,'') === (_currentDriver.mobile || '').replace(/\D/g,'')) {
+          if (d.fullName) { ukItems.push(d); }
+          else { kuItems.push(d); if (d.deliveryPricePerKg) kuBalance += parseFloat(d.deliveryPricePerKg) || 0; }
+        }
+      });
+    }
+    kuItems.sort(function(a,b){ return (b.sortKey||0)-(a.sortKey||0); });
+    ukItems.sort(function(a,b){ return (b.sortKey||0)-(a.sortKey||0); });
+
+    // Save balance to Firebase if changed
+    var storedBalance = parseFloat(_currentDriver.kuBalance) || 0;
+    document.getElementById('driverKuBalance').textContent = kuBalance.toLocaleString();
+    document.getElementById('driverUkCount').textContent = ukItems.length;
+
+    // Render KU list
+    if (kuItems.length === 0) {
+      kuList.innerHTML = '<div style="text-align:center;padding:30px;color:#a0aec0;"><div style="font-size:2.5rem;margin-bottom:10px;">📦</div><div>هیچ تۆماری ناوخۆ نییە</div></div>';
+    } else {
+      kuList.innerHTML = kuItems.map(function(d) { return buildDriverKuCard(d); }).join('');
+    }
+
+    // Render UK list
+    if (ukItems.length === 0) {
+      ukList.innerHTML = '<div style="text-align:center;padding:30px;color:#a0aec0;"><div style="font-size:2.5rem;margin-bottom:10px;">🌍</div><div>هیچ تۆماری دەرەوە نییە</div></div>';
+    } else {
+      ukList.innerHTML = ukItems.map(function(d) { return buildDriverUkCard(d); }).join('');
+    }
+  }).catch(function() {
+    kuList.innerHTML = '<div style="text-align:center;color:#e53e3e;padding:16px;">هەڵە لە بارکردن</div>';
+  });
+}
+
+function buildDriverKuCard(d) {
+  var status = d.status || 'registered';
+  var statusColors = {registered:'#667eea',picked_up:'#ed8936',loading:'#d69e2e',in_transit:'#3182ce',sorting:'#805ad5',delivered:'#38a169'};
+  var statusLabels = {registered:'📋 تۆماركراوە',picked_up:'🚗 وەرگیراو',loading:'🏭 بارکراوە',in_transit:'🚛 لەڕێگادایە',sorting:'📦 دابەشکردن',delivered:'✅ گەیشتووە'};
+  var clr = statusColors[status] || '#667eea';
+  var lbl = statusLabels[status] || status;
+  var price = d.deliveryPricePerKg ? '<span style="background:#e6fffa;color:#276749;padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:700;">💰 ' + d.deliveryPricePerKg + ' IQD</span>' : '';
+  return '<div style="background:#fff;border-radius:14px;margin-bottom:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);border:2px solid ' + clr + '22;">'
+    + '<div style="background:' + clr + ';padding:8px 12px;display:flex;justify-content:space-between;align-items:center;">'
+      + '<span style="color:#fff;font-weight:900;font-size:.9rem;"># ' + escapeHtml(d.orderNumber||'—') + '</span>'
+      + '<span style="color:#fff;font-size:.75rem;background:rgba(255,255,255,.2);padding:2px 10px;border-radius:20px;font-weight:700;">' + lbl + '</span>'
+    + '</div>'
+    + '<div style="padding:12px;">'
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">'
+        + '<div><div style="font-size:.7rem;color:#718096;margin-bottom:2px;">📤 نێردەر</div><div style="font-size:.85rem;font-weight:700;color:#1a202c;">' + escapeHtml(d.senderName||d.name||'—') + '</div><div style="font-size:.78rem;color:#4a5568;">' + escapeHtml(d.senderMobile||d.mobile||'—') + '</div></div>'
+        + '<div><div style="font-size:.7rem;color:#718096;margin-bottom:2px;">📥 وەرگر</div><div style="font-size:.85rem;font-weight:700;color:#1a202c;">' + escapeHtml(d.receiverName||'—') + '</div><div style="font-size:.78rem;color:#4a5568;">' + escapeHtml(d.receiverMobile||'—') + '</div></div>'
+      + '</div>'
+      + (d.packageName ? '<div style="font-size:.78rem;color:#4a5568;margin-bottom:6px;">📦 ' + escapeHtml(d.packageName) + (d.packageKg?' — '+d.packageKg+'کگ':'') + '</div>' : '')
+      + '<div style="display:flex;align-items:center;justify-content:space-between;">'
+        + price
+        + '<button onclick="driverScanOrViewDelivery(\'' + d.key + '\',\'ku\')" style="padding:6px 14px;background:linear-gradient(135deg,#276749,#38a169);color:#fff;border:none;border-radius:20px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;"><i class="fas fa-eye"></i> بینین</button>'
+      + '</div>'
+    + '</div>'
+  + '</div>';
+}
+
+function buildDriverUkCard(d) {
+  var status = d.status || 'registered';
+  var clrMap = {registered:'#667eea',picked_up:'#ed8936',loading:'#d69e2e',in_transit:'#3182ce',sorting:'#805ad5',delivered:'#38a169'};
+  var lblMap = {registered:'📋 Registered',picked_up:'🚗 Picked Up',loading:'🏭 Loading',in_transit:'🚛 In Transit',sorting:'📦 Sorting',delivered:'✅ Delivered'};
+  var clr = clrMap[status] || '#2b6cb0';
+  var lbl = lblMap[status] || status;
+  return '<div style="background:#fff;border-radius:14px;margin-bottom:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);border:2px solid ' + clr + '22;direction:ltr;">'
+    + '<div style="background:' + clr + ';padding:8px 12px;display:flex;justify-content:space-between;align-items:center;">'
+      + '<span style="color:#fff;font-weight:900;font-size:.9rem;"># ' + escapeHtml(d.orderNumber||'—') + '</span>'
+      + '<span style="color:#fff;font-size:.75rem;background:rgba(255,255,255,.2);padding:2px 10px;border-radius:20px;font-weight:700;">' + lbl + '</span>'
+    + '</div>'
+    + '<div style="padding:12px;">'
+      + '<div style="margin-bottom:6px;"><span style="font-size:.7rem;color:#718096;">To: </span><span style="font-size:.88rem;font-weight:700;color:#1a202c;">' + escapeHtml(d.fullName||'—') + '</span></div>'
+      + '<div style="font-size:.78rem;color:#4a5568;margin-bottom:4px;">📞 ' + escapeHtml(d.phone||'—') + '</div>'
+      + (d.destinationCity ? '<div style="font-size:.78rem;color:#2b6cb0;font-weight:700;margin-bottom:6px;">🏙️ ' + escapeHtml(d.destinationCity) + '</div>' : '')
+      + (d.packageName ? '<div style="font-size:.78rem;color:#4a5568;margin-bottom:8px;">📦 ' + escapeHtml(d.packageName) + (d.packageKg?' — '+d.packageKg+'kg':'') + '</div>' : '')
+      + '<div style="display:flex;justify-content:flex-end;">'
+        + '<button onclick="driverScanOrViewDelivery(\'' + d.key + '\',\'uk\')" style="padding:6px 14px;background:linear-gradient(135deg,#1a365d,#2b6cb0);color:#fff;border:none;border-radius:20px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;"><i class="fas fa-edit"></i> Update</button>'
+      + '</div>'
+    + '</div>'
+  + '</div>';
+}
+
+function switchDriverTab(tab) {
+  var kuBtn = document.getElementById('driverTabKu');
+  var ukBtn = document.getElementById('driverTabUk');
+  var kuList = document.getElementById('driverKuList');
+  var ukList = document.getElementById('driverUkList');
+  if (tab === 'ku') {
+    kuList.style.display = 'block'; ukList.style.display = 'none';
+    kuBtn.style.background = 'linear-gradient(135deg,#276749,#38a169)'; kuBtn.style.color = '#fff';
+    ukBtn.style.background = 'transparent'; ukBtn.style.color = '#718096';
+  } else {
+    kuList.style.display = 'none'; ukList.style.display = 'block';
+    ukBtn.style.background = 'linear-gradient(135deg,#1a365d,#2b6cb0)'; ukBtn.style.color = '#fff';
+    kuBtn.style.background = 'transparent'; kuBtn.style.color = '#718096';
+  }
+}
+
+// ── QR Scanner ──────────────────────────────────────────────
+function startDriverQrScan() {
+  var readerDiv = document.getElementById('driverQrReader');
+  var resultDiv = document.getElementById('driverQrResult');
+  var btn = document.getElementById('driverQrScanBtn');
+  if (readerDiv.style.display === 'block') { stopDriverQrScan(); return; }
+  readerDiv.style.display = 'block';
+  resultDiv.style.display = 'none';
+  btn.innerHTML = '<i class="fas fa-stop"></i> ڕاگرتن';
+
+  if (typeof Html5Qrcode === 'undefined') {
+    // Load html5-qrcode dynamically
+    var script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js';
+    script.onload = function() { _initDriverQrScanner(); };
+    script.onerror = function() { 
+      readerDiv.style.display = 'none';
+      showNotification('QR Scanner بارنەبوو، دەستی بنووسە', 'error');
+      btn.innerHTML = '<i class="fas fa-qrcode"></i> QR بخوێنەرەوە';
+    };
+    document.head.appendChild(script);
+  } else {
+    _initDriverQrScanner();
+  }
+}
+
+function _initDriverQrScanner() {
+  var readerDiv = document.getElementById('driverQrReader');
+  readerDiv.innerHTML = '';
+  try {
+    _driverQrScanner = new Html5Qrcode('driverQrReader');
+    _driverQrScanner.start(
+      { facingMode: 'environment' },
+      { fps: 10, qrbox: { width: 220, height: 220 } },
+      function(decodedText) {
+        stopDriverQrScan();
+        handleDriverQrResult(decodedText);
+      },
+      function() {}
+    ).catch(function(err) {
+      showNotification('کامێرا کراوەنەبوو: ' + err, 'error');
+      stopDriverQrScan();
+    });
+  } catch(e) {
+    showNotification('QR Scanner کراونەبوو', 'error');
+    stopDriverQrScan();
+  }
+}
+
+function stopDriverQrScan() {
+  var btn = document.getElementById('driverQrScanBtn');
+  var readerDiv = document.getElementById('driverQrReader');
+  if (_driverQrScanner) {
+    try { _driverQrScanner.stop().then(function() { _driverQrScanner.clear(); _driverQrScanner = null; }); } catch(e) { _driverQrScanner = null; }
+  }
+  if (readerDiv) { readerDiv.style.display = 'none'; readerDiv.innerHTML = ''; }
+  if (btn) btn.innerHTML = '<i class="fas fa-qrcode"></i> QR بخوێنەرەوە';
+}
+
+function handleDriverQrResult(text) {
+  var resultDiv = document.getElementById('driverQrResult');
+  resultDiv.style.display = 'block';
+  resultDiv.textContent = 'زانیاری دۆزرایەوە، چاوەڕێ بکە...';
+
+  // Parse order number from QR text
+  // QR text format: "پسولە: KU-0001 | ..." or "Order: UK-0001 | ..."
+  var orderMatch = text.match(/(?:پسولە|Order):\s*([A-Z]+-\d+)/i);
+  if (!orderMatch) {
+    resultDiv.innerHTML = '<div style="color:#e53e3e;">❌ فۆرماتی QR ناشناسراو</div><div style="margin-top:6px;font-size:.75rem;color:#718096;word-break:break-all;">' + escapeHtml(text.substring(0,200)) + '</div>';
+    return;
+  }
+  var orderNum = orderMatch[1];
+  
+  // Find in Firebase
+  database.ref('delivery').orderByChild('orderNumber').equalTo(orderNum).once('value').then(function(snap) {
+    if (!snap.exists()) {
+      resultDiv.innerHTML = '<div style="color:#e53e3e;">❌ تۆمار نەدۆزرایەوە: ' + escapeHtml(orderNum) + '</div>';
+      return;
+    }
+    snap.forEach(function(ch) {
+      var d = Object.assign({ key: ch.key }, ch.val());
+      resultDiv.style.display = 'none';
+      openDriverDeliveryDetail(d);
+    });
+  }).catch(function() {
+    resultDiv.innerHTML = '<div style="color:#e53e3e;">❌ هەڵەی پەیوەندی</div>';
+  });
+}
+
+function driverManualEntry() {
+  var orderNum = prompt('ژمارەی پسولە بنووسە (مەسەلە: KU-0001):');
+  if (!orderNum) return;
+  orderNum = orderNum.trim().toUpperCase();
+  showNotification('گەڕانی: ' + orderNum, 'info');
+  database.ref('delivery').orderByChild('orderNumber').equalTo(orderNum).once('value').then(function(snap) {
+    if (!snap.exists()) { showNotification('تۆمار نەدۆزرایەوە!', 'error'); return; }
+    snap.forEach(function(ch) {
+      var d = Object.assign({ key: ch.key }, ch.val());
+      openDriverDeliveryDetail(d);
+    });
+  }).catch(function() { showNotification('هەڵەی پەیوەندی', 'error'); });
+}
+
+function driverScanOrViewDelivery(key, type) {
+  database.ref('delivery/' + key).once('value').then(function(snap) {
+    if (!snap.exists()) { showNotification('تۆمار نەدۆزرایەوە', 'error'); return; }
+    var d = Object.assign({ key: key }, snap.val());
+    openDriverDeliveryDetail(d);
+  });
+}
+
+function openDriverDeliveryDetail(d) {
+  var isUk = !!d.fullName;
+  var modal = document.getElementById('driverQrDetailModal');
+  var content = document.getElementById('driverQrDetailContent');
+  
+  if (isUk) {
+    content.innerHTML = buildDriverUkDetailForm(d);
+  } else {
+    content.innerHTML = buildDriverKuDetail(d);
+  }
+  
+  modal.style.display = 'flex';
+}
+
+function closeDriverDetailModal() {
+  document.getElementById('driverQrDetailModal').style.display = 'none';
+}
+
+function buildDriverKuDetail(d) {
+  var status = d.status || 'registered';
+  var statusColors = {registered:'#667eea',picked_up:'#ed8936',loading:'#d69e2e',in_transit:'#3182ce',sorting:'#805ad5',delivered:'#38a169'};
+  var clr = statusColors[status] || '#667eea';
+  var qrText = encodeURIComponent('پسولە: ' + (d.orderNumber||'—') + ' | نێردەر: ' + (d.senderName||d.name||'') + ' ' + (d.senderMobile||d.mobile||'') + ' | وەرگر: ' + (d.receiverName||'') + ' ' + (d.receiverMobile||'') + ' | کەلوپەل: ' + (d.packageName||''));
+  var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=4&data=' + qrText;
+  
+  return '<div style="background:linear-gradient(135deg,#276749,#38a169);padding:16px;text-align:center;position:relative;">'
+    + '<button onclick="closeDriverDetailModal()" style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,.25);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:.9rem;cursor:pointer;">✕</button>'
+    + '<div style="color:#fff;font-weight:900;font-size:1.1rem;"># ' + escapeHtml(d.orderNumber||'—') + '</div>'
+    + '<div style="color:rgba(255,255,255,.8);font-size:.78rem;margin-top:4px;">🇮🇶 پۆستی ناوخۆ</div>'
+  + '</div>'
+  + '<div style="padding:16px;">'
+    + '<div style="display:flex;justify-content:center;margin-bottom:14px;"><img src="' + qrUrl + '" style="width:130px;height:130px;border-radius:10px;border:2px solid #e2e8f0;"></div>'
+    // Info rows
+    + '<div style="background:#f7fafc;border-radius:12px;padding:12px;margin-bottom:12px;">'
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">'
+        + '<div><div style="font-size:.68rem;color:#718096;margin-bottom:3px;">📤 نێردەر</div><div style="font-size:.85rem;font-weight:700;">' + escapeHtml(d.senderName||d.name||'—') + '</div><div style="font-size:.75rem;color:#4a5568;">' + escapeHtml(d.senderMobile||d.mobile||'—') + '</div><div style="font-size:.72rem;color:#718096;">' + escapeHtml(d.senderLocation||d.address||'—') + '</div></div>'
+        + '<div><div style="font-size:.68rem;color:#718096;margin-bottom:3px;">📥 وەرگر</div><div style="font-size:.85rem;font-weight:700;">' + escapeHtml(d.receiverName||'—') + '</div><div style="font-size:.75rem;color:#4a5568;">' + escapeHtml(d.receiverMobile||'—') + '</div><div style="font-size:.72rem;color:#718096;">' + escapeHtml(d.receiverLocation||'—') + '</div></div>'
+      + '</div>'
+      + (d.packageName ? '<div style="margin-top:8px;padding-top:8px;border-top:1px solid #e2e8f0;font-size:.78rem;color:#4a5568;"><span style="color:#718096;">📦 کاڵا: </span>' + escapeHtml(d.packageName) + (d.packageKg ? ' — <strong>' + d.packageKg + 'کگ</strong>' : '') + '</div>' : '')
+      + (d.deliveryPricePerKg ? '<div style="margin-top:6px;background:#e6fffa;border-radius:8px;padding:8px;display:flex;align-items:center;justify-content:space-between;"><span style="font-size:.78rem;color:#276749;font-weight:700;">💰 نرخی گەیاندن:</span><span style="font-size:.95rem;font-weight:900;color:#276749;">' + escapeHtml(d.deliveryPricePerKg) + ' IQD</span></div>' : '')
+    + '</div>'
+    // Status Badge
+    + '<div style="background:' + clr + ';color:#fff;padding:10px;border-radius:10px;text-align:center;font-weight:800;font-size:.9rem;margin-bottom:12px;">' + (({registered:'📋 تۆماركراوە',picked_up:'🚗 وەرگیراو',loading:'🏭 بارکراوە',in_transit:'🚛 لەڕێگادایە',sorting:'📦 دابەشکردن',delivered:'✅ گەیشتووە'})[status]||status) + '</div>'
+    // Update status button
+    + '<button onclick="driverUpdateKuStatus(\'' + d.key + '\')" style="width:100%;padding:12px;background:linear-gradient(135deg,#276749,#38a169);color:#fff;border:none;border-radius:12px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px;"><i class="fas fa-check"></i> گەیاندرا — نشانی بکە</button>'
+    + '<button onclick="closeDriverDetailModal()" style="width:100%;padding:10px;background:#f7fafc;color:#4a5568;border:2px solid #e2e8f0;border-radius:12px;font-size:.88rem;font-weight:700;cursor:pointer;font-family:inherit;">داخستن</button>'
+  + '</div>';
+}
+
+function buildDriverUkDetailForm(d) {
+  return '<div style="background:linear-gradient(135deg,#1a365d,#2b6cb0);padding:16px;text-align:center;position:relative;direction:ltr;">'
+    + '<button onclick="closeDriverDetailModal()" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,.25);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:.9rem;cursor:pointer;">✕</button>'
+    + '<div style="color:#fff;font-weight:900;font-size:1.1rem;"># ' + escapeHtml(d.orderNumber||'—') + '</div>'
+    + '<div style="color:rgba(255,255,255,.8);font-size:.78rem;margin-top:4px;">🇬🇧 UK Post</div>'
+  + '</div>'
+  + '<div style="padding:16px;direction:ltr;">'
+    + '<div style="background:#f7fafc;border-radius:12px;padding:12px;margin-bottom:14px;">'
+      + '<div style="font-size:.7rem;font-weight:700;color:#718096;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">📬 Recipient</div>'
+      + '<div style="font-size:.9rem;font-weight:700;color:#1a202c;margin-bottom:2px;">' + escapeHtml(d.fullName||'—') + '</div>'
+      + '<div style="font-size:.8rem;color:#4a5568;margin-bottom:2px;">📞 ' + escapeHtml(d.phone||'—') + '</div>'
+      + (d.destinationCity ? '<div style="font-size:.82rem;color:#2b6cb0;font-weight:700;">🏙️ ' + escapeHtml(d.destinationCity) + '</div>' : '')
+      + (d.packageName ? '<div style="font-size:.78rem;color:#718096;margin-top:4px;border-top:1px solid #e2e8f0;padding-top:4px;">📦 ' + escapeHtml(d.packageName) + (d.packageKg?' — '+d.packageKg+'kg':'') + '</div>' : '')
+    + '</div>'
+    // Driver fills in delivery info
+    + '<div style="background:#fffbeb;border:2px solid #f0c040;border-radius:12px;padding:12px;margin-bottom:14px;">'
+      + '<div style="font-size:.82rem;font-weight:800;color:#d97706;margin-bottom:10px;"><i class="fas fa-truck"></i> Driver Delivery Update</div>'
+      + '<div style="margin-bottom:8px;"><label style="font-size:.75rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px;">📍 Delivery Notes / Status Update:</label>'
+        + '<textarea id="driverUkNotes" placeholder="e.g. Delivered to neighbour, Left at door, Attempted delivery..." rows="3" style="width:100%;padding:9px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-family:inherit;outline:none;box-sizing:border-box;resize:none;">' + escapeHtml(d.deliveryNote||'') + '</textarea>'
+      + '</div>'
+      + '<div style="margin-bottom:8px;"><label style="font-size:.75rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px;">✅ Update Status:</label>'
+        + '<select id="driverUkStatus" style="width:100%;padding:9px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-family:inherit;outline:none;box-sizing:border-box;background:#fff;">'
+          + '<option value="registered" ' + ((d.status||'registered')==='registered'?'selected':'') + '>📋 Registered</option>'
+          + '<option value="picked_up" ' + ((d.status||'')==='picked_up'?'selected':'') + '>🚗 Picked Up</option>'
+          + '<option value="in_transit" ' + ((d.status||'')==='in_transit'?'selected':'') + '>🚛 In Transit</option>'
+          + '<option value="sorting" ' + ((d.status||'')==='sorting'?'selected':'') + '>📦 Sorting</option>'
+          + '<option value="delivered" ' + ((d.status||'')==='delivered'?'selected':'') + '>✅ Delivered</option>'
+        + '</select>'
+      + '</div>'
+    + '</div>'
+    + '<button onclick="saveDriverUkUpdate(\'' + d.key + '\')" style="width:100%;padding:12px;background:linear-gradient(135deg,#1a365d,#2b6cb0);color:#fff;border:none;border-radius:12px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px;"><i class="fas fa-save"></i> Save Update</button>'
+    + '<button onclick="closeDriverDetailModal()" style="width:100%;padding:10px;background:#f7fafc;color:#4a5568;border:2px solid #e2e8f0;border-radius:12px;font-size:.88rem;font-weight:700;cursor:pointer;font-family:inherit;">Cancel</button>'
+  + '</div>';
+}
+
+function driverUpdateKuStatus(key) {
+  if (!confirm('دڵنیایت کاڵاکە گەیاندرا؟')) return;
+  database.ref('delivery/' + key).update({ status: 'delivered', deliveredByDriver: _currentDriver ? _currentDriver.name || _currentDriver.username : '', deliveredAt: new Date().toLocaleString() })
+    .then(function() {
+      showNotification('✅ پاشەکەوت کرا — گەیاندرا');
+      closeDriverDetailModal();
+      loadDriverDeliveries();
+    })
+    .catch(function() { showNotification('هەڵە لە پاشەکەوتکردن', 'error'); });
+}
+
+function saveDriverUkUpdate(key) {
+  var notes = (document.getElementById('driverUkNotes') || {value:''}).value.trim();
+  var status = (document.getElementById('driverUkStatus') || {value:'registered'}).value;
+  database.ref('delivery/' + key).update({ deliveryNote: notes, status: status, driverUpdatedAt: new Date().toLocaleString(), driverName: _currentDriver ? (_currentDriver.name || _currentDriver.username) : '' })
+    .then(function() {
+      showNotification('✅ نوێ کرایەوە');
+      closeDriverDetailModal();
+      loadDriverDeliveries();
+    })
+    .catch(function() { showNotification('Error saving!', 'error'); });
+}
+
+// Close modals when clicking backdrop
+document.addEventListener('click', function(e) {
+  if (e.target === document.getElementById('driverLoginModal')) closeDriverLoginModal();
+  if (e.target === document.getElementById('driverQrDetailModal')) closeDriverDetailModal();
+});
+</script>
+</body>
+</html>
