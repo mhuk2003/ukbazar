@@ -29,6 +29,20 @@
       header .lang-bar-auto { display: none !important; }
     </style>
 
+    <style>
+      .btn-delivery-uk { font-size:.88rem !important; padding:8px 14px !important; }
+      @media print { .no-print { display:none !important; } }
+    </style>
+    <script>
+      function toggleTrackingWidget() {
+        var body = document.getElementById('trackingWidgetBody');
+        var chev = document.getElementById('trackingChevron');
+        if (!body) return;
+        var open = body.style.display !== 'none';
+        body.style.display = open ? 'none' : 'block';
+        chev.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
+      }
+    </script>
 </head>
 <body>
     <!-- Loading Spinner with Banner -->
@@ -73,11 +87,11 @@
                     <i class="fas fa-shipping-fast"></i>
                     <span class="btn-text" data-i18n="kuDelivery">گەیاندن</span>
                 </button>
-                <button class="btn-delivery-uk" onclick="showUkDeliveryModal()">
+                <button class="btn-delivery-uk btn-delivery-ku" onclick="showUkDeliveryModal()">
                     <i class="fas fa-shipping-fast"></i>
                     <span class="btn-text" data-i18n="ukDelivery">UK Delivery</span>
                 </button>
-                <button onclick="showDriverLoginModal()" id="driverNavBtn" style="display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#1a365d,#2b6cb0);color:#fff;border:none;border-radius:50px;padding:8px 16px;font-family:inherit;font-size:.88rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(43,108,176,.4);">
+                <button onclick="showDriverLoginModal()" id="driverNavBtn" style="display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#f56565,#e53e3e);color:#fff;border:none;border-radius:50px;padding:8px 16px;font-family:inherit;font-size:.88rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(245,101,101,.35);">
                     <i class="fas fa-truck"></i>
                     <span class="btn-text">شۆفیر</span>
                 </button>
@@ -101,10 +115,10 @@
                             <div style="color:rgba(255,255,255,.85);font-size:.82rem;margin-top:3px;">ژمارەی مۆبایلت بنووسە — کاڵاکانت ببینە</div>
                         </div>
                     </div>
-                    <div id="trackingChevron" style="color:#fff;font-size:1.3rem;transition:transform .3s;transform:rotate(180deg);"><i class="fas fa-chevron-down"></i></div>
+                    <div id="trackingChevron" style="color:#fff;font-size:1.3rem;transition:transform .3s;transform:rotate(0deg);"><i class="fas fa-chevron-down"></i></div>
                 </div>
                 <!-- Body — کراوە بە پێشکەوت -->
-                <div id="trackingWidgetBody" style="background:#f7fff9;">
+                <div id="trackingWidgetBody" style="background:#f7fff9;display:none;">
                     <div style="padding:20px 16px 10px;">
                         <!-- ژمارەی مۆبایل -->
                         <div style="margin-bottom:10px;">
@@ -1625,7 +1639,7 @@ document.addEventListener('DOMContentLoaded', () => {
           '<span>UK POST &amp; King Street— Kurdistan Delivery</span>' +
         '</div>' +
       '</div>' +
-      '<script>window.onload=function(){window.print();}<\/script>' +
+      '<script>window.onload=function(){var b=document.createElement(String.fromCharCode(98,117,116,116,111,110));b.innerHTML=String.fromCharCode(10005)+String.fromCharCode(32,1583,1575,1582,1587,1578,1606);b.setAttribute("style","position:fixed;top:10px;right:10px;z-index:9999;background:#e53e3e;color:#fff;border:none;border-radius:50px;padding:10px 22px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3)");b.setAttribute("class","no-print");b.onclick=function(){try{window.close();}catch(e){history.go(-1);}};document.body.insertBefore(b,document.body.firstChild);setTimeout(function(){window.print();},400);};<\/script>' +
       '</body></html>';
 
     // Open in new tab (works on desktop + mobile)
@@ -1909,7 +1923,7 @@ document.addEventListener('DOMContentLoaded', () => {
           + flagSvg
         + '</div>'
       + '</div>'
-      + '<script>window.onload=function(){window.print();}<\/script>'
+      + '<script>window.onload=function(){var b=document.createElement(String.fromCharCode(98,117,116,116,111,110));b.innerHTML=String.fromCharCode(10005)+String.fromCharCode(32,1583,1575,1582,1587,1578,1606);b.setAttribute("style","position:fixed;top:10px;right:10px;z-index:9999;background:#e53e3e;color:#fff;border:none;border-radius:50px;padding:10px 22px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3)");b.setAttribute("class","no-print");b.onclick=function(){try{window.close();}catch(e){history.go(-1);}};document.body.insertBefore(b,document.body.firstChild);setTimeout(function(){window.print();},400);};<\/script>'
       + '</body></html>';
 
     var win = window.open('', '_blank');
@@ -2575,64 +2589,48 @@ function driverUpdateKuStatus(key) {
 }
 
 function saveDriverIntlUpdate(key, node) {
-  var notes  = (document.getElementById('driverUkNotes') || {value:''}).value.trim();
-  var status = (document.getElementById('driverUkStatus') || {value:'registered'}).value;
+  var notes  = (document.getElementById('driverUkNotes')||{value:''}).value.trim();
+  var status = (document.getElementById('driverUkStatus')||{value:'registered'}).value;
   if (!_currentDriver) return;
-
-  var isIntl  = (node === 'intlPost');
-  var dataRef = isIntl ? database.ref('intlPost/' + key) : database.ref('delivery/' + key);
-
-  // FIX: Read order data FIRST (read always allowed), then try update (may be blocked by rules)
-  dataRef.once('value').then(function(snap) {
-    if (!snap.exists()) { showNotification('\u062a\u06c6\u0645\u0627\u0631 \u0646\u06d5\u062f\u06c6\u0632\u0631\u0627\u06cc\u06d5\u0648\u06d5', 'error'); return; }
-    var d = snap.val();
-    var s = d.sender    || {};
-    var r = d.recipient || {};
-
-    var scanRecord = {
-      deliveryKey:      key,
-      node:             node || 'delivery',
-      orderNumber:      d.orderNumber || key,
-      senderName:       isIntl ? (s.name||'')   : (d.senderName||d.name||''),
-      senderMobile:     isIntl ? (s.tel||'')    : (d.senderMobile||d.mobile||''),
-      receiverName:     isIntl ? (r.name||'')   : (d.receiverName||d.fullName||''),
-      receiverMobile:   isIntl ? (r.tel||'')    : (d.receiverMobile||d.phone||''),
-      senderLocation:   isIntl ? (s.address||s.postcode||'') : (d.senderLocation||''),
-      receiverLocation: isIntl ? (r.address||r.postcode||r.city||d.destinationCity||'') : (d.receiverLocation||d.destinationCity||''),
-      packageName:      isIntl ? (s.kala||r.kala||'') : (d.packageName||d.details||''),
-      packageKg:        isIntl ? (s.weight||r.weight||'') : (d.packageKg||''),
-      country:          d.country || '',
-      deliveryNote:     notes,
-      status:           status,
-      timestamp:        d.timestamp || '',
-      savedAt:          new Date().toLocaleString(),
-      type:             isIntl ? 'intl' : 'uk'
-    };
-
-    // Try to update order status — silently skip if Firebase rules block it
-    var updateAttempt = dataRef.update({
-      deliveryNote:    notes,
-      status:          status,
-      driverUpdatedAt: new Date().toLocaleString(),
-      driverName:      _currentDriver.name || _currentDriver.username
-    }).catch(function(err) {
-      console.warn('Order update blocked by Firebase rules (non-fatal):', err.message || err);
-    });
-
-    // Always save scan record to driverScans (driver owns this path)
-    return updateAttempt.then(function() {
+  var ref = node === 'intlPost' ? database.ref('intlPost/' + key) : database.ref('delivery/' + key);
+  ref.update({ deliveryNote: notes, status: status, driverUpdatedAt: new Date().toLocaleString(), driverName: _currentDriver.name||_currentDriver.username })
+    .then(function() {
+      return ref.once('value');
+    })
+    .then(function(snap) {
+      if (!snap.exists()) return;
+      var d = snap.val();
+      var isIntl = (node === 'intlPost');
+      var s = d.sender || {};
+      var r = d.recipient || {};
+      var scanRecord = {
+        deliveryKey: key,
+        node: node || 'delivery',
+        orderNumber: d.orderNumber || key,
+        senderName: isIntl ? (s.name||'') : (d.senderName||d.name||''),
+        senderMobile: isIntl ? (s.tel||'') : (d.senderMobile||d.mobile||''),
+        receiverName: isIntl ? (r.name||'') : (d.receiverName||d.fullName||''),
+        receiverMobile: isIntl ? (r.tel||'') : (d.receiverMobile||d.phone||''),
+        senderLocation: isIntl ? (s.address||s.postcode||'') : (d.senderLocation||''),
+        receiverLocation: isIntl ? (r.address||r.postcode||'') : (d.receiverLocation||d.destinationCity||''),
+        packageName: isIntl ? (s.kala||r.kala||'') : (d.packageName||d.details||''),
+        packageKg: isIntl ? (s.weight||r.weight||'') : (d.packageKg||''),
+        country: d.country || '',
+        deliveryNote: notes,
+        status: status,
+        timestamp: d.timestamp || '',
+        savedAt: new Date().toLocaleString(),
+        type: isIntl ? 'intl' : 'uk'
+      };
       return database.ref('driverScans/' + _currentDriver.key).push(scanRecord);
-    });
-
-  }).then(function() {
-    showNotification('\u2705 \u067e\u0627\u0634\u06d5\u06a9\u06d5\u0648\u062a \u06a9\u0631\u0627 \u0648 \u0628\u06d5 \u0644\u06cc\u0633\u062a \u0632\u06cc\u0627\u062f\u06a9\u0631\u0627');
-    closeDriverDetailModal();
-    loadDriverDeliveries();
-    _updateDriverSavedBadge();
-  }).catch(function(err) {
-    console.error('saveDriverIntlUpdate error:', err);
-    showNotification('\u0647\u06d5\u06b5\u06d5 \u0644\u06d5 \u067e\u0627\u0634\u06d5\u06a9\u06d5\u0648\u062a\u06a9\u0631\u062f\u0646', 'error');
-  });
+    })
+    .then(function() {
+      showNotification('✅ پاشەکەوت کرا و بە لیست زیادکرا');
+      closeDriverDetailModal();
+      loadDriverDeliveries();
+      _updateDriverSavedBadge();
+    })
+    .catch(function() { showNotification('هەڵە لە پاشەکەوتکردن', 'error'); });
 }
 
 function saveDriverUkUpdate(key) { saveDriverIntlUpdate(key, 'intlPost'); }
@@ -2758,80 +2756,51 @@ function saveDriverKuUpdate(key) {
 //  driverPrintLabel — پرینتی پۆستی ناوخۆ
 // ============================================================
 function driverPrintLabel(key) {
-  // FIX: IP- orders live in intlPost/, not delivery/
-  // Try intlPost first for IP- keys, delivery first for others, then fallback
-  var firstNode  = /^IP-/i.test(key) ? 'intlPost' : 'delivery';
-  var secondNode = /^IP-/i.test(key) ? 'delivery'  : 'intlPost';
+  database.ref('delivery/' + key).once('value').then(function(snap) {
+    if (!snap.exists()) { showNotification('تۆمار نەدۆزرایەوە', 'error'); return; }
+    var d = snap.val();
+    var orderNum = d.orderNumber || key;
+    var qrData = 'پسولە: ' + orderNum + ' | نێردەر: ' + (d.senderName||d.name||'') + ' ' + (d.senderMobile||d.mobile||'') + ' | وەرگر: ' + (d.receiverName||'') + ' ' + (d.receiverMobile||'');
+    var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=' + encodeURIComponent(qrData);
 
-  database.ref(firstNode + '/' + key).once('value').then(function(snap) {
-    if (snap.exists()) { _buildAndPrintDriverLabel(snap.val(), firstNode, key); return; }
-    // Fallback to other node
-    return database.ref(secondNode + '/' + key).once('value').then(function(snap2) {
-      if (snap2.exists()) { _buildAndPrintDriverLabel(snap2.val(), secondNode, key); }
-      else { showNotification('تۆمار نەدۆزرایەوە', 'error'); }
-    });
+    var html = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
+      + '<style>@page{size:A5;margin:8mm;} body{font-family:"Tahoma","Arial",sans-serif;direction:rtl;margin:0;padding:0;} '
+      + '.box{border:3px solid #276749;border-radius:10px;padding:12px;} '
+      + '.hdr{background:#276749;color:#fff;padding:8px 14px;font-size:1rem;font-weight:900;display:flex;justify-content:space-between;border-radius:6px;margin-bottom:10px;} '
+      + '.grid{display:flex;gap:12px;margin-bottom:10px;} .col{flex:1;border:1.5px solid #e2e8f0;border-radius:6px;padding:8px;} '
+      + '.lbl{font-size:.65rem;color:#718096;margin-bottom:2px;} .val{font-size:.85rem;font-weight:700;color:#1a202c;} '
+      + '.tel{font-size:.78rem;color:#4a5568;} .loc{font-size:.7rem;color:#718096;}'
+      + '</style></head><body>'
+      + '<div class="box">'
+      + '<div class="hdr"><span>🇮🇶 پۆستی ناوخۆ — UK BAZAR</span><span># ' + escapeHtml(orderNum) + '</span></div>'
+      + '<div class="grid">'
+        + '<div class="col" style="border-right:3px solid #276749;">'
+          + '<div class="lbl">📤 نێردەر</div>'
+          + '<div class="val">' + escapeHtml(d.senderName||d.name||'—') + '</div>'
+          + '<div class="tel">📞 ' + escapeHtml(d.senderMobile||d.mobile||'—') + '</div>'
+          + (d.senderLocation||d.address ? '<div class="loc">📍 ' + escapeHtml(d.senderLocation||d.address||'') + '</div>' : '')
+        + '</div>'
+        + '<div class="col" style="border-right:3px solid #38a169;">'
+          + '<div class="lbl">📥 وەرگر</div>'
+          + '<div class="val">' + escapeHtml(d.receiverName||'—') + '</div>'
+          + '<div class="tel">📞 ' + escapeHtml(d.receiverMobile||'—') + '</div>'
+          + (d.receiverLocation ? '<div class="loc">📍 ' + escapeHtml(d.receiverLocation) + '</div>' : '')
+        + '</div>'
+      + '</div>'
+      + '<div style="display:flex;align-items:center;justify-content:space-between;background:#f0fff4;border-radius:8px;padding:8px 12px;margin-bottom:8px;">'
+        + '<div><div class="lbl">📦 کاڵا</div><div style="font-size:.85rem;font-weight:700;">' + escapeHtml(d.packageName||d.details||'—') + (d.packageKg?' — '+d.packageKg+'کگ':'') + '</div></div>'
+        + '<img src="' + qrUrl + '" style="width:90px;height:90px;border-radius:4px;">'
+      + '</div>'
+      + (d.deliveryNote ? '<div style="font-size:.75rem;color:#718096;border-top:1px dashed #e2e8f0;padding-top:6px;">📝 ' + escapeHtml(d.deliveryNote) + '</div>' : '')
+      + '<div style="text-align:center;font-size:.65rem;color:#a0aec0;margin-top:8px;border-top:1px dashed #e2e8f0;padding-top:6px;">' + (d.timestamp||'') + ' — UK BAZAR</div>'
+      + '</div>'
+      + '<script>window.onload=function(){var b=document.createElement(String.fromCharCode(98,117,116,116,111,110));b.innerHTML=String.fromCharCode(10005)+String.fromCharCode(32,1583,1575,1582,1587,1578,1606);b.setAttribute("style","position:fixed;top:10px;right:10px;z-index:9999;background:#e53e3e;color:#fff;border:none;border-radius:50px;padding:10px 22px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3)");b.setAttribute("class","no-print");b.onclick=function(){try{window.close();}catch(e){history.go(-1);}};document.body.insertBefore(b,document.body.firstChild);setTimeout(function(){window.print();},400);};<\/script>'
+      + '</body></html>';
+
+    var win = window.open('', '_blank');
+    if (win) { win.document.write(html); win.document.close(); }
+    else { showNotification('پاپ-ئەپ بلۆک کراوە! تکایە ڕێگە بدە', 'error'); }
   }).catch(function() { showNotification('هەڵە لە پرینت', 'error'); });
-}
-
-function _buildAndPrintDriverLabel(d, node, key) {
-  var isIntl   = (node === 'intlPost');
-  var s        = d.sender    || {};
-  var r        = d.recipient || {};
-  var orderNum = d.orderNumber || key;
-
-  // Extract fields correctly based on data structure
-  var sName    = isIntl ? (s.name   || '')  : (d.senderName   || d.name   || '—');
-  var sMobile  = isIntl ? (s.tel    || '')  : (d.senderMobile || d.mobile || '—');
-  var sLoc     = isIntl ? (s.address|| s.postcode || s.postCity || '') : (d.senderLocation || d.address || '');
-  var rName    = isIntl ? (r.name   || '')  : (d.receiverName  || d.fullName || '—');
-  var rMobile  = isIntl ? (r.tel    || '')  : (d.receiverMobile|| d.phone   || '—');
-  var rLoc     = isIntl ? (r.address|| r.postcode || r.city || d.destinationCity || '') : (d.receiverLocation || d.destinationCity || '');
-  var pkgName  = isIntl ? (s.kala   || r.kala  || '—') : (d.packageName || d.details || '—');
-  var pkgKg    = isIntl ? (s.weight || r.weight || '')  : (d.packageKg   || '');
-
-  var hdrColor = isIntl ? '#2b6cb0' : '#276749';
-  var hdrLabel = isIntl ? '🌍 پۆستی نێودەوڵەتی — UK POST KING STREET' : '🇮🇶 پۆستی ناوخۆ — UK BAZAR';
-
-  var qrData = 'پسولە: ' + orderNum + ' | نێردەر: ' + sName + ' ' + sMobile + ' | وەرگر: ' + rName + ' ' + rMobile;
-  var qrUrl  = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=' + encodeURIComponent(qrData);
-
-  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
-    + '<style>@page{size:A5;margin:8mm;} body{font-family:"Tahoma","Arial",sans-serif;direction:rtl;margin:0;padding:0;} '
-    + '.box{border:3px solid ' + hdrColor + ';border-radius:10px;padding:12px;} '
-    + '.hdr{background:' + hdrColor + ';color:#fff;padding:8px 14px;font-size:1rem;font-weight:900;display:flex;justify-content:space-between;border-radius:6px;margin-bottom:10px;} '
-    + '.grid{display:flex;gap:12px;margin-bottom:10px;} .col{flex:1;border:1.5px solid #e2e8f0;border-radius:6px;padding:8px;} '
-    + '.lbl{font-size:.65rem;color:#718096;margin-bottom:2px;} .val{font-size:.85rem;font-weight:700;color:#1a202c;} '
-    + '.tel{font-size:.78rem;color:#4a5568;} .loc{font-size:.7rem;color:#718096;}'
-    + '</style></head><body>'
-    + '<div class="box">'
-    + '<div class="hdr"><span>' + hdrLabel + '</span><span># ' + escapeHtml(orderNum) + '</span></div>'
-    + '<div class="grid">'
-      + '<div class="col" style="border-right:3px solid ' + hdrColor + ';">'
-        + '<div class="lbl">📤 نێردەر</div>'
-        + '<div class="val">' + escapeHtml(sName) + '</div>'
-        + '<div class="tel">📞 ' + escapeHtml(sMobile) + '</div>'
-        + (sLoc ? '<div class="loc">📍 ' + escapeHtml(sLoc) + '</div>' : '')
-      + '</div>'
-      + '<div class="col">'
-        + '<div class="lbl">📥 وەرگر</div>'
-        + '<div class="val">' + escapeHtml(rName) + '</div>'
-        + '<div class="tel">📞 ' + escapeHtml(rMobile) + '</div>'
-        + (rLoc ? '<div class="loc">📍 ' + escapeHtml(rLoc) + '</div>' : '')
-      + '</div>'
-    + '</div>'
-    + '<div style="display:flex;align-items:center;justify-content:space-between;background:#f0fff4;border-radius:8px;padding:8px 12px;margin-bottom:8px;">'
-      + '<div><div class="lbl">📦 کاڵا</div><div style="font-size:.85rem;font-weight:700;">' + escapeHtml(pkgName) + (pkgKg ? ' — ' + pkgKg + 'کگ' : '') + '</div></div>'
-      + '<img src="' + qrUrl + '" style="width:90px;height:90px;border-radius:4px;">'
-    + '</div>'
-    + (d.deliveryNote ? '<div style="font-size:.75rem;color:#718096;border-top:1px dashed #e2e8f0;padding-top:6px;">📝 ' + escapeHtml(d.deliveryNote) + '</div>' : '')
-    + '<div style="text-align:center;font-size:.65rem;color:#a0aec0;margin-top:8px;border-top:1px dashed #e2e8f0;padding-top:6px;">' + escapeHtml(d.timestamp||'') + ' — UK BAZAR</div>'
-    + '</div>'
-    + '<script>window.onload=function(){window.print();};<\/script>'
-    + '</body></html>';
-
-  var win = window.open('', '_blank');
-  if (win) { win.document.write(html); win.document.close(); }
-  else { showNotification('پاپ-ئەپ بلۆک کراوە! تکایە ڕێگە بدە', 'error'); }
 }
 
 // ============================================================
@@ -2991,7 +2960,7 @@ function printDriverScan(scanKey) {
         + '<span>UK BAZAR — ' + escapeHtml(_currentDriver.name||_currentDriver.username||'') + '</span>'
       + '</div>'
       + '</div>'
-      + '<script>window.onload=function(){window.print();};<\/script>'
+      + '<script>window.onload=function(){var b=document.createElement(String.fromCharCode(98,117,116,116,111,110));b.innerHTML=String.fromCharCode(10005)+String.fromCharCode(32,1583,1575,1582,1587,1578,1606);b.setAttribute("style","position:fixed;top:10px;right:10px;z-index:9999;background:#e53e3e;color:#fff;border:none;border-radius:50px;padding:10px 22px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3)");b.setAttribute("class","no-print");b.onclick=function(){try{window.close();}catch(e){history.go(-1);}};document.body.insertBefore(b,document.body.firstChild);setTimeout(function(){window.print();},400);};<\/script>'
       + '</body></html>';
 
     var win = window.open('', '_blank');
