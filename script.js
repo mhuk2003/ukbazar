@@ -716,6 +716,8 @@ function showAdminTab(tab) {
         showAdminAddProductForm();
     } else if (tab === 'drivers') {
         loadDriversAdmin();
+    } else if (tab === 'balance') {
+        loadBalanceAdmin();
     }
 }
 
@@ -1478,130 +1480,87 @@ function saveDriverInfo(key) {
 function printLabel(key) {
     const card = document.getElementById('label-' + key);
     if (!card) return;
-    const orderNum = card.querySelector('.label-order-num') ? card.querySelector('.label-order-num').textContent.trim() : '';
-    const qrImg = card.querySelector('.label-qr-img');
-    const qrSrc = qrImg ? qrImg.src : '';
-    const rows = (selector) => Array.from(card.querySelectorAll(selector))
-        .map(r => `<div class="pr-row"><span>${r.querySelector('span').textContent}</span><strong>${r.querySelector('strong').textContent}</strong></div>`)
-        .join('');
-    const dateText = card.querySelector('.label-footer span') ? card.querySelector('.label-footer span').textContent : '';
-    const drRow = card.querySelector('.label-driver-row');
-    const nrRow = card.querySelector('.label-note-row');
 
-    const html = `
-    <div style="font-family:'Tahoma','Arial',sans-serif;direction:rtl;padding:12px;background:#fff;color:#1a202c;">
-    <style>
-    .pr-wrap{border:3px solid #2d3748;border-radius:12px;padding:14px;max-width:100%;}
-    .pr-top{display:flex;justify-content:space-between;align-items:center;border-bottom:2px dashed #667eea;padding-bottom:8px;margin-bottom:10px;}
-    .pr-title{font-size:15px;font-weight:bold;color:#667eea;}
-    .pr-date{font-size:10px;color:#718096;margin-top:2px;}
-    .pr-num{font-size:20px;font-weight:bold;color:#2d3748;background:#eef2ff;padding:3px 12px;border-radius:8px;border:2px solid #667eea;}
-    .pr-body{display:flex;gap:10px;align-items:flex-start;}
-    .pr-main{flex:1;min-width:0;}
-    .pr-cols{display:flex;gap:7px;margin-bottom:8px;}
-    .pr-col{flex:1;border:1.5px solid #e2e8f0;border-radius:8px;padding:8px;background:#f7fafc;min-width:0;}
-    .pr-col.s{border-right:3px solid #667eea;}
-    .pr-col.r{border-right:3px solid #48bb78;}
-    .pr-col-title{font-size:11px;font-weight:bold;color:#667eea;border-bottom:1px solid #e2e8f0;padding-bottom:3px;margin-bottom:5px;}
-    .pr-col.r .pr-col-title{color:#48bb78;}
-    .pr-row{display:flex;justify-content:space-between;font-size:11px;padding:2px 0;border-bottom:1px dotted #e2e8f0;gap:4px;word-break:break-word;}
-    .pr-row span{color:#718096;white-space:nowrap;flex-shrink:0;}
-    .pr-row strong{color:#2d3748;text-align:right;}
-    .pr-pkg{background:#edf2ff;border-radius:8px;padding:8px;}
-    .pr-info{display:flex;justify-content:space-between;font-size:11px;padding:4px 8px;margin-top:4px;border-radius:6px;gap:4px;}
-    .pr-driver{background:#ebf8ff;border:1px solid #bee3f8;}
-    .pr-note{background:#fefce8;border:1px solid #fde68a;}
-    .pr-info span{color:#718096;white-space:nowrap;}
-    .pr-info strong{color:#1a202c;}
-    .pr-qr{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px;border:1.5px solid #e2e8f0;border-radius:8px;background:#f7fafc;flex-shrink:0;}
-    .pr-qr img{width:110px;height:110px;display:block;}
-    .pr-qr small{font-size:10px;color:#718096;}
-    .pr-foot{text-align:center;font-size:10px;color:#a0aec0;margin-top:8px;border-top:1px dashed #e2e8f0;padding-top:6px;}
-    </style>
-    <div style="position:fixed;top:10px;right:10px;z-index:9999;">
-      <button onclick="try{window.close();}catch(e){} history.length>1?history.back():(window.location.href='about:blank');" style="background:linear-gradient(135deg,#f56565,#e53e3e);border:none;color:#fff;border-radius:50px;padding:11px 26px;font-size:1rem;font-weight:900;cursor:pointer;touch-action:manipulation;box-shadow:0 3px 12px rgba(229,62,62,.5);white-space:nowrap;">✕ داخستن</button>
-    </div>
-    <div class="pr-wrap">
-      <div class="pr-top">
-        <div>
-          <div class="pr-title">🚚 UK BAZAR — لەیبلی گەیاندن</div>
-          <div class="pr-date">${dateText}</div>
-        </div>
-        <div class="pr-num">${orderNum}</div>
-      </div>
-      <div class="pr-body">
-        <div class="pr-main">
-          <div class="pr-cols">
-            <div class="pr-col s"><div class="pr-col-title">📤 نێردەر</div>${rows('.sender-section .label-row')}</div>
-            <div class="pr-col r"><div class="pr-col-title">📥 وەرگر</div>${rows('.receiver-section .label-row')}</div>
-          </div>
-          <div class="pr-pkg">${rows('.label-package .label-row:not(.label-driver-row):not(.label-note-row)')}</div>
-          ${drRow ? `<div class="pr-info pr-driver"><span>🚗 شۆفیر:</span><strong>${drRow.querySelector('strong').textContent}</strong></div>` : ''}
-          ${nrRow ? `<div class="pr-info pr-note"><span>📝 تیبینی:</span><strong>${nrRow.querySelector('strong').textContent}</strong></div>` : ''}
-        </div>
-        <div class="pr-qr">
-          <img src="${qrSrc}" alt="QR" onload="window._qrKuLoaded=true;" onerror="window._qrKuLoaded=true;">
-          <small>QR کۆد</small>
-        </div>
-      </div>
-      <div class="pr-foot">UK BAZAR — World Online Shopping</div>
-    </div>
-    </div>`;
+    const orderNum  = card.querySelector('.label-order-num') ? card.querySelector('.label-order-num').textContent.trim() : '';
+    const qrImg     = card.querySelector('.label-qr-img');
+    const qrSrc     = qrImg ? qrImg.src : '';
+    const dateText  = card.querySelector('.label-footer span') ? card.querySelector('.label-footer span').textContent : '';
+    const drRow     = card.querySelector('.label-driver-row');
+    const nrRow     = card.querySelector('.label-note-row');
 
-    const printArea = document.getElementById('printArea');
-    if (!printArea) { _printLabelFallback(key); return; }
+    const getRows = (selector) => Array.from(card.querySelectorAll(selector)).map(r => {
+        const sp = r.querySelector('span'); const st = r.querySelector('strong');
+        if (!sp || !st) return '';
+        const v = st.textContent.trim();
+        if (!v || v === '—') return '';
+        return '<tr><td style="padding:3px 7px;border:1.5px solid #aaa;width:38%;font-size:.82rem;font-weight:800;color:#333;">' + sp.textContent + '</td>'
+             + '<td style="padding:3px 7px;border:1.5px solid #aaa;font-size:.82rem;font-weight:700;color:#111;">' + v + '</td></tr>';
+    }).join('');
 
-    printArea.innerHTML = html;
-    printArea.style.display = 'block';
-    window._qrKuLoaded = false;
+    const boxHtml = (title, rowsHtml, showQr) =>
+        '<div class="no-break" style="border:2px solid #1a365d;border-radius:6px;margin-bottom:10px;overflow:hidden;">'
+      + '<div style="background:#1a365d;color:#fff;padding:5px 10px;font-size:.85rem;font-weight:900;display:flex;justify-content:space-between;align-items:center;">'
+      + '<span>' + title + '</span></div>'
+      + '<table style="width:100%;border-collapse:collapse;">' + rowsHtml + '</table>'
+      + (showQr && qrSrc ? '<div style="display:flex;align-items:center;justify-content:center;gap:14px;padding:10px 14px;background:#f7fafc;border-top:1px solid #e2e8f0;">'
+         + '<img id="nauxo-qr-img" src="' + qrSrc + '" style="width:80px;height:80px;display:block;border-radius:6px;" alt="QR">'
+         + '<div style="text-align:center;"><div style="font-size:.75rem;font-weight:900;color:#1a365d;letter-spacing:.5px;">QR CODE</div>'
+         + '<div style="font-size:.68rem;color:#718096;margin-top:3px;">' + orderNum + '</div></div></div>' : '')
+      + '<div style="background:#1a365d;color:#fff;padding:5px 10px;font-size:.72rem;display:flex;justify-content:space-between;align-items:center;">'
+      + '<span>KING STREET - UK POST &nbsp;&nbsp; 07755436275 / 07507472656</span>'
+      + '<img src="https://flagcdn.com/h20/gb.png" style="height:14px;" alt="GB"></div></div>';
 
-    const doPrint = () => {
-        // iframe بەکاربهێنە تا مۆدالەکان نەشارێتەوە
-        let iframe = document.getElementById('_printIframe');
-        if (!iframe) {
-            iframe = document.createElement('iframe');
-            iframe.id = '_printIframe';
-            iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;border:0;';
-            document.body.appendChild(iframe);
-        }
-        const doc = iframe.contentDocument || iframe.contentWindow.document;
-        doc.open();
-        doc.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Tahoma,Arial,sans-serif;margin:0;padding:10px;background:#fff;}img{max-width:100%;}</style></head><body>' + html + '</body></html>');
-        doc.close();
-        // چاوەڕوانی QR لە ناو iframe
-        const iframeQr = doc.querySelector('.pr-qr img');
-        const execPrint = () => {
-            setTimeout(() => {
-                iframe.contentWindow.focus();
-                iframe.contentWindow.print();
-                setTimeout(() => {
-                    printArea.style.display = 'none';
-                    printArea.innerHTML = '';
-                }, 1000);
-            }, 300);
-        };
-        if (iframeQr && !iframeQr.complete) {
-            let done = false;
-            iframeQr.onload = () => { if (!done) { done = true; execPrint(); } };
-            iframeQr.onerror = () => { if (!done) { done = true; execPrint(); } };
-            setTimeout(() => { if (!done) { done = true; execPrint(); } }, 2500);
-        } else {
-            execPrint();
-        }
-    };
+    const senderRows   = getRows('.sender-section .label-row');
+    const receiverRows = getRows('.receiver-section .label-row');
+    const pkgRows      = getRows('.label-package .label-row:not(.label-driver-row):not(.label-note-row)');
+    const driverVal    = drRow ? drRow.querySelector('strong').textContent.trim() : '';
+    const noteVal      = nrRow ? nrRow.querySelector('strong').textContent.trim() : '';
+    const extraRows    = (driverVal ? '<tr><td style="padding:3px 7px;border:1.5px solid #aaa;font-size:.82rem;font-weight:800;color:#333;">🚗 شۆفیر</td><td style="padding:3px 7px;border:1.5px solid #aaa;font-size:.82rem;font-weight:700;color:#111;">' + driverVal + '</td></tr>' : '')
+                       + (noteVal  ? '<tr><td style="padding:3px 7px;border:1.5px solid #aaa;font-size:.82rem;font-weight:800;color:#333;">📝 تیبینی</td><td style="padding:3px 7px;border:1.5px solid #aaa;font-size:.82rem;font-weight:700;color:#111;">' + noteVal  + '</td></tr>' : '');
 
-    // چاوەڕوانی QR لە printArea پێش iframe
-    const qrEl = printArea.querySelector('.pr-qr img');
-    if (qrEl && !qrEl.complete) {
-        let fired = false;
-        const fire = () => { if (!fired) { fired = true; doPrint(); } };
-        qrEl.onload = fire;
-        qrEl.onerror = fire;
-        setTimeout(fire, 2500);
-    } else {
-        doPrint();
+    const html = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
+        + '<style>'
+        + '@page{size:A5;margin:5mm;}'
+        + '*{box-sizing:border-box;}'
+        + 'body{font-family:Arial,sans-serif;margin:0;padding:4px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}'
+        + 'img{display:inline-block;}'
+        + '.no-break{page-break-inside:avoid;break-inside:avoid;}'
+        + '@media print{#dl-btn{display:none !important;}}'
+        + '</style>'
+        + '</head><body>'
+        + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;border-bottom:2px solid #1a365d;padding-bottom:5px;">'
+        + '<span style="font-size:1.1rem;font-weight:900;color:#1a365d;">' + orderNum + '</span>'
+        + '<div style="text-align:right;">'
+        + '<div style="font-size:.95rem;font-weight:900;color:#1a365d;white-space:nowrap;">UK POST - KING STREET</div>'
+        + '<div style="font-size:.7rem;color:#718096;">' + dateText + '</div>'
+        + '</div></div>'
+        + boxHtml('SENDER &nbsp;—&nbsp; نێردەر', senderRows, false)
+        + boxHtml('recipient &nbsp;--&nbsp; وەرگر', receiverRows + pkgRows + extraRows, true)
+        + '<script>'
+        + 'var qr=document.getElementById("nauxo-qr-img");'
+        + 'function doPrint(){window.focus();window.print();}'
+        + 'if(!qr){setTimeout(doPrint,300);}'
+        + 'else if(qr.complete){setTimeout(doPrint,300);}'
+        + 'else{qr.onload=function(){setTimeout(doPrint,300);};qr.onerror=function(){setTimeout(doPrint,300);};}'
+        + '<\/script>'
+        + '</body></html>';
+
+    const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+    const blobUrl = URL.createObjectURL(blob);
+    var win = window.open(blobUrl, '_blank');
+    if (!win || win.closed || typeof win.closed === 'undefined') {
+        var a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = 'label-' + orderNum.replace(/[^a-zA-Z0-9-]/g,'') + '.html';
+        a.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9999;background:#1a365d;color:#fff;padding:14px 22px;border-radius:12px;font-size:1rem;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,.3);';
+        a.textContent = '⬇️ داونلۆدی لەیبل';
+        document.body.appendChild(a);
+        setTimeout(function(){ a.click(); }, 300);
+        setTimeout(function(){ if(document.body.contains(a)) document.body.removeChild(a); URL.revokeObjectURL(blobUrl); }, 8000);
     }
 }
+
+
 
 function _printLabelFallback(key) {
     // fallback بۆ ئەگەر #printArea نەبوو
@@ -4209,7 +4168,7 @@ function printIntlPost(key) {
             ? '<img src="https://flagcdn.com/h40/' + code + '.png" style="height:32px;width:auto;border-radius:3px;border:1px solid rgba(255,255,255,.3);" alt="' + cname + '">'
             : '<span style="font-size:2.8rem;line-height:1;">' + flag + '</span>';
 
-        const row = (l, v) => '<tr><td style="padding:2px 6px;color:#555;border:1px solid #ccc;width:40%;font-size:.72rem;">' + l + '</td><td style="padding:2px 6px;border:1px solid #ccc;font-size:.72rem;font-weight:600;">' + (v||'') + '</td></tr>';
+        const row = (l, v) => '<tr><td class="lbl" style="padding:3px 7px;color:#333;border:1.5px solid #aaa;width:38%;font-size:.82rem;font-weight:800;">' + l + '</td><td style="padding:3px 7px;border:1.5px solid #aaa;font-size:.82rem;font-weight:700;color:#111;">' + (v||'') + '</td></tr>';
 
         const box = (title, person, showQr) => '<div class="no-break" style="border:2px solid #1a365d;border-radius:6px;margin-bottom:10px;overflow:hidden;">'
           + '<div style="background:#1a365d;color:#fff;padding:5px 10px;font-size:.85rem;font-weight:900;display:flex;justify-content:space-between;align-items:center;">'
@@ -4245,9 +4204,12 @@ function printIntlPost(key) {
           + '<style>'
           + '@page{size:A5;margin:5mm;}'
           + '*{box-sizing:border-box;}'
-          + 'body{font-family:\'Segoe UI\',Arial,sans-serif;margin:0;padding:4px;}'
+          + 'body{font-family:Arial,sans-serif;margin:0;padding:4px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}'
           + 'img{display:inline-block;}'
           + '.no-break{page-break-inside:avoid;break-inside:avoid;}'
+          + 'td{font-size:.82rem !important;font-weight:700 !important;color:#111 !important;}'
+          + '.lbl{font-size:.82rem !important;font-weight:800 !important;color:#333 !important;}'
+          + '@media print{#dl-btn{display:none !important;}}'
           + '</style>'
           + '</head><body>'
           + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;border-bottom:2px solid #1a365d;padding-bottom:5px;">'
@@ -4269,8 +4231,23 @@ function printIntlPost(key) {
           + '<\/script>'
           + '</body></html>';
 
-        const win = window.open('','_blank');
-        if (win) { win.document.write(html); win.document.close(); }
+        // Mobile-friendly: blob URL approach
+        const blob = new Blob([html], {type: 'text/html;charset=utf-8'});
+        const blobUrl = URL.createObjectURL(blob);
+
+        // Try window.open first, fallback to download link
+        var win = window.open(blobUrl, '_blank');
+        if (!win || win.closed || typeof win.closed === 'undefined') {
+            // Popup blocked or mobile - offer download
+            var a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = 'label-' + (d.orderNumber||'IP') + '.html';
+            a.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9999;background:#1a365d;color:#fff;padding:14px 22px;border-radius:12px;font-size:1rem;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,.3);';
+            a.textContent = '⬇️ داونلۆدی لەیبل';
+            document.body.appendChild(a);
+            setTimeout(function(){ a.click(); }, 300);
+            setTimeout(function(){ if(document.body.contains(a)) document.body.removeChild(a); URL.revokeObjectURL(blobUrl); }, 8000);
+        }
     });
 }
 
@@ -4431,4 +4408,304 @@ function resetDriverPassword(key) {
     database.ref('drivers/' + key).update({ password: newPass.trim() })
         .then(function() { showNotification('وشەی تێپەڕ گۆڕایەوە ✅'); })
         .catch(function() { showNotification('هەڵە!', 'error'); });
+}
+
+// ==================== Balance & Expenses Admin ====================
+function loadBalanceAdmin() {
+    const content = document.getElementById('adminContent');
+    if (!content) return;
+
+    content.innerHTML = `
+    <div style="padding:16px;max-width:900px;margin:0 auto;direction:rtl;">
+
+      <!-- سەرەوە: کارتەکانی پوخت -->
+      <div id="bal-summary" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px;"></div>
+
+      <!-- فۆرمی زیادکردنی خەرجی -->
+      <div style="background:#fff;border:2px solid #276749;border-radius:14px;padding:16px;margin-bottom:20px;">
+        <div style="font-size:1rem;font-weight:900;color:#276749;margin-bottom:12px;"><i class="fas fa-plus-circle"></i> خەرجیی نوێ زیاد بکە</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div>
+            <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:4px;">١ — ناوی خەرجی</label>
+            <input id="exp-name" type="text" placeholder="بۆ نموونە: کرێی مەخزەن" style="width:100%;padding:8px 10px;border:1.5px solid #c6f6d5;border-radius:8px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:4px;">٢ — بری پارە (£)</label>
+            <input id="exp-amount" type="number" min="0" step="0.01" placeholder="0.00" style="width:100%;padding:8px 10px;border:1.5px solid #c6f6d5;border-radius:8px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:4px;">٣ — بابەت / جۆر</label>
+            <select id="exp-category" style="width:100%;padding:8px 10px;border:1.5px solid #c6f6d5;border-radius:8px;font-size:.85rem;font-family:inherit;box-sizing:border-box;background:#fff;">
+              <option value="">— جۆری خەرجی هەڵبژێرە —</option>
+              <option value="کرێ">🏠 کرێ</option>
+              <option value="مووچە">👤 مووچە</option>
+              <option value="گواستنەوە">🚚 گواستنەوە</option>
+              <option value="کاڵا">📦 کڕینی کاڵا</option>
+              <option value="پارەی پارک">🅿️ پارەی پارک</option>
+              <option value="خۆراک">🍽️ خۆراک</option>
+              <option value="تەکنەلۆجیا">💻 تەکنەلۆجیا</option>
+              <option value="ئەندازیاری">🔧 ئەندازیاری</option>
+              <option value="بڕوانامە">📋 بڕوانامە</option>
+              <option value="تر">📌 تر</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:4px;">٤ — بەروار</label>
+            <input id="exp-date" type="date" style="width:100%;padding:8px 10px;border:1.5px solid #c6f6d5;border-radius:8px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
+          </div>
+        </div>
+        <div style="margin-top:10px;">
+          <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:4px;">تێبینی (ئارەزوومەندانە)</label>
+          <input id="exp-note" type="text" placeholder="تێبینی..." style="width:100%;padding:8px 10px;border:1.5px solid #c6f6d5;border-radius:8px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
+        </div>
+        <div style="margin-top:12px;display:flex;gap:8px;">
+          <button onclick="saveExpense()" style="flex:1;padding:10px;background:linear-gradient(135deg,#276749,#38a169);color:#fff;border:none;border-radius:10px;font-size:.9rem;font-weight:800;cursor:pointer;font-family:inherit;"><i class="fas fa-save"></i> پاشەکەوتکردن</button>
+          <button onclick="clearExpenseForm()" style="padding:10px 16px;background:#e2e8f0;color:#2d3748;border:none;border-radius:10px;font-size:.85rem;cursor:pointer;font-family:inherit;">پاككردنەوە</button>
+        </div>
+      </div>
+
+      <!-- فیلتەر و گەڕان -->
+      <div style="background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:12px;margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <input id="exp-search" type="text" placeholder="🔍 گەڕان..." oninput="filterExpenses()" style="flex:1;min-width:140px;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-family:inherit;">
+        <select id="exp-filter-cat" onchange="filterExpenses()" style="padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-family:inherit;background:#fff;">
+          <option value="">هەموو بابەتەکان</option>
+          <option value="کرێ">🏠 کرێ</option>
+          <option value="مووچە">👤 مووچە</option>
+          <option value="گواستنەوە">🚚 گواستنەوە</option>
+          <option value="کاڵا">📦 کڕینی کاڵا</option>
+          <option value="پارەی پارک">🅿️ پارەی پارک</option>
+          <option value="خۆراک">🍽️ خۆراک</option>
+          <option value="تەکنەلۆجیا">💻 تەکنەلۆجیا</option>
+          <option value="ئەندازیاری">🔧 ئەندازیاری</option>
+          <option value="بڕوانامە">📋 بڕوانامە</option>
+          <option value="تر">📌 تر</option>
+        </select>
+        <select id="exp-filter-month" onchange="filterExpenses()" style="padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-family:inherit;background:#fff;">
+          <option value="">هەموو مانگەکان</option>
+          <option value="01">کانوونی دووەم</option><option value="02">شوبات</option>
+          <option value="03">ئازار</option><option value="04">نیسان</option>
+          <option value="05">ئایار</option><option value="06">حوزەیران</option>
+          <option value="07">تەممووز</option><option value="08">ئاب</option>
+          <option value="09">ئەیلوول</option><option value="10">تشرینی یەکەم</option>
+          <option value="11">تشرینی دووەم</option><option value="12">کانوونی یەکەم</option>
+        </select>
+      </div>
+
+      <!-- لیستی خەرجیەکان -->
+      <div id="exp-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+    </div>`;
+
+    // تەرخانکردنی بەرواری ئەمرۆ
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('exp-date').value = today;
+
+    _loadExpensesFromDB();
+}
+
+function _loadExpensesFromDB() {
+    database.ref('expenses').orderByChild('timestamp').once('value', function(snap) {
+        window._expensesCache = [];
+        snap.forEach(function(ch) {
+            window._expensesCache.unshift({ key: ch.key, ...ch.val() });
+        });
+        _renderExpenses(window._expensesCache);
+        _renderBalanceSummary(window._expensesCache);
+    });
+}
+
+function _renderBalanceSummary(list) {
+    const el = document.getElementById('bal-summary');
+    if (!el) return;
+    const total  = list.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+    const today  = new Date().toISOString().split('T')[0];
+    const todayT = list.filter(e => (e.date||'').startsWith(today)).reduce((s,e) => s+(parseFloat(e.amount)||0),0);
+    const m      = new Date().toISOString().slice(0,7);
+    const monthT = list.filter(e => (e.date||'').startsWith(m)).reduce((s,e) => s+(parseFloat(e.amount)||0),0);
+    const cards  = [
+        { icon:'fas fa-list', label:'کۆی خەرجیەکان', val: list.length + ' تۆمار', color:'#1a365d', bg:'#ebf8ff' },
+        { icon:'fas fa-pound-sign', label:'کۆی گشتی', val: '£' + total.toFixed(2), color:'#276749', bg:'#f0fff4' },
+        { icon:'fas fa-calendar-day', label:'خەرجی ئەمرۆ', val: '£' + todayT.toFixed(2), color:'#d97706', bg:'#fffbeb' },
+        { icon:'fas fa-calendar-alt', label:'خەرجی ئەم مانگە', val: '£' + monthT.toFixed(2), color:'#c53030', bg:'#fff5f5' },
+    ];
+    el.innerHTML = cards.map(c =>
+        `<div style="background:${c.bg};border:2px solid ${c.color}22;border-radius:12px;padding:14px;text-align:center;">
+          <i class="${c.icon}" style="font-size:1.4rem;color:${c.color};margin-bottom:6px;display:block;"></i>
+          <div style="font-size:.72rem;color:#718096;font-weight:700;">${c.label}</div>
+          <div style="font-size:1.1rem;font-weight:900;color:${c.color};margin-top:4px;">${c.val}</div>
+        </div>`
+    ).join('');
+}
+
+function _renderExpenses(list) {
+    const el = document.getElementById('exp-list');
+    if (!el) return;
+    if (!list.length) {
+        el.innerHTML = '<div style="text-align:center;padding:30px;color:#a0aec0;font-size:.9rem;">هیچ خەرجیەک نییە</div>';
+        return;
+    }
+    el.innerHTML = list.map(e => `
+        <div style="background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">
+            <div style="background:#f0fff4;border:1.5px solid #c6f6d5;border-radius:8px;padding:6px 10px;text-align:center;min-width:52px;">
+              <div style="font-size:1rem;font-weight:900;color:#276749;">£${parseFloat(e.amount||0).toFixed(2)}</div>
+            </div>
+            <div style="min-width:0;">
+              <div style="font-size:.88rem;font-weight:800;color:#1a202c;">${e.name||'—'}</div>
+              <div style="font-size:.73rem;color:#718096;margin-top:2px;">
+                <span style="background:#e2e8f0;border-radius:5px;padding:1px 6px;">${e.category||'تر'}</span>
+                &nbsp;${e.date||''}
+                ${e.note ? ' &nbsp;— ' + e.note : ''}
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <button onclick="viewExpense('${e.key}')" style="background:#ebf8ff;color:#2b6cb0;border:none;border-radius:8px;padding:6px 10px;font-size:.8rem;cursor:pointer;">👁️ بینین</button>
+            <button onclick="printExpense('${e.key}')" style="background:#f0fff4;color:#276749;border:none;border-radius:8px;padding:6px 10px;font-size:.8rem;cursor:pointer;">🖨️ چاپ</button>
+            <button onclick="deleteExpense('${e.key}')" style="background:#fed7d7;color:#c53030;border:none;border-radius:8px;padding:6px 10px;font-size:.8rem;cursor:pointer;">🗑️</button>
+          </div>
+        </div>`
+    ).join('');
+}
+
+function filterExpenses() {
+    if (!window._expensesCache) return;
+    const q    = (document.getElementById('exp-search').value||'').toLowerCase();
+    const cat  = document.getElementById('exp-filter-cat').value;
+    const mon  = document.getElementById('exp-filter-month').value;
+    const list = window._expensesCache.filter(e => {
+        const matchQ   = !q   || (e.name||'').toLowerCase().includes(q) || (e.note||'').toLowerCase().includes(q);
+        const matchCat = !cat || e.category === cat;
+        const matchMon = !mon || (e.date||'').slice(5,7) === mon;
+        return matchQ && matchCat && matchMon;
+    });
+    _renderExpenses(list);
+    _renderBalanceSummary(list);
+}
+
+function saveExpense() {
+    const name     = (document.getElementById('exp-name').value||'').trim();
+    const amount   = parseFloat(document.getElementById('exp-amount').value||'0');
+    const category = document.getElementById('exp-category').value;
+    const date     = document.getElementById('exp-date').value;
+    const note     = (document.getElementById('exp-note').value||'').trim();
+    if (!name)     { showNotification('ناوی خەرجی بنووسە!', 'error'); return; }
+    if (!amount)   { showNotification('بری پارە بنووسە!', 'error'); return; }
+    if (!category) { showNotification('بابەتی خەرجی هەڵبژێرە!', 'error'); return; }
+    if (!date)     { showNotification('بەروار دیاری بکە!', 'error'); return; }
+    const data = { name, amount, category, date, note, timestamp: Date.now() };
+    database.ref('expenses').push(data).then(function() {
+        showNotification('خەرجی زیادکرا ✅');
+        clearExpenseForm();
+        _loadExpensesFromDB();
+    }).catch(function() { showNotification('هەڵە!', 'error'); });
+}
+
+function clearExpenseForm() {
+    ['exp-name','exp-note'].forEach(id => { var el=document.getElementById(id); if(el) el.value=''; });
+    var a=document.getElementById('exp-amount'); if(a) a.value='';
+    var c=document.getElementById('exp-category'); if(c) c.value='';
+    var d=document.getElementById('exp-date'); if(d) d.value=new Date().toISOString().split('T')[0];
+}
+
+function deleteExpense(key) {
+    if (!confirm('دڵنیایت لە سڕینەوەی ئەم خەرجیە؟')) return;
+    database.ref('expenses/' + key).remove().then(function() {
+        showNotification('سڕایەوە ✅');
+        _loadExpensesFromDB();
+    }).catch(function() { showNotification('هەڵە!', 'error'); });
+}
+
+function viewExpense(key) {
+    const e = (window._expensesCache||[]).find(x => x.key === key);
+    if (!e) return;
+
+    const modal = document.createElement('div');
+    modal.id = 'expViewModal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;';
+    modal.innerHTML = `
+    <div style="background:#fff;border-radius:16px;padding:0;width:100%;max-width:420px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.25);">
+      <!-- هێدەر -->
+      <div style="background:linear-gradient(135deg,#276749,#38a169);padding:16px 18px;display:flex;justify-content:space-between;align-items:center;">
+        <div style="color:#fff;font-size:1rem;font-weight:900;"><i class="fas fa-wallet"></i> وردەکاری خەرجی</div>
+        <button onclick="document.getElementById('expViewModal').remove()" style="background:rgba(255,255,255,.2);color:#fff;border:none;border-radius:8px;padding:5px 10px;cursor:pointer;font-size:.9rem;">✕</button>
+      </div>
+      <!-- بری پارە - گەورە -->
+      <div style="text-align:center;padding:20px 18px 10px;border-bottom:1.5px solid #e2e8f0;">
+        <div style="font-size:2.2rem;font-weight:900;color:#276749;">£${parseFloat(e.amount||0).toFixed(2)}</div>
+        <div style="font-size:1rem;font-weight:800;color:#1a202c;margin-top:4px;">${e.name||'—'}</div>
+      </div>
+      <!-- وردەکاریەکان -->
+      <div style="padding:14px 18px;display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;justify-content:space-between;padding:8px 12px;background:#f7fafc;border-radius:8px;">
+          <span style="font-size:.82rem;font-weight:700;color:#718096;">📂 بابەت</span>
+          <span style="font-size:.82rem;font-weight:800;color:#1a202c;">${e.category||'تر'}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:8px 12px;background:#f7fafc;border-radius:8px;">
+          <span style="font-size:.82rem;font-weight:700;color:#718096;">📅 بەروار</span>
+          <span style="font-size:.82rem;font-weight:800;color:#1a202c;">${e.date||'—'}</span>
+        </div>
+        ${e.note ? `<div style="padding:8px 12px;background:#fffbeb;border-radius:8px;border:1px solid #fde68a;">
+          <div style="font-size:.75rem;font-weight:700;color:#d97706;margin-bottom:3px;">📝 تێبینی</div>
+          <div style="font-size:.82rem;font-weight:700;color:#1a202c;">${e.note}</div>
+        </div>` : ''}
+        <div style="display:flex;justify-content:space-between;padding:8px 12px;background:#f7fafc;border-radius:8px;">
+          <span style="font-size:.78rem;font-weight:700;color:#a0aec0;">🕐 تۆمارکرا</span>
+          <span style="font-size:.78rem;color:#a0aec0;">${e.timestamp ? new Date(e.timestamp).toLocaleString('en-GB') : '—'}</span>
+        </div>
+      </div>
+      <!-- دوگمەکان -->
+      <div style="padding:12px 18px;display:flex;gap:8px;border-top:1.5px solid #e2e8f0;">
+        <button onclick="printExpense('${key}');document.getElementById('expViewModal').remove();" style="flex:1;padding:10px;background:linear-gradient(135deg,#276749,#38a169);color:#fff;border:none;border-radius:10px;font-size:.88rem;font-weight:800;cursor:pointer;font-family:inherit;"><i class="fas fa-print"></i> چاپکردن</button>
+        <button onclick="document.getElementById('expViewModal').remove()" style="padding:10px 16px;background:#e2e8f0;color:#2d3748;border:none;border-radius:10px;font-size:.85rem;cursor:pointer;font-family:inherit;">داخستن</button>
+      </div>
+    </div>`;
+    document.body.appendChild(modal);
+    modal.addEventListener('click', function(ev){ if(ev.target===modal) modal.remove(); });
+}
+
+function printExpense(key) {
+    const e = (window._expensesCache||[]).find(x => x.key === key);
+    if (!e) return;
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+    <style>
+      @page{size:A5 portrait;margin:10mm;}
+      body{font-family:Arial,sans-serif;direction:rtl;margin:0;padding:0;color:#111;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+      .header{background:#276749;color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-radius:8px 8px 0 0;}
+      .amount{text-align:center;padding:18px;border-bottom:2px dashed #c6f6d5;}
+      .rows{padding:12px 16px;display:flex;flex-direction:column;gap:8px;}
+      .row{display:flex;justify-content:space-between;padding:7px 10px;background:#f7fafc;border-radius:7px;font-size:.85rem;}
+      .row span{color:#666;font-weight:700;}
+      .row strong{color:#111;}
+      .footer{text-align:center;font-size:.72rem;color:#aaa;margin-top:16px;border-top:1px dashed #e2e8f0;padding-top:8px;}
+      @media print{button{display:none!important;}}
+    </style>
+    </head><body>
+    <div style="border:2px solid #276749;border-radius:8px;max-width:400px;margin:0 auto;">
+      <div class="header">
+        <div style="font-size:.95rem;font-weight:900;">🏢 UK POST — KING STREET</div>
+        <div style="font-size:.8rem;opacity:.85;">${e.date||''}</div>
+      </div>
+      <div class="amount">
+        <div style="font-size:2rem;font-weight:900;color:#276749;">£${parseFloat(e.amount||0).toFixed(2)}</div>
+        <div style="font-size:1rem;font-weight:800;margin-top:5px;">${e.name||'—'}</div>
+      </div>
+      <div class="rows">
+        <div class="row"><span>📂 بابەت:</span><strong>${e.category||'تر'}</strong></div>
+        <div class="row"><span>📅 بەروار:</span><strong>${e.date||'—'}</strong></div>
+        ${e.note ? `<div class="row" style="background:#fffbeb;"><span>📝 تێبینی:</span><strong>${e.note}</strong></div>` : ''}
+        <div class="row"><span>🕐 تۆمارکرا:</span><strong>${e.timestamp ? new Date(e.timestamp).toLocaleString('en-GB') : '—'}</strong></div>
+      </div>
+      <div class="footer">UK POST - KING STREET &nbsp;|&nbsp; 07755436275 / 07507472656</div>
+    </div>
+    <script>window.onload=function(){window.print();}<\/script>
+    </body></html>`;
+    const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+    const url  = URL.createObjectURL(blob);
+    var win = window.open(url, '_blank');
+    if (!win || win.closed) {
+        var a = document.createElement('a');
+        a.href = url; a.download = 'expense-' + (e.name||key) + '.html';
+        document.body.appendChild(a); a.click();
+        setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); }, 5000);
+    }
 }
