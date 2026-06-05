@@ -40,7 +40,7 @@
         var chevron = document.getElementById('trackingChevron');
         if (!body) return;
         var open = body.style.display !== 'none';
-        body.style.display      = open ? 'none'      : 'block';
+        body.style.display      = open ? 'none'        : 'block';
         chevron.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
       }
     </script>
@@ -1193,7 +1193,7 @@ const TRANSLATIONS = {
     dir: 'rtl', lang: 'ku',
     videos: 'ڤیدیۆکان',
     kuDelivery: 'گەیاندن',
-    ukDelivery: 'گەیاندنی UK',
+    ukDelivery: 'گەیاندن -UK',
     search: 'گەڕان',
     searchPlaceholder: 'گەڕان بە کاڵا...',
     home: 'ماڵەوە',
@@ -1253,7 +1253,7 @@ const TRANSLATIONS = {
     dir: 'ltr', lang: 'en',
     videos: 'Videos',
     kuDelivery: 'KU Delivery',
-    ukDelivery: 'UK Delivery',
+    ukDelivery: 'UK -Delivery',
     search: 'Search',
     searchPlaceholder: 'Search products...',
     home: 'Home',
@@ -1313,7 +1313,7 @@ const TRANSLATIONS = {
     dir: 'rtl', lang: 'ar',
     videos: 'الفيديوهات',
     kuDelivery: 'التوصيل كردستان',
-    ukDelivery: 'التوصيل UK',
+    ukDelivery: 'التوصيل -UK',
     search: 'بحث',
     searchPlaceholder: 'ابحث عن المنتجات...',
     home: 'الرئيسية',
@@ -1536,8 +1536,8 @@ document.addEventListener('DOMContentLoaded', () => {
       '*{box-sizing:border-box;}' +
       'body{font-family:"Segoe UI",Arial,sans-serif;background:#fff;margin:0;padding:0;width:100mm;direction:rtl;}' +
       '.page{background:#fff;border:2.5px dashed #c8a000;width:100mm;min-height:148mm;overflow:hidden;display:flex;flex-direction:column;}' +
-      '.close-btn{display:flex;justify-content:flex-start;padding:2px 4px 0;}' +
-      '.close-btn button{background:#fee2e2;border:1.5px solid #fca5a5;color:#dc2626;border-radius:50%;width:22px;height:22px;font-size:.8rem;font-weight:900;cursor:pointer;}' +
+      '.close-btn{position:fixed;top:10px;right:10px;z-index:9999;display:block;}' +
+      '.close-btn button{background:linear-gradient(135deg,#f56565,#e53e3e);border:none;color:#fff;border-radius:50px;padding:10px 22px;font-size:1rem;font-weight:900;cursor:pointer;box-shadow:0 3px 12px rgba(229,62,62,.5);white-space:nowrap;}' +
       /* Header */
       '.hdr{display:flex;align-items:center;justify-content:space-between;padding:3px 7px 4px;border-bottom:2px solid #1a1a1a;background:#fff;}' +
       '.hdr-l{display:flex;align-items:center;gap:4px;}' +
@@ -1576,7 +1576,7 @@ document.addEventListener('DOMContentLoaded', () => {
       '<meta name="viewport" content="width=device-width,initial-scale=1">' +
       '<title>لەیبڵی گەیاندن</title><style>' + css + '</style></head><body>' +
       '<div class="page">' +
-        '<div class="close-btn"><button onclick="' + closeJs + '">✕</button></div>' +
+        '<div class="close-btn"><button onclick="' + closeJs + '">✕ داخستن</button></div>' +
        /* Header — کوردی: تەنها King Street */
 
         '<div class="hdr">' +
@@ -1640,7 +1640,7 @@ document.addEventListener('DOMContentLoaded', () => {
           '<span>UK POST &amp; King Street— Kurdistan Delivery</span>' +
         '</div>' +
       '</div>' +
-      '<script>window.onload=function(){var b=document.createElement(String.fromCharCode(98,117,116,116,111,110));b.innerHTML=String.fromCharCode(10005)+String.fromCharCode(32,1583,1575,1582,1587,1578,1606);b.setAttribute("style","position:fixed;top:10px;right:10px;z-index:9999;background:#e53e3e;color:#fff;border:none;border-radius:50px;padding:10px 22px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3)");b.setAttribute("class","no-print");b.onclick=function(){try{window.close();}catch(e){history.go(-1);}};document.body.insertBefore(b,document.body.firstChild);setTimeout(function(){window.print();},400);};<\/script>' +
+      '<script>window.onload=function(){window.print();}<\/script>' +
       '</body></html>';
 
     // Open in new tab (works on desktop + mobile)
@@ -1898,9 +1898,9 @@ document.addEventListener('DOMContentLoaded', () => {
       + '<title>IP Label — ' + ipLabel + '</title>'
       + '<style>' + css + '</style></head><body>'
       + '<button class="no-print" onclick="' + closeJs + '" '
-        + 'style="position:fixed;top:6px;right:6px;background:#fee2e2;border:2px solid #fca5a5;'
-        + 'color:#dc2626;border-radius:50%;width:32px;height:32px;font-size:1rem;'
-        + 'font-weight:900;cursor:pointer;z-index:9999;">✕</button>'
+        + 'style="position:fixed;top:10px;right:10px;background:linear-gradient(135deg,#f56565,#e53e3e);'
+        + 'border:none;color:#fff;border-radius:50px;padding:10px 22px;font-size:1rem;'
+        + 'font-weight:900;cursor:pointer;z-index:9999;box-shadow:0 3px 12px rgba(229,62,62,.5);">✕ داخستن</button>'
       + '<div class="page">'
         /* ─── Header: IP number left, flag+country+date right ─── */
        /* ─── Header: IP number left, flag+country+date right ─── */
@@ -1924,7 +1924,7 @@ document.addEventListener('DOMContentLoaded', () => {
           + flagSvg
         + '</div>'
       + '</div>'
-      + '<script>window.onload=function(){var b=document.createElement(String.fromCharCode(98,117,116,116,111,110));b.innerHTML=String.fromCharCode(10005)+String.fromCharCode(32,1583,1575,1582,1587,1578,1606);b.setAttribute("style","position:fixed;top:10px;right:10px;z-index:9999;background:#e53e3e;color:#fff;border:none;border-radius:50px;padding:10px 22px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3)");b.setAttribute("class","no-print");b.onclick=function(){try{window.close();}catch(e){history.go(-1);}};document.body.insertBefore(b,document.body.firstChild);setTimeout(function(){window.print();},400);};<\/script>'
+      + '<script>window.onload=function(){window.print();}<\/script>'
       + '</body></html>';
 
     var win = window.open('', '_blank');
@@ -2795,7 +2795,7 @@ function driverPrintLabel(key) {
       + (d.deliveryNote ? '<div style="font-size:.75rem;color:#718096;border-top:1px dashed #e2e8f0;padding-top:6px;">📝 ' + escapeHtml(d.deliveryNote) + '</div>' : '')
       + '<div style="text-align:center;font-size:.65rem;color:#a0aec0;margin-top:8px;border-top:1px dashed #e2e8f0;padding-top:6px;">' + (d.timestamp||'') + ' — UK BAZAR</div>'
       + '</div>'
-      + '<script>window.onload=function(){var b=document.createElement(String.fromCharCode(98,117,116,116,111,110));b.innerHTML=String.fromCharCode(10005)+String.fromCharCode(32,1583,1575,1582,1587,1578,1606);b.setAttribute("style","position:fixed;top:10px;right:10px;z-index:9999;background:#e53e3e;color:#fff;border:none;border-radius:50px;padding:10px 22px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3)");b.setAttribute("class","no-print");b.onclick=function(){try{window.close();}catch(e){history.go(-1);}};document.body.insertBefore(b,document.body.firstChild);setTimeout(function(){window.print();},400);};<\/script>'
+      + '<script>window.onload=function(){window.print();};<\/script>'
       + '</body></html>';
 
     var win = window.open('', '_blank');
@@ -2961,7 +2961,7 @@ function printDriverScan(scanKey) {
         + '<span>UK BAZAR — ' + escapeHtml(_currentDriver.name||_currentDriver.username||'') + '</span>'
       + '</div>'
       + '</div>'
-      + '<script>window.onload=function(){var b=document.createElement(String.fromCharCode(98,117,116,116,111,110));b.innerHTML=String.fromCharCode(10005)+String.fromCharCode(32,1583,1575,1582,1587,1578,1606);b.setAttribute("style","position:fixed;top:10px;right:10px;z-index:9999;background:#e53e3e;color:#fff;border:none;border-radius:50px;padding:10px 22px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3)");b.setAttribute("class","no-print");b.onclick=function(){try{window.close();}catch(e){history.go(-1);}};document.body.insertBefore(b,document.body.firstChild);setTimeout(function(){window.print();},400);};<\/script>'
+      + '<script>window.onload=function(){window.print();};<\/script>'
       + '</body></html>';
 
     var win = window.open('', '_blank');
