@@ -30,8 +30,22 @@
     </style>
 
     <style>
-      .btn-delivery-uk{font-size:.88rem!important;padding:8px 14px!important;}
-      .nav-buttons{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:flex-end;}
+      .btn-delivery-uk{font-size:.82rem!important;padding:7px 11px!important;}
+      .nav-buttons{
+        display:flex;
+        flex-wrap:nowrap;
+        gap:5px;
+        align-items:center;
+        justify-content:flex-end;
+        overflow-x:auto;
+        -webkit-overflow-scrolling:touch;
+        scrollbar-width:none;
+        padding-bottom:2px;
+        max-width:100%;
+      }
+      .nav-buttons::-webkit-scrollbar{display:none;}
+      .nav-buttons button{flex-shrink:0;}
+
     </style>
     <script>
       function toggleTrackingWidget(){
@@ -91,10 +105,11 @@
                     <i class="fas fa-shipping-fast"></i>
                     <span class="btn-text" data-i18n="ukDelivery">UK Delivery</span>
                 </button>
-                <button onclick="showDriverLoginModal()" id="driverNavBtn" style="display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#f56565,#e53e3e);color:#fff;border:none;border-radius:50px;padding:8px 16px;font-family:inherit;font-size:.88rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(245,101,101,.35);">
+                <button onclick="showDriverLoginModal()" id="driverNavBtn" style="display:flex;align-items:center;gap:5px;background:linear-gradient(135deg,#f56565,#e53e3e);color:#fff;border:none;border-radius:50px;padding:7px 11px;font-family:inherit;font-size:.82rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(245,101,101,.35);flex-shrink:0;">
                     <i class="fas fa-truck"></i>
                     <span class="btn-text">شۆفیر</span>
                 </button>
+
             </div>
         </div>
     </div>
@@ -2915,59 +2930,77 @@ function printDriverScan(scanKey) {
   database.ref('driverScans/' + _currentDriver.key + '/' + scanKey).once('value').then(function(snap) {
     if (!snap.exists()) { showNotification('تۆمار نەدۆزرایەوە', 'error'); return; }
     var sc = snap.val();
-    var isIntl = sc.type === 'intl' || sc.type === 'uk';
     var orderNum = sc.orderNumber || scanKey;
     var qrData = 'پسولە: ' + orderNum + ' | نێردەر: ' + (sc.senderName||'') + ' ' + (sc.senderMobile||'') + ' | وەرگر: ' + (sc.receiverName||'') + ' ' + (sc.receiverMobile||'');
     var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=' + encodeURIComponent(qrData);
-
-    var typeLabel = sc.type === 'ku' ? '🇮🇶 پۆستی ناوخۆ' : (sc.type === 'intl' ? '🌍 نێودەوڵەتی' : '🇬🇧 UK Post');
+    var typeLabel = sc.type === 'ku' ? 'پۆستی ناوخۆ' : (sc.type === 'intl' ? 'نێودەوڵەتی' : 'UK Post');
     var borderClr = sc.type === 'ku' ? '#276749' : '#2b6cb0';
 
     var html = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
-      + '<style>@page{size:A5;margin:8mm;} body{font-family:"Tahoma","Arial",sans-serif;direction:rtl;margin:0;padding:0;}'
+      + '<meta name="viewport" content="width=device-width,initial-scale=1">'
+      + '<style>'
+      + '@page{size:A5;margin:8mm;}'
+      + 'body{font-family:Tahoma,Arial,sans-serif;direction:rtl;margin:0;padding:10px;background:#fff;}'
       + '.box{border:3px solid ' + borderClr + ';border-radius:10px;padding:12px;}'
       + '.hdr{background:' + borderClr + ';color:#fff;padding:8px 14px;font-size:1rem;font-weight:900;display:flex;justify-content:space-between;border-radius:6px;margin-bottom:10px;}'
-      + '.grid{display:flex;gap:12px;margin-bottom:10px;} .col{flex:1;border:1.5px solid #e2e8f0;border-radius:6px;padding:8px;}'
-      + '.lbl{font-size:.65rem;color:#718096;margin-bottom:2px;} .val{font-size:.85rem;font-weight:700;color:#1a202c;}'
-      + '.tel{font-size:.78rem;color:#4a5568;} .loc{font-size:.7rem;color:#718096;}'
+      + '.grid{display:flex;gap:10px;margin-bottom:10px;}'
+      + '.col{flex:1;border:1.5px solid #e2e8f0;border-radius:6px;padding:8px;}'
+      + '.lbl{font-size:.65rem;color:#718096;margin-bottom:2px;}'
+      + '.val{font-size:.85rem;font-weight:700;color:#1a202c;}'
+      + '.tel{font-size:.78rem;color:#4a5568;}'
+      + '.loc{font-size:.7rem;color:#718096;}'
+      + '.pkg{display:flex;align-items:center;justify-content:space-between;background:#f7fafc;border-radius:8px;padding:8px 12px;margin-bottom:8px;}'
+      + '.foot{display:flex;justify-content:space-between;font-size:.65rem;color:#a0aec0;border-top:1px dashed #e2e8f0;padding-top:6px;}'
+      + '.print-btn{display:block;width:100%;padding:14px;background:' + borderClr + ';color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:Tahoma,Arial,sans-serif;cursor:pointer;margin-top:14px;}'
+      + '@media print{.print-btn{display:none!important;}}'
       + '</style></head><body>'
       + '<div class="box">'
       + '<div class="hdr"><span>' + typeLabel + ' — UK BAZAR</span><span># ' + escapeHtml(orderNum) + '</span></div>'
       + '<div class="grid">'
         + '<div class="col" style="border-right:3px solid ' + borderClr + ';">'
-          + '<div class="lbl">📤 نێردەر</div>'
+          + '<div class="lbl">نێردەر</div>'
           + '<div class="val">' + escapeHtml(sc.senderName||'—') + '</div>'
-          + '<div class="tel">📞 ' + escapeHtml(sc.senderMobile||'') + '</div>'
-          + (sc.senderLocation ? '<div class="loc">📍 ' + escapeHtml(sc.senderLocation) + '</div>' : '')
+          + '<div class="tel">' + escapeHtml(sc.senderMobile||'') + '</div>'
+          + (sc.senderLocation ? '<div class="loc">' + escapeHtml(sc.senderLocation) + '</div>' : '')
         + '</div>'
         + '<div class="col">'
-          + '<div class="lbl">📥 وەرگر</div>'
+          + '<div class="lbl">وەرگر</div>'
           + '<div class="val">' + escapeHtml(sc.receiverName||'—') + '</div>'
-          + '<div class="tel">📞 ' + escapeHtml(sc.receiverMobile||'') + '</div>'
-          + (sc.receiverLocation ? '<div class="loc">📍 ' + escapeHtml(sc.receiverLocation) + '</div>' : '')
+          + '<div class="tel">' + escapeHtml(sc.receiverMobile||'') + '</div>'
+          + (sc.receiverLocation ? '<div class="loc">' + escapeHtml(sc.receiverLocation) + '</div>' : '')
         + '</div>'
       + '</div>'
-      + '<div style="display:flex;align-items:center;justify-content:space-between;background:#f7fafc;border-radius:8px;padding:8px 12px;margin-bottom:8px;">'
+      + '<div class="pkg">'
         + '<div>'
-          + '<div class="lbl">📦 کاڵا</div>'
+          + '<div class="lbl">کاڵا</div>'
           + '<div style="font-size:.85rem;font-weight:700;">' + escapeHtml(sc.packageName||'—') + (sc.packageKg?' — '+sc.packageKg+'کگ':'') + '</div>'
-          + (sc.deliveryNote ? '<div class="loc" style="margin-top:4px;">📝 ' + escapeHtml(sc.deliveryNote) + '</div>' : '')
+          + (sc.deliveryNote ? '<div class="loc" style="margin-top:4px;">' + escapeHtml(sc.deliveryNote) + '</div>' : '')
         + '</div>'
         + '<img src="' + qrUrl + '" style="width:90px;height:90px;border-radius:4px;">'
       + '</div>'
-      + '<div style="display:flex;justify-content:space-between;font-size:.65rem;color:#a0aec0;border-top:1px dashed #e2e8f0;padding-top:6px;">'
-        + '<span>💾 ' + escapeHtml(sc.savedAt||'') + '</span>'
-        + '<span>UK BAZAR — ' + escapeHtml(_currentDriver.name||_currentDriver.username||'') + '</span>'
+      + '<div class="foot">'
+        + '<span>' + escapeHtml(sc.savedAt||'') + '</span>'
+        + '<span>UK BAZAR</span>'
       + '</div>'
       + '</div>'
-      + '<script>window.onload=function(){window.print();};<\/script>'
+      + '<button class="print-btn" onclick="window.print()">🖨️ چاپ کردن</button>'
       + '</body></html>';
 
-    var win = window.open('', '_blank');
-    if (win) { win.document.write(html); win.document.close(); }
-    else { showNotification('پاپ-ئەپ بلۆک کراوە!', 'error'); }
+    // Blob URL — لە هەموو موبایلێک کار دەکات، بلۆک ناکرێت
+    var blob = new Blob([html], {type: 'text/html;charset=utf-8'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 10000);
+
   }).catch(function() { showNotification('هەڵە لە پرینت', 'error'); });
 }
+
 
 // Close modals when clicking backdrop
 document.addEventListener('click', function(e) {
