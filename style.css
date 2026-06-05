@@ -37,7 +37,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     font-family: 'Noto Sans Arabic', 'Tahoma', 'Arial', sans-serif;
 }
 
-//* Loading Spinner with Banner - چاککراو */
+/* Loading Spinner with Banner - چاککراو */
 .loading-spinner {
     position: fixed;
     top: 0;
@@ -172,8 +172,8 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 .nav-buttons {
     display: flex !important;
     flex-direction: row !important;
-    gap: 10px;
-    flex-wrap: nowrap;
+    gap: 6px;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     order: 2;
@@ -235,9 +235,9 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 .nav-buttons {
     display: flex !important;
     gap: 6px;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: center;
-    flex-shrink: 0;
+    justify-content: center;
     order: 2;
 }
 
@@ -284,20 +284,20 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .btn-delivery-uk {
-    background: linear-gradient(135deg, #d4a017, #c49010);
+    background: linear-gradient(135deg, #f0c040, #e6a800);
     color: #1a1a1a !important;
     font-weight: 800;
     font-size: 0.82rem !important;
     padding: 9px 11px !important;
     border-radius: 12px !important;
-    box-shadow: 0 3px 10px rgba(180, 140, 0, 0.35);
+    box-shadow: 0 3px 10px rgba(224, 168, 0, 0.35);
     letter-spacing: 0.2px;
 }
 
 .btn-delivery-uk:hover {
-    background: linear-gradient(135deg, #e6b420, #d4a017);
+    background: linear-gradient(135deg, #ffd700, #f0c040);
     transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(180, 140, 0, 0.45);
+    box-shadow: 0 6px 18px rgba(224, 168, 0, 0.45);
 }
 
 .btn {
