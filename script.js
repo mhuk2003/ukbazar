@@ -4006,6 +4006,7 @@ function loadIntlPost() {
                   + '<span style="font-weight:700;font-size:.8rem;">' + flag + ' ' + cname + ' — ' + (d.timestamp||'') + '</span>'
                   + '<div style="display:flex;gap:6px;">'
                   + '<button onclick="printIntlPost(\'' + d.key + '\')" style="background:#fff;color:#2b6cb0;border:none;border-radius:5px;padding:3px 10px;font-size:.75rem;font-weight:700;cursor:pointer;">🖨️ Print</button>'
+                  + '<button onclick="editIntlPost(\'' + d.key + '\')" style="background:#fffbeb;color:#d97706;border:none;border-radius:5px;padding:3px 10px;font-size:.75rem;font-weight:700;cursor:pointer;">✏️ Edit</button>'
                   + '<button onclick="deleteIntlPost(\'' + d.key + '\')" style="background:#fed7d7;color:#c53030;border:none;border-radius:5px;padding:3px 8px;font-size:.75rem;cursor:pointer;">🗑️</button>'
                   + '</div></div>'
                   + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">'
@@ -4205,13 +4206,13 @@ function printIntlPost(key) {
         const countryObj = INTL_COUNTRIES.find(c => c.name === cname || c.flag === flag);
         const code = countryObj ? countryObj.code : '';
         const flagImg = code
-            ? '<img src="https://flagcdn.com/h80/' + code + '.png" style="height:52px;width:auto;border-radius:3px;border:1px solid rgba(255,255,255,.3);" alt="' + cname + '">'
+            ? '<img src="https://flagcdn.com/h40/' + code + '.png" style="height:32px;width:auto;border-radius:3px;border:1px solid rgba(255,255,255,.3);" alt="' + cname + '">'
             : '<span style="font-size:2.8rem;line-height:1;">' + flag + '</span>';
 
-        const row = (l, v) => '<tr><td style="padding:4px 8px;color:#555;border:1px solid #ccc;width:40%;font-size:.8rem;">' + l + '</td><td style="padding:4px 8px;border:1px solid #ccc;font-size:.8rem;font-weight:600;">' + (v||'') + '</td></tr>';
+        const row = (l, v) => '<tr><td style="padding:2px 6px;color:#555;border:1px solid #ccc;width:40%;font-size:.72rem;">' + l + '</td><td style="padding:2px 6px;border:1px solid #ccc;font-size:.72rem;font-weight:600;">' + (v||'') + '</td></tr>';
 
-        const box = (title, person) => '<div style="border:2px solid #1a365d;border-radius:6px;margin-bottom:14px;overflow:hidden;">'
-          + '<div style="background:#1a365d;color:#fff;padding:7px 14px;font-size:.95rem;font-weight:900;display:flex;justify-content:space-between;align-items:center;">'
+        const box = (title, person, showQr) => '<div class="no-break" style="border:2px solid #1a365d;border-radius:6px;margin-bottom:10px;overflow:hidden;">'
+          + '<div style="background:#1a365d;color:#fff;padding:5px 10px;font-size:.85rem;font-weight:900;display:flex;justify-content:space-between;align-items:center;">'
           + '<span>' + title + '</span>'
           + '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;">'
           + flagImg
@@ -4226,31 +4227,105 @@ function printIntlPost(key) {
           + row('WEIGHT+BOX', person.weight)
           + row('Notes and payments', person.notes)
           + '</table>'
+          + (showQr ? '<div style="display:flex;align-items:center;justify-content:center;gap:14px;padding:10px 14px;background:#f7fafc;border-top:1px solid #e2e8f0;">'
+            + '<img id="intl-qr-img" src="' + qrUrl + '" style="width:80px;height:80px;display:block;border-radius:6px;" alt="QR">'
+            + '<div style="text-align:center;">'
+            + '<div style="font-size:.75rem;font-weight:900;color:#1a365d;letter-spacing:.5px;">QR CODE</div>'
+            + '<div style="font-size:.68rem;color:#718096;margin-top:3px;">' + (d.orderNumber||'') + '</div>'
+            + '</div></div>' : '')
           + '<div style="background:#1a365d;color:#fff;padding:5px 14px;font-size:.72rem;display:flex;justify-content:space-between;align-items:center;">'
           + '<span>KING STREET - UK POST &nbsp;&nbsp; 07755436275 / 07507472656</span>'
           + (code ? '<img src="https://flagcdn.com/h20/gb.png" style="height:14px;" alt="GB">' : '<span>🇬🇧</span>')
           + '</div></div>';
 
+        const qrData = encodeURIComponent('# ' + (d.orderNumber||'') + ' | SENDER: ' + (s.name||'') + ' ' + (s.tel||'') + ' | RECIPIENT: ' + (r.name||'') + ' ' + (r.tel||'') + ' | ' + cname);
+        const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=4&data=' + qrData;
+
       const html = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
-          + '<style>@page{size:A5;margin:10mm;} body{font-family:\'Segoe UI\',Arial,sans-serif;margin:0;padding:0;} img{display:inline-block;}</style>'
+          + '<style>'
+          + '@page{size:A5;margin:5mm;}'
+          + '*{box-sizing:border-box;}'
+          + 'body{font-family:\'Segoe UI\',Arial,sans-serif;margin:0;padding:4px;}'
+          + 'img{display:inline-block;}'
+          + '.no-break{page-break-inside:avoid;break-inside:avoid;}'
+          + '</style>'
           + '</head><body>'
-          + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;border-bottom:2px solid #1a365d;padding-bottom:8px;">'
+          + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;border-bottom:2px solid #1a365d;padding-bottom:5px;">'
           + '<span style="font-size:1.1rem;font-weight:900;color:#1a365d;"># ' + (d.orderNumber||'—') + '</span>'
           + '<div style="display:flex;align-items:center;gap:8px;">'
           + (code ? '<img src="https://flagcdn.com/h40/' + code + '.png" style="height:32px;border-radius:2px;" alt="' + cname + '">' : '<span style="font-size:2rem;">' + flag + '</span>')
           + '<div style="text-align:right;">'
-          // 🛠️ لێرەدا لە جیاتی cname بە ڕەقی ناوی نوێمان جێگیر کرد:
           + '<div style="font-size:.95rem;font-weight:900;color:#1a365d; white-space: nowrap;">UK POST - KING STREET</div>'
           + '<div style="font-size:.7rem;color:#718096;">' + (d.timestamp||'') + '</div>'
           + '</div></div></div>'
           + box('SENDER &nbsp;—&nbsp; نێردەر', s)
-          + box('recipient &nbsp;--&nbsp; وەرگر', r)
-          + '<script>window.onload=function(){window.print();}<\/script>'
+          + box('recipient &nbsp;--&nbsp; وەرگر', r, true)
+
+          + '<script>'
+          + 'var qrImg = document.getElementById("intl-qr-img");'
+          + 'function doPrint(){ window.focus(); window.print(); }'
+          + 'if(qrImg.complete){ setTimeout(doPrint, 300); }'
+          + 'else { qrImg.onload = function(){ setTimeout(doPrint, 300); }; qrImg.onerror = function(){ setTimeout(doPrint, 300); }; }'
+          + '<\/script>'
           + '</body></html>';
 
         const win = window.open('','_blank');
         if (win) { win.document.write(html); win.document.close(); }
     });
+}
+
+// ==================== Edit Intl Post ====================
+function editIntlPost(key) {
+    database.ref('intlPost/' + key).once('value', function(snap) {
+        if (!snap.exists()) { showNotification('تۆمار نەدۆزرایەوە', 'error'); return; }
+        var d = snap.val();
+        var s = d.sender || {};
+        var r = d.recipient || {};
+
+        var modal = document.createElement('div');
+        modal.id = 'editIntlModal';
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:12px;';
+
+        var inp = function(id, val, ph) {
+            return '<input id="eip-' + id + '" type="text" value="' + (val||'').replace(/"/g,'&quot;') + '" placeholder="' + ph + '" style="width:100%;padding:6px 8px;border:1.5px solid #bee3f8;border-radius:7px;font-size:.82rem;box-sizing:border-box;margin-bottom:6px;font-family:inherit;">';
+        };
+
+        modal.innerHTML = '<div style="background:#fff;border-radius:14px;padding:18px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.2);">'
+          + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">'
+          + '<h3 style="margin:0;color:#1a365d;font-size:1rem;">✏️ دەستکاری پۆستی نێودەوڵەتی</h3>'
+          + '<button onclick="document.getElementById(\'editIntlModal\').remove()" style="background:#fed7d7;color:#c53030;border:none;border-radius:7px;padding:5px 10px;cursor:pointer;font-size:.9rem;">✕</button>'
+          + '</div>'
+          + '<div style="background:#ebf8ff;border-radius:8px;padding:10px 12px;margin-bottom:12px;">'
+          + '<div style="font-size:.75rem;font-weight:800;color:#2b6cb0;margin-bottom:6px;">📤 SENDER — نێردەر</div>'
+          + inp('s-name', s.name, 'Name') + inp('s-kala', s.kala, 'Kala') + inp('s-postcode', s.postcode, 'Post Code + City') + inp('s-tel', s.tel, 'Tel') + inp('s-address', s.address, 'Address') + inp('s-weight', s.weight, 'Weight+Box') + inp('s-notes', s.notes, 'Notes')
+          + '</div>'
+          + '<div style="background:#f0fff4;border-radius:8px;padding:10px 12px;margin-bottom:14px;">'
+          + '<div style="font-size:.75rem;font-weight:800;color:#276749;margin-bottom:6px;">📬 RECIPIENT — وەرگر</div>'
+          + inp('r-name', r.name, 'Name') + inp('r-kala', r.kala, 'Kala') + inp('r-postcode', r.postcode, 'Post Code + City') + inp('r-tel', r.tel, 'Tel') + inp('r-address', r.address, 'Address') + inp('r-weight', r.weight, 'Weight+Box') + inp('r-notes', r.notes, 'Notes')
+          + '</div>'
+          + '<div style="display:flex;gap:8px;">'
+          + '<button onclick="saveEditIntlPost(\'' + key + '\')" style="flex:1;padding:10px;background:linear-gradient(135deg,#1a365d,#2b6cb0);color:#fff;border:none;border-radius:10px;font-size:.88rem;font-weight:700;cursor:pointer;font-family:inherit;">💾 پاشەکەوتکردن</button>'
+          + '<button onclick="document.getElementById(\'editIntlModal\').remove()" style="padding:10px 16px;background:#e2e8f0;color:#2d3748;border:none;border-radius:10px;font-size:.85rem;cursor:pointer;">داخستن</button>'
+          + '</div>'
+          + '</div>';
+
+        document.body.appendChild(modal);
+        modal.addEventListener('click', function(e){ if(e.target===modal) modal.remove(); });
+    });
+}
+
+function saveEditIntlPost(key) {
+    var g2 = function(id){ var el = document.getElementById('eip-' + id); return el ? el.value.trim() : ''; };
+    var updated = {
+        sender:    { name:g2('s-name'), kala:g2('s-kala'), postcode:g2('s-postcode'), tel:g2('s-tel'), address:g2('s-address'), weight:g2('s-weight'), notes:g2('s-notes') },
+        recipient: { name:g2('r-name'), kala:g2('r-kala'), postcode:g2('r-postcode'), tel:g2('r-tel'), address:g2('r-address'), weight:g2('r-weight'), notes:g2('r-notes') }
+    };
+    database.ref('intlPost/' + key).update(updated).then(function() {
+        showNotification('نوێکرایەوە ✅');
+        var m = document.getElementById('editIntlModal');
+        if (m) m.remove();
+        loadIntlPost();
+    }).catch(function() { showNotification('هەڵە لە پاشەکەوتکردن!', 'error'); });
 }
 
 // ============================================================
