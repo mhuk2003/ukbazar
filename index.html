@@ -1562,8 +1562,10 @@ document.addEventListener('DOMContentLoaded', () => {
       '*{box-sizing:border-box;}' +
       'body{font-family:"Segoe UI",Arial,sans-serif;background:#fff;margin:0;padding:0;width:100mm;direction:rtl;}' +
       '.page{background:#fff;border:2.5px dashed #c8a000;width:100mm;min-height:148mm;overflow:hidden;display:flex;flex-direction:column;}' +
-      '@media screen{.close-btn{position:fixed;top:10px;right:10px;z-index:9999;}}' +
-      '.close-btn button{background:linear-gradient(135deg,#f56565,#e53e3e);border:none;color:#fff;border-radius:50px;padding:11px 24px;font-size:1rem;font-weight:900;cursor:pointer;box-shadow:0 3px 12px rgba(229,62,62,.5);white-space:nowrap;}' +
+      '.action-bar{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;gap:8px;padding:8px 10px;background:#fff;border-bottom:1.5px solid #e2e8f0;box-shadow:0 2px 8px rgba(0,0,0,.1);}' +
+      '.action-bar button{flex:1;padding:12px 8px;border:none;border-radius:10px;font-size:.95rem;font-weight:800;cursor:pointer;font-family:inherit;}' +
+      '.btn-x{background:linear-gradient(135deg,#e53e3e,#c53030);color:#fff;}' +
+      '.btn-p{background:linear-gradient(135deg,#276749,#38a169);color:#fff;}' +
       /* Header */
       '.hdr{display:flex;align-items:center;justify-content:space-between;padding:3px 7px 4px;border-bottom:2px solid #1a1a1a;background:#fff;}' +
       '.hdr-l{display:flex;align-items:center;gap:4px;}' +
@@ -1592,8 +1594,8 @@ document.addEventListener('DOMContentLoaded', () => {
       '@media print{' +
         'body{background:#fff;padding:0;width:100mm;}' +
         '.page{box-shadow:none;border:2.5px dashed #c8a000;width:100mm;}' +
-        '.close-btn{display:none!important;}' +
-      '}' + '@media screen{.page{margin-top:56px;}}';
+        '.action-bar{display:none!important;}' +
+      '}' + '@media screen{.page{margin-top:60px;}}';
 
     var closeJs = "try{window.close();}catch(e){} history.length>1?history.back():(window.location.href='about:blank');";
 
@@ -1602,7 +1604,10 @@ document.addEventListener('DOMContentLoaded', () => {
       '<meta name="viewport" content="width=device-width,initial-scale=1">' +
       '<title>لەیبڵی گەیاندن</title><style>' + css + '</style></head><body>' +
       '<div class="page">' +
-        '<div class="close-btn"><button onclick="' + closeJs + '">✕ داخستن</button></div>' +
+        '<div class="action-bar">' +
+        '<button class="btn-x" onclick="' + closeJs + '">✕ داخستن</button>' +
+        '<button class="btn-p" onclick="window.print()">🖨 چاپ</button>' +
+      '</div>' +
        /* Header — کوردی: تەنها King Street */
 
         '<div class="hdr">' +
@@ -1666,26 +1671,16 @@ document.addEventListener('DOMContentLoaded', () => {
           '<span>UK POST &amp; King Street— Kurdistan Delivery</span>' +
         '</div>' +
       '</div>' +
-      '<script>window.onload=function(){window.print();}<\/script>' +
+      '' +
       '</body></html>';
 
-    // Open in new tab (works on desktop + mobile)
-    var win = window.open('', '_blank');
-    if (win) {
-      win.document.write(html);
-      win.document.close();
-    } else {
-      // Popup blocked: overlay fallback
-      var ov = document.createElement('div');
-      ov.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#fff;z-index:99999;overflow:auto;';
-      ov.innerHTML = html;
-      document.body.appendChild(ov);
-      var ps = document.createElement('style');
-      ps.innerHTML = '@media print{body>*:not(#_kuOv){display:none!important;}}';
-      document.head.appendChild(ps);
-      ov.id = '_kuOv';
-      setTimeout(function(){ window.print(); }, 600);
-    }
+    // Use blob URL — mobile-friendly, no popup blocker
+    var blobKu = new Blob([html], {type: 'text/html;charset=utf-8'});
+    var blobUrlKu = URL.createObjectURL(blobKu);
+    var aKu = document.createElement('a');
+    aKu.href = blobUrlKu; aKu.target = '_blank'; aKu.rel = 'noopener';
+    document.body.appendChild(aKu); aKu.click(); document.body.removeChild(aKu);
+    setTimeout(function(){ URL.revokeObjectURL(blobUrlKu); }, 60000);
   }
 
   // Override printLabel after script.js
@@ -1900,7 +1895,7 @@ document.addEventListener('DOMContentLoaded', () => {
             + '</div>'
             + '<div class="foot"><span>UK BAZAR &mdash; International Post</span><span>' + (dFb.timestamp||new Date().toLocaleString()) + '</span></div>'
             + '</div></div>'
-            + '<script>window.onload=function(){window.print();};<\/script>'
+            + ''
             + '</body></html>';
           var blob = new Blob([htmlFb], {type:'text/html;charset=utf-8'});
           var url = URL.createObjectURL(blob);
@@ -2043,24 +2038,15 @@ document.addEventListener('DOMContentLoaded', () => {
           + flagSvg
         + '</div>'
       + '</div>'
-      + '<script>window.onload=function(){window.print();}<\/script>'
+      + ''
       + '</body></html>';
 
-    var win = window.open('', '_blank');
-    if (win) {
-      win.document.write(html);
-      win.document.close();
-    } else {
-      var ov = document.createElement('div');
-      ov.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#fff;z-index:99999;overflow:auto;';
-      ov.innerHTML = html;
-      document.body.appendChild(ov);
-      var ps = document.createElement('style');
-      ps.innerHTML = '@media print{body>*:not(#_ipOv){display:none!important;}}';
-      document.head.appendChild(ps);
-      ov.id = '_ipOv';
-      setTimeout(function(){ window.print(); }, 600);
-    }
+    var blob2 = new Blob([html], {type: 'text/html;charset=utf-8'});
+    var blobUrl2 = URL.createObjectURL(blob2);
+    var a2 = document.createElement('a');
+    a2.href = blobUrl2; a2.target = '_blank'; a2.rel = 'noopener';
+    document.body.appendChild(a2); a2.click(); document.body.removeChild(a2);
+    setTimeout(function(){ URL.revokeObjectURL(blobUrl2); }, 60000);
   }
 
   // Expose ipPrint globally
@@ -2927,12 +2913,15 @@ function driverPrintLabel(key) {
       + (d.deliveryNote ? '<div style="font-size:.75rem;color:#718096;border-top:1px dashed #e2e8f0;padding-top:6px;">📝 ' + escapeHtml(d.deliveryNote) + '</div>' : '')
       + '<div style="text-align:center;font-size:.65rem;color:#a0aec0;margin-top:8px;border-top:1px dashed #e2e8f0;padding-top:6px;">' + (d.timestamp||'') + ' — UK BAZAR</div>'
       + '</div>'
-      + '<script>window.onload=function(){window.print();};<\/script>'
+      + ''
       + '</body></html>';
 
-    var win = window.open('', '_blank');
-    if (win) { win.document.write(html); win.document.close(); }
-    else { showNotification('پاپ-ئەپ بلۆک کراوە! تکایە ڕێگە بدە', 'error'); }
+    var blobDr = new Blob([html], {type: 'text/html;charset=utf-8'});
+    var blobUrlDr = URL.createObjectURL(blobDr);
+    var aDr = document.createElement('a');
+    aDr.href = blobUrlDr; aDr.target = '_blank'; aDr.rel = 'noopener';
+    document.body.appendChild(aDr); aDr.click(); document.body.removeChild(aDr);
+    setTimeout(function(){ URL.revokeObjectURL(blobUrlDr); }, 60000);
   }).catch(function() { showNotification('هەڵە لە پرینت', 'error'); });
 }
 
