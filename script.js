@@ -1545,19 +1545,7 @@ function printLabel(key) {
         + '<\/script>'
         + '</body></html>';
 
-    const blob = new Blob([html], {type:'text/html;charset=utf-8'});
-    const blobUrl = URL.createObjectURL(blob);
-    var win = window.open(blobUrl, '_blank');
-    if (!win || win.closed || typeof win.closed === 'undefined') {
-        var a = document.createElement('a');
-        a.href = blobUrl;
-        a.download = 'label-' + orderNum.replace(/[^a-zA-Z0-9-]/g,'') + '.html';
-        a.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9999;background:#1a365d;color:#fff;padding:14px 22px;border-radius:12px;font-size:1rem;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,.3);';
-        a.textContent = '⬇️ داونلۆدی لەیبل';
-        document.body.appendChild(a);
-        setTimeout(function(){ a.click(); }, 300);
-        setTimeout(function(){ if(document.body.contains(a)) document.body.removeChild(a); URL.revokeObjectURL(blobUrl); }, 8000);
-    }
+    _mobilePrint(html, 'label-' + orderNum.replace(/[^a-zA-Z0-9-]/g,''));
 }
 
 
@@ -4232,22 +4220,7 @@ function printIntlPost(key) {
           + '</body></html>';
 
         // Mobile-friendly: blob URL approach
-        const blob = new Blob([html], {type: 'text/html;charset=utf-8'});
-        const blobUrl = URL.createObjectURL(blob);
-
-        // Try window.open first, fallback to download link
-        var win = window.open(blobUrl, '_blank');
-        if (!win || win.closed || typeof win.closed === 'undefined') {
-            // Popup blocked or mobile - offer download
-            var a = document.createElement('a');
-            a.href = blobUrl;
-            a.download = 'label-' + (d.orderNumber||'IP') + '.html';
-            a.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9999;background:#1a365d;color:#fff;padding:14px 22px;border-radius:12px;font-size:1rem;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,.3);';
-            a.textContent = '⬇️ داونلۆدی لەیبل';
-            document.body.appendChild(a);
-            setTimeout(function(){ a.click(); }, 300);
-            setTimeout(function(){ if(document.body.contains(a)) document.body.removeChild(a); URL.revokeObjectURL(blobUrl); }, 8000);
-        }
+        _mobilePrint(html, 'label-' + (d.orderNumber||'IP'));
     });
 }
 
@@ -4318,6 +4291,15 @@ function loadDriversAdmin() {
         var formHtml = `
         <div style="background:#fff;border-radius:14px;padding:18px;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,.07);border:2px solid #bee3f8;">
           <h3 style="color:#1a365d;margin:0 0 14px;font-size:1rem;display:flex;align-items:center;gap:8px;"><i class="fas fa-user-plus"></i> زیادکردنی شۆفیری نوێ</h3>
+          <!-- وێنەی شۆفیر -->
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;padding:10px;background:#f7fafc;border-radius:10px;border:1.5px dashed #bee3f8;">
+            <div id="newDriverPhotoPreview" style="width:64px;height:64px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:2rem;overflow:hidden;flex-shrink:0;">🚗</div>
+            <div style="flex:1;">
+              <label style="font-size:.75rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px;">📷 وێنەی شۆفیر</label>
+              <input type="file" id="newDriverPhoto" accept="image/*" onchange="previewDriverPhoto(this,'newDriverPhotoPreview')" style="width:100%;font-size:.8rem;font-family:inherit;">
+              <div style="font-size:.68rem;color:#a0aec0;margin-top:3px;">JPG, PNG — زیاتر لە 1MB مەبێت</div>
+            </div>
+          </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
             <div>
               <label style="font-size:.75rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px;">👤 ناوی شۆفیر</label>
@@ -4349,13 +4331,15 @@ function loadDriversAdmin() {
             drivers.forEach(function(d) {
                 listHtml += '<div style="background:#fff;border-radius:12px;padding:14px;border:1.5px solid #e2e8f0;box-shadow:0 1px 6px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">'
                   + '<div style="display:flex;align-items:center;gap:12px;">'
-                    + '<div style="width:40px;height:40px;background:linear-gradient(135deg,#1a365d,#2b6cb0);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;flex-shrink:0;">🚗</div>'
+                    + (d.photo ? '<img src="' + d.photo + '" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid #bee3f8;">' : '<div style="width:44px;height:44px;background:linear-gradient(135deg,#1a365d,#2b6cb0);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.2rem;flex-shrink:0;">🚗</div>')
                     + '<div>'
                       + '<div style="font-weight:800;font-size:.9rem;color:#1a202c;">' + escapeHtml(d.name || '—') + '</div>'
                       + '<div style="font-size:.75rem;color:#718096;">📱 ' + escapeHtml(d.mobile || '—') + ' &nbsp;|&nbsp; 👤 ' + escapeHtml(d.username || '—') + '</div>'
                     + '</div>'
                   + '</div>'
-                  + '<div style="display:flex;gap:6px;">'
+                  + '<div style="display:flex;gap:6px;flex-wrap:wrap;">'
+                    + '<button onclick="viewDriver(\'' + d.key + '\')" style="padding:5px 12px;background:#ebf8ff;color:#2b6cb0;border:1.5px solid #bee3f8;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;">👁️ بینین</button>'
+                    + '<button onclick="printDriver(\'' + d.key + '\')" style="padding:5px 12px;background:#f0fff4;color:#276749;border:1.5px solid #c6f6d5;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;">🖨️ چاپ</button>'
                     + '<button onclick="resetDriverPassword(\'' + d.key + '\')" style="padding:5px 12px;background:#fffbeb;color:#d97706;border:1.5px solid #f0c040;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;"><i class="fas fa-key"></i> وشە</button>'
                     + '<button onclick="deleteDriver(\'' + d.key + '\')" style="padding:5px 12px;background:#fff5f5;color:#c53030;border:1.5px solid #fed7d7;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;"><i class="fas fa-trash"></i></button>'
                   + '</div>'
@@ -4387,12 +4371,35 @@ function saveNewDriver() {
     var username = ((document.getElementById('newDriverUsername') || {}).value || '').trim();
     var password = ((document.getElementById('newDriverPassword') || {}).value || '').trim();
     if (!name || !username || !password) { showNotification('تکایە هەموو خانەکان پڕبکەرەوە!', 'error'); return; }
-    database.ref('drivers').push({ name: name, mobile: mobile, username: username, password: password, kuBalance: 0, createdAt: new Date().toLocaleString() })
-        .then(function() {
-            showNotification('شۆفیر زیادکرا ✅');
-            loadDriversAdmin();
-        })
-        .catch(function() { showNotification('هەڵە لە زیادکردن!', 'error'); });
+
+    var photoFile = (document.getElementById('newDriverPhoto') || {}).files && document.getElementById('newDriverPhoto').files[0];
+    function doSave(photoBase64) {
+        var data = { name: name, mobile: mobile, username: username, password: password, kuBalance: 0, createdAt: new Date().toLocaleString() };
+        if (photoBase64) data.photo = photoBase64;
+        database.ref('drivers').push(data)
+            .then(function() { showNotification('شۆفیر زیادکرا ✅'); loadDriversAdmin(); })
+            .catch(function() { showNotification('هەڵە لە زیادکردن!', 'error'); });
+    }
+
+    if (photoFile) {
+        if (photoFile.size > 1024 * 1024) { showNotification('وێنەکە زۆر گەورەیە! زیاتر لە 1MB مەبێت', 'error'); return; }
+        var reader = new FileReader();
+        reader.onload = function(e) { doSave(e.target.result); };
+        reader.readAsDataURL(photoFile);
+    } else {
+        doSave(null);
+    }
+}
+
+function previewDriverPhoto(input, previewId) {
+    var preview = document.getElementById(previewId);
+    if (!preview || !input.files || !input.files[0]) return;
+    if (input.files[0].size > 1024 * 1024) { showNotification('وێنەکە زۆر گەورەیە! زیاتر لە 1MB مەبێت', 'error'); input.value=''; return; }
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        preview.innerHTML = '<img src="' + e.target.result + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+    };
+    reader.readAsDataURL(input.files[0]);
 }
 
 function deleteDriver(key) {
@@ -4419,7 +4426,7 @@ function loadBalanceAdmin() {
     <div style="padding:16px;max-width:900px;margin:0 auto;direction:rtl;">
 
       <!-- سەرەوە: کارتەکانی پوخت -->
-      <div id="bal-summary" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px;"></div>
+      <div id="bal-summary" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;"></div>
 
       <!-- فۆرمی زیادکردنی خەرجی -->
       <div style="background:#fff;border:2px solid #276749;border-radius:14px;padding:16px;margin-bottom:20px;">
@@ -4528,10 +4535,12 @@ function _renderBalanceSummary(list) {
         { icon:'fas fa-calendar-alt', label:'خەرجی ئەم مانگە', val: '£' + monthT.toFixed(2), color:'#c53030', bg:'#fff5f5' },
     ];
     el.innerHTML = cards.map(c =>
-        `<div style="background:${c.bg};border:2px solid ${c.color}22;border-radius:12px;padding:14px;text-align:center;">
-          <i class="${c.icon}" style="font-size:1.4rem;color:${c.color};margin-bottom:6px;display:block;"></i>
-          <div style="font-size:.72rem;color:#718096;font-weight:700;">${c.label}</div>
-          <div style="font-size:1.1rem;font-weight:900;color:${c.color};margin-top:4px;">${c.val}</div>
+        `<div style="background:${c.bg};border:1.5px solid ${c.color}33;border-radius:10px;padding:7px 12px;display:flex;align-items:center;gap:8px;flex:1;min-width:130px;">
+          <i class="${c.icon}" style="font-size:1rem;color:${c.color};flex-shrink:0;"></i>
+          <div>
+            <div style="font-size:.65rem;color:#718096;font-weight:700;line-height:1.2;">${c.label}</div>
+            <div style="font-size:.92rem;font-weight:900;color:${c.color};">${c.val}</div>
+          </div>
         </div>`
     ).join('');
 }
@@ -4699,13 +4708,130 @@ function printExpense(key) {
     </div>
     <script>window.onload=function(){window.print();}<\/script>
     </body></html>`;
-    const blob = new Blob([html], {type:'text/html;charset=utf-8'});
-    const url  = URL.createObjectURL(blob);
-    var win = window.open(url, '_blank');
-    if (!win || win.closed) {
-        var a = document.createElement('a');
-        a.href = url; a.download = 'expense-' + (e.name||key) + '.html';
-        document.body.appendChild(a); a.click();
-        setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); }, 5000);
-    }
+    _mobilePrint(html, 'expense-' + (e.name||key));
+}
+
+// ==================== Universal Mobile Print ====================
+function _mobilePrint(html, filename) {
+    // iframe بەکاربهێنە — هەموو براوزەرەکان پشتیوانی دەکەن
+    var iframeId = '_ukPrintFrame';
+    var old = document.getElementById(iframeId);
+    if (old) old.remove();
+
+    var iframe = document.createElement('iframe');
+    iframe.id  = iframeId;
+    iframe.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;border:0;z-index:99999;background:#fff;';
+    document.body.appendChild(iframe);
+
+    var doc = iframe.contentDocument || iframe.contentWindow.document;
+    doc.open();
+    // زیادکردنی دوگمەی داخستن و PDF لەناو پەنجەرەی چاپ
+    var fullHtml = html.replace('</body>', `
+    <div id="_printCtrl" style="position:fixed;top:0;left:0;right:0;display:flex;gap:8px;padding:8px;background:#1a365d;z-index:9999999;">
+      <button onclick="window.print()" style="flex:1;padding:12px;background:#38a169;color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:800;cursor:pointer;font-family:inherit;">🖨️ چاپ / PDF</button>
+      <button onclick="try{window.parent.document.getElementById('_ukPrintFrame').remove();}catch(e){window.frameElement&&window.frameElement.remove();}" style="flex:1;padding:12px;background:#e53e3e;color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:800;cursor:pointer;font-family:inherit;">✕ داخستن</button>
+    </div>
+    <div style="height:60px;"></div>
+    <style>@media print{#_printCtrl{display:none!important;}}</style>
+    </body>`);
+    doc.write(fullHtml);
+    doc.close();
+
+    // چاوەڕوانی QR و دواتر ئاگادارکردنەوە — چاپی ئۆتۆماتیکی نییە لە موبایل (براوزەر دەیبڵۆکێت)
+    // بەکارهێنەر دوگمەی "چاپ / PDF" دەبینێت
+}
+
+// ==================== View & Print Driver ====================
+function viewDriver(key) {
+    database.ref('drivers/' + key).once('value', function(snap) {
+        if (!snap.exists()) { showNotification('نەدۆزرایەوە', 'error'); return; }
+        var d = Object.assign({ key: key }, snap.val());
+
+        var modal = document.createElement('div');
+        modal.id = 'driverViewModal';
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;';
+        modal.innerHTML = `
+        <div style="background:#fff;border-radius:16px;width:100%;max-width:400px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.25);">
+          <!-- هێدەر -->
+          <div style="background:linear-gradient(135deg,#1a365d,#2b6cb0);padding:16px 18px;display:flex;justify-content:space-between;align-items:center;">
+            <div style="color:#fff;font-size:1rem;font-weight:900;">🚗 وردەکاری شۆفیر</div>
+            <button onclick="document.getElementById('driverViewModal').remove()" style="background:rgba(255,255,255,.2);color:#fff;border:none;border-radius:8px;padding:5px 10px;cursor:pointer;">✕</button>
+          </div>
+          <!-- ئایکۆن و ناو -->
+          <div style="text-align:center;padding:20px 18px 10px;border-bottom:1.5px solid #e2e8f0;">
+            ${d.photo ? '<img src="'+d.photo+'" style="width:72px;height:72px;border-radius:50%;object-fit:cover;margin:0 auto 10px;display:block;border:3px solid #bee3f8;">' : '<div style="width:72px;height:72px;background:linear-gradient(135deg,#1a365d,#2b6cb0);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.2rem;margin:0 auto 10px;">🚗</div>'}
+            <div style="font-size:1.1rem;font-weight:900;color:#1a202c;">${d.name||'—'}</div>
+          </div>
+          <!-- وردەکاریەکان -->
+          <div style="padding:14px 18px;display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;justify-content:space-between;padding:8px 12px;background:#f7fafc;border-radius:8px;">
+              <span style="font-size:.82rem;font-weight:700;color:#718096;">📱 مۆبایل</span>
+              <span style="font-size:.82rem;font-weight:800;color:#1a202c;direction:ltr;">${d.mobile||'—'}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:8px 12px;background:#f7fafc;border-radius:8px;">
+              <span style="font-size:.82rem;font-weight:700;color:#718096;">👤 Username</span>
+              <span style="font-size:.82rem;font-weight:800;color:#1a202c;direction:ltr;">${d.username||'—'}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:8px 12px;background:#fffbeb;border-radius:8px;border:1px solid #fde68a;">
+              <span style="font-size:.82rem;font-weight:700;color:#d97706;">🔑 وشەی تێپەڕ</span>
+              <span style="font-size:.82rem;font-weight:800;color:#d97706;direction:ltr;">${d.password||'—'}</span>
+            </div>
+            ${d.kuBalance !== undefined ? `<div style="display:flex;justify-content:space-between;padding:8px 12px;background:#f0fff4;border-radius:8px;border:1px solid #c6f6d5;">
+              <span style="font-size:.82rem;font-weight:700;color:#276749;">💰 بالانس</span>
+              <span style="font-size:.82rem;font-weight:900;color:#276749;">${d.kuBalance||0}</span>
+            </div>` : ''}
+            ${d.createdAt ? `<div style="display:flex;justify-content:space-between;padding:8px 12px;background:#f7fafc;border-radius:8px;">
+              <span style="font-size:.78rem;font-weight:700;color:#a0aec0;">🕐 تۆمارکرا</span>
+              <span style="font-size:.78rem;color:#a0aec0;">${d.createdAt}</span>
+            </div>` : ''}
+          </div>
+          <!-- دوگمەکان -->
+          <div style="padding:12px 18px;display:flex;gap:8px;border-top:1.5px solid #e2e8f0;">
+            <button onclick="printDriver('${key}');document.getElementById('driverViewModal').remove();" style="flex:1;padding:10px;background:linear-gradient(135deg,#1a365d,#2b6cb0);color:#fff;border:none;border-radius:10px;font-size:.88rem;font-weight:800;cursor:pointer;font-family:inherit;">🖨️ چاپکردن</button>
+            <button onclick="document.getElementById('driverViewModal').remove()" style="padding:10px 16px;background:#e2e8f0;color:#2d3748;border:none;border-radius:10px;font-size:.85rem;cursor:pointer;font-family:inherit;">داخستن</button>
+          </div>
+        </div>`;
+        document.body.appendChild(modal);
+        modal.addEventListener('click', function(ev){ if(ev.target===modal) modal.remove(); });
+    });
+}
+
+function printDriver(key) {
+    database.ref('drivers/' + key).once('value', function(snap) {
+        if (!snap.exists()) return;
+        var d = Object.assign({ key: key }, snap.val());
+        var html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+        <style>
+          @page{size:A5 portrait;margin:10mm;}
+          body{font-family:Arial,sans-serif;direction:rtl;margin:0;padding:0;color:#111;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+          .header{background:#1a365d;color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-radius:8px 8px 0 0;}
+          .rows{padding:12px 16px;display:flex;flex-direction:column;gap:8px;}
+          .row{display:flex;justify-content:space-between;padding:7px 10px;background:#f7fafc;border-radius:7px;font-size:.85rem;}
+          .row span{color:#666;font-weight:700;}
+          .row strong{color:#111;direction:ltr;}
+          .footer{text-align:center;font-size:.72rem;color:#aaa;margin-top:16px;border-top:1px dashed #e2e8f0;padding-top:8px;}
+          @media print{button{display:none!important;}}
+        </style>
+        </head><body>
+        <div style="border:2px solid #1a365d;border-radius:8px;max-width:380px;margin:0 auto;">
+          <div class="header">
+            <div style="font-size:.95rem;font-weight:900;">🚗 UK POST — KING STREET</div>
+            <div style="font-size:.8rem;opacity:.85;">کارتی شۆفیر</div>
+          </div>
+          <div style="text-align:center;padding:16px;border-bottom:2px dashed #bee3f8;">
+            ${d.photo ? '<img src="'+d.photo+'" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #bee3f8;display:block;margin:0 auto 8px;">' : '<div style="font-size:2.5rem;margin-bottom:8px;">🚗</div>'}
+            <div style="font-size:1.1rem;font-weight:900;color:#1a365d;">${d.name||'—'}</div>
+          </div>
+          <div class="rows">
+            <div class="row"><span>📱 مۆبایل:</span><strong>${d.mobile||'—'}</strong></div>
+            <div class="row"><span>👤 Username:</span><strong>${d.username||'—'}</strong></div>
+            <div class="row" style="background:#fffbeb;"><span>🔑 وشەی تێپەڕ:</span><strong>${d.password||'—'}</strong></div>
+            ${d.kuBalance !== undefined ? `<div class="row" style="background:#f0fff4;"><span>💰 بالانس:</span><strong style="color:#276749;">${d.kuBalance||0}</strong></div>` : ''}
+            ${d.createdAt ? `<div class="row"><span>🕐 تۆمارکرا:</span><strong>${d.createdAt}</strong></div>` : ''}
+          </div>
+          <div class="footer">UK POST - KING STREET &nbsp;|&nbsp; 07755436275 / 07507472656</div>
+        </div>
+        </body></html>`;
+        _mobilePrint(html, 'driver-' + (d.name||key));
+    });
 }
