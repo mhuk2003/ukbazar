@@ -31,16 +31,17 @@
 
     <style>
       .btn-delivery-uk { font-size:.88rem !important; padding:8px 14px !important; }
+      .nav-buttons { display:flex; flex-wrap:wrap; gap:6px; align-items:center; justify-content:flex-end; }
       @media print { .no-print { display:none !important; } }
     </style>
     <script>
       function toggleTrackingWidget() {
-        var body = document.getElementById('trackingWidgetBody');
-        var chev = document.getElementById('trackingChevron');
+        var body    = document.getElementById('trackingWidgetBody');
+        var chevron = document.getElementById('trackingChevron');
         if (!body) return;
         var open = body.style.display !== 'none';
-        body.style.display = open ? 'none' : 'block';
-        chev.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
+        body.style.display      = open ? 'none'      : 'block';
+        chevron.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
       }
     </script>
 </head>
