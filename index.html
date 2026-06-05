@@ -1504,60 +1504,63 @@ document.addEventListener('DOMContentLoaded', () => {
 <script>
 // ڕاستەوخۆ PDF دانلۆد — بەبێ پەرەی نوێ
 function _openPrintPage(htmlStr, filename) {
-  filename = filename || ('label-' + Date.now() + '.pdf');
+  // ============================================================
+  // چارەسەری کێشەی پەرەی بەتاڵ و پەرەی دووەم لەسەر موبایل و دێسکتۆپ
+  // بەکارهێنانی iframe — ئەمە تەنیا ڕێگای پشت پێبەستراوە
+  // overlay + window.print() = پەرەی دووەمی بەتاڵ دروستدەکات
+  // ============================================================
+  var frameId = '_ukPrintOverlayFrame';
+  var old = document.getElementById(frameId);
+  if (old) old.remove();
 
-  // دوگمەی داخستنی گلۆبال — کاتێک overlay کراوەیە
-  function _closePrintOverlay() {
-    var ov = document.getElementById('_printOverlay');
-    if (ov) document.body.removeChild(ov);
-    document.body.style.overflow = '';
+  // پاکسازی htmlStr
+  htmlStr = htmlStr
+    .replace(/backdrop-filter\s*:[^;"}]+;?/gi, '')
+    .replace(/-webkit-backdrop-filter\s*:[^;"}]+;?/gi, '')
+    .replace(/<div class="action-bar"[\s\S]*?<\/div>\s*<\/div>/gi, '')
+    .replace(/<div class="close-bar"[\s\S]*?<\/div>\s*<\/div>/gi, '');
+
+  // style ی کۆنترۆلبار و چاپ — لەناو iframe خۆی
+  var ctrlStyle = '<style id="_iframeCtrlStyle">'
+    + '#_iframeCtrl{position:fixed;top:0;left:0;right:0;display:flex;gap:8px;padding:10px 12px;background:#1a365d;z-index:9999999;box-shadow:0 2px 8px rgba(0,0,0,.3);}'
+    + '#_iframeCtrl button{flex:1;padding:13px 8px;border:none;border-radius:10px;font-size:.95rem;font-weight:800;cursor:pointer;font-family:Tahoma,Arial,sans-serif;}'
+    + '.btn-cp{background:linear-gradient(135deg,#276749,#38a169);color:#fff;}'
+    + '.btn-cx{background:linear-gradient(135deg,#e53e3e,#c53030);color:#fff;}'
+    + '@media screen{body{padding-top:62px!important;}}'
+    + '@media print{'
+    +   '#_iframeCtrl{display:none!important;}'
+    +   'body{padding-top:0!important;margin-top:0!important;}'
+    +   '*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}'
+    + '}'
+    + '</style>';
+
+  var ctrlBar = '<div id="_iframeCtrl">'
+    + '<button class="btn-cp" onclick="window.print()">🖨️ چاپ / PDF</button>'
+    + '<button class="btn-cx" onclick="(function(){try{window.parent.document.getElementById(\'_ukPrintOverlayFrame\').remove();}catch(e){}})()">✕ داخستن</button>'
+    + '</div>';
+
+  // زیادکردنی style و bar لەناو HTML
+  var finalHtml = htmlStr;
+  if (/<\/head>/i.test(finalHtml)) {
+    finalHtml = finalHtml.replace(/<\/head>/i, ctrlStyle + '</head>');
+  } else {
+    finalHtml = ctrlStyle + finalHtml;
   }
-  window._closePrintOverlay = _closePrintOverlay;
+  if (/<body[^>]*>/i.test(finalHtml)) {
+    finalHtml = finalHtml.replace(/(<body[^>]*>)/i, '$1' + ctrlBar);
+  } else {
+    finalHtml = ctrlBar + finalHtml;
+  }
 
-  // Overlay ی تەواو پەرە
-  var overlay = document.createElement('div');
-  overlay.id = '_printOverlay';
-  overlay.style.cssText = 'position:fixed;inset:0;z-index:999999;background:#fff;overflow-y:auto;-webkit-overflow-scrolling:touch;';
+  var iframe = document.createElement('iframe');
+  iframe.id = frameId;
+  iframe.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;border:0;z-index:999999;background:#fff;';
+  document.body.appendChild(iframe);
 
-  // بار-ی دوگمەکان — ستیکی
-  var bar = document.createElement('div');
-  bar.style.cssText = 'position:sticky;top:0;left:0;right:0;z-index:10;display:flex;gap:8px;padding:10px 12px;background:#fff;border-bottom:2px solid #e2e8f0;box-shadow:0 2px 12px rgba(0,0,0,.12);';
-
-  var btnClose = document.createElement('button');
-  btnClose.innerHTML = '&#x2715; داخستن';
-  btnClose.style.cssText = 'flex:1;padding:14px 8px;background:linear-gradient(135deg,#e53e3e,#c53030);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:800;cursor:pointer;font-family:inherit;';
-  btnClose.onclick = _closePrintOverlay;
-
-  var btnPrint = document.createElement('button');
-  btnPrint.innerHTML = '&#128424; چاپ / PDF';
-  btnPrint.style.cssText = 'flex:1;padding:14px 8px;background:linear-gradient(135deg,#276749,#38a169);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:800;cursor:pointer;font-family:inherit;';
-  btnPrint.onclick = function() { window.print(); };
-
-  bar.appendChild(btnClose);
-  bar.appendChild(btnPrint);
-
-  // ناوەرۆکی لەیبل
-  var content_div = document.createElement('div');
-  content_div.style.cssText = 'padding:12px;';
-  content_div.innerHTML = htmlStr
-    .replace(/<!DOCTYPE[^>]*>/gi,'')
-    .replace(/<html[^>]*>/gi,'').replace(/<\/html>/gi,'')
-    .replace(/<head>[\s\S]*?<\/head>/gi,'')
-    .replace(/<body[^>]*>/gi,'').replace(/<\/body>/gi,'')
-    .replace(/<script[\s\S]*?<\/script>/gi,'')
-    .replace(/<div class="action-bar"[\s\S]*?<\/div>/gi,'')
-    .replace(/<div class="close-bar"[\s\S]*?<\/div>/gi,'')
-    .replace(/class="no-print"[^>]*>[\s\S]*?<\/button>/gi,'');
-
-  // @media print — شاردنی بار و پیشاندانی تەنها لەیبل
-  var printStyle = document.createElement('style');
-  printStyle.innerHTML = '@media print { #_printOverlay > div:first-child { display:none!important; } body > *:not(#_printOverlay) { display:none!important; } }';
-  document.head.appendChild(printStyle);
-
-  overlay.appendChild(bar);
-  overlay.appendChild(content_div);
-  document.body.appendChild(overlay);
-  document.body.style.overflow = 'hidden';
+  var doc = iframe.contentDocument || iframe.contentWindow.document;
+  doc.open();
+  doc.write(finalHtml);
+  doc.close();
 }
 </script>
 <script>
@@ -1652,10 +1655,13 @@ function _openPrintPage(htmlStr, filename) {
       '.ftr{border-top:1.5px solid #ccc;padding:2px 7px;display:flex;justify-content:space-between;align-items:center;background:#f5f5f5;}' +
       '.ftr span{font-size:.52rem;font-weight:700;color:#666;}' +
       '@media print{' +
-        'body{background:#fff;padding:0;width:100mm;}' +
-        '.page{box-shadow:none;border:2.5px dashed #c8a000;width:100mm;}' +
-        '.action-bar{display:none!important;}' +
-      '}' + '@media screen{.page{margin-top:60px;}}';
+        '@page{size:100mm 150mm;margin:0;}' +
+        'body{background:#fff;padding:0!important;margin:0!important;width:100mm;}' +
+        '.page{box-shadow:none;border:2.5px dashed #c8a000;width:100mm;min-height:0;}' +
+        '#_iframeCtrl,.action-bar{display:none!important;}' +
+        '*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}' +
+      '}' + '@media screen{.page{margin-top:62px;}}' +
+      'body{padding-top:0;}';
 
     var closeJs = "try{window.close();}catch(e){} history.length>1?history.back():(window.location.href='about:blank');";
 
@@ -1883,14 +1889,18 @@ function _openPrintPage(htmlStr, filename) {
             key: key,
             _node: 'intlPost',
             orderNumber: fb.orderNumber || key,
-            senderName: s.name || fb.senderName || '',
-            senderMobile: s.tel || fb.senderMobile || '',
-            senderLocation: s.address || s.postcode || fb.senderLocation || '',
-            receiverName: r.name || fb.receiverName || fb.fullName || '',
-            receiverMobile: r.tel || fb.receiverPhone || fb.phone || '',
-            receiverLocation: [r.address1||'', r.address2||'', r.postcode||'', r.country||''].filter(Boolean).join(', ') || fb.receiverLocation || '',
+            senderName:     s.name     || fb.senderName  || '',
+            senderMobile:   s.tel      || fb.senderMobile|| '',
+            senderLocation: s.address  || s.postcode     || fb.senderLocation || '',
+            senderKala:     s.kala     || '',
+            senderWeight:   s.weight   || '',
+            receiverName:   r.name     || fb.receiverName || fb.fullName || '',
+            receiverMobile: r.tel      || fb.receiverPhone|| fb.phone   || '',
+            receiverLocation: [r.address1||r.address||'', r.address2||'', r.postcode||'', r.country||''].filter(Boolean).join(', ') || fb.receiverLocation || '',
+            receiverKala:   r.kala     || '',
+            receiverWeight: r.weight   || '',
             packageName: s.kala || r.kala || fb.packageName || '',
-            packageKg: s.weight || r.weight || fb.packageKg || '',
+            packageKg:   s.weight || r.weight || fb.packageKg || '',
             deliveryNote: fb.deliveryNote || '',
             timestamp: fb.timestamp || '',
             type: 'intl'
@@ -1907,10 +1917,8 @@ function _openPrintPage(htmlStr, filename) {
             + '@page{size:A5;margin:8mm;}'
             + '*{box-sizing:border-box;margin:0;padding:0;}'
             + 'body{font-family:Tahoma,Arial,sans-serif;direction:rtl;background:#fff;}'
-            + '.close-bar{position:fixed;top:0;left:0;right:0;z-index:999;display:flex;gap:10px;padding:10px 12px;background:#fff;border-bottom:1px solid #e2e8f0;box-shadow:0 2px 8px rgba(0,0,0,.08);}'
-            + '.btn-close{flex:1;padding:13px;background:linear-gradient(135deg,#e53e3e,#c53030);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;font-family:Tahoma,Arial,sans-serif;cursor:pointer;}'
-            + '.btn-print{flex:1;padding:13px;background:linear-gradient(135deg,#276749,#38a169);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;font-family:Tahoma,Arial,sans-serif;cursor:pointer;}'
-            + '.content{padding:80px 12px 30px;}'
+            + '.content{padding:12px;}'
+            + '@media screen{.content{padding-top:74px;}}'
             + '.box{border:3px solid '+borderClr+';border-radius:12px;padding:12px;}'
             + '.hdr{background:'+borderClr+';color:#fff;padding:10px 14px;font-size:1rem;font-weight:900;display:flex;justify-content:space-between;align-items:center;border-radius:8px;margin-bottom:12px;}'
             + '.grid{display:flex;gap:10px;margin-bottom:10px;}'
@@ -1921,36 +1929,37 @@ function _openPrintPage(htmlStr, filename) {
             + '.loc{font-size:.72rem;color:#718096;margin-top:2px;}'
             + '.pkg{display:flex;align-items:center;justify-content:space-between;background:#f7fafc;border-radius:8px;padding:10px 12px;margin-bottom:10px;}'
             + '.foot{display:flex;justify-content:space-between;font-size:.65rem;color:#a0aec0;border-top:1px dashed #e2e8f0;padding-top:8px;}'
-            + '@media print{.close-bar{display:none!important;}.content{padding:0;}}'
+            + '@media print{body{padding:0!important;margin:0!important;}.content{padding:0!important;}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}}'
             + '</style></head><body>'
-            + '<div class="close-bar">'
-              + '<button class="btn-close" onclick="try{window.close();}catch(e){} history.length>1?history.back():void(0);">&#x2715; داخستن</button>'
-              + '<button class="btn-print" onclick="window.print();">&#128424; چاپ کردن</button>'
-            + '</div>'
             + '<div class="content">'
             + '<div class="box">'
-            + '<div class="hdr"><span>🌍 نێودەوڵەتی &mdash; UK BAZAR</span><span># ' + orderNumFb + '</span></div>'
+            + '<div class="hdr"><span>🌍 نێودەوڵەتی &mdash; UK BAZAR</span><span># ' + escapeHtml(orderNumFb) + '</span></div>'
             + '<div class="grid">'
               + '<div class="col" style="border-right:3px solid '+borderClr+';">'
                 + '<div class="lbl">&#128230; نێردەر</div>'
-                + '<div class="val">' + (dFb.senderName||'&mdash;') + '</div>'
-                + '<div class="tel">&#128222; ' + (dFb.senderMobile||'') + '</div>'
-                + (dFb.senderLocation ? '<div class="loc">&#128205; ' + dFb.senderLocation + '</div>' : '')
+                + '<div class="val">' + escapeHtml(dFb.senderName||'&mdash;') + '</div>'
+                + (dFb.senderMobile ? '<div class="tel">&#128222; ' + escapeHtml(dFb.senderMobile) + '</div>' : '')
+                + (dFb.senderLocation ? '<div class="loc">&#128205; ' + escapeHtml(dFb.senderLocation) + '</div>' : '')
+                + (dFb.senderKala ? '<div class="loc">&#128230; ' + escapeHtml(dFb.senderKala) + (dFb.senderWeight?' — '+escapeHtml(dFb.senderWeight)+'کگ':'') + '</div>' : '')
               + '</div>'
               + '<div class="col">'
                 + '<div class="lbl">&#128229; وەرگر</div>'
-                + '<div class="val">' + (dFb.receiverName||'&mdash;') + '</div>'
-                + '<div class="tel">&#128222; ' + (dFb.receiverMobile||'') + '</div>'
-                + (dFb.receiverLocation ? '<div class="loc">&#128205; ' + dFb.receiverLocation + '</div>' : '')
+                + '<div class="val">' + escapeHtml(dFb.receiverName||'&mdash;') + '</div>'
+                + (dFb.receiverMobile ? '<div class="tel">&#128222; ' + escapeHtml(dFb.receiverMobile) + '</div>' : '')
+                + (dFb.receiverLocation ? '<div class="loc">&#128205; ' + escapeHtml(dFb.receiverLocation) + '</div>' : '')
+                + (dFb.receiverKala ? '<div class="loc">&#128230; ' + escapeHtml(dFb.receiverKala) + (dFb.receiverWeight?' — '+escapeHtml(dFb.receiverWeight)+'کگ':'') + '</div>' : '')
               + '</div>'
             + '</div>'
             + '<div class="pkg">'
-              + '<div><div class="lbl">&#128230; کاڵا</div><div style="font-size:.88rem;font-weight:700;">' + (dFb.packageName||'&mdash;') + (dFb.packageKg?' &mdash; '+dFb.packageKg+'کگ':'') + '</div>' + (dFb.deliveryNote?'<div class="loc" style="margin-top:4px;">&#128221; '+dFb.deliveryNote+'</div>':'') + '</div>'
+              + '<div>'
+                + '<div class="lbl">&#128230; کاڵا</div>'
+                + '<div style="font-size:.88rem;font-weight:700;">' + escapeHtml(dFb.packageName||'&mdash;') + (dFb.packageKg?' &mdash; '+escapeHtml(dFb.packageKg)+'کگ':'') + '</div>'
+                + (dFb.deliveryNote ? '<div class="loc" style="margin-top:4px;">&#128221; '+escapeHtml(dFb.deliveryNote)+'</div>' : '')
+              + '</div>'
               + '<img src="' + qrUrlFb + '" style="width:90px;height:90px;border-radius:6px;flex-shrink:0;">'
             + '</div>'
-            + '<div class="foot"><span>UK BAZAR &mdash; International Post</span><span>' + (dFb.timestamp||new Date().toLocaleString()) + '</span></div>'
+            + '<div class="foot"><span>UK BAZAR &mdash; International Post</span><span>' + escapeHtml(dFb.timestamp||new Date().toLocaleString()) + '</span></div>'
             + '</div></div>'
-            + ''
             + '</body></html>';
           _openPrintPage(htmlFb, (dFb.orderNumber||'IP') + '.pdf');
         }).catch(function() { showNotification('هەڵە لە پرینت', 'error'); });
@@ -2125,7 +2134,7 @@ function _openPrintPage(htmlStr, filename) {
   <div style="background:#fff;border-radius:20px;max-width:380px;width:92%;padding:0;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3);animation:driverModalIn .3s ease;">
     <div style="background:linear-gradient(135deg,#1a365d,#2b6cb0);padding:24px 20px 20px;text-align:center;position:relative;">
       <button onclick="closeDriverLoginModal()" style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
-      <div style="width:64px;height:64px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:2rem;">🚗</div>
+      <div id="driverLoginAvatar" style="width:72px;height:72px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:2rem;overflow:hidden;border:3px solid rgba(255,255,255,0.4);">🚗</div>
       <h2 style="color:#fff;font-size:1.2rem;font-weight:900;margin:0 0 4px;">پۆرتاڵی شۆفیر</h2>
       <p style="color:rgba(255,255,255,0.8);font-size:.82rem;margin:0;">ئەکاونتەکەت داخل بکە</p>
     </div>
@@ -2134,7 +2143,7 @@ function _openPrintPage(htmlStr, filename) {
         <div style="font-size:.78rem;font-weight:700;color:#4a5568;margin-bottom:6px;">👤 ناوی کارمەند</div>
         <input type="text" id="driverLoginUsername" placeholder="ناوی بەکارهێنەر..." 
           style="width:100%;padding:12px 14px;border:2px solid #e2e8f0;border-radius:12px;font-size:.95rem;font-family:inherit;outline:none;box-sizing:border-box;"
-          onfocus="this.style.borderColor='#2b6cb0'" onblur="this.style.borderColor='#e2e8f0'"
+          onfocus="this.style.borderColor='#2b6cb0'" onblur="this.style.borderColor='#e2e8f0';_previewDriverAvatar(this.value)"
           onkeydown="if(event.key==='Enter')document.getElementById('driverLoginPassword').focus()">
       </div>
       <div style="margin-bottom:18px;">
@@ -2160,7 +2169,7 @@ function _openPrintPage(htmlStr, filename) {
   <div style="background:linear-gradient(135deg,#1a365d,#2b6cb0);padding:16px 16px 12px;position:sticky;top:0;z-index:10;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
     <div style="display:flex;align-items:center;justify-content:space-between;max-width:600px;margin:0 auto;">
       <div style="display:flex;align-items:center;gap:12px;">
-        <div style="width:44px;height:44px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;">🚗</div>
+        <div id="driverHeaderAvatar" style="width:44px;height:44px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;overflow:hidden;flex-shrink:0;">🚗</div>
         <div>
           <div id="driverWelcomeName" style="color:#fff;font-weight:900;font-size:1rem;"></div>
           <div style="color:rgba(255,255,255,.75);font-size:.75rem;">پۆرتاڵی شۆفیر</div>
@@ -2260,6 +2269,23 @@ function _openPrintPage(htmlStr, filename) {
 var _currentDriver = null; // { key, name, mobile, password, kuBalance, ukBalance }
 var _driverQrScanner = null;
 
+// وینەی کەوینەی شۆفیر پیشان بدە کاتی نووسینی ناو لە login modal
+function _previewDriverAvatar(username) {
+  if (!username) return;
+  database.ref('drivers').orderByChild('username').equalTo(username).once('value').then(function(snap) {
+    var av = document.getElementById('driverLoginAvatar');
+    if (!av) return;
+    if (snap.exists()) {
+      var d = Object.values(snap.val())[0];
+      if (d && d.photo) {
+        av.innerHTML = '<img src="' + d.photo + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+      } else {
+        av.innerHTML = '🚗';
+      }
+    }
+  }).catch(function(){});
+}
+
 function showDriverLoginModal() {
   var m = document.getElementById('driverLoginModal');
   m.style.display = 'flex';
@@ -2303,6 +2329,16 @@ function openDriverDashboard() {
   if (!_currentDriver) return;
   document.getElementById('driverDashboard').style.display = 'block';
   document.getElementById('driverWelcomeName').textContent = '👋 ' + (_currentDriver.name || _currentDriver.username);
+  // وینەی شۆفیر لە header
+  var headerAvEl = document.getElementById('driverHeaderAvatar');
+  if (headerAvEl) {
+    if (_currentDriver.photo) {
+      headerAvEl.innerHTML = '<img src="' + _currentDriver.photo + '" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.5);">';
+      headerAvEl.style.background = 'transparent';
+    } else {
+      headerAvEl.innerHTML = '🚗';
+    }
+  }
   loadDriverDeliveries();
   _updateDriverSavedBadge();
 }
@@ -2655,14 +2691,23 @@ function buildDriverIntlDetail(d) {
   var statusLabels = {registered:'📋 Registered',picked_up:'🚗 Picked Up',loading:'🏭 Loading',in_transit:'🚛 In Transit',sorting:'📦 Sorting',delivered:'✅ Delivered'};
   var clr = statusColors[status] || '#2b6cb0';
 
-  var toName    = d.fullName || d.receiverName || '—';
-  var toPhone   = d.phone || d.receiverPhone || '—';
-  var toAddr    = [d.address1, d.address2, d.destinationCity, d.postcode, d.country].filter(Boolean).join(', ') || '—';
-  var fromName  = d.senderName || d.name || '—';
-  var fromPhone = d.senderMobile || d.mobile || '—';
-  var fromAddr  = d.senderLocation || d.address || '—';
-  var pkg       = d.packageName || d.details || '—';
-  var kg        = d.packageKg || d.weight || '';
+  // ————————————————————————————————————————————
+  // چارەسەری ڕاستەوخۆ: intlPost داتای نێردەر و وەرگر لەناو
+  // d.sender{} و d.recipient{} هەیە، نەک d.senderName بە ڕاستەوخۆ
+  // ————————————————————————————————————————————
+  var s = d.sender || {};
+  var r = d.recipient || {};
+
+  var toName    = r.name || d.fullName || d.receiverName || '—';
+  var toPhone   = r.tel || d.phone || d.receiverPhone || '—';
+  var toAddr    = [r.address1||r.address||'', r.address2||'', r.postcode||d.postcode||'', r.country||d.country||''].filter(Boolean).join(', ')
+                  || [d.address1, d.address2, d.destinationCity, d.postcode, d.country].filter(Boolean).join(', ')
+                  || '—';
+  var fromName  = s.name || d.senderName || d.name || '—';
+  var fromPhone = s.tel || d.senderMobile || d.mobile || '—';
+  var fromAddr  = s.address || s.postcode || d.senderLocation || d.address || '—';
+  var pkg       = s.kala || r.kala || d.packageName || d.details || '—';
+  var kg        = s.weight || r.weight || d.packageKg || d.weight || '';
   var qty       = d.packageQty || '';
   var orderNum  = d.orderNumber || d.id || '—';
 
@@ -3090,11 +3135,9 @@ function printDriverScan(scanKey) {
       + '<style>'
       + '@page{size:A5;margin:8mm;}'
       + '*{box-sizing:border-box;margin:0;padding:0;}'
-      + 'body{font-family:Tahoma,Arial,sans-serif;direction:rtl;background:#fff;padding:0;}'
-      + '.close-bar{position:fixed;top:0;left:0;right:0;z-index:999;display:flex;gap:10px;padding:10px 12px;background:#fff;border-bottom:1px solid #e2e8f0;box-shadow:0 2px 8px rgba(0,0,0,.08);}'
-      + '.btn-close{flex:1;padding:13px;background:linear-gradient(135deg,#e53e3e,#c53030);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;font-family:Tahoma,Arial,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}'
-      + '.btn-print{flex:1;padding:13px;background:linear-gradient(135deg,#276749,#38a169);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;font-family:Tahoma,Arial,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}'
-      + '.content{padding:80px 12px 30px;}'
+      + 'body{font-family:Tahoma,Arial,sans-serif;direction:rtl;background:#fff;}'
+      + '.content{padding:12px;}'
+      + '@media screen{.content{padding-top:74px;}}'
       + '.box{border:3px solid ' + borderClr + ';border-radius:12px;padding:12px;}'
       + '.hdr{background:' + borderClr + ';color:#fff;padding:10px 14px;font-size:1rem;font-weight:900;display:flex;justify-content:space-between;align-items:center;border-radius:8px;margin-bottom:12px;}'
       + '.grid{display:flex;gap:10px;margin-bottom:10px;}'
@@ -3106,17 +3149,12 @@ function printDriverScan(scanKey) {
       + '.pkg{display:flex;align-items:center;justify-content:space-between;background:#f7fafc;border-radius:8px;padding:10px 12px;margin-bottom:10px;}'
       + '.foot{display:flex;justify-content:space-between;font-size:.65rem;color:#a0aec0;border-top:1px dashed #e2e8f0;padding-top:8px;}'
       + '@media print{'
-      + '  .close-bar{display:none!important;}'
-      + '  body{padding:0;}'
-      + '  .content{padding:0;}'
+      + '  body{padding:0!important;margin:0!important;}'
+      + '  .content{padding:0!important;}'
+      + '  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}'
       + '}'
       + '</style></head><body>'
-      // دوگمەکان - لە سەرەوەی پەرە، ستیکی
-      + '<div class="close-bar">'
-        + '<button class="btn-close" onclick="(function(){if(window.history.length>1){window.history.back();}else{window.close();}})()">&#x2715; داخستن</button>'
-        + '<button class="btn-print" onclick="window.print()">&#128424; چاپ کردن</button>'
-      + '</div>'
-      // ناوەرۆکی پسولە
+      // ناوەرۆکی پسولە — دوگمەکان لەلایەن _openPrintPage iframe بار دەخرێن
       + '<div class="content">'
       + '<div class="box">'
       + '<div class="hdr"><span>' + typeLabel + ' &mdash; UK BAZAR</span><span># ' + escapeHtml(orderNum) + '</span></div>'
