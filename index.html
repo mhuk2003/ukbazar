@@ -2940,53 +2940,67 @@ function printDriverScan(scanKey) {
       + '<meta name="viewport" content="width=device-width,initial-scale=1">'
       + '<style>'
       + '@page{size:A5;margin:8mm;}'
-      + 'body{font-family:Tahoma,Arial,sans-serif;direction:rtl;margin:0;padding:10px;background:#fff;}'
-      + '.box{border:3px solid ' + borderClr + ';border-radius:10px;padding:12px;}'
-      + '.hdr{background:' + borderClr + ';color:#fff;padding:8px 14px;font-size:1rem;font-weight:900;display:flex;justify-content:space-between;border-radius:6px;margin-bottom:10px;}'
+      + '*{box-sizing:border-box;margin:0;padding:0;}'
+      + 'body{font-family:Tahoma,Arial,sans-serif;direction:rtl;background:#fff;padding:0;}'
+      + '.close-bar{position:sticky;top:0;z-index:999;display:flex;gap:10px;padding:10px 12px;background:#fff;border-bottom:1px solid #e2e8f0;box-shadow:0 2px 8px rgba(0,0,0,.08);}'
+      + '.btn-close{flex:1;padding:13px;background:linear-gradient(135deg,#e53e3e,#c53030);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;font-family:Tahoma,Arial,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}'
+      + '.btn-print{flex:1;padding:13px;background:linear-gradient(135deg,#276749,#38a169);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;font-family:Tahoma,Arial,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}'
+      + '.content{padding:14px 12px 30px;}'
+      + '.box{border:3px solid ' + borderClr + ';border-radius:12px;padding:12px;}'
+      + '.hdr{background:' + borderClr + ';color:#fff;padding:10px 14px;font-size:1rem;font-weight:900;display:flex;justify-content:space-between;align-items:center;border-radius:8px;margin-bottom:12px;}'
       + '.grid{display:flex;gap:10px;margin-bottom:10px;}'
-      + '.col{flex:1;border:1.5px solid #e2e8f0;border-radius:6px;padding:8px;}'
-      + '.lbl{font-size:.65rem;color:#718096;margin-bottom:2px;}'
-      + '.val{font-size:.85rem;font-weight:700;color:#1a202c;}'
-      + '.tel{font-size:.78rem;color:#4a5568;}'
-      + '.loc{font-size:.7rem;color:#718096;}'
-      + '.pkg{display:flex;align-items:center;justify-content:space-between;background:#f7fafc;border-radius:8px;padding:8px 12px;margin-bottom:8px;}'
-      + '.foot{display:flex;justify-content:space-between;font-size:.65rem;color:#a0aec0;border-top:1px dashed #e2e8f0;padding-top:6px;}'
-      + '.print-btn{display:block;width:100%;padding:14px;background:' + borderClr + ';color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:Tahoma,Arial,sans-serif;cursor:pointer;margin-top:14px;}'
-      + '@media print{.print-btn{display:none!important;}}'
+      + '.col{flex:1;border:1.5px solid #e2e8f0;border-radius:8px;padding:9px;text-align:right;}'
+      + '.lbl{font-size:.65rem;color:#718096;margin-bottom:3px;}'
+      + '.val{font-size:.88rem;font-weight:700;color:#1a202c;}'
+      + '.tel{font-size:.78rem;color:#4a5568;margin-top:2px;}'
+      + '.loc{font-size:.72rem;color:#718096;margin-top:2px;}'
+      + '.pkg{display:flex;align-items:center;justify-content:space-between;background:#f7fafc;border-radius:8px;padding:10px 12px;margin-bottom:10px;}'
+      + '.foot{display:flex;justify-content:space-between;font-size:.65rem;color:#a0aec0;border-top:1px dashed #e2e8f0;padding-top:8px;}'
+      + '@media print{'
+      + '  .close-bar{display:none!important;}'
+      + '  body{padding:0;}'
+      + '  .content{padding:0;}'
+      + '}'
       + '</style></head><body>'
+      // دوگمەکان - لە سەرەوەی پەرە، ستیکی
+      + '<div class="close-bar">'
+        + '<button class="btn-close" onclick="window.close()">&#x2715; داخستن</button>'
+        + '<button class="btn-print" onclick="window.print()">&#128424; چاپ کردن</button>'
+      + '</div>'
+      // ناوەرۆکی پسولە
+      + '<div class="content">'
       + '<div class="box">'
-      + '<div class="hdr"><span>' + typeLabel + ' — UK BAZAR</span><span># ' + escapeHtml(orderNum) + '</span></div>'
+      + '<div class="hdr"><span>' + typeLabel + ' &mdash; UK BAZAR</span><span># ' + escapeHtml(orderNum) + '</span></div>'
       + '<div class="grid">'
         + '<div class="col" style="border-right:3px solid ' + borderClr + ';">'
-          + '<div class="lbl">نێردەر</div>'
-          + '<div class="val">' + escapeHtml(sc.senderName||'—') + '</div>'
-          + '<div class="tel">' + escapeHtml(sc.senderMobile||'') + '</div>'
-          + (sc.senderLocation ? '<div class="loc">' + escapeHtml(sc.senderLocation) + '</div>' : '')
+          + '<div class="lbl">&#128230; نێردەر</div>'
+          + '<div class="val">' + escapeHtml(sc.senderName||'&mdash;') + '</div>'
+          + '<div class="tel">&#128222; ' + escapeHtml(sc.senderMobile||'') + '</div>'
+          + (sc.senderLocation ? '<div class="loc">&#128205; ' + escapeHtml(sc.senderLocation) + '</div>' : '')
         + '</div>'
         + '<div class="col">'
-          + '<div class="lbl">وەرگر</div>'
-          + '<div class="val">' + escapeHtml(sc.receiverName||'—') + '</div>'
-          + '<div class="tel">' + escapeHtml(sc.receiverMobile||'') + '</div>'
-          + (sc.receiverLocation ? '<div class="loc">' + escapeHtml(sc.receiverLocation) + '</div>' : '')
+          + '<div class="lbl">&#128229; وەرگر</div>'
+          + '<div class="val">' + escapeHtml(sc.receiverName||'&mdash;') + '</div>'
+          + '<div class="tel">&#128222; ' + escapeHtml(sc.receiverMobile||'') + '</div>'
+          + (sc.receiverLocation ? '<div class="loc">&#128205; ' + escapeHtml(sc.receiverLocation) + '</div>' : '')
         + '</div>'
       + '</div>'
       + '<div class="pkg">'
-        + '<div>'
-          + '<div class="lbl">کاڵا</div>'
-          + '<div style="font-size:.85rem;font-weight:700;">' + escapeHtml(sc.packageName||'—') + (sc.packageKg?' — '+sc.packageKg+'کگ':'') + '</div>'
-          + (sc.deliveryNote ? '<div class="loc" style="margin-top:4px;">' + escapeHtml(sc.deliveryNote) + '</div>' : '')
+        + '<div style="text-align:right;">'
+          + '<div class="lbl">&#128230; کاڵا</div>'
+          + '<div style="font-size:.88rem;font-weight:700;">' + escapeHtml(sc.packageName||'&mdash;') + (sc.packageKg?' &mdash; '+sc.packageKg+'کگ':'') + '</div>'
+          + (sc.deliveryNote ? '<div class="loc" style="margin-top:4px;">&#128221; ' + escapeHtml(sc.deliveryNote) + '</div>' : '')
         + '</div>'
-        + '<img src="' + qrUrl + '" style="width:90px;height:90px;border-radius:4px;">'
+        + '<img src="' + qrUrl + '" style="width:90px;height:90px;border-radius:6px;flex-shrink:0;">'
       + '</div>'
       + '<div class="foot">'
+        + '<span>UK BAZAR &mdash; ' + escapeHtml(_currentDriver.name||_currentDriver.username||'') + '</span>'
         + '<span>' + escapeHtml(sc.savedAt||'') + '</span>'
-        + '<span>UK BAZAR</span>'
       + '</div>'
       + '</div>'
-      + '<button class="print-btn" onclick="window.print()">🖨️ چاپ کردن</button>'
+      + '</div>'
       + '</body></html>';
 
-    // Blob URL — لە هەموو موبایلێک کار دەکات، بلۆک ناکرێت
     var blob = new Blob([html], {type: 'text/html;charset=utf-8'});
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
@@ -2996,7 +3010,7 @@ function printDriverScan(scanKey) {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    setTimeout(function(){ URL.revokeObjectURL(url); }, 10000);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 30000);
 
   }).catch(function() { showNotification('هەڵە لە پرینت', 'error'); });
 }
