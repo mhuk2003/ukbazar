@@ -648,27 +648,36 @@ function searchCustomerOrders() {
 function showFibModal() { showModal('fibModal'); }
 
 // ==================== Admin Functions ====================
+// وشەی تێپەڕی بەڕێوەبەر بە hash پاراستراوە — نەک بە تەکست ئاشکرا
+var _ADMIN_H = 'aa5ff7ddeca7848ed7eb16270306d14ba2f7b65171ca0e700ec2e2adda115b83';
+function _checkAdminPass(p) {
+  return crypto.subtle.digest('SHA-256', new TextEncoder().encode(p))
+    .then(function(b){ return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0');}).join('') === _ADMIN_H; });
+}
+
 function showAdminLogin() {
     const username = prompt('ناوی بەکارهێنەر:');
     const password = prompt('وشەی تێپەڕ:');
-    
-    if (username === 'admin' && password === 'admin112233') {
+    if (!username || !password) return;
+    _checkAdminPass(password).then(function(ok) {
+      if (username === 'admin' && ok) {
         isAdmin = true;
         const adminPanel = document.getElementById('adminPanel');
         const productsSection = document.querySelector('.products-section');
         const sliderSection = document.querySelector('.slider-section');
         const categorySection = document.querySelector('.category-filter-section');
-        
+
         if (adminPanel) adminPanel.style.display = 'block';
         if (productsSection) productsSection.style.display = 'none';
         if (sliderSection) sliderSection.style.display = 'none';
         if (categorySection) categorySection.style.display = 'none';
-        
+
         showNotification('بەخێربێیت بەڕێوەبەر! 🔐');
         showAdminTab('products');
-    } else {
+      } else {
         showNotification('هەڵە! ناوی بەکارهێنەر یان وشەی تێپەڕ هەڵەیە', 'error');
-    }
+      }
+    });
 }
 
 function logout() {
@@ -1536,13 +1545,6 @@ function printLabel(key) {
         + '</div></div>'
         + boxHtml('SENDER &nbsp;—&nbsp; نێردەر', senderRows, false)
         + boxHtml('recipient &nbsp;--&nbsp; وەرگر', receiverRows + pkgRows + extraRows, true)
-        + '<script>'
-        + 'var qr=document.getElementById("nauxo-qr-img");'
-        + 'function doPrint(){window.focus();window.print();}'
-        + 'if(!qr){setTimeout(doPrint,300);}'
-        + 'else if(qr.complete){setTimeout(doPrint,300);}'
-        + 'else{qr.onload=function(){setTimeout(doPrint,300);};qr.onerror=function(){setTimeout(doPrint,300);};}'
-        + '<\/script>'
         + '</body></html>';
 
     _mobilePrint(html, 'label-' + orderNum.replace(/[^a-zA-Z0-9-]/g,''));
@@ -2068,10 +2070,8 @@ function sendWhatsAppLabel(encodedMsg) {
 function deleteDelivery(key) {
     const pass = prompt('🔐 وشەی تێپەڕی بەڕێوەبەر داخڵ بکە بۆ سڕینەوەی لەیبل:\n(Admin password required to delete label)');
     if (pass === null) return; // cancelled
-    if (pass !== 'admin112233') {
-        showNotification('❌ وشەی تێپەڕ هەڵەیە! تەنها بەڕێوەبەر دەتوانێت لەیبل بسڕێتەوە.', 'error');
-        return;
-    }
+    _checkAdminPass(pass).then(function(ok) {
+      if (!ok) { showNotification('❌ وشەی تێپەڕ هەڵەیە! تەنها بەڕێوەبەر دەتوانێت لەیبل بسڕێتەوە.', 'error'); return; }
     database.ref('delivery/' + key).remove()
         .then(() => {
             showNotification('لەیبل بە سەرکەوتوویی سڕایەوە 🗑️');
@@ -2087,6 +2087,7 @@ function deleteDelivery(key) {
             _allDeliveryItems = _allDeliveryItems.filter(i => i.key !== key);
         })
         .catch(() => showNotification('هەڵە لە سڕینەوە!', 'error'));
+    }); // close _checkAdminPass
 }
 
 // ==================== Admin Forms ====================
@@ -4718,6 +4719,15 @@ function _mobilePrint(html, filename) {
     var old = document.getElementById(iframeId);
     if (old) old.remove();
 
+    // ✅ چاکسازی: لابردنی backdrop-filter چونکە مۆبایل چاپەکە دەشکێنێت
+    html = html
+        .replace(/backdrop-filter\s*:[^;"}]+;?/gi, '')
+        .replace(/-webkit-backdrop-filter\s*:[^;"}]+;?/gi, '');
+
+    // ✅ چاکسازی: overflow:hidden/auto لابردن لە modal/body بۆ چاپی دروست
+    html = html
+        .replace(/overflow(-[xy])?\s*:\s*(hidden|auto|scroll)\s*;/gi, 'overflow:visible;');
+
     var iframe = document.createElement('iframe');
     iframe.id  = iframeId;
     iframe.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;border:0;z-index:99999;background:#fff;';
@@ -4725,19 +4735,40 @@ function _mobilePrint(html, filename) {
 
     var doc = iframe.contentDocument || iframe.contentWindow.document;
     doc.open();
-    // زیادکردنی دوگمەی داخستن و PDF لەناو پەنجەرەی چاپ
-    var fullHtml = html.replace('</body>', `
-    <div id="_printCtrl" style="position:fixed;top:0;left:0;right:0;display:flex;gap:8px;padding:8px;background:#1a365d;z-index:9999999;">
-      <button onclick="window.print()" style="flex:1;padding:12px;background:#38a169;color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:800;cursor:pointer;font-family:inherit;">🖨️ چاپ / PDF</button>
-      <button onclick="try{window.parent.document.getElementById('_ukPrintFrame').remove();}catch(e){window.frameElement&&window.frameElement.remove();}" style="flex:1;padding:12px;background:#e53e3e;color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:800;cursor:pointer;font-family:inherit;">✕ داخستن</button>
-    </div>
-    <div style="height:60px;"></div>
-    <style>@media print{#_printCtrl{display:none!important;}}</style>
-    </body>`);
+
+    // ✅ چاکسازی: زیادکردنی دوگمەکان بەڵام بەبێ height spacer کە پەرەی بەتاڵ دروست دەکات
+    // print-color-adjust زیادکراوە بۆ موبایل
+    var printFixStyle = '<style>'
+        + '#_printCtrl{position:fixed;top:0;left:0;right:0;display:flex;gap:8px;padding:8px;background:#1a365d;z-index:9999999;}'
+        + '@media print{'
+        + '  #_printCtrl{display:none!important;}'
+        + '  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}'
+        + '  body{padding-top:0!important;margin-top:0!important;}'
+        + '}'
+        + '@media screen{'
+        + '  body{padding-top:60px!important;}'
+        + '}'
+        + '</style>';
+
+    var ctrlBar = '<div id="_printCtrl">'
+        + '<button onclick="window.print()" style="flex:1;padding:12px;background:#38a169;color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:800;cursor:pointer;font-family:inherit;">🖨️ چاپ / PDF</button>'
+        + '<button onclick="try{window.parent.document.getElementById(\'_ukPrintFrame\').remove();}catch(e){window.frameElement&&window.frameElement.remove();}" style="flex:1;padding:12px;background:#e53e3e;color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:800;cursor:pointer;font-family:inherit;">✕ داخستن</button>'
+        + '</div>';
+
+    // زیادکردنی style لەناو <head> و دوگمەکان لەناو <body> — بەبێ spacer
+    var fullHtml = html
+        .replace('</head>', printFixStyle + '</head>')
+        .replace('<body>', '<body>' + ctrlBar)
+        .replace('</body>', '</body>');
+
+    // ئەگەر <head> یان <body> نەبوو، فۆلبەک
+    if (fullHtml === html) {
+        fullHtml = html.replace('</body>', printFixStyle + ctrlBar + '</body>');
+    }
+
     doc.write(fullHtml);
     doc.close();
-
-    // چاوەڕوانی QR و دواتر ئاگادارکردنەوە — چاپی ئۆتۆماتیکی نییە لە موبایل (براوزەر دەیبڵۆکێت)
+    // چاپی ئۆتۆماتیکی نییە لە موبایل (براوزەر دەیبڵۆکێت)
     // بەکارهێنەر دوگمەی "چاپ / PDF" دەبینێت
 }
 
@@ -4772,9 +4803,12 @@ function viewDriver(key) {
               <span style="font-size:.82rem;font-weight:700;color:#718096;">👤 Username</span>
               <span style="font-size:.82rem;font-weight:800;color:#1a202c;direction:ltr;">${d.username||'—'}</span>
             </div>
-            <div style="display:flex;justify-content:space-between;padding:8px 12px;background:#fffbeb;border-radius:8px;border:1px solid #fde68a;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#fffbeb;border-radius:8px;border:1px solid #fde68a;">
               <span style="font-size:.82rem;font-weight:700;color:#d97706;">🔑 وشەی تێپەڕ</span>
-              <span style="font-size:.82rem;font-weight:800;color:#d97706;direction:ltr;">${d.password||'—'}</span>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span id="driverViewPass_${key}" style="font-size:.82rem;font-weight:800;color:#d97706;direction:ltr;letter-spacing:2px;">••••••••</span>
+                <button onclick="(function(){var s=document.getElementById('driverViewPass_${key}');var b=document.getElementById('driverViewPassBtn_${key}');if(s.dataset.shown==='1'){s.textContent='••••••••';s.dataset.shown='0';b.textContent='👁';}else{s.textContent='${d.password||'—'}';s.dataset.shown='1';b.textContent='🙈';}})()" id="driverViewPassBtn_${key}" style="background:#fef3c7;border:1px solid #fde68a;border-radius:6px;padding:2px 7px;font-size:.78rem;cursor:pointer;">👁</button>
+              </div>
             </div>
             ${d.kuBalance !== undefined ? `<div style="display:flex;justify-content:space-between;padding:8px 12px;background:#f0fff4;border-radius:8px;border:1px solid #c6f6d5;">
               <span style="font-size:.82rem;font-weight:700;color:#276749;">💰 بالانس</span>
@@ -4825,7 +4859,6 @@ function printDriver(key) {
           <div class="rows">
             <div class="row"><span>📱 مۆبایل:</span><strong>${d.mobile||'—'}</strong></div>
             <div class="row"><span>👤 Username:</span><strong>${d.username||'—'}</strong></div>
-            <div class="row" style="background:#fffbeb;"><span>🔑 وشەی تێپەڕ:</span><strong>${d.password||'—'}</strong></div>
             ${d.kuBalance !== undefined ? `<div class="row" style="background:#f0fff4;"><span>💰 بالانس:</span><strong style="color:#276749;">${d.kuBalance||0}</strong></div>` : ''}
             ${d.createdAt ? `<div class="row"><span>🕐 تۆمارکرا:</span><strong>${d.createdAt}</strong></div>` : ''}
           </div>
