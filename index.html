@@ -30,18 +30,17 @@
     </style>
 
     <style>
-      .btn-delivery-uk { font-size:.88rem !important; padding:8px 14px !important; }
-      .nav-buttons { display:flex; flex-wrap:wrap; gap:6px; align-items:center; justify-content:flex-end; }
-      @media print { .no-print { display:none !important; } }
+      .btn-delivery-uk{font-size:.88rem!important;padding:8px 14px!important;}
+      .nav-buttons{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:flex-end;}
     </style>
     <script>
-      function toggleTrackingWidget() {
-        var body    = document.getElementById('trackingWidgetBody');
-        var chevron = document.getElementById('trackingChevron');
-        if (!body) return;
-        var open = body.style.display !== 'none';
-        body.style.display      = open ? 'none'        : 'block';
-        chevron.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
+      function toggleTrackingWidget(){
+        var b=document.getElementById('trackingWidgetBody');
+        var c=document.getElementById('trackingChevron');
+        if(!b)return;
+        var o=b.style.display!=='none';
+        b.style.display=o?'none':'block';
+        c.style.transform=o?'rotate(0deg)':'rotate(180deg)';
       }
     </script>
 </head>
@@ -1253,7 +1252,7 @@ const TRANSLATIONS = {
     dir: 'ltr', lang: 'en',
     videos: 'Videos',
     kuDelivery: 'KU Delivery',
-    ukDelivery: 'UK -Delivery',
+    ukDelivery: 'UK -گەیاندن',
     search: 'Search',
     searchPlaceholder: 'Search products...',
     home: 'Home',
@@ -1313,7 +1312,7 @@ const TRANSLATIONS = {
     dir: 'rtl', lang: 'ar',
     videos: 'الفيديوهات',
     kuDelivery: 'التوصيل كردستان',
-    ukDelivery: 'التوصيل -UK',
+    ukDelivery: 'توصيل -UK',
     search: 'بحث',
     searchPlaceholder: 'ابحث عن المنتجات...',
     home: 'الرئيسية',
@@ -1536,8 +1535,8 @@ document.addEventListener('DOMContentLoaded', () => {
       '*{box-sizing:border-box;}' +
       'body{font-family:"Segoe UI",Arial,sans-serif;background:#fff;margin:0;padding:0;width:100mm;direction:rtl;}' +
       '.page{background:#fff;border:2.5px dashed #c8a000;width:100mm;min-height:148mm;overflow:hidden;display:flex;flex-direction:column;}' +
-      '.close-btn{position:fixed;top:10px;right:10px;z-index:9999;display:block;}' +
-      '.close-btn button{background:linear-gradient(135deg,#f56565,#e53e3e);border:none;color:#fff;border-radius:50px;padding:10px 22px;font-size:1rem;font-weight:900;cursor:pointer;box-shadow:0 3px 12px rgba(229,62,62,.5);white-space:nowrap;}' +
+      '@media screen{.close-btn{position:fixed;top:10px;right:10px;z-index:9999;}}' +
+      '.close-btn button{background:linear-gradient(135deg,#f56565,#e53e3e);border:none;color:#fff;border-radius:50px;padding:11px 24px;font-size:1rem;font-weight:900;cursor:pointer;box-shadow:0 3px 12px rgba(229,62,62,.5);white-space:nowrap;}' +
       /* Header */
       '.hdr{display:flex;align-items:center;justify-content:space-between;padding:3px 7px 4px;border-bottom:2px solid #1a1a1a;background:#fff;}' +
       '.hdr-l{display:flex;align-items:center;gap:4px;}' +
@@ -1567,7 +1566,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'body{background:#fff;padding:0;width:100mm;}' +
         '.page{box-shadow:none;border:2.5px dashed #c8a000;width:100mm;}' +
         '.close-btn{display:none!important;}' +
-      '}';
+      '}' + '@media screen{.page{margin-top:56px;}}';
 
     var closeJs = "try{window.close();}catch(e){} history.length>1?history.back():(window.location.href='about:blank');";
 
@@ -1841,7 +1840,7 @@ document.addEventListener('DOMContentLoaded', () => {
       /* ── Flag ── */
       '.flag{width:60px;height:30px;flex-shrink:0;}',
       '@media print{',
-        '.no-print{display:none!important;}',
+        '.no-print{display:none!important;visibility:hidden;}',
         'html,body{width:210mm;height:297mm;}',
         'body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}',
       '}'
@@ -1899,7 +1898,7 @@ document.addEventListener('DOMContentLoaded', () => {
       + '<style>' + css + '</style></head><body>'
       + '<button class="no-print" onclick="' + closeJs + '" '
         + 'style="position:fixed;top:10px;right:10px;background:linear-gradient(135deg,#f56565,#e53e3e);'
-        + 'border:none;color:#fff;border-radius:50px;padding:10px 22px;font-size:1rem;'
+        + 'border:none;color:#fff;border-radius:50px;padding:11px 24px;font-size:1rem;'
         + 'font-weight:900;cursor:pointer;z-index:9999;box-shadow:0 3px 12px rgba(229,62,62,.5);">✕ داخستن</button>'
       + '<div class="page">'
         /* ─── Header: IP number left, flag+country+date right ─── */
