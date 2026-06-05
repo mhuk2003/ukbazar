@@ -1518,8 +1518,8 @@ function printLabel(key) {
     .pr-qr small{font-size:10px;color:#718096;}
     .pr-foot{text-align:center;font-size:10px;color:#a0aec0;margin-top:8px;border-top:1px dashed #e2e8f0;padding-top:6px;}
     </style>
-    <div style="display:flex;justify-content:flex-end;padding:4px 8px 0;">
-      <button onclick="try{window.close();}catch(e){} history.length>1?history.back():(window.location.href='about:blank');" style="background:#fee2e2;border:2px solid #fca5a5;color:#dc2626;border-radius:50%;width:34px;height:34px;font-size:1.1rem;font-weight:900;cursor:pointer;touch-action:manipulation;">✕</button>
+    <div style="position:fixed;top:10px;right:10px;z-index:9999;">
+      <button onclick="try{window.close();}catch(e){} history.length>1?history.back():(window.location.href='about:blank');" style="background:linear-gradient(135deg,#f56565,#e53e3e);border:none;color:#fff;border-radius:50px;padding:11px 26px;font-size:1rem;font-weight:900;cursor:pointer;touch-action:manipulation;box-shadow:0 3px 12px rgba(229,62,62,.5);white-space:nowrap;">✕ داخستن</button>
     </div>
     <div class="pr-wrap">
       <div class="pr-top">
@@ -1678,8 +1678,8 @@ function printUkLabel(key) {
     .pru-qr small{font-size:10px;color:#718096;text-align:center;}
     .pru-foot{text-align:center;font-size:10px;color:#a0aec0;margin-top:10px;border-top:1px dashed #e2e8f0;padding-top:6px;}
     </style>
-    <div style="display:flex;justify-content:flex-end;padding:4px 8px 0;">
-      <button onclick="try{window.close();}catch(e){} history.length>1?history.back():(window.location.href='about:blank');" style="background:#fee2e2;border:2px solid #fca5a5;color:#dc2626;border-radius:50%;width:34px;height:34px;font-size:1.1rem;font-weight:900;cursor:pointer;touch-action:manipulation;">✕</button>
+    <div style="position:fixed;top:10px;right:10px;z-index:9999;">
+      <button onclick="try{window.close();}catch(e){} history.length>1?history.back():(window.location.href='about:blank');" style="background:linear-gradient(135deg,#f56565,#e53e3e);border:none;color:#fff;border-radius:50px;padding:11px 26px;font-size:1rem;font-weight:900;cursor:pointer;touch-action:manipulation;box-shadow:0 3px 12px rgba(229,62,62,.5);white-space:nowrap;">✕ داخستن</button>
     </div>
     <div class="pru-wrap">
       <div class="pru-top">
