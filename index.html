@@ -1503,64 +1503,55 @@ document.addEventListener('DOMContentLoaded', () => {
     <script src="./script.js"></script>
 <script>
 // ڕاستەوخۆ PDF دانلۆد — بەبێ پەرەی نوێ
-function _openPrintPage(htmlStr, filename) {
-  // ============================================================
-  // چارەسەری کێشەی پەرەی بەتاڵ و پەرەی دووەم لەسەر موبایل و دێسکتۆپ
-  // بەکارهێنانی iframe — ئەمە تەنیا ڕێگای پشت پێبەستراوە
-  // overlay + window.print() = پەرەی دووەمی بەتاڵ دروستدەکات
-  // ============================================================
-  var frameId = '_ukPrintOverlayFrame';
-  var old = document.getElementById(frameId);
-  if (old) old.remove();
+// ========== printHtml: چارەسەری گەرەنتیکراو بۆ مۆبایل و لەپتۆپ ==========
+function printHtml(htmlContent, fileName) {
+  fileName = fileName || 'document.pdf';
+  // پەنجەرەیەکی تازە بکەرەوە
+  var win = window.open('', '_blank');
+  if (!win) {
+    alert('تکایە ڕێگەبدە بە کردنەوەی پەنجەرەی تازە بۆ چاپکردن');
+    return;
+  }
+  // ستایلەکانی کۆنترۆلبار
+  var ctrlStyle = '<style>'
+    + '#print-ctrl{position:fixed;top:0;left:0;right:0;display:flex;gap:10px;padding:12px;background:#1a365d;z-index:99999;box-shadow:0 2px 8px rgba(0,0,0,.2);}'
+    + '#print-ctrl button{flex:1;padding:13px;border:none;border-radius:12px;font-size:1rem;font-weight:bold;cursor:pointer;font-family:Tahoma,Arial,sans-serif;}'
+    + '.btn-print{background:#38a169;color:#fff;}'
+    + '.btn-close{background:#e53e3e;color:#fff;}'
+    + '@media print{#print-ctrl{display:none!important;}body{margin:0;padding:0;}}'
+    + '@media screen{body{padding-top:64px!important;}}'
+    + '</style>';
+  // ستایلەکانی خود HTMLـەکە زیاد بکە
+  var extraStyles = '';
+  var styleMatches = htmlContent.match(/<style[^>]*>[\s\S]*?<\/style>/gi);
+  if (styleMatches) extraStyles = styleMatches.join('');
+  var ctrlBar = '<div id="print-ctrl">'
+    + '<button class="btn-print" onclick="window.print()">🖨️ چاپ / PDF</button>'
+    + '<button class="btn-close" onclick="window.close()">✕ داخستن</button>'
+    + '</div>';
+  win.document.write('<!DOCTYPE html><html><head>'
+    + '<meta charset="UTF-8">'
+    + '<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes">'
+    + '<title>چاپ - ' + fileName + '</title>'
+    + ctrlStyle
+    + extraStyles
+    + '</head><body>'
+    + ctrlBar
+    + htmlContent
+    + '</body></html>');
+  win.document.close();
+}
 
+function _openPrintPage(htmlStr, filename) {
   // پاکسازی htmlStr
   htmlStr = htmlStr
     .replace(/backdrop-filter\s*:[^;"}]+;?/gi, '')
     .replace(/-webkit-backdrop-filter\s*:[^;"}]+;?/gi, '')
     .replace(/<div class="action-bar"[\s\S]*?<\/div>\s*<\/div>/gi, '')
-    .replace(/<div class="close-bar"[\s\S]*?<\/div>\s*<\/div>/gi, '');
-
-  // style ی کۆنترۆلبار و چاپ — لەناو iframe خۆی
-  var ctrlStyle = '<style id="_iframeCtrlStyle">'
-    + '#_iframeCtrl{position:fixed;top:0;left:0;right:0;display:flex;gap:8px;padding:10px 12px;background:#1a365d;z-index:9999999;box-shadow:0 2px 8px rgba(0,0,0,.3);}'
-    + '#_iframeCtrl button{flex:1;padding:13px 8px;border:none;border-radius:10px;font-size:.95rem;font-weight:800;cursor:pointer;font-family:Tahoma,Arial,sans-serif;}'
-    + '.btn-cp{background:linear-gradient(135deg,#276749,#38a169);color:#fff;}'
-    + '.btn-cx{background:linear-gradient(135deg,#e53e3e,#c53030);color:#fff;}'
-    + '@media screen{body{padding-top:62px!important;}}'
-    + '@media print{'
-    +   '#_iframeCtrl{display:none!important;}'
-    +   'body{padding-top:0!important;margin-top:0!important;}'
-    +   '*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}'
-    + '}'
-    + '</style>';
-
-  var ctrlBar = '<div id="_iframeCtrl">'
-    + '<button class="btn-cp" onclick="window.print()">🖨️ چاپ / PDF</button>'
-    + '<button class="btn-cx" onclick="(function(){try{window.parent.document.getElementById(\'_ukPrintOverlayFrame\').remove();}catch(e){}})()">✕ داخستن</button>'
-    + '</div>';
-
-  // زیادکردنی style و bar لەناو HTML
-  var finalHtml = htmlStr;
-  if (/<\/head>/i.test(finalHtml)) {
-    finalHtml = finalHtml.replace(/<\/head>/i, ctrlStyle + '</head>');
-  } else {
-    finalHtml = ctrlStyle + finalHtml;
-  }
-  if (/<body[^>]*>/i.test(finalHtml)) {
-    finalHtml = finalHtml.replace(/(<body[^>]*>)/i, '$1' + ctrlBar);
-  } else {
-    finalHtml = ctrlBar + finalHtml;
-  }
-
-  var iframe = document.createElement('iframe');
-  iframe.id = frameId;
-  iframe.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;border:0;z-index:999999;background:#fff;';
-  document.body.appendChild(iframe);
-
-  var doc = iframe.contentDocument || iframe.contentWindow.document;
-  doc.open();
-  doc.write(finalHtml);
-  doc.close();
+    .replace(/<div class="close-bar"[\s\S]*?<\/div>\s*<\/div>/gi, '')
+    .replace(/<div[^>]*id="_iframeCtrl"[^>]*>[\s\S]*?<\/div>/gi, '');
+  // بانگی فەنکشنی نوێ
+  printHtml(htmlStr, filename);
 }
 </script>
 <script>
