@@ -4713,20 +4713,23 @@ function printExpense(key) {
 }
 
 // ============================================================
-// printHtml — چارەسەری نوێ: srcdoc iframe + PDF داونلۆد موبایل
+// printHtml — چارەسەری نوێ: موبایل window.open + دێسکتۆپ iframe
 // ============================================================
 function printHtml(htmlContent, fileName) {
     fileName = (fileName || 'label').replace(/\.pdf$/i, '');
+
     var cleaned = htmlContent
         .replace(/backdrop-filter\s*:[^;"]+;?/gi, '')
         .replace(/-webkit-backdrop-filter\s*:[^;"]+;?/gi, '')
         .replace(/<div[^>]*id="(_iframeCtrl|_printCtrl|print-ctrl|_ukPrintBar|_pbar)"[^>]*>[\s\S]*?<\/div>/gi, '')
         .replace(/<style[^>]*id="(_iframeCtrlStyle|_ukPrintBarStyle)"[^>]*>[\s\S]*?<\/style>/gi, '');
 
+    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
     var barStyle = '<style>'
         + '*{box-sizing:border-box;}'
         + '#_pbar{position:fixed;top:0;left:0;right:0;display:flex;gap:6px;'
-        + 'padding:10px 10px;background:#1a365d;z-index:2147483647;'
+        + 'padding:10px;background:#1a365d;z-index:2147483647;'
         + 'box-shadow:0 3px 10px rgba(0,0,0,.4);}'
         + '#_pbar button{flex:1;padding:13px 4px;border:none;border-radius:10px;'
         + 'font-size:.88rem;font-weight:800;cursor:pointer;'
@@ -4754,11 +4757,17 @@ function printHtml(htmlContent, fileName) {
         + '    setTimeout(function(){URL.revokeObjectURL(u);a.remove();},5000);'
         + '  }catch(e){alert("هەڵە: "+e);}'
         + '}'
+        + 'function _mobilePrint(){'
+        + '  setTimeout(function(){window.print();},600);'
+        + '}'
         + '<\/scr'+'ipt>';
 
-    var closeCode = "try{window.parent.document.getElementById('_ukPO').remove();}catch(e){}";
+    var closeCode = isMobile
+        ? "window.history.back();"
+        : "try{window.parent.document.getElementById('_ukPO').remove();}catch(e){}";
+
     var bar = '<div id="_pbar">'
-        + '<button id="_pbtn" onclick="window.print()">🖨 چاپ</button>'
+        + '<button id="_pbtn" onclick="' + (isMobile ? '_mobilePrint()' : 'window.print()') + '">🖨 چاپ</button>'
         + '<button id="_dbtn" onclick="_dl()">⬇ داونلۆد</button>'
         + '<button id="_cbtn" onclick="' + closeCode + '">✕ داخستن</button>'
         + '</div>';
@@ -4775,11 +4784,29 @@ function printHtml(htmlContent, fileName) {
         final = bar + final;
     }
 
+    if (isMobile) {
+        // موبایل: پەنجەرەی نوێ بکرەوە — iOS و Android پشتیوانی دەکەن
+        var newWin = window.open('', '_blank');
+        if (newWin) {
+            newWin.document.open();
+            newWin.document.write(final);
+            newWin.document.close();
+        } else {
+            // Pop-up بلۆک کراوە — iframe بەکاربێنە
+            _printFallbackIframe(final);
+        }
+    } else {
+        // دێسکتۆپ: iframe
+        _printFallbackIframe(final);
+    }
+}
+
+function _printFallbackIframe(final) {
     var old = document.getElementById('_ukPO');
     if (old) old.remove();
     var iframe = document.createElement('iframe');
     iframe.id = '_ukPO';
-    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-downloads allow-modals');
+    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-downloads allow-modals allow-popups');
     iframe.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;'
         + 'min-height:100vh;border:0;z-index:2147483646;background:#fff;display:block;';
     document.body.appendChild(iframe);
