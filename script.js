@@ -4713,74 +4713,110 @@ function printExpense(key) {
 }
 
 // ============================================================
-// printHtml — چارەسەری نوێ: srcdoc iframe + PDF داونلۆد موبایل
+// printHtml v6 — موبایل: Blob URL | دێسکتۆپ: iframe srcdoc
 // ============================================================
+function _isMob() {
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || navigator.maxTouchPoints > 2;
+}
+
 function printHtml(htmlContent, fileName) {
-    fileName = (fileName || 'label').replace(/\.pdf$/i, '');
+    fileName = (fileName || 'label').replace(/\.pdf$/i, '').replace(/\.html$/i, '');
 
     var cleaned = htmlContent
         .replace(/backdrop-filter\s*:[^;"]+;?/gi, '')
-        .replace(/-webkit-backdrop-filter\s*:[^;"]+;?/gi, '')
-        .replace(/<div[^>]*id="(_iframeCtrl|_printCtrl|print-ctrl|_ukPrintBar|_pbar)"[^>]*>[\s\S]*?<\/div>/gi, '')
-        .replace(/<style[^>]*id="(_iframeCtrlStyle|_ukPrintBarStyle)"[^>]*>[\s\S]*?<\/style>/gi, '');
+        .replace(/-webkit-backdrop-filter\s*:[^;"]+;?/gi, '');
 
     var fnStr = JSON.stringify(fileName);
-    var closeCode = "try{window.parent.document.getElementById('_ukPO').remove();}catch(e){}";
 
-    var injected = '<style>'
+    // ── CSS + سکریپتی ناوخۆی پەنجەرە ──────────────────────
+    var innerCss = '<style>'
         + '*{box-sizing:border-box;}'
-        + '#_pbar{position:fixed;top:0;left:0;right:0;display:flex;gap:5px;'
-        + 'padding:9px 10px;background:#1a365d;z-index:2147483647;'
-        + 'box-shadow:0 3px 10px rgba(0,0,0,.5);}'
-        + '#_pbar button{flex:1;padding:12px 2px;border:none;border-radius:10px;'
-        + 'font-size:.82rem;font-weight:800;cursor:pointer;font-family:Tahoma,Arial,sans-serif;line-height:1.3;}'
+        + '#_pbar{position:fixed;top:0;left:0;right:0;display:flex;gap:6px;'
+        + 'padding:10px 12px;background:#1a365d;z-index:2147483647;'
+        + 'box-shadow:0 3px 12px rgba(0,0,0,.5);}'
+        + '#_pbar button{flex:1;padding:14px 4px;border:none;border-radius:12px;'
+        + 'font-size:.85rem;font-weight:800;cursor:pointer;'
+        + 'font-family:Tahoma,Arial,sans-serif;line-height:1.3;'
+        + 'touch-action:manipulation;-webkit-tap-highlight-color:transparent;}'
         + '#_pbtn{background:#38a169;color:#fff;}'
-        + '#_dbtn{background:#3182ce;color:#fff;}'
-        + '#_cbtn{background:#e53e3e;color:#fff;}'
+        + '#_sbtn{background:#3182ce;color:#fff;}'
+        + '#_cbtn{background:#e53e3e;color:#fff;max-width:56px;}'
         + '@media print{#_pbar{display:none!important;}body{padding-top:0!important;}}'
-        + '@media screen{body{padding-top:64px!important;}}'
-        + '</style>'
-        + '<scr'+'ipt>'
+        + '@media screen{body{padding-top:70px!important;}}'
+        + '</style>';
+
+    var innerJs = '<script>'
         + 'var _fn=' + fnStr + ';'
-        + 'function _share(){'
+        + 'function _doPrint(){window.print();}'
+        + 'function _doClose(){'
+        + '  try{window.close();}catch(e){}'
+        + '  try{history.back();}catch(e){}'
+        + '}'
+        + 'function _doShare(){'
         + '  var html=document.documentElement.outerHTML;'
         + '  var blob=new Blob([html],{type:"text/html;charset=utf-8"});'
         + '  var file=new File([blob],_fn+".html",{type:"text/html"});'
         + '  if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){'
-        + '    navigator.share({files:[file],title:_fn}).catch(function(){_dlHtml(html);});'
-        + '  } else {'
-        + '    _dlHtml(html);'
-        + '  }'
+        + '    navigator.share({files:[file],title:_fn})'
+        + '    .catch(function(){_doDl(html);});'
+        + '  }else{_doDl(html);}'
         + '}'
-        + 'function _dlHtml(html){'
-        + '  try{'
-        + '    var b=new Blob([html],{type:"text/html;charset=utf-8"});'
-        + '    var u=URL.createObjectURL(b);'
-        + '    var a=document.createElement("a");'
-        + '    a.href=u;a.download=_fn+".html";'
-        + '    document.body.appendChild(a);a.click();'
-        + '    setTimeout(function(){URL.revokeObjectURL(u);a.remove();},5000);'
-        + '  }catch(e){alert("هەڵە: "+e);}'
+        + 'function _doDl(h){'
+        + '  var b=new Blob([h||document.documentElement.outerHTML],'
+        + '    {type:"text/html;charset=utf-8"});'
+        + '  var u=URL.createObjectURL(b);'
+        + '  var a=document.createElement("a");'
+        + '  a.href=u;a.download=_fn+".html";'
+        + '  document.body.appendChild(a);a.click();'
+        + '  setTimeout(function(){URL.revokeObjectURL(u);a.remove();},5000);'
         + '}'
-        + '<\/scr'+'ipt>';
+        + '<\/script>';
 
     var bar = '<div id="_pbar">'
-        + '<button id="_pbtn" onclick="window.print()">🖨<br>چاپ</button>'
-        + '<button id="_dbtn" onclick="_share()">📤<br>شێر/داونلۆد</button>'
-        + '<button id="_cbtn" onclick="' + closeCode + '">✕<br>داخستن</button>'
+        + '<button id="_pbtn" onclick="_doPrint()">🖨️<br>چاپ</button>'
+        + '<button id="_sbtn" onclick="_doShare()">📤<br>شێر / داونلۆد</button>'
+        + '<button id="_cbtn" onclick="_doClose()">✕</button>'
         + '</div>';
 
+    // HTML ئامادە بکە
     var final = cleaned;
     if (/<\/head>/i.test(final)) {
-        final = final.replace(/<\/head>/i, injected + '</head>');
+        final = final.replace(/<\/head>/i, innerCss + innerJs + '</head>');
     } else {
-        final = injected + final;
+        final = innerCss + innerJs + final;
     }
     if (/<body[^>]*>/i.test(final)) {
         final = final.replace(/(<body[^>]*>)/i, '$1' + bar);
     } else {
         final = bar + final;
     }
+
+    // ── موبایل: Blob URL → window.open ─────────────────────
+    if (_isMob()) {
+        var blob = new Blob([final], { type: 'text/html;charset=utf-8' });
+        var blobUrl = URL.createObjectURL(blob);
+        var win = window.open(blobUrl, '_blank');
+        if (win) {
+            setTimeout(function() { URL.revokeObjectURL(blobUrl); }, 60000);
+        } else {
+            // Popup بلۆک کراوە — یەکسەر داونلۆد بکە
+            var a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = fileName + '.html';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function() { URL.revokeObjectURL(blobUrl); a.remove(); }, 5000);
+            showNotification('📥 پسولەکە داونلۆد کرا — لە داونلۆدەکانت بیبینە', 'info');
+        }
+        return;
+    }
+
+    // ── دێسکتۆپ: iframe + srcdoc ───────────────────────────
+    // closeCode بۆ دێسکتۆپ iframe
+    final = final.replace(
+        'function _doClose(){  try{window.close();}catch(e){}  try{history.back();}catch(e){}}',
+        'function _doClose(){try{window.parent.document.getElementById("_ukPO").remove();}catch(e){}}'
+    );
 
     var old = document.getElementById('_ukPO');
     if (old) old.remove();
@@ -4793,11 +4829,9 @@ function printHtml(htmlContent, fileName) {
     iframe.srcdoc = final;
 }
 
-function _printHtmlIframe(final) { printHtml(final, 'label'); }
+function _printHtmlIframe(f) { printHtml(f, 'label'); }
 
-function _mobilePrint(html, filename) {
-    printHtml(html, filename);
-}
+function _mobilePrint(html, filename) { printHtml(html, filename); }
 
 // ==================== View & Print Driver ====================
 function viewDriver(key) {
