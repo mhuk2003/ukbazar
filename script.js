@@ -4717,7 +4717,6 @@ function printExpense(key) {
 // ============================================================
 function printHtml(htmlContent, fileName) {
     fileName = (fileName || 'label').replace(/\.pdf$/i, '');
-
     var cleaned = htmlContent
         .replace(/backdrop-filter\s*:[^;"]+;?/gi, '')
         .replace(/-webkit-backdrop-filter\s*:[^;"]+;?/gi, '')
@@ -4726,13 +4725,14 @@ function printHtml(htmlContent, fileName) {
 
     var barStyle = '<style>'
         + '*{box-sizing:border-box;}'
-        + '#_pbar{position:fixed;top:0;left:0;right:0;display:flex;gap:8px;'
-        + 'padding:10px 12px;background:#1a365d;z-index:2147483647;'
+        + '#_pbar{position:fixed;top:0;left:0;right:0;display:flex;gap:6px;'
+        + 'padding:10px 10px;background:#1a365d;z-index:2147483647;'
         + 'box-shadow:0 3px 10px rgba(0,0,0,.4);}'
-        + '#_pbar button{flex:1;padding:14px 6px;border:none;border-radius:10px;'
-        + 'font-size:.95rem;font-weight:800;cursor:pointer;'
+        + '#_pbar button{flex:1;padding:13px 4px;border:none;border-radius:10px;'
+        + 'font-size:.88rem;font-weight:800;cursor:pointer;'
         + 'font-family:Tahoma,Arial,sans-serif;}'
         + '#_pbtn{background:#38a169;color:#fff;}'
+        + '#_dbtn{background:#3182ce;color:#fff;}'
         + '#_cbtn{background:#e53e3e;color:#fff;}'
         + '@media print{'
         + '#_pbar{display:none!important;}'
@@ -4741,32 +4741,26 @@ function printHtml(htmlContent, fileName) {
         + '@media screen{body{padding-top:66px!important;}}'
         + '</style>';
 
+    var fnStr = JSON.stringify(fileName);
     var dlFn = '<scr'+'ipt>'
-        + 'var _ukFileName = ' + JSON.stringify(fileName) + ';'
-        + 'function _ukDownloadHTML(){'
+        + 'var _fn=' + fnStr + ';'
+        + 'function _dl(){'
         + '  try{'
-        + '    var blob=new Blob([document.documentElement.outerHTML],{type:"text/html;charset=utf-8"});'
-        + '    var url=URL.createObjectURL(blob);'
+        + '    var b=new Blob([document.documentElement.outerHTML],{type:"text/html;charset=utf-8"});'
+        + '    var u=URL.createObjectURL(b);'
         + '    var a=document.createElement("a");'
-        + '    a.href=url; a.download=_ukFileName+".html";'
-        + '    document.body.appendChild(a); a.click();'
-        + '    setTimeout(function(){URL.revokeObjectURL(url);a.remove();},3000);'
-        + '  }catch(e){window.print();}'
-        + '}'
-        + 'function _ukSmartPrint(){'
-        + '  var isMobile=/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);'
-        + '  if(isMobile){'
-        + '    _ukDownloadHTML();'
-        + '  } else {'
-        + '    window.print();'
-        + '  }'
+        + '    a.href=u;a.download=_fn+".html";'
+        + '    document.body.appendChild(a);a.click();'
+        + '    setTimeout(function(){URL.revokeObjectURL(u);a.remove();},5000);'
+        + '  }catch(e){alert("هەڵە: "+e);}'
         + '}'
         + '<\/scr'+'ipt>';
 
-    var closeCode = "try{window.parent.document.getElementById('_ukPO').remove();}catch(e){}try{window.close();}catch(e2){}";
+    var closeCode = "try{window.parent.document.getElementById('_ukPO').remove();}catch(e){}";
     var bar = '<div id="_pbar">'
-        + '<button id="_pbtn" onclick="_ukSmartPrint()">&#128424; چاپ / داونلۆد</button>'
-        + '<button id="_cbtn" onclick="' + closeCode + '">&#x2715; داخستن</button>'
+        + '<button id="_pbtn" onclick="window.print()">🖨 چاپ</button>'
+        + '<button id="_dbtn" onclick="_dl()">⬇ داونلۆد</button>'
+        + '<button id="_cbtn" onclick="' + closeCode + '">✕ داخستن</button>'
         + '</div>';
 
     var final = cleaned;
@@ -4781,33 +4775,18 @@ function printHtml(htmlContent, fileName) {
         final = bar + final;
     }
 
-    // موبایل: Blob URL تابی نوێ بکەرەوە (popup blocker نییە لەگەڵ click handler)
-    var isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    if (isMobile) {
-        try {
-            var blob = new Blob([final], { type: 'text/html;charset=utf-8' });
-            var blobUrl = URL.createObjectURL(blob);
-            var newTab = window.open(blobUrl, '_blank');
-            if (!newTab) { _printHtmlIframe(final); }
-            setTimeout(function() { try { URL.revokeObjectURL(blobUrl); } catch(e){} }, 30000);
-        } catch (e) {
-            _printHtmlIframe(final);
-        }
-    } else {
-        _printHtmlIframe(final);
-    }
-}
-
-function _printHtmlIframe(final) {
     var old = document.getElementById('_ukPO');
     if (old) old.remove();
     var iframe = document.createElement('iframe');
     iframe.id = '_ukPO';
+    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-downloads allow-modals');
     iframe.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;'
         + 'min-height:100vh;border:0;z-index:2147483646;background:#fff;display:block;';
     document.body.appendChild(iframe);
     iframe.srcdoc = final;
 }
+
+function _printHtmlIframe(final) { printHtml(final, 'label'); }
 
 function _mobilePrint(html, filename) {
     printHtml(html, filename);
