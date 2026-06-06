@@ -4714,23 +4714,26 @@ function printExpense(key) {
 
 // ============================================================
 // printHtml — html2canvas + jsPDF بۆ موبایل / iframe بۆ دێسکتۆپ
+// چارەسەرکراو بۆ PWA ئەپەکان (iOS + Android)
 // ============================================================
 function printHtml(htmlContent, fileName) {
     fileName = (fileName || 'label').replace(/\.pdf$/i, '');
     var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    // تەستی PWA: ئەگەر لە standalone mode بوو، ئەپ دەزانین
+    var isPWA = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
+             || (window.navigator && window.navigator.standalone === true);
 
     if (!isMobile) {
         _printFallbackIframe(htmlContent, fileName);
         return;
     }
 
-    // موبایل — html2canvas + jsPDF
+    // موبایل / PWA — html2canvas + jsPDF
     showNotification('PDF ئامادە دەکرێت... ⏳');
 
     var tempDiv = document.createElement('div');
     tempDiv.style.cssText = 'position:fixed;left:-9999px;top:0;width:560px;background:#fff;'
         + 'padding:16px;direction:rtl;font-family:Tahoma,Arial,sans-serif;z-index:-1;';
-    // سڕینەوەی تاگەکانی HTML و body ئەگەر هەبوون — تەنها ناوەرۆک
     var bodyMatch = htmlContent.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
     tempDiv.innerHTML = bodyMatch ? bodyMatch[1] : htmlContent;
     document.body.appendChild(tempDiv);
@@ -4753,13 +4756,10 @@ function printHtml(htmlContent, fileName) {
 
             var pdfW = pdf.internal.pageSize.getWidth();
             var pdfH = (canvas.height * pdfW) / canvas.width;
-
-            // ئەگەر درێژیەکە زیاتر بوو لە یەک لاپەڕە
             var pageH = pdf.internal.pageSize.getHeight();
             if (pdfH <= pageH) {
                 pdf.addImage(imgData, 'JPEG', 0, 0, pdfW, pdfH);
             } else {
-                // دابەشکردن بە چەند لاپەڕە
                 var pageCount = Math.ceil(pdfH / pageH);
                 for (var p = 0; p < pageCount; p++) {
                     if (p > 0) pdf.addPage();
@@ -4767,31 +4767,113 @@ function printHtml(htmlContent, fileName) {
                 }
             }
 
-            // iOS: کرانەوەی PDF لە تابێکی نوێ
-            if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-                var pdfUri = pdf.output('datauristring');
-                var win = window.open(pdfUri, '_blank');
-                if (!win) {
-                    // pop-up بلۆک — داونلۆد بلۆب
-                    var blob = pdf.output('blob');
-                    var url = URL.createObjectURL(blob);
-                    var a = document.createElement('a');
-                    a.href = url; a.download = fileName + '.pdf';
-                    document.body.appendChild(a); a.click();
-                    setTimeout(function() { URL.revokeObjectURL(url); a.remove(); }, 5000);
+            var pdfBlob = pdf.output('blob');
+            var pdfName = fileName + '.pdf';
+
+            // ═══ ١. Web Share API (باشترین ڕێگا بۆ PWA) ═══
+            if (navigator.canShare && navigator.share) {
+                var shareFile = new File([pdfBlob], pdfName, { type: 'application/pdf' });
+                if (navigator.canShare({ files: [shareFile] })) {
+                    navigator.share({ files: [shareFile], title: pdfName })
+                        .then(function() { showNotification('✅ PDF هاوبەشکرا!'); })
+                        .catch(function(err) {
+                            // بە ئارەزووی بەکارهێنەر هەڵوەشاندەوە — بچۆ بۆ viewer
+                            if (err.name !== 'AbortError') _showPdfInViewer(pdfBlob, pdfName, canvas);
+                        });
+                    return;
                 }
-            } else {
-                // Android — ڕاستەوخۆ داونلۆد
-                pdf.save(fileName + '.pdf');
             }
 
-            showNotification('✅ PDF ئامادەیە!');
+            // ═══ ٢. نیشاندانی PDF viewer لە ناو ئەپەکە ═══
+            _showPdfInViewer(pdfBlob, pdfName, canvas);
+
         }).catch(function(err) {
             if (document.body.contains(tempDiv)) document.body.removeChild(tempDiv);
             showNotification('هەڵە لە دروستکردنی PDF', 'error');
             console.error('html2canvas error:', err);
         });
     }, 400);
+}
+
+// ═══ نیشاندانی PDF/وێنە لە viewer لە ناو ئەپەکە ═══
+function _showPdfInViewer(pdfBlob, pdfName, canvas) {
+    // دروستکردنی overlay viewer
+    var old = document.getElementById('_pwaViewer');
+    if (old) old.remove();
+
+    var overlay = document.createElement('div');
+    overlay.id = '_pwaViewer';
+    overlay.style.cssText = 'position:fixed;inset:0;background:#1a1a2e;z-index:2147483647;display:flex;flex-direction:column;';
+
+    // تاپبار
+    var bar = document.createElement('div');
+    bar.style.cssText = 'display:flex;gap:8px;padding:10px 12px;background:#16213e;flex-shrink:0;safe-area-inset-top:env(safe-area-inset-top);padding-top:calc(10px + env(safe-area-inset-top));';
+
+    var btnClose = document.createElement('button');
+    btnClose.textContent = '✕ داخستن';
+    btnClose.style.cssText = 'flex:1;padding:12px;background:#e53e3e;color:#fff;border:none;border-radius:10px;font-size:.9rem;font-weight:800;cursor:pointer;font-family:inherit;';
+    btnClose.onclick = function() { overlay.remove(); };
+
+    var btnShare = document.createElement('button');
+    btnShare.textContent = '📤 هاوبەشکردن';
+    btnShare.style.cssText = 'flex:1;padding:12px;background:#3182ce;color:#fff;border:none;border-radius:10px;font-size:.9rem;font-weight:800;cursor:pointer;font-family:inherit;';
+
+    var btnDl = document.createElement('button');
+    btnDl.textContent = '⬇ داونلۆد';
+    btnDl.style.cssText = 'flex:1;padding:12px;background:#276749;color:#fff;border:none;border-radius:10px;font-size:.9rem;font-weight:800;cursor:pointer;font-family:inherit;';
+
+    // داونلۆد بە blob URL
+    var blobUrl = URL.createObjectURL(pdfBlob);
+    btnDl.onclick = function() {
+        var a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = pdfName;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() { a.remove(); }, 2000);
+    };
+
+    // هاوبەشکردن
+    btnShare.onclick = function() {
+        if (navigator.share) {
+            var f = new File([pdfBlob], pdfName, { type: 'application/pdf' });
+            var shareData = navigator.canShare && navigator.canShare({ files: [f] })
+                ? { files: [f], title: pdfName }
+                : { url: blobUrl, title: pdfName };
+            navigator.share(shareData)
+                .then(function() { showNotification('✅ هاوبەشکرا!'); })
+                .catch(function() {});
+        } else {
+            // فۆلبەک — کۆپیکردنی url
+            showNotification('Browser پشتگیری Share ناکات', 'error');
+        }
+    };
+
+    bar.appendChild(btnClose);
+    bar.appendChild(btnShare);
+    bar.appendChild(btnDl);
+
+    // نیشاندانی وێنەکە (canvas بە img)
+    var imgArea = document.createElement('div');
+    imgArea.style.cssText = 'flex:1;overflow-y:auto;display:flex;justify-content:center;align-items:flex-start;padding:12px;background:#2d3748;';
+
+    var img = document.createElement('img');
+    img.src = canvas ? canvas.toDataURL('image/jpeg', 0.95) : blobUrl;
+    img.style.cssText = 'max-width:100%;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.5);';
+    imgArea.appendChild(img);
+
+    overlay.appendChild(bar);
+    overlay.appendChild(imgArea);
+    document.body.appendChild(overlay);
+
+    showNotification('✅ PDF ئامادەیە — هاوبەشی بکە یان داونلۆد بکە');
+
+    // پاکردنەوەی blob URL کاتێک overlay دادەخرێت
+    var origRemove = overlay.remove.bind(overlay);
+    overlay.remove = function() {
+        setTimeout(function() { URL.revokeObjectURL(blobUrl); }, 3000);
+        origRemove();
+    };
 }
 
 function _printFallbackIframe(htmlContent, fileName) {
