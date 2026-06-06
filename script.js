@@ -1547,7 +1547,63 @@ function printLabel(key) {
         + boxHtml('recipient &nbsp;--&nbsp; وەرگر', receiverRows + pkgRows + extraRows, true)
         + '</body></html>';
 
-    _smartPrint(html, 'label-' + orderNum.replace(/[^a-zA-Z0-9-]/g,''));
+    // موبایل APK: Firebase Function بانگ بکە → PDF URL → داونلۆد
+    var isMobileApk = /Android/i.test(navigator.userAgent);
+    if (isMobileApk) {
+        _serverPdf(html, 'label-' + orderNum.replace(/[^a-zA-Z0-9-]/g,''));
+    } else {
+        _smartPrint(html, 'label-' + orderNum.replace(/[^a-zA-Z0-9-]/g,''));
+    }
+}
+
+// ============================================================
+// _serverPdf — HTML بنێرە بۆ Firebase Function → PDF داونلۆد بکە
+// ============================================================
+function _serverPdf(html, fileName) {
+    // پیشاندانی ئاگادارکردنەوەی بارکردن
+    var prog = document.createElement('div');
+    prog.id = '_ukPdfProg';
+    prog.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);'
+        + 'background:rgba(26,54,93,.96);color:#fff;padding:22px 32px;border-radius:16px;'
+        + 'font-size:1rem;font-weight:800;z-index:2147483647;text-align:center;'
+        + 'font-family:Tahoma,Arial,sans-serif;box-shadow:0 8px 32px rgba(0,0,0,.4);min-width:200px;';
+    prog.innerHTML = '⏳ PDF ئامادە دەکرێت...';
+    document.body.appendChild(prog);
+
+    // URL ی Firebase Function — پرۆژەکەت
+    var FUNC_URL = 'https://us-central1-ukbazar-15eda.cloudfunctions.net/generateLabelPDF';
+
+    fetch(FUNC_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ html: html, fileName: fileName })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        var p = document.getElementById('_ukPdfProg');
+        if (p) p.remove();
+
+        if (!data.url) throw new Error(data.error || 'هەڵە');
+
+        // PDF URL بە <a> داونلۆد بکە
+        var a = document.createElement('a');
+        a.href = data.url;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() { a.remove(); }, 3000);
+
+        showNotification('✅ PDF ئامادەیە — دابگرە!');
+    })
+    .catch(function(err) {
+        var p = document.getElementById('_ukPdfProg');
+        if (p) p.remove();
+        console.error('_serverPdf error:', err);
+        showNotification('هەڵە: ' + err.message, 'error');
+        // fallback بۆ overlay
+        _printFallbackIframe(html, fileName);
+    });
 }
 
 
