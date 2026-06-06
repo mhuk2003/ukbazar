@@ -4722,126 +4722,99 @@ function printHtml(htmlContent, fileName) {
 }
 
 function _printFallbackIframe(htmlContent, fileName) {
+    // هەموو iframe و window.open سڕاوەتەوە — overlay ڕاستەوخۆ لە پەیجەکەدا
     var cleaned = htmlContent
         .replace(/backdrop-filter\s*:[^;"]+;?/gi, '')
-        .replace(/-webkit-backdrop-filter\s*:[^;"]+;?/gi, '')
-        .replace(/<div[^>]*id="(_iframeCtrl|_printCtrl|print-ctrl|_ukPrintBar|_pbar)"[^>]*>[\s\S]*?<\/div>/gi, '')
-        .replace(/<style[^>]*id="(_iframeCtrlStyle|_ukPrintBarStyle)"[^>]*>[\s\S]*?<\/style>/gi, '');
+        .replace(/-webkit-backdrop-filter\s*:[^;"]+;?/gi, '');
 
-    var fnStr = JSON.stringify(fileName || 'label');
-    var barStyle = '<style>'
-        + '*{box-sizing:border-box;}'
-        + '#_pbar{position:fixed;top:0;left:0;right:0;display:flex;gap:6px;padding:10px;'
-        + 'background:#1a365d;z-index:2147483647;box-shadow:0 3px 10px rgba(0,0,0,.4);}'
-        + '#_pbar button{flex:1;padding:13px 4px;border:none;border-radius:10px;'
-        + 'font-size:.88rem;font-weight:800;cursor:pointer;font-family:Tahoma,Arial,sans-serif;}'
-        + '#_pbtn{background:#38a169;color:#fff;}'
-        + '#_dbtn{background:#3182ce;color:#fff;}'
-        + '#_cbtn{background:#e53e3e;color:#fff;}'
-        + '@media print{#_pbar{display:none!important;}body{padding-top:0!important;margin:0!important;}'
-        + '*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}}'
-        + '@media screen{body{padding-top:66px!important;}}'
-        + '</style>';
+    // بەشی ناوەرۆک — body تەنها
+    var bodyMatch = cleaned.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+    var bodyContent = bodyMatch ? bodyMatch[1] : cleaned;
 
-    // داونلۆد + داخستن — بەشێوەیەک کار دەکات لە ئەپ و براوسەر هەردووکیان
-    var dlFn = '<scr'+'ipt>'
-        + 'var _fn=' + fnStr + ';'
-        + 'var _parentOrigin=null;'
-        + 'try{_parentOrigin=window.parent!==window?window.parent:null;}catch(e){}'
-        + 'function _dl(){'
-        + '  try{'
-        + '    var b=new Blob([document.documentElement.outerHTML],{type:"text/html;charset=utf-8"});'
-        + '    var u=URL.createObjectURL(b);var a=document.createElement("a");'
-        + '    a.href=u;a.download=_fn+".html";document.body.appendChild(a);a.click();'
-        + '    setTimeout(function(){URL.revokeObjectURL(u);a.remove();},5000);'
-        + '  }catch(e){'
-        + '    var enc=encodeURIComponent(document.documentElement.outerHTML);'
-        + '    var a2=document.createElement("a");'
-        + '    a2.href="data:text/html;charset=utf-8,"+enc;'
-        + '    a2.download=_fn+".html";document.body.appendChild(a2);a2.click();'
-        + '    setTimeout(function(){a2.remove();},3000);'
-        + '  }'
-        + '}'
-        + 'function _close(){'
-        + '  if(_parentOrigin){'
-        + '    try{_parentOrigin.document.getElementById("_ukPO").remove();return;}catch(e){}'
-        + '  }'
-        + '  var o=document.getElementById("_ukOverlay");'
-        + '  if(o)o.remove();'
-        + '}'
-        + '<\/scr'+'ipt>';
+    // سڕینەوەی دوگمەکانی کۆن ئەگەر هەبوون
+    var old = document.getElementById('_ukPO');
+    if (old) old.remove();
 
-    var bar = '<div id="_pbar">'
-        + '<button id="_pbtn" onclick="window.print()">🖨 چاپ</button>'
-        + '<button id="_dbtn" onclick="_dl()">⬇ داونلۆد</button>'
-        + '<button id="_cbtn" onclick="_close()">✕ داخستن</button>'
-        + '</div>';
+    // overlay ی سەرەوە
+    var overlay = document.createElement('div');
+    overlay.id = '_ukPO';
+    overlay.style.cssText = [
+        'position:fixed','top:0','left:0','width:100%','height:100%',
+        'z-index:2147483646','background:#fff',
+        'overflow-y:auto','-webkit-overflow-scrolling:touch',
+        'display:flex','flex-direction:column'
+    ].join(';') + ';';
 
-    var final = cleaned;
-    if (/<\/head>/i.test(final)) final = final.replace(/<\/head>/i, barStyle + dlFn + '</head>');
-    else final = barStyle + dlFn + final;
-    if (/<body[^>]*>/i.test(final)) final = final.replace(/(<body[^>]*>)/i, '$1' + bar);
-    else final = bar + final;
+    // بار ی دوگمەکان
+    var bar = document.createElement('div');
+    bar.style.cssText = [
+        'position:sticky','top:0','left:0','right:0',
+        'display:flex','gap:6px','padding:10px',
+        'background:#1a365d','z-index:1',
+        'box-shadow:0 3px 10px rgba(0,0,0,.4)',
+        'flex-shrink:0'
+    ].join(';') + ';';
 
-    // ئایا لە ناو PWA/ئەپ دەن؟
-    var inPwa = window.matchMedia('(display-mode: standalone)').matches
-        || window.navigator.standalone === true
-        || document.referrer.includes('android-app://');
+    var btnStyle = 'flex:1;padding:14px 4px;border:none;border-radius:10px;'
+        + 'font-size:.92rem;font-weight:800;cursor:pointer;'
+        + 'font-family:Tahoma,Arial,sans-serif;-webkit-tap-highlight-color:transparent;';
 
-    if (!inPwa) {
-        // براوسەری ئاساسی — iframe srcdoc ی پێشوو
-        var old2 = document.getElementById('_ukPO');
-        if (old2) old2.remove();
-        var iframe = document.createElement('iframe');
-        iframe.id = '_ukPO';
-        // allow-same-origin سڕایەوە بۆ ئەمنیەت — تەنها allow-scripts
-        iframe.setAttribute('sandbox', 'allow-scripts allow-downloads allow-modals allow-popups');
-        iframe.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;'
-            + 'min-height:100vh;border:0;z-index:2147483646;background:#fff;display:block;';
-        document.body.appendChild(iframe);
-        iframe.srcdoc = final;
-    } else {
-        // PWA / ئەپ — window.open بەجای iframe چونکە iframe srcdoc کارناکات
-        var pw = window.open('', '_blank', 'width='+screen.width+',height='+screen.height);
-        if (pw) {
-            pw.document.open();
-            pw.document.write(final);
-            pw.document.close();
-        } else {
-            // pop-up بلۆک — overlay دروست بکە لە ناو خودی پەیجەکە
-            var old3 = document.getElementById('_ukPO');
-            if (old3) old3.remove();
-            var overlay = document.createElement('div');
-            overlay.id = '_ukPO';
-            overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;'
-                + 'z-index:2147483646;background:#fff;overflow:auto;-webkit-overflow-scrolling:touch;';
-            overlay.innerHTML = final;
-            // جێنشانی _close بۆ سڕینەوەی overlay
-            document.body.appendChild(overlay);
-            // دوگمەکان دووبارە سوودمەند بکە
-            var pb = overlay.querySelector('#_pbtn');
-            var db = overlay.querySelector('#_dbtn');
-            var cb = overlay.querySelector('#_cbtn');
-            if (pb) pb.onclick = function(){ window.print(); };
-            if (db) db.onclick = function(){
-                try{
-                    var b=new Blob([final],{type:"text/html;charset=utf-8"});
-                    var u=URL.createObjectURL(b);var a=document.createElement("a");
-                    a.href=u;a.download=(fileName||'label')+".html";
-                    document.body.appendChild(a);a.click();
-                    setTimeout(function(){URL.revokeObjectURL(u);a.remove();},5000);
-                }catch(e){
-                    var enc=encodeURIComponent(final);
-                    var a2=document.createElement("a");
-                    a2.href="data:text/html;charset=utf-8,"+enc;
-                    a2.download=(fileName||'label')+".html";
-                    document.body.appendChild(a2);a2.click();
-                    setTimeout(function(){a2.remove();},3000);
-                }
-            };
-            if (cb) cb.onclick = function(){ overlay.remove(); };
+    var pbtn = document.createElement('button');
+    pbtn.style.cssText = btnStyle + 'background:#38a169;color:#fff;';
+    pbtn.innerHTML = '🖨 چاپ';
+    pbtn.onclick = function(){ window.print(); };
+
+    var dbtn = document.createElement('button');
+    dbtn.style.cssText = btnStyle + 'background:#3182ce;color:#fff;';
+    dbtn.innerHTML = '⬇ داونلۆد';
+    dbtn.onclick = function(){
+        try {
+            var b = new Blob([cleaned], {type:'text/html;charset=utf-8'});
+            var u = URL.createObjectURL(b);
+            var a = document.createElement('a');
+            a.href = u; a.download = (fileName||'label') + '.html';
+            document.body.appendChild(a); a.click();
+            setTimeout(function(){ URL.revokeObjectURL(u); a.remove(); }, 5000);
+        } catch(e) {
+            var enc = encodeURIComponent(cleaned);
+            var a2 = document.createElement('a');
+            a2.href = 'data:text/html;charset=utf-8,' + enc;
+            a2.download = (fileName||'label') + '.html';
+            document.body.appendChild(a2); a2.click();
+            setTimeout(function(){ a2.remove(); }, 3000);
         }
-    }
+    };
+
+    var cbtn = document.createElement('button');
+    cbtn.style.cssText = btnStyle + 'background:#e53e3e;color:#fff;';
+    cbtn.innerHTML = '✕ داخستن';
+    cbtn.onclick = function(){ overlay.remove(); };
+
+    bar.appendChild(pbtn);
+    bar.appendChild(dbtn);
+    bar.appendChild(cbtn);
+
+    // ناوەرۆکی لەیبل
+    var content = document.createElement('div');
+    content.style.cssText = 'padding:12px;flex:1;direction:rtl;font-family:Tahoma,Arial,sans-serif;';
+    content.innerHTML = bodyContent;
+
+    overlay.appendChild(bar);
+    overlay.appendChild(content);
+    document.body.appendChild(overlay);
+
+    // print style — دوگمەکان بنووشێ
+    var ps = document.createElement('style');
+    ps.id = '_ukPrintStyle';
+    ps.textContent = '@media print{#_ukPO>div:first-child{display:none!important;}body>*:not(#_ukPO){display:none!important;}#_ukPO{position:static!important;overflow:visible!important;height:auto!important;}}';
+    document.head.appendChild(ps);
+    overlay.addEventListener('remove', function(){ var s=document.getElementById('_ukPrintStyle'); if(s)s.remove(); });
+    // cleanup وەختی داخستن
+    cbtn.onclick = function(){
+        var s = document.getElementById('_ukPrintStyle');
+        if (s) s.remove();
+        overlay.remove();
+    };
 }
 
 function _printHtmlIframe(final) { printHtml(final, 'label'); }
