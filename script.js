@@ -4712,90 +4712,79 @@ function printExpense(key) {
     _mobilePrint(html, 'expense-' + (e.name||key));
 }
 
-// ==================== Universal Mobile Print ====================
-// ========== printHtml: نسخەی script.js — گەرەنتی بارکردن ==========
+// ============================================================
+// printHtml — چارەسەری نوێ: srcdoc iframe + داونلۆد دوگمە
+// ============================================================
 function printHtml(htmlContent, fileName) {
-  fileName = fileName || 'document.pdf';
+    fileName = (fileName || 'label').replace(/\.pdf$/i, '');
 
-  // پاکسازی هەموو بارەکانی کۆن
-  var cleaned = htmlContent
-    .replace(/backdrop-filter\s*:[^;"}]+;?/gi, '')
-    .replace(/-webkit-backdrop-filter\s*:[^;"}]+;?/gi, '')
-    .replace(/<div[^>]*id="(_iframeCtrl|_printCtrl|print-ctrl|_ukPrintBar)"[^>]*>[\s\S]*?<\/div>/gi, '')
-    .replace(/<style[^>]*id="(_iframeCtrlStyle|_ukPrintBarStyle)"[^>]*>[\s\S]*?<\/style>/gi, '');
+    // پاکسازی
+    var cleaned = htmlContent
+        .replace(/backdrop-filter\s*:[^;"}]+;?/gi, '')
+        .replace(/-webkit-backdrop-filter\s*:[^;"}]+;?/gi, '')
+        .replace(/<div[^>]*id="(_iframeCtrl|_printCtrl|print-ctrl|_ukPrintBar|_pbar)"[^>]*>[\s\S]*?<\/div>/gi, '')
+        .replace(/<style[^>]*id="(_iframeCtrlStyle|_ukPrintBarStyle)"[^>]*>[\s\S]*?<\/style>/gi, '');
 
-  // ستایل — دوگمەکان و چاپ
-  var ctrlStyle = '<style id="_ukPrintBarStyle">'
-    + '#_ukPrintBar{'
-    + 'position:fixed;top:0;left:0;right:0;'
-    + 'display:flex;gap:10px;padding:10px 12px;'
-    + 'background:#1a365d;z-index:2147483647;'
-    + 'box-shadow:0 2px 8px rgba(0,0,0,.3);box-sizing:border-box;'
-    + 'font-family:Tahoma,Arial,sans-serif;}'
-    + '#_ukPrintBar button{'
-    + 'flex:1;padding:13px 8px;border:none;border-radius:10px;'
-    + 'font-size:.95rem;font-weight:800;cursor:pointer;'
-    + 'font-family:Tahoma,Arial,sans-serif;}'
-    + '#_ukPrintBar .ubp{background:#38a169;color:#fff;}'
-    + '#_ukPrintBar .ubc{background:#e53e3e;color:#fff;}'
-    + '@media print{'
-    + '#_ukPrintBar{display:none!important;}'
-    + 'body{padding-top:0!important;margin:0!important;}'
-    + '*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}}'
-    + '@media screen{body{padding-top:62px!important;}}'
-    + '</style>';
+    // ستایلی دوگمەکان
+    var barStyle = '<style>'
+        + '*{box-sizing:border-box;}'
+        + '#_pbar{position:fixed;top:0;left:0;right:0;display:flex;gap:8px;'
+        + 'padding:10px 12px;background:#1a365d;z-index:2147483647;'
+        + 'box-shadow:0 3px 10px rgba(0,0,0,.4);}'
+        + '#_pbar button{flex:1;padding:14px 6px;border:none;border-radius:10px;'
+        + 'font-size:.95rem;font-weight:800;cursor:pointer;'
+        + 'font-family:Tahoma,Arial,sans-serif;}'
+        + '#_pbtn{background:#38a169;color:#fff;}'
+        + '#_cbtn{background:#e53e3e;color:#fff;}'
+        + '#_dbtn{background:#3182ce;color:#fff;}'
+        + '@media print{'
+        + '#_pbar{display:none!important;}'
+        + 'body{padding-top:0!important;margin:0!important;}'
+        + '*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}}'
+        + '@media screen{body{padding-top:66px!important;}}'
+        + '</style>';
 
-  // دوگمەکان — داخستن بە parent.document
-  var closeScript = "try{window.parent.document.getElementById('_ukPrintOverlay').remove();}catch(e){}";
-  var ctrlBar = '<div id="_ukPrintBar">'
-    + '<button class="ubp" onclick="window.print()">&#128424; چاپ / PDF</button>'
-    + '<button class="ubc" onclick="' + closeScript + '">&#x2715; داخستن</button>'
-    + '</div>';
+    // فەنکشنی داونلۆد — Blob
+    var dlFn = '<scr'+'ipt>'
+        + 'function _ukDL(){'
+        + 'try{'
+        + 'var b=new Blob([document.documentElement.outerHTML],{type:"text/html;charset=utf-8"});'
+        + 'var u=URL.createObjectURL(b);'
+        + 'var a=document.createElement("a");'
+        + 'a.href=u;a.download="label.html";document.body.appendChild(a);a.click();'
+        + 'setTimeout(function(){URL.revokeObjectURL(u);a.remove();},3000);'
+        + '}catch(e){alert("هەڵە: "+e.message);}}'
+        + '<\/scr'+'ipt>';
 
-  // زیادکردن بە HTML
-  var finalHtml = cleaned;
-  if (/<\/head>/i.test(finalHtml)) {
-    finalHtml = finalHtml.replace(/<\/head>/i, ctrlStyle + '</head>');
-  } else {
-    finalHtml = ctrlStyle + finalHtml;
-  }
-  if (/<body[^>]*>/i.test(finalHtml)) {
-    finalHtml = finalHtml.replace(/(<body[^>]*>)/i, '$1' + ctrlBar);
-  } else {
-    finalHtml = ctrlBar + finalHtml;
-  }
+    var closeCode = "try{window.parent.document.getElementById('_ukPO').remove();}catch(e){}";
+    var bar = '<div id="_pbar">'
+        + '<button id="_pbtn" onclick="window.print()">&#128424; چاپ / PDF</button>'
+        + '<button id="_dbtn" onclick="_ukDL()">&#11015; داونلۆد HTML</button>'
+        + '<button id="_cbtn" onclick="' + closeCode + '">&#x2715; داخستن</button>'
+        + '</div>';
 
-  // iframe — تەنیا ڕێگای پشت پێبەستراوە بۆ موبایل و دێسکتۆپ
-  var frameId = '_ukPrintOverlay';
-  var old = document.getElementById(frameId);
-  if (old) old.remove();
+    // زیادکردن بە HTML
+    var final = cleaned;
+    if (/<\/head>/i.test(final)) {
+        final = final.replace(/<\/head>/i, barStyle + dlFn + '</head>');
+    } else {
+        final = barStyle + dlFn + final;
+    }
+    if (/<body[^>]*>/i.test(final)) {
+        final = final.replace(/(<body[^>]*>)/i, '$1' + bar);
+    } else {
+        final = bar + final;
+    }
 
-  var iframe = document.createElement('iframe');
-  iframe.id = frameId;
-  iframe.setAttribute('allowfullscreen', '');
-  iframe.style.cssText = [
-    'position:fixed',
-    'top:0',
-    'left:0',
-    'width:100%',
-    'height:100%',
-    'min-height:100vh',
-    'border:0',
-    'z-index:2147483646',
-    'background:#fff',
-    'display:block'
-  ].join(';') + ';';
-  document.body.appendChild(iframe);
-
-  // بارکردن — srcdoc بۆ موبایل Chrome (document.write ناکرێت بلۆک بکرێت)
-  try {
-    iframe.srcdoc = finalHtml;
-  } catch(e) {
-    var doc = iframe.contentDocument || iframe.contentWindow.document;
-    doc.open('text/html', 'replace');
-    doc.write(finalHtml);
-    doc.close();
-  }
+    // iframe — srcdoc هیچ بلۆکی نییە لە Chrome موبایل
+    var old = document.getElementById('_ukPO');
+    if (old) old.remove();
+    var iframe = document.createElement('iframe');
+    iframe.id = '_ukPO';
+    iframe.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;'
+        + 'min-height:100vh;border:0;z-index:2147483646;background:#fff;display:block;';
+    document.body.appendChild(iframe);
+    iframe.srcdoc = final;
 }
 
 function _mobilePrint(html, filename) {
