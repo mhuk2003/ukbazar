@@ -1547,7 +1547,7 @@ function printLabel(key) {
         + boxHtml('recipient &nbsp;--&nbsp; وەرگر', receiverRows + pkgRows + extraRows, true)
         + '</body></html>';
 
-    _mobilePrint(html, 'label-' + orderNum.replace(/[^a-zA-Z0-9-]/g,''));
+    _smartPrint(html, 'label-' + orderNum.replace(/[^a-zA-Z0-9-]/g,''));
 }
 
 
@@ -4815,6 +4815,177 @@ function _printFallbackIframe(htmlContent, fileName) {
         if (s) s.remove();
         overlay.remove();
     };
+}
+
+// ============================================================
+// _smartPrint — موبایل: html2canvas → PNG → Share Sheet
+//               دێسکتۆپ: overlay ی ئاساسی
+// ============================================================
+function _smartPrint(htmlContent, fileName) {
+    fileName = (fileName || 'label').replace(/\.pdf$/i, '');
+
+    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (!isMobile) {
+        // دێسکتۆپ — overlay ئاساسی
+        _printFallbackIframe(htmlContent, fileName);
+        return;
+    }
+
+    // موبایل — html2canvas بە تایبەتمەندی
+    if (typeof html2canvas === 'undefined') {
+        _printFallbackIframe(htmlContent, fileName);
+        return;
+    }
+
+    // نمایشی پرۆگرەس
+    var prog = document.createElement('div');
+    prog.id = '_ukProgMsg';
+    prog.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);'
+        + 'background:rgba(26,54,93,.95);color:#fff;padding:20px 32px;border-radius:16px;'
+        + 'font-size:1rem;font-weight:800;z-index:2147483647;text-align:center;'
+        + 'font-family:Tahoma,Arial,sans-serif;box-shadow:0 8px 32px rgba(0,0,0,.4);';
+    prog.innerHTML = '⏳ ئامادەدەکرێت...';
+    document.body.appendChild(prog);
+
+    // پارچەکردنی HTML بۆ body ی تەنها
+    var bodyMatch = htmlContent.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+    var bodyHtml = bodyMatch ? bodyMatch[1] : htmlContent;
+
+    var tempDiv = document.createElement('div');
+    tempDiv.style.cssText = 'position:fixed;left:-9999px;top:0;width:600px;'
+        + 'background:#fff;padding:16px;direction:rtl;'
+        + 'font-family:Tahoma,Arial,sans-serif;z-index:-9999;';
+    tempDiv.innerHTML = bodyHtml;
+    document.body.appendChild(tempDiv);
+
+    // چاوەڕوان بکە وێنەکان بار ببن
+    var imgs = tempDiv.querySelectorAll('img');
+    var imgPromises = Array.from(imgs).map(function(img) {
+        if (img.complete) return Promise.resolve();
+        return new Promise(function(res) {
+            img.onload = res; img.onerror = res;
+            setTimeout(res, 3000);
+        });
+    });
+
+    Promise.all(imgPromises).then(function() {
+        return html2canvas(tempDiv, {
+            scale: 2.5,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#ffffff',
+            logging: false,
+            scrollX: 0, scrollY: 0,
+            width: 600,
+            windowWidth: 600
+        });
+    }).then(function(canvas) {
+        document.body.removeChild(tempDiv);
+
+        // PNG Blob
+        canvas.toBlob(function(pngBlob) {
+            var progEl = document.getElementById('_ukProgMsg');
+            if (progEl) progEl.remove();
+
+            // Share API هەیە و موبایلە — Share Sheet کردنەوە
+            if (navigator.share && navigator.canShare) {
+                var shareFile = new File([pngBlob], fileName + '.png', { type: 'image/png' });
+                if (navigator.canShare({ files: [shareFile] })) {
+                    navigator.share({
+                        title: fileName,
+                        files: [shareFile]
+                    }).catch(function(err) {
+                        // بەکارهێنەر کەنسەلی کرد — باشە
+                        if (err.name !== 'AbortError') _fallbackShowImage(canvas, pngBlob, fileName);
+                    });
+                    return;
+                }
+            }
+
+            // Share API نییە — وێنەکە نیشانبدە لە overlay
+            _fallbackShowImage(canvas, pngBlob, fileName);
+
+        }, 'image/png', 1.0);
+
+    }).catch(function(err) {
+        var progEl = document.getElementById('_ukProgMsg');
+        if (progEl) progEl.remove();
+        if (document.body.contains(tempDiv)) document.body.removeChild(tempDiv);
+        console.error('html2canvas:', err);
+        // fallback بۆ overlay
+        _printFallbackIframe(htmlContent, fileName);
+    });
+}
+
+// نیشاندانی وێنە لە overlay — بۆ ئەگەر Share نەبوو
+function _fallbackShowImage(canvas, pngBlob, fileName) {
+    var old = document.getElementById('_ukPO');
+    if (old) old.remove();
+
+    var overlay = document.createElement('div');
+    overlay.id = '_ukPO';
+    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;'
+        + 'z-index:2147483646;background:#1a365d;overflow-y:auto;'
+        + '-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;';
+
+    // بار
+    var bar = document.createElement('div');
+    bar.style.cssText = 'display:flex;gap:6px;padding:10px;background:#1a365d;'
+        + 'flex-shrink:0;position:sticky;top:0;z-index:1;';
+
+    var btnS = 'flex:1;padding:14px 4px;border:none;border-radius:10px;'
+        + 'font-size:.88rem;font-weight:800;cursor:pointer;font-family:Tahoma,Arial,sans-serif;';
+
+    // دوگمەی پێش هێنان/شێرکردن
+    var sbtn = document.createElement('button');
+    sbtn.style.cssText = btnS + 'background:#38a169;color:#fff;';
+    sbtn.innerHTML = '📤 شێرکردن';
+    sbtn.onclick = function() {
+        if (navigator.share && pngBlob) {
+            var f = new File([pngBlob], fileName + '.png', { type: 'image/png' });
+            navigator.share({ files: [f] }).catch(function(){});
+        } else {
+            // داونلۆدی ڕاستەوخۆ
+            var u = URL.createObjectURL(pngBlob);
+            var a = document.createElement('a');
+            a.href = u; a.download = fileName + '.png';
+            document.body.appendChild(a); a.click();
+            setTimeout(function() { URL.revokeObjectURL(u); a.remove(); }, 3000);
+        }
+    };
+
+    var dbtn = document.createElement('button');
+    dbtn.style.cssText = btnS + 'background:#3182ce;color:#fff;';
+    dbtn.innerHTML = '⬇ داونلۆد';
+    dbtn.onclick = function() {
+        var u = URL.createObjectURL(pngBlob);
+        var a = document.createElement('a');
+        a.href = u; a.download = fileName + '.png';
+        document.body.appendChild(a); a.click();
+        setTimeout(function() { URL.revokeObjectURL(u); a.remove(); }, 3000);
+    };
+
+    var cbtn = document.createElement('button');
+    cbtn.style.cssText = btnS + 'background:#e53e3e;color:#fff;';
+    cbtn.innerHTML = '✕ داخستن';
+    cbtn.onclick = function() { overlay.remove(); };
+
+    bar.appendChild(sbtn);
+    bar.appendChild(dbtn);
+    bar.appendChild(cbtn);
+
+    // وێنەی لەیبل
+    var imgWrap = document.createElement('div');
+    imgWrap.style.cssText = 'flex:1;display:flex;align-items:flex-start;justify-content:center;'
+        + 'padding:10px;background:#f0f4f8;';
+    var img = document.createElement('img');
+    img.src = canvas.toDataURL('image/png');
+    img.style.cssText = 'max-width:100%;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.3);';
+    imgWrap.appendChild(img);
+
+    overlay.appendChild(bar);
+    overlay.appendChild(imgWrap);
+    document.body.appendChild(overlay);
 }
 
 function _printHtmlIframe(final) { printHtml(final, 'label'); }
