@@ -4713,77 +4713,61 @@ function printExpense(key) {
 }
 
 // ============================================================
-// printHtml v6 — موبایل: Blob URL | دێسکتۆپ: iframe srcdoc
+// printHtml — چارەسەری نوێ: srcdoc iframe + PDF داونلۆد موبایل
 // ============================================================
-function _isMob() {
-    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || navigator.maxTouchPoints > 2;
-}
-
 function printHtml(htmlContent, fileName) {
-    fileName = (fileName || 'label').replace(/\.pdf$/i, '').replace(/\.html$/i, '');
-
+    fileName = (fileName || 'label').replace(/\.pdf$/i, '');
     var cleaned = htmlContent
         .replace(/backdrop-filter\s*:[^;"]+;?/gi, '')
-        .replace(/-webkit-backdrop-filter\s*:[^;"]+;?/gi, '');
+        .replace(/-webkit-backdrop-filter\s*:[^;"]+;?/gi, '')
+        .replace(/<div[^>]*id="(_iframeCtrl|_printCtrl|print-ctrl|_ukPrintBar|_pbar)"[^>]*>[\s\S]*?<\/div>/gi, '')
+        .replace(/<style[^>]*id="(_iframeCtrlStyle|_ukPrintBarStyle)"[^>]*>[\s\S]*?<\/style>/gi, '');
 
-    var fnStr = JSON.stringify(fileName);
-
-    // ── CSS + سکریپتی ناوخۆی پەنجەرە ──────────────────────
-    var innerCss = '<style>'
+    var barStyle = '<style>'
         + '*{box-sizing:border-box;}'
         + '#_pbar{position:fixed;top:0;left:0;right:0;display:flex;gap:6px;'
-        + 'padding:10px 12px;background:#1a365d;z-index:2147483647;'
-        + 'box-shadow:0 3px 12px rgba(0,0,0,.5);}'
-        + '#_pbar button{flex:1;padding:14px 4px;border:none;border-radius:12px;'
-        + 'font-size:.85rem;font-weight:800;cursor:pointer;'
-        + 'font-family:Tahoma,Arial,sans-serif;line-height:1.3;'
-        + 'touch-action:manipulation;-webkit-tap-highlight-color:transparent;}'
+        + 'padding:10px 10px;background:#1a365d;z-index:2147483647;'
+        + 'box-shadow:0 3px 10px rgba(0,0,0,.4);}'
+        + '#_pbar button{flex:1;padding:13px 4px;border:none;border-radius:10px;'
+        + 'font-size:.88rem;font-weight:800;cursor:pointer;'
+        + 'font-family:Tahoma,Arial,sans-serif;}'
         + '#_pbtn{background:#38a169;color:#fff;}'
-        + '#_sbtn{background:#3182ce;color:#fff;}'
-        + '#_cbtn{background:#e53e3e;color:#fff;max-width:56px;}'
-        + '@media print{#_pbar{display:none!important;}body{padding-top:0!important;}}'
-        + '@media screen{body{padding-top:70px!important;}}'
+        + '#_dbtn{background:#3182ce;color:#fff;}'
+        + '#_cbtn{background:#e53e3e;color:#fff;}'
+        + '@media print{'
+        + '#_pbar{display:none!important;}'
+        + 'body{padding-top:0!important;margin:0!important;}'
+        + '*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}}'
+        + '@media screen{body{padding-top:66px!important;}}'
         + '</style>';
 
-    var innerJs = '<script>'
+    var fnStr = JSON.stringify(fileName);
+    var dlFn = '<scr'+'ipt>'
         + 'var _fn=' + fnStr + ';'
-        + 'function _doPrint(){window.print();}'
-        + 'function _doClose(){'
-        + '  try{window.close();}catch(e){}'
-        + '  try{history.back();}catch(e){}'
+        + 'function _dl(){'
+        + '  try{'
+        + '    var b=new Blob([document.documentElement.outerHTML],{type:"text/html;charset=utf-8"});'
+        + '    var u=URL.createObjectURL(b);'
+        + '    var a=document.createElement("a");'
+        + '    a.href=u;a.download=_fn+".html";'
+        + '    document.body.appendChild(a);a.click();'
+        + '    setTimeout(function(){URL.revokeObjectURL(u);a.remove();},5000);'
+        + '  }catch(e){alert("هەڵە: "+e);}'
         + '}'
-        + 'function _doShare(){'
-        + '  var html=document.documentElement.outerHTML;'
-        + '  var blob=new Blob([html],{type:"text/html;charset=utf-8"});'
-        + '  var file=new File([blob],_fn+".html",{type:"text/html"});'
-        + '  if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){'
-        + '    navigator.share({files:[file],title:_fn})'
-        + '    .catch(function(){_doDl(html);});'
-        + '  }else{_doDl(html);}'
-        + '}'
-        + 'function _doDl(h){'
-        + '  var b=new Blob([h||document.documentElement.outerHTML],'
-        + '    {type:"text/html;charset=utf-8"});'
-        + '  var u=URL.createObjectURL(b);'
-        + '  var a=document.createElement("a");'
-        + '  a.href=u;a.download=_fn+".html";'
-        + '  document.body.appendChild(a);a.click();'
-        + '  setTimeout(function(){URL.revokeObjectURL(u);a.remove();},5000);'
-        + '}'
-        + '<\/script>';
+        + '<\/scr'+'ipt>';
 
+    var closeCode = "try{window.parent.document.getElementById('_ukPO').remove();}catch(e){}";
     var bar = '<div id="_pbar">'
-        + '<button id="_pbtn" onclick="_doPrint()">🖨️<br>چاپ</button>'
-        + '<button id="_sbtn" onclick="_doShare()">📤<br>شێر / داونلۆد</button>'
-        + '<button id="_cbtn" onclick="_doClose()">✕</button>'
+        + '<button id="_pbtn" onclick="window.print()">🖨 چاپ</button>'
+        + '<button id="_dbtn" onclick="_dl()">⬇ داونلۆد</button>'
+        + '<button id="_cbtn" onclick="' + closeCode + '">✕ داخستن</button>'
         + '</div>';
 
-    // HTML ئامادە بکە
     var final = cleaned;
     if (/<\/head>/i.test(final)) {
-        final = final.replace(/<\/head>/i, innerCss + innerJs + '</head>');
+        final = final.replace(/<\/head>/i, barStyle + dlFn + '</head>');
     } else {
-        final = innerCss + innerJs + final;
+        final = barStyle + dlFn + final;
     }
     if (/<body[^>]*>/i.test(final)) {
         final = final.replace(/(<body[^>]*>)/i, '$1' + bar);
@@ -4791,47 +4775,22 @@ function printHtml(htmlContent, fileName) {
         final = bar + final;
     }
 
-    // ── موبایل: Blob URL → window.open ─────────────────────
-    if (_isMob()) {
-        var blob = new Blob([final], { type: 'text/html;charset=utf-8' });
-        var blobUrl = URL.createObjectURL(blob);
-        var win = window.open(blobUrl, '_blank');
-        if (win) {
-            setTimeout(function() { URL.revokeObjectURL(blobUrl); }, 60000);
-        } else {
-            // Popup بلۆک کراوە — یەکسەر داونلۆد بکە
-            var a = document.createElement('a');
-            a.href = blobUrl;
-            a.download = fileName + '.html';
-            document.body.appendChild(a);
-            a.click();
-            setTimeout(function() { URL.revokeObjectURL(blobUrl); a.remove(); }, 5000);
-            showNotification('📥 پسولەکە داونلۆد کرا — لە داونلۆدەکانت بیبینە', 'info');
-        }
-        return;
-    }
-
-    // ── دێسکتۆپ: iframe + srcdoc ───────────────────────────
-    // closeCode بۆ دێسکتۆپ iframe
-    final = final.replace(
-        'function _doClose(){  try{window.close();}catch(e){}  try{history.back();}catch(e){}}',
-        'function _doClose(){try{window.parent.document.getElementById("_ukPO").remove();}catch(e){}}'
-    );
-
     var old = document.getElementById('_ukPO');
     if (old) old.remove();
     var iframe = document.createElement('iframe');
     iframe.id = '_ukPO';
-    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-downloads allow-modals allow-popups');
-    iframe.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;'
-        + 'border:0;z-index:2147483646;background:#fff;display:block;';
+    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-downloads allow-modals');
+    iframe.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;'
+        + 'min-height:100vh;border:0;z-index:2147483646;background:#fff;display:block;';
     document.body.appendChild(iframe);
     iframe.srcdoc = final;
 }
 
-function _printHtmlIframe(f) { printHtml(f, 'label'); }
+function _printHtmlIframe(final) { printHtml(final, 'label'); }
 
-function _mobilePrint(html, filename) { printHtml(html, filename); }
+function _mobilePrint(html, filename) {
+    printHtml(html, filename);
+}
 
 // ==================== View & Print Driver ====================
 function viewDriver(key) {
