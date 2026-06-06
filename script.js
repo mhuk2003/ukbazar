@@ -4713,100 +4713,139 @@ function printExpense(key) {
 }
 
 // ============================================================
-// printHtml — چارەسەری نوێ: موبایل window.open + دێسکتۆپ iframe
+// printHtml — html2canvas + jsPDF بۆ موبایل / iframe بۆ دێسکتۆپ
 // ============================================================
 function printHtml(htmlContent, fileName) {
     fileName = (fileName || 'label').replace(/\.pdf$/i, '');
+    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
+    if (!isMobile) {
+        _printFallbackIframe(htmlContent, fileName);
+        return;
+    }
+
+    // موبایل — html2canvas + jsPDF
+    showNotification('PDF ئامادە دەکرێت... ⏳');
+
+    var tempDiv = document.createElement('div');
+    tempDiv.style.cssText = 'position:fixed;left:-9999px;top:0;width:560px;background:#fff;'
+        + 'padding:16px;direction:rtl;font-family:Tahoma,Arial,sans-serif;z-index:-1;';
+    // سڕینەوەی تاگەکانی HTML و body ئەگەر هەبوون — تەنها ناوەرۆک
+    var bodyMatch = htmlContent.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+    tempDiv.innerHTML = bodyMatch ? bodyMatch[1] : htmlContent;
+    document.body.appendChild(tempDiv);
+
+    setTimeout(function() {
+        html2canvas(tempDiv, {
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#ffffff',
+            logging: false,
+            scrollX: 0,
+            scrollY: 0
+        }).then(function(canvas) {
+            document.body.removeChild(tempDiv);
+
+            var imgData = canvas.toDataURL('image/jpeg', 0.92);
+            var jsPDFLib = window.jspdf ? window.jspdf.jsPDF : window.jsPDF;
+            var pdf = new jsPDFLib({ orientation: 'portrait', unit: 'mm', format: 'a5' });
+
+            var pdfW = pdf.internal.pageSize.getWidth();
+            var pdfH = (canvas.height * pdfW) / canvas.width;
+
+            // ئەگەر درێژیەکە زیاتر بوو لە یەک لاپەڕە
+            var pageH = pdf.internal.pageSize.getHeight();
+            if (pdfH <= pageH) {
+                pdf.addImage(imgData, 'JPEG', 0, 0, pdfW, pdfH);
+            } else {
+                // دابەشکردن بە چەند لاپەڕە
+                var pageCount = Math.ceil(pdfH / pageH);
+                for (var p = 0; p < pageCount; p++) {
+                    if (p > 0) pdf.addPage();
+                    pdf.addImage(imgData, 'JPEG', 0, -(p * pageH), pdfW, pdfH);
+                }
+            }
+
+            // iOS: کرانەوەی PDF لە تابێکی نوێ
+            if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                var pdfUri = pdf.output('datauristring');
+                var win = window.open(pdfUri, '_blank');
+                if (!win) {
+                    // pop-up بلۆک — داونلۆد بلۆب
+                    var blob = pdf.output('blob');
+                    var url = URL.createObjectURL(blob);
+                    var a = document.createElement('a');
+                    a.href = url; a.download = fileName + '.pdf';
+                    document.body.appendChild(a); a.click();
+                    setTimeout(function() { URL.revokeObjectURL(url); a.remove(); }, 5000);
+                }
+            } else {
+                // Android — ڕاستەوخۆ داونلۆد
+                pdf.save(fileName + '.pdf');
+            }
+
+            showNotification('✅ PDF ئامادەیە!');
+        }).catch(function(err) {
+            if (document.body.contains(tempDiv)) document.body.removeChild(tempDiv);
+            showNotification('هەڵە لە دروستکردنی PDF', 'error');
+            console.error('html2canvas error:', err);
+        });
+    }, 400);
+}
+
+function _printFallbackIframe(htmlContent, fileName) {
     var cleaned = htmlContent
         .replace(/backdrop-filter\s*:[^;"]+;?/gi, '')
         .replace(/-webkit-backdrop-filter\s*:[^;"]+;?/gi, '')
         .replace(/<div[^>]*id="(_iframeCtrl|_printCtrl|print-ctrl|_ukPrintBar|_pbar)"[^>]*>[\s\S]*?<\/div>/gi, '')
         .replace(/<style[^>]*id="(_iframeCtrlStyle|_ukPrintBarStyle)"[^>]*>[\s\S]*?<\/style>/gi, '');
 
-    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
+    var fnStr = JSON.stringify(fileName || 'label');
     var barStyle = '<style>'
         + '*{box-sizing:border-box;}'
-        + '#_pbar{position:fixed;top:0;left:0;right:0;display:flex;gap:6px;'
-        + 'padding:10px;background:#1a365d;z-index:2147483647;'
-        + 'box-shadow:0 3px 10px rgba(0,0,0,.4);}'
+        + '#_pbar{position:fixed;top:0;left:0;right:0;display:flex;gap:6px;padding:10px;'
+        + 'background:#1a365d;z-index:2147483647;box-shadow:0 3px 10px rgba(0,0,0,.4);}'
         + '#_pbar button{flex:1;padding:13px 4px;border:none;border-radius:10px;'
-        + 'font-size:.88rem;font-weight:800;cursor:pointer;'
-        + 'font-family:Tahoma,Arial,sans-serif;}'
+        + 'font-size:.88rem;font-weight:800;cursor:pointer;font-family:Tahoma,Arial,sans-serif;}'
         + '#_pbtn{background:#38a169;color:#fff;}'
         + '#_dbtn{background:#3182ce;color:#fff;}'
         + '#_cbtn{background:#e53e3e;color:#fff;}'
-        + '@media print{'
-        + '#_pbar{display:none!important;}'
-        + 'body{padding-top:0!important;margin:0!important;}'
+        + '@media print{#_pbar{display:none!important;}body{padding-top:0!important;margin:0!important;}'
         + '*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}}'
         + '@media screen{body{padding-top:66px!important;}}'
         + '</style>';
 
-    var fnStr = JSON.stringify(fileName);
     var dlFn = '<scr'+'ipt>'
         + 'var _fn=' + fnStr + ';'
         + 'function _dl(){'
         + '  try{'
         + '    var b=new Blob([document.documentElement.outerHTML],{type:"text/html;charset=utf-8"});'
-        + '    var u=URL.createObjectURL(b);'
-        + '    var a=document.createElement("a");'
-        + '    a.href=u;a.download=_fn+".html";'
-        + '    document.body.appendChild(a);a.click();'
+        + '    var u=URL.createObjectURL(b);var a=document.createElement("a");'
+        + '    a.href=u;a.download=_fn+".html";document.body.appendChild(a);a.click();'
         + '    setTimeout(function(){URL.revokeObjectURL(u);a.remove();},5000);'
         + '  }catch(e){alert("هەڵە: "+e);}'
         + '}'
-        + 'function _mobilePrint(){'
-        + '  setTimeout(function(){window.print();},600);'
-        + '}'
         + '<\/scr'+'ipt>';
 
-    var closeCode = isMobile
-        ? "window.history.back();"
-        : "try{window.parent.document.getElementById('_ukPO').remove();}catch(e){}";
-
+    var closeCode = "try{window.parent.document.getElementById('_ukPO').remove();}catch(e){}";
     var bar = '<div id="_pbar">'
-        + '<button id="_pbtn" onclick="' + (isMobile ? '_mobilePrint()' : 'window.print()') + '">🖨 چاپ</button>'
+        + '<button id="_pbtn" onclick="window.print()">🖨 چاپ</button>'
         + '<button id="_dbtn" onclick="_dl()">⬇ داونلۆد</button>'
         + '<button id="_cbtn" onclick="' + closeCode + '">✕ داخستن</button>'
         + '</div>';
 
     var final = cleaned;
-    if (/<\/head>/i.test(final)) {
-        final = final.replace(/<\/head>/i, barStyle + dlFn + '</head>');
-    } else {
-        final = barStyle + dlFn + final;
-    }
-    if (/<body[^>]*>/i.test(final)) {
-        final = final.replace(/(<body[^>]*>)/i, '$1' + bar);
-    } else {
-        final = bar + final;
-    }
+    if (/<\/head>/i.test(final)) final = final.replace(/<\/head>/i, barStyle + dlFn + '</head>');
+    else final = barStyle + dlFn + final;
+    if (/<body[^>]*>/i.test(final)) final = final.replace(/(<body[^>]*>)/i, '$1' + bar);
+    else final = bar + final;
 
-    if (isMobile) {
-        // موبایل: پەنجەرەی نوێ بکرەوە — iOS و Android پشتیوانی دەکەن
-        var newWin = window.open('', '_blank');
-        if (newWin) {
-            newWin.document.open();
-            newWin.document.write(final);
-            newWin.document.close();
-        } else {
-            // Pop-up بلۆک کراوە — iframe بەکاربێنە
-            _printFallbackIframe(final);
-        }
-    } else {
-        // دێسکتۆپ: iframe
-        _printFallbackIframe(final);
-    }
-}
-
-function _printFallbackIframe(final) {
     var old = document.getElementById('_ukPO');
     if (old) old.remove();
     var iframe = document.createElement('iframe');
     iframe.id = '_ukPO';
-    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-downloads allow-modals allow-popups');
+    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-downloads allow-modals');
     iframe.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;'
         + 'min-height:100vh;border:0;z-index:2147483646;background:#fff;display:block;';
     document.body.appendChild(iframe);
@@ -4814,10 +4853,7 @@ function _printFallbackIframe(final) {
 }
 
 function _printHtmlIframe(final) { printHtml(final, 'label'); }
-
-function _mobilePrint(html, filename) {
-    printHtml(html, filename);
-}
+function _mobilePrint(html, filename) { printHtml(html, filename); }
 
 // ==================== View & Print Driver ====================
 function viewDriver(key) {
