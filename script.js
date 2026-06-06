@@ -4713,9 +4713,10 @@ function printExpense(key) {
 }
 
 // ============================================================
-// printHtml — iframe srcdoc بۆ هەموو ئامێرەکان (موبایل + دێسکتۆپ + ئەپ)
+// printHtml — html2canvas + jsPDF بۆ موبایل / iframe بۆ دێسکتۆپ
 // ============================================================
 function printHtml(htmlContent, fileName) {
+    // هەموو ئامێرەکان (براوسەر + ئەپ + موبایل) — یەک رێگا
     fileName = (fileName || 'label').replace(/\.pdf$/i, '');
     _printFallbackIframe(htmlContent, fileName);
 }
@@ -4742,35 +4743,38 @@ function _printFallbackIframe(htmlContent, fileName) {
         + '@media screen{body{padding-top:66px!important;}}'
         + '</style>';
 
+    // داونلۆد + داخستن — بەشێوەیەک کار دەکات لە ئەپ و براوسەر هەردووکیان
     var dlFn = '<scr'+'ipt>'
         + 'var _fn=' + fnStr + ';'
+        + 'var _parentOrigin=null;'
+        + 'try{_parentOrigin=window.parent!==window?window.parent:null;}catch(e){}'
         + 'function _dl(){'
         + '  try{'
-        // بەکارهێنانی data URI بۆ ئەوەی لە ئەپیشدا کاربکات
-        + '    var html=document.documentElement.outerHTML;'
-        + '    var encoded=encodeURIComponent(html);'
-        + '    var a=document.createElement("a");'
-        + '    a.href="data:text/html;charset=utf-8,"+encoded;'
-        + '    a.download=_fn+".html";'
-        + '    document.body.appendChild(a);a.click();'
-        + '    setTimeout(function(){a.remove();},3000);'
+        + '    var b=new Blob([document.documentElement.outerHTML],{type:"text/html;charset=utf-8"});'
+        + '    var u=URL.createObjectURL(b);var a=document.createElement("a");'
+        + '    a.href=u;a.download=_fn+".html";document.body.appendChild(a);a.click();'
+        + '    setTimeout(function(){URL.revokeObjectURL(u);a.remove();},5000);'
         + '  }catch(e){'
-        // یەدەگ: Blob
-        + '    try{'
-        + '      var b=new Blob([document.documentElement.outerHTML],{type:"text/html;charset=utf-8"});'
-        + '      var u=URL.createObjectURL(b);var a2=document.createElement("a");'
-        + '      a2.href=u;a2.download=_fn+".html";document.body.appendChild(a2);a2.click();'
-        + '      setTimeout(function(){URL.revokeObjectURL(u);a2.remove();},5000);'
-        + '    }catch(e2){alert("هەڵە: "+e2);}'
+        + '    var enc=encodeURIComponent(document.documentElement.outerHTML);'
+        + '    var a2=document.createElement("a");'
+        + '    a2.href="data:text/html;charset=utf-8,"+enc;'
+        + '    a2.download=_fn+".html";document.body.appendChild(a2);a2.click();'
+        + '    setTimeout(function(){a2.remove();},3000);'
         + '  }'
+        + '}'
+        + 'function _close(){'
+        + '  if(_parentOrigin){'
+        + '    try{_parentOrigin.document.getElementById("_ukPO").remove();return;}catch(e){}'
+        + '  }'
+        + '  var o=document.getElementById("_ukOverlay");'
+        + '  if(o)o.remove();'
         + '}'
         + '<\/scr'+'ipt>';
 
-    var closeCode = "try{window.parent.document.getElementById('_ukPO').remove();}catch(e){try{window.close();}catch(e2){}}";
     var bar = '<div id="_pbar">'
         + '<button id="_pbtn" onclick="window.print()">🖨 چاپ</button>'
         + '<button id="_dbtn" onclick="_dl()">⬇ داونلۆد</button>'
-        + '<button id="_cbtn" onclick="' + closeCode + '">✕ داخستن</button>'
+        + '<button id="_cbtn" onclick="_close()">✕ داخستن</button>'
         + '</div>';
 
     var final = cleaned;
@@ -4779,15 +4783,65 @@ function _printFallbackIframe(htmlContent, fileName) {
     if (/<body[^>]*>/i.test(final)) final = final.replace(/(<body[^>]*>)/i, '$1' + bar);
     else final = bar + final;
 
-    var old = document.getElementById('_ukPO');
-    if (old) old.remove();
-    var iframe = document.createElement('iframe');
-    iframe.id = '_ukPO';
-    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-downloads allow-modals allow-popups allow-popups-to-escape-sandbox');
-    iframe.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;'
-        + 'min-height:100vh;border:0;z-index:2147483646;background:#fff;display:block;';
-    document.body.appendChild(iframe);
-    iframe.srcdoc = final;
+    // ئایا لە ناو PWA/ئەپ دەن؟
+    var inPwa = window.matchMedia('(display-mode: standalone)').matches
+        || window.navigator.standalone === true
+        || document.referrer.includes('android-app://');
+
+    if (!inPwa) {
+        // براوسەری ئاساسی — iframe srcdoc ی پێشوو
+        var old2 = document.getElementById('_ukPO');
+        if (old2) old2.remove();
+        var iframe = document.createElement('iframe');
+        iframe.id = '_ukPO';
+        // allow-same-origin سڕایەوە بۆ ئەمنیەت — تەنها allow-scripts
+        iframe.setAttribute('sandbox', 'allow-scripts allow-downloads allow-modals allow-popups');
+        iframe.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;'
+            + 'min-height:100vh;border:0;z-index:2147483646;background:#fff;display:block;';
+        document.body.appendChild(iframe);
+        iframe.srcdoc = final;
+    } else {
+        // PWA / ئەپ — window.open بەجای iframe چونکە iframe srcdoc کارناکات
+        var pw = window.open('', '_blank', 'width='+screen.width+',height='+screen.height);
+        if (pw) {
+            pw.document.open();
+            pw.document.write(final);
+            pw.document.close();
+        } else {
+            // pop-up بلۆک — overlay دروست بکە لە ناو خودی پەیجەکە
+            var old3 = document.getElementById('_ukPO');
+            if (old3) old3.remove();
+            var overlay = document.createElement('div');
+            overlay.id = '_ukPO';
+            overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;'
+                + 'z-index:2147483646;background:#fff;overflow:auto;-webkit-overflow-scrolling:touch;';
+            overlay.innerHTML = final;
+            // جێنشانی _close بۆ سڕینەوەی overlay
+            document.body.appendChild(overlay);
+            // دوگمەکان دووبارە سوودمەند بکە
+            var pb = overlay.querySelector('#_pbtn');
+            var db = overlay.querySelector('#_dbtn');
+            var cb = overlay.querySelector('#_cbtn');
+            if (pb) pb.onclick = function(){ window.print(); };
+            if (db) db.onclick = function(){
+                try{
+                    var b=new Blob([final],{type:"text/html;charset=utf-8"});
+                    var u=URL.createObjectURL(b);var a=document.createElement("a");
+                    a.href=u;a.download=(fileName||'label')+".html";
+                    document.body.appendChild(a);a.click();
+                    setTimeout(function(){URL.revokeObjectURL(u);a.remove();},5000);
+                }catch(e){
+                    var enc=encodeURIComponent(final);
+                    var a2=document.createElement("a");
+                    a2.href="data:text/html;charset=utf-8,"+enc;
+                    a2.download=(fileName||'label')+".html";
+                    document.body.appendChild(a2);a2.click();
+                    setTimeout(function(){a2.remove();},3000);
+                }
+            };
+            if (cb) cb.onclick = function(){ overlay.remove(); };
+        }
+    }
 }
 
 function _printHtmlIframe(final) { printHtml(final, 'label'); }
