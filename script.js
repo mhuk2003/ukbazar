@@ -4713,7 +4713,7 @@ function printExpense(key) {
 }
 
 // ============================================================
-// printHtml — چارەسەری نوێ: srcdoc iframe + داونلۆد دوگمە
+// printHtml — چارەسەری نوێ: srcdoc iframe + PDF داونلۆد موبایل
 // ============================================================
 function printHtml(htmlContent, fileName) {
     fileName = (fileName || 'label').replace(/\.pdf$/i, '');
@@ -4725,7 +4725,7 @@ function printHtml(htmlContent, fileName) {
         .replace(/<div[^>]*id="(_iframeCtrl|_printCtrl|print-ctrl|_ukPrintBar|_pbar)"[^>]*>[\s\S]*?<\/div>/gi, '')
         .replace(/<style[^>]*id="(_iframeCtrlStyle|_ukPrintBarStyle)"[^>]*>[\s\S]*?<\/style>/gi, '');
 
-    // ستایلی دوگمەکان
+    // ستایلی بار و دوگمەکان
     var barStyle = '<style>'
         + '*{box-sizing:border-box;}'
         + '#_pbar{position:fixed;top:0;left:0;right:0;display:flex;gap:8px;'
@@ -4744,22 +4744,61 @@ function printHtml(htmlContent, fileName) {
         + '@media screen{body{padding-top:66px!important;}}'
         + '</style>';
 
-    // فەنکشنی داونلۆد — Blob
-    var dlFn = '<scr'+'ipt>'
+    // ===== فەنکشنی PDF داونلۆد بۆ موبایل (html2canvas + jsPDF) =====
+    var dlFn = '<scr'+'ipt src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"><\/scr'+'ipt>'
+        + '<scr'+'ipt src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"><\/scr'+'ipt>'
+        + '<scr'+'ipt>'
+        + 'var _ukFileName = ' + JSON.stringify(fileName) + ';'
         + 'function _ukDL(){'
-        + 'try{'
-        + 'var b=new Blob([document.documentElement.outerHTML],{type:"text/html;charset=utf-8"});'
-        + 'var u=URL.createObjectURL(b);'
-        + 'var a=document.createElement("a");'
-        + 'a.href=u;a.download="label.html";document.body.appendChild(a);a.click();'
-        + 'setTimeout(function(){URL.revokeObjectURL(u);a.remove();},3000);'
-        + '}catch(e){alert("هەڵە: "+e.message);}}'
+        + '  var btn = document.getElementById("_dbtn");'
+        + '  if(btn){ btn.disabled=true; btn.textContent="چاوەڕێ..."; }'
+        + '  var el = document.body;'
+        // پشاندنی بار مەوقوتی بۆ وێنەگرتن
+        + '  var pbar = document.getElementById("_pbar");'
+        + '  if(pbar) pbar.style.display="none";'
+        + '  var origPad = document.body.style.paddingTop;'
+        + '  document.body.style.paddingTop = "0";'
+        + '  html2canvas(el, {'
+        + '    scale: 2,'
+        + '    useCORS: true,'
+        + '    allowTaint: true,'
+        + '    backgroundColor: "#ffffff"'
+        + '  }).then(function(canvas){'
+        + '    if(pbar) pbar.style.display="";'
+        + '    document.body.style.paddingTop = origPad;'
+        + '    var imgData = canvas.toDataURL("image/jpeg", 0.95);'
+        + '    var { jsPDF } = window.jspdf;'
+        + '    var w = canvas.width, h = canvas.height;'
+        + '    var pdfW = 210, pdfH = Math.round(h * 210 / w);'
+        // بۆ لەیبل کووچک — A5
+        + '    if(pdfH < 200) { pdfW = 148; pdfH = Math.round(h * 148 / w); }'
+        + '    var doc = new jsPDF({ orientation: pdfH > pdfW ? "p" : "l", unit: "mm", format: [pdfW, pdfH] });'
+        + '    doc.addImage(imgData, "JPEG", 0, 0, pdfW, pdfH);'
+        + '    doc.save(_ukFileName + ".pdf");'
+        + '    if(btn){ btn.disabled=false; btn.textContent="⬇ PDF داونلۆد"; }'
+        + '  }).catch(function(e){'
+        + '    if(pbar) pbar.style.display="";'
+        + '    document.body.style.paddingTop = origPad;'
+        + '    alert("هەڵە لە PDF: " + e.message);'
+        + '    if(btn){ btn.disabled=false; btn.textContent="⬇ PDF داونلۆد"; }'
+        + '  });'
+        + '}'
         + '<\/scr'+'ipt>';
+
+    // ئەگەر موبایل بوو PDF داونلۆد، ئەگەر دێسکتۆپ بوو چاپ
+    var smartPrintFn = '<scr'+'ipt>'
+        + 'function _ukSmartPrint(){'
+        + '  var isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);'
+        + '  if(isMobile){ _ukDL(); }'
+        + '  else{ window.print(); }'
+        + '}'
+        + '<\/scr'+'ipt>';
+    // زیادی کردن بە dlFn
+    dlFn = dlFn + smartPrintFn;
 
     var closeCode = "try{window.parent.document.getElementById('_ukPO').remove();}catch(e){}";
     var bar = '<div id="_pbar">'
-        + '<button id="_pbtn" onclick="window.print()">&#128424; چاپ / PDF</button>'
-        + '<button id="_dbtn" onclick="_ukDL()">&#11015; داونلۆد HTML</button>'
+        + '<button id="_pbtn" onclick="_ukSmartPrint()">&#128424; چاپ / PDF</button>'
         + '<button id="_cbtn" onclick="' + closeCode + '">&#x2715; داخستن</button>'
         + '</div>';
 
