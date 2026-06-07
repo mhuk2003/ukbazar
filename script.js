@@ -385,27 +385,24 @@ function checkDeliveryAdminPass()  {}
 // ───────────────────────────────────────────────────────────
 function searchCustomerOrders() {
     const phoneInp  = document.getElementById('trackingPhoneInput');
-    const codeInp   = document.getElementById('trackingCodeInput');
     const resultsEl = document.getElementById('trackingResults');
     const errEl     = document.getElementById('trackingErr');
     if (!phoneInp || !resultsEl) return;
 
-    const phone   = phoneInp.value.trim().replace(/\s+/g, '');
-    const codeVal = codeInp ? codeInp.value.trim().toUpperCase() : '';
-
-    if (!phone || phone.length < 7) {
-        if (errEl) { errEl.textContent = 'تکایە ژمارەی مۆبایلێکی دروست بنووسە'; errEl.style.display = 'block'; }
-        return;
-    }
-    if (!codeVal) {
-        if (errEl) { errEl.textContent = 'تکایە کۆد بنووسە (نموونە: ABCD1234)'; errEl.style.display = 'block'; }
+    const raw = phoneInp.value.trim();
+    if (!raw || raw.length < 4) {
+        if (errEl) { errEl.textContent = 'تکایە ژمارەی مۆبایل یان کۆدی پسولە بنووسە'; errEl.style.display = 'block'; }
         return;
     }
     if (errEl) errEl.style.display = 'none';
 
+    // دیاریکردنی جۆری گەڕان: کۆد (پیتی+ژمارە) یان مۆبایل
+    const upperRaw = raw.toUpperCase();
+    const isCode = /^[A-Z]{2,}[0-9]{2,}/.test(upperRaw) || /^[A-Z0-9]{6,10}$/.test(upperRaw);
+    const phone  = raw.replace(/\s+/g, '');
+
     resultsEl.innerHTML = '<div style="text-align:center;padding:20px;color:#667eea;"><i class="fas fa-spinner fa-spin"></i> چاوەڕوانی بکە...</div>';
 
-    // گەڕان لە delivery، uk، و intlPost داتابەیس
     var noSnap = { exists: function(){ return false; }, forEach: function(){} };
     var safeOnce = function(ref) { return database.ref(ref).once('value').catch(function(){ return noSnap; }); };
     Promise.all([
@@ -414,18 +411,26 @@ function searchCustomerOrders() {
     ]).then(([deliverySnap, intlSnap]) => {
         const matches = [];
 
-        // KU + UK گەیاندن — هەردووکیان لە delivery/ نۆددایە
+        // KU + UK گەیاندن
         if (deliverySnap.exists()) {
             deliverySnap.forEach(child => {
                 const d = child.val();
                 const isUk = d.type === 'uk';
-                const phones = isUk
-                    ? [d.phone, d.receiverPhone, d.receiverTel]
-                    : [d.senderMobile, d.senderMobile2, d.receiverMobile, d.receiverMobile2];
-                const phoneList = phones.filter(Boolean).map(p => p.replace(/\s+/g,''));
-                const phoneOk = phoneList.some(p => p.includes(phone) || phone.includes(p));
-                const codeOk  = (d.orderNumber || '').toUpperCase() === codeVal;
-                if (phoneOk && codeOk) matches.push({ key: child.key, type: isUk ? 'uk' : 'ku', ...d });
+                const orderNum = (d.orderNumber || '').toUpperCase();
+
+                let matched = false;
+                if (isCode) {
+                    // گەڕان بە کۆدی پسولە تەنها
+                    matched = orderNum === upperRaw || orderNum.includes(upperRaw) || upperRaw.includes(orderNum);
+                } else {
+                    // گەڕان بە مۆبایل تەنها
+                    const phones = isUk
+                        ? [d.phone, d.receiverPhone, d.receiverTel]
+                        : [d.senderMobile, d.senderMobile2, d.receiverMobile, d.receiverMobile2];
+                    const phoneList = phones.filter(Boolean).map(p => p.replace(/\s+/g,''));
+                    matched = phoneList.some(p => p.includes(phone) || phone.includes(p));
+                }
+                if (matched) matches.push({ key: child.key, type: isUk ? 'uk' : 'ku', ...d });
             });
         }
 
@@ -435,11 +440,17 @@ function searchCustomerOrders() {
                 const d = child.val();
                 const s = d.sender || {};
                 const r = d.recipient || {};
-                const phones = [s.tel, r.tel, d.driverMobile]
-                    .filter(Boolean).map(p => p.replace(/\s+/g,''));
-                const phoneOk = phones.some(p => p.includes(phone) || phone.includes(p));
-                const codeOk  = (d.orderNumber || '').toUpperCase() === codeVal;
-                if (phoneOk && codeOk) matches.push({ key: child.key, type: 'intl', ...d });
+                const orderNum = (d.orderNumber || '').toUpperCase();
+
+                let matched = false;
+                if (isCode) {
+                    matched = orderNum === upperRaw || orderNum.includes(upperRaw) || upperRaw.includes(orderNum);
+                } else {
+                    const phones = [s.tel, r.tel, d.driverMobile]
+                        .filter(Boolean).map(p => p.replace(/\s+/g,''));
+                    matched = phones.some(p => p.includes(phone) || phone.includes(p));
+                }
+                if (matched) matches.push({ key: child.key, type: 'intl', ...d });
             });
         }
 
@@ -449,7 +460,7 @@ function searchCustomerOrders() {
                     <div style="font-size:2rem;margin-bottom:8px;">🔍</div>
                     <div style="font-weight:700;color:#e53e3e;margin-bottom:4px;">هیچ کاڵایەک نەدۆزرایەوە</div>
                     <div style="font-size:.82rem;color:#718096;margin-bottom:4px;">ژمارەی مۆبایل یان کۆدی پسولە هەڵەیە</div>
-                    <div style="font-size:.78rem;color:#a0aec0;">دووبارە بپشکنە: <strong>${phone}</strong> + <strong>${codeVal}</strong></div>
+                    <div style="font-size:.78rem;color:#a0aec0;">دووبارە بپشکنە: <strong>${escapeHtml(raw)}</strong></div>
                 </div>`;
             return;
         }
@@ -656,11 +667,70 @@ function _checkAdminPass(p) {
 }
 
 function showAdminLogin() {
-    const username = prompt('ناوی بەکارهێنەر:');
-    const password = prompt('وشەی تێپەڕ:');
-    if (!username || !password) return;
+    // سڕینەوەی modal ی کۆن ئەگەر هەبوو
+    var old = document.getElementById('_adminLoginModal');
+    if (old) old.remove();
+
+    var modal = document.createElement('div');
+    modal.id = '_adminLoginModal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999999;display:flex;align-items:center;justify-content:center;padding:16px;';
+    modal.innerHTML = `
+      <div style="background:#fff;border-radius:20px;padding:0;width:100%;max-width:380px;overflow:hidden;box-shadow:0 16px 50px rgba(0,0,0,.3);">
+        <!-- هێدەر -->
+        <div style="background:linear-gradient(135deg,#667eea,#764ba2);padding:22px 20px 18px;text-align:center;">
+          <div style="font-size:2rem;margin-bottom:6px;">🔐</div>
+          <div style="color:#fff;font-weight:900;font-size:1.1rem;">داشبۆردی بەڕێوەبەر</div>
+          <div style="color:rgba(255,255,255,.75);font-size:.8rem;margin-top:3px;">UK BAZAR — Admin Panel</div>
+        </div>
+        <!-- فۆرم -->
+        <div style="padding:22px 20px 20px;">
+          <div style="margin-bottom:14px;">
+            <label style="font-size:.82rem;font-weight:700;color:#4a5568;display:block;margin-bottom:6px;">👤 ناوی بەکارهێنەر</label>
+            <input id="_adminUser" type="text" placeholder="Username" autocomplete="username"
+              style="width:100%;padding:11px 14px;border:2px solid #e2e8f0;border-radius:12px;font-size:.95rem;font-family:inherit;box-sizing:border-box;outline:none;direction:ltr;"
+              onfocus="this.style.borderColor='#667eea'" onblur="this.style.borderColor='#e2e8f0'"
+              onkeydown="if(event.key==='Enter')document.getElementById('_adminPass').focus()">
+          </div>
+          <div style="margin-bottom:6px;">
+            <label style="font-size:.82rem;font-weight:700;color:#4a5568;display:block;margin-bottom:6px;">🔑 وشەی تێپەڕ</label>
+            <div style="position:relative;">
+              <input id="_adminPass" type="password" placeholder="Password" autocomplete="current-password"
+                style="width:100%;padding:11px 44px 11px 14px;border:2px solid #e2e8f0;border-radius:12px;font-size:.95rem;font-family:inherit;box-sizing:border-box;outline:none;direction:ltr;"
+                onfocus="this.style.borderColor='#667eea'" onblur="this.style.borderColor='#e2e8f0'"
+                onkeydown="if(event.key==='Enter')_doAdminLogin()">
+              <button type="button" onclick="(function(b){var i=document.getElementById('_adminPass');if(i.type==='password'){i.type='text';b.innerHTML='🙈';}else{i.type='password';b.innerHTML='👁';}})(this)"
+                style="position:absolute;left:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;padding:4px;line-height:1;">👁</button>
+            </div>
+          </div>
+          <div id="_adminLoginErr" style="display:none;color:#e53e3e;font-size:.8rem;margin-bottom:10px;padding:7px 10px;background:#fff5f5;border-radius:8px;border:1px solid #fed7d7;"></div>
+          <div style="display:flex;gap:8px;margin-top:16px;">
+            <button onclick="document.getElementById('_adminLoginModal').remove()"
+              style="flex:1;padding:12px;background:#e2e8f0;color:#2d3748;border:none;border-radius:12px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:inherit;">داخستن</button>
+            <button onclick="_doAdminLogin()"
+              style="flex:2;padding:12px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:12px;font-size:.95rem;font-weight:800;cursor:pointer;font-family:inherit;">
+              <i class="fas fa-sign-in-alt"></i> داخلبوون
+            </button>
+          </div>
+        </div>
+      </div>`;
+
+    document.body.appendChild(modal);
+    modal.addEventListener('click', function(e){ if(e.target===modal) modal.remove(); });
+    setTimeout(function(){ var u=document.getElementById('_adminUser'); if(u) u.focus(); }, 80);
+}
+
+function _doAdminLogin() {
+    var username = (document.getElementById('_adminUser')||{}).value || '';
+    var password = (document.getElementById('_adminPass')||{}).value || '';
+    var errEl = document.getElementById('_adminLoginErr');
+    if (!username || !password) {
+        if(errEl){ errEl.textContent='تکایە هەردوو خانەکان پڕبکەرەوە'; errEl.style.display='block'; }
+        return;
+    }
     _checkAdminPass(password).then(function(ok) {
       if (username === 'admin' && ok) {
+        var m = document.getElementById('_adminLoginModal');
+        if(m) m.remove();
         isAdmin = true;
         const adminPanel = document.getElementById('adminPanel');
         const productsSection = document.querySelector('.products-section');
@@ -675,7 +745,9 @@ function showAdminLogin() {
         showNotification('بەخێربێیت بەڕێوەبەر! 🔐');
         showAdminTab('products');
       } else {
-        showNotification('هەڵە! ناوی بەکارهێنەر یان وشەی تێپەڕ هەڵەیە', 'error');
+        if(errEl){ errEl.textContent='هەڵە! ناوی بەکارهێنەر یان وشەی تێپەڕ هەڵەیە ❌'; errEl.style.display='block'; }
+        var passEl = document.getElementById('_adminPass');
+        if(passEl){ passEl.value=''; passEl.focus(); }
       }
     });
 }
@@ -2124,14 +2196,52 @@ function sendWhatsAppLabel(encodedMsg) {
 
 // ==================== Delete Delivery Label ====================
 function deleteDelivery(key) {
-    const pass = prompt('🔐 وشەی تێپەڕی بەڕێوەبەر داخڵ بکە بۆ سڕینەوەی لەیبل:\n(Admin password required to delete label)');
-    if (pass === null) return; // cancelled
+    var old = document.getElementById('_delLabelModal');
+    if(old) old.remove();
+    var modal = document.createElement('div');
+    modal.id = '_delLabelModal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999999;display:flex;align-items:center;justify-content:center;padding:16px;';
+    modal.innerHTML = `
+      <div style="background:#fff;border-radius:16px;padding:22px;width:100%;max-width:360px;box-shadow:0 12px 40px rgba(0,0,0,.25);">
+        <div style="font-weight:900;color:#c53030;font-size:1rem;margin-bottom:6px;">🗑️ سڕینەوەی لەیبل</div>
+        <div style="font-size:.82rem;color:#718096;margin-bottom:14px;">وشەی تێپەڕی بەڕێوەبەر داخڵ بکە بۆ سڕینەوە.</div>
+        <div style="position:relative;margin-bottom:14px;">
+          <input id="_delLabelPass" type="password" placeholder="وشەی تێپەڕ..."
+            style="width:100%;padding:11px 44px 11px 14px;border:2px solid #fed7d7;border-radius:10px;font-size:.95rem;font-family:inherit;box-sizing:border-box;direction:ltr;"
+            onfocus="this.style.borderColor='#fc8181'" onblur="this.style.borderColor='#fed7d7'"
+            onkeydown="if(event.key==='Enter')_doDeleteLabel('${key}')">
+          <button type="button" onclick="(function(b){var i=document.getElementById('_delLabelPass');if(i.type==='password'){i.type='text';b.innerHTML='🙈';}else{i.type='password';b.innerHTML='👁';}})(this)"
+            style="position:absolute;left:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1rem;">👁</button>
+        </div>
+        <div id="_delLabelErr" style="display:none;color:#e53e3e;font-size:.8rem;margin-bottom:10px;padding:7px;background:#fff5f5;border-radius:8px;"></div>
+        <div style="display:flex;gap:8px;">
+          <button onclick="document.getElementById('_delLabelModal').remove()"
+            style="flex:1;padding:10px;background:#e2e8f0;color:#2d3748;border:none;border-radius:10px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:inherit;">پاشگەزبوونەوە</button>
+          <button onclick="_doDeleteLabel('${key}')"
+            style="flex:2;padding:10px;background:linear-gradient(135deg,#e53e3e,#c53030);color:#fff;border:none;border-radius:10px;font-size:.9rem;font-weight:800;cursor:pointer;font-family:inherit;">🗑️ سڕینەوە</button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+    modal.addEventListener('click',function(e){if(e.target===modal)modal.remove();});
+    setTimeout(function(){var i=document.getElementById('_delLabelPass');if(i)i.focus();},80);
+}
+
+function _doDeleteLabel(key) {
+    var inp = document.getElementById('_delLabelPass');
+    var pass = inp ? inp.value : '';
+    var errEl = document.getElementById('_delLabelErr');
+    if (!pass) { if(errEl){errEl.textContent='وشەی تێپەڕ بنووسە!';errEl.style.display='block';} return; }
     _checkAdminPass(pass).then(function(ok) {
-      if (!ok) { showNotification('❌ وشەی تێپەڕ هەڵەیە! تەنها بەڕێوەبەر دەتوانێت لەیبل بسڕێتەوە.', 'error'); return; }
-    database.ref('delivery/' + key).remove()
+      if (!ok) {
+          if(errEl){errEl.textContent='❌ وشەی تێپەڕ هەڵەیە!';errEl.style.display='block';}
+          if(inp){inp.value='';inp.focus();}
+          return;
+      }
+      var m = document.getElementById('_delLabelModal');
+      if(m) m.remove();
+      database.ref('delivery/' + key).remove()
         .then(() => {
             showNotification('لەیبل بە سەرکەوتوویی سڕایەوە 🗑️');
-            // سڕینەوەی کارتەکە بە ئەنیمەیشن
             const card = document.getElementById('label-' + key);
             if (card) {
                 card.style.transition = 'opacity 0.3s, transform 0.3s';
@@ -2139,11 +2249,10 @@ function deleteDelivery(key) {
                 card.style.transform = 'scale(0.95)';
                 setTimeout(() => card.remove(), 300);
             }
-            // نوێکردنەوەی لیستی کاشی
             _allDeliveryItems = _allDeliveryItems.filter(i => i.key !== key);
         })
         .catch(() => showNotification('هەڵە لە سڕینەوە!', 'error'));
-    }); // close _checkAdminPass
+    });
 }
 
 // ==================== Admin Forms ====================
@@ -3325,6 +3434,12 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
+function onUkCountryChange(val) {
+    var note = document.getElementById('ukCountryNote');
+    if (!note) return;
+    note.style.display = (val && val !== 'United Kingdom') ? 'block' : 'none';
+}
+
 function showUkDeliveryModal() { showModal('ukDeliveryModal'); }
 
 // ==================== UK Delivery Form Submission ====================
@@ -4467,10 +4582,38 @@ function deleteDriver(key) {
 }
 
 function resetDriverPassword(key) {
-    var newPass = prompt('وشەی تێپەڕی نوێ:');
-    if (!newPass) return;
-    database.ref('drivers/' + key).update({ password: newPass.trim() })
-        .then(function() { showNotification('وشەی تێپەڕ گۆڕایەوە ✅'); })
+    var old = document.getElementById('_resetPassModal');
+    if(old) old.remove();
+    var modal = document.createElement('div');
+    modal.id = '_resetPassModal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999999;display:flex;align-items:center;justify-content:center;padding:16px;';
+    modal.innerHTML = `
+      <div style="background:#fff;border-radius:16px;padding:22px;width:100%;max-width:340px;box-shadow:0 12px 40px rgba(0,0,0,.2);">
+        <div style="font-weight:900;color:#1a365d;font-size:1rem;margin-bottom:14px;">🔑 گۆڕینی وشەی تێپەڕ</div>
+        <div style="position:relative;margin-bottom:14px;">
+          <input id="_newPassInput" type="password" placeholder="وشەی تێپەڕی نوێ..."
+            style="width:100%;padding:11px 44px 11px 14px;border:2px solid #bee3f8;border-radius:10px;font-size:.95rem;font-family:inherit;box-sizing:border-box;direction:ltr;"
+            onkeydown="if(event.key==='Enter')_doResetPass('${key}')">
+          <button type="button" onclick="(function(b){var i=document.getElementById('_newPassInput');if(i.type==='password'){i.type='text';b.innerHTML='🙈';}else{i.type='password';b.innerHTML='👁';}})(this)"
+            style="position:absolute;left:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1rem;">👁</button>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button onclick="document.getElementById('_resetPassModal').remove()"
+            style="flex:1;padding:10px;background:#e2e8f0;color:#2d3748;border:none;border-radius:10px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:inherit;">پاشگەزبوونەوە</button>
+          <button onclick="_doResetPass('${key}')"
+            style="flex:2;padding:10px;background:linear-gradient(135deg,#d97706,#f59e0b);color:#fff;border:none;border-radius:10px;font-size:.9rem;font-weight:800;cursor:pointer;font-family:inherit;">پاشەکەوتکردن</button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+    modal.addEventListener('click',function(e){if(e.target===modal)modal.remove();});
+    setTimeout(function(){var i=document.getElementById('_newPassInput');if(i)i.focus();},80);
+}
+function _doResetPass(key) {
+    var inp = document.getElementById('_newPassInput');
+    var newPass = inp ? inp.value.trim() : '';
+    if (!newPass) { showNotification('وشەی تێپەڕ بنووسە!', 'error'); return; }
+    database.ref('drivers/' + key).update({ password: newPass })
+        .then(function() { showNotification('وشەی تێپەڕ گۆڕایەوە ✅'); var m=document.getElementById('_resetPassModal');if(m)m.remove(); })
         .catch(function() { showNotification('هەڵە!', 'error'); });
 }
 
@@ -4494,8 +4637,16 @@ function loadBalanceAdmin() {
             <input id="exp-name" type="text" placeholder="بۆ نموونە: کرێی مەخزەن" style="width:100%;padding:8px 10px;border:1.5px solid #c6f6d5;border-radius:8px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
           </div>
           <div>
-            <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:4px;">٢ — بری پارە (£)</label>
-            <input id="exp-amount" type="number" min="0" step="0.01" placeholder="0.00" style="width:100%;padding:8px 10px;border:1.5px solid #c6f6d5;border-radius:8px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
+            <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:4px;">٢ — بری پارە</label>
+            <div style="display:flex;gap:5px;">
+              <select id="exp-currency" style="padding:8px 6px;border:1.5px solid #c6f6d5;border-radius:8px;font-size:.82rem;font-family:inherit;background:#fff;min-width:70px;flex-shrink:0;">
+                <option value="GBP">£ GBP</option>
+                <option value="EUR">€ EUR</option>
+                <option value="USD">$ USD</option>
+                <option value="IQD">IQD دینار</option>
+              </select>
+              <input id="exp-amount" type="number" min="0" step="0.01" placeholder="0.00" style="flex:1;padding:8px 10px;border:1.5px solid #c6f6d5;border-radius:8px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
+            </div>
           </div>
           <div>
             <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:4px;">٣ — بابەت / جۆر</label>
@@ -4609,11 +4760,14 @@ function _renderExpenses(list) {
         el.innerHTML = '<div style="text-align:center;padding:30px;color:#a0aec0;font-size:.9rem;">هیچ خەرجیەک نییە</div>';
         return;
     }
-    el.innerHTML = list.map(e => `
+    el.innerHTML = list.map(e => {
+        const sym = e.currency === 'EUR' ? '€' : e.currency === 'USD' ? '$' : e.currency === 'IQD' ? '' : '£';
+        const curLabel = e.currency === 'IQD' ? (parseFloat(e.amount||0).toFixed(0) + ' IQD') : (sym + parseFloat(e.amount||0).toFixed(2));
+        return `
         <div style="background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
           <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">
             <div style="background:#f0fff4;border:1.5px solid #c6f6d5;border-radius:8px;padding:6px 10px;text-align:center;min-width:52px;">
-              <div style="font-size:1rem;font-weight:900;color:#276749;">£${parseFloat(e.amount||0).toFixed(2)}</div>
+              <div style="font-size:.95rem;font-weight:900;color:#276749;">${curLabel}</div>
             </div>
             <div style="min-width:0;">
               <div style="font-size:.88rem;font-weight:800;color:#1a202c;">${e.name||'—'}</div>
@@ -4629,8 +4783,7 @@ function _renderExpenses(list) {
             <button onclick="printExpense('${e.key}')" style="background:#f0fff4;color:#276749;border:none;border-radius:8px;padding:6px 10px;font-size:.8rem;cursor:pointer;">🖨️ چاپ</button>
             <button onclick="deleteExpense('${e.key}')" style="background:#fed7d7;color:#c53030;border:none;border-radius:8px;padding:6px 10px;font-size:.8rem;cursor:pointer;">🗑️</button>
           </div>
-        </div>`
-    ).join('');
+        </div>`}).join('');
 }
 
 function filterExpenses() {
@@ -4651,6 +4804,7 @@ function filterExpenses() {
 function saveExpense() {
     const name     = (document.getElementById('exp-name').value||'').trim();
     const amount   = parseFloat(document.getElementById('exp-amount').value||'0');
+    const currency = (document.getElementById('exp-currency') ? document.getElementById('exp-currency').value : 'GBP') || 'GBP';
     const category = document.getElementById('exp-category').value;
     const date     = document.getElementById('exp-date').value;
     const note     = (document.getElementById('exp-note').value||'').trim();
@@ -4658,7 +4812,7 @@ function saveExpense() {
     if (!amount)   { showNotification('بری پارە بنووسە!', 'error'); return; }
     if (!category) { showNotification('بابەتی خەرجی هەڵبژێرە!', 'error'); return; }
     if (!date)     { showNotification('بەروار دیاری بکە!', 'error'); return; }
-    const data = { name, amount, category, date, note, timestamp: Date.now() };
+    const data = { name, amount, currency, category, date, note, timestamp: Date.now() };
     database.ref('expenses').push(data).then(function() {
         showNotification('خەرجی زیادکرا ✅');
         clearExpenseForm();
@@ -4669,6 +4823,7 @@ function saveExpense() {
 function clearExpenseForm() {
     ['exp-name','exp-note'].forEach(id => { var el=document.getElementById(id); if(el) el.value=''; });
     var a=document.getElementById('exp-amount'); if(a) a.value='';
+    var cur=document.getElementById('exp-currency'); if(cur) cur.value='GBP';
     var c=document.getElementById('exp-category'); if(c) c.value='';
     var d=document.getElementById('exp-date'); if(d) d.value=new Date().toISOString().split('T')[0];
 }
@@ -4697,7 +4852,7 @@ function viewExpense(key) {
       </div>
       <!-- بری پارە - گەورە -->
       <div style="text-align:center;padding:20px 18px 10px;border-bottom:1.5px solid #e2e8f0;">
-        <div style="font-size:2.2rem;font-weight:900;color:#276749;">£${parseFloat(e.amount||0).toFixed(2)}</div>
+        <div style="font-size:2.2rem;font-weight:900;color:#276749;">${e.currency==='EUR'?'€':e.currency==='USD'?'$':e.currency==='IQD'?'':' £'}${e.currency==='IQD'?parseFloat(e.amount||0).toFixed(0)+' IQD':parseFloat(e.amount||0).toFixed(2)}</div>
         <div style="font-size:1rem;font-weight:800;color:#1a202c;margin-top:4px;">${e.name||'—'}</div>
       </div>
       <!-- وردەکاریەکان -->
@@ -4752,7 +4907,7 @@ function printExpense(key) {
         <div style="font-size:.8rem;opacity:.85;">${e.date||''}</div>
       </div>
       <div class="amount">
-        <div style="font-size:2rem;font-weight:900;color:#276749;">£${parseFloat(e.amount||0).toFixed(2)}</div>
+        <div style="font-size:2rem;font-weight:900;color:#276749;">${e.currency==='EUR'?'€':e.currency==='USD'?'$':e.currency==='IQD'?'':'£'}${e.currency==='IQD'?parseFloat(e.amount||0).toFixed(0)+' IQD':parseFloat(e.amount||0).toFixed(2)}</div>
         <div style="font-size:1rem;font-weight:800;margin-top:5px;">${e.name||'—'}</div>
       </div>
       <div class="rows">
