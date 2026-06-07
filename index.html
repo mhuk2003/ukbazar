@@ -152,12 +152,12 @@
                         <div style="width:48px;height:48px;background:rgba(255,255,255,.18);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.15);">📦</div>
                         <div>
                             <div style="color:#fff;font-weight:900;font-size:1.1rem;letter-spacing:.3px;">چاودێری کاڵاکەم</div>
-                            <div style="color:rgba(255,255,255,.85);font-size:.78rem;margin-top:2px;">   </div>
+                            <div style="color:rgba(255,255,255,.85);font-size:.78rem;margin-top:2px;"></div>
                         </div>
                     </div>
                     <!-- My Goods Tracking Button -->
                     <button onclick="event.stopPropagation();openMyGoodsTracking();" style="flex-shrink:0;background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.5);color:#fff;border-radius:30px;padding:7px 13px;font-size:.72rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;display:flex;align-items:center;gap:5px;transition:background .2s;" onmouseover="this.style.background='rgba(255,255,255,.35)'" onmouseout="this.style.background='rgba(255,255,255,.22)'">
-                        <i class="fas fa-box-open"></i> King Street Goods
+                        <i class="fas fa-box-open"></i> Trucking  parcel
                     </button>
                     <div id="trackingChevron" style="color:#fff;font-size:1.2rem;transition:transform .3s;transform:rotate(0deg);flex-shrink:0;"><i class="fas fa-chevron-down"></i></div>
                 </div>
@@ -2248,15 +2248,14 @@ function _openPrintPage(htmlStr, filename) {
       <div id="driverQrResult" style="display:none;margin-top:10px;padding:12px;background:#f0fff4;border-radius:10px;border:2px solid #68d391;font-size:.85rem;color:#276749;"></div>
     </div>
 
-    <!-- Tabs: KU / UK / Saved -->
     <div style="display:flex;background:#fff;border-radius:14px;padding:4px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,0.07);gap:2px;">
       <button onclick="switchDriverTab('ku')" id="driverTabKu"
         style="flex:1;padding:9px 4px;border:none;border-radius:10px;font-family:inherit;font-size:.8rem;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#276749,#38a169);color:#fff;transition:all .2s;">
-        🇮🇶 ناوخۆ
+        🇮🇶 ناوخۆ <span style="font-size:.65rem;opacity:.8;">(UK / کوردستان)</span>
       </button>
       <button onclick="switchDriverTab('uk')" id="driverTabUk"
         style="flex:1;padding:9px 4px;border:none;border-radius:10px;font-family:inherit;font-size:.8rem;font-weight:700;cursor:pointer;background:transparent;color:#718096;transition:all .2s;">
-        🇬🇧 دەرەوە
+        🌍 دەرەوە <span style="font-size:.65rem;opacity:.8;">(IP-)</span>
       </button>
       <button onclick="switchDriverTab('saved')" id="driverTabSaved"
         style="flex:1;padding:9px 4px;border:none;border-radius:10px;font-family:inherit;font-size:.8rem;font-weight:700;cursor:pointer;background:transparent;color:#718096;transition:all .2s;position:relative;">
@@ -2387,18 +2386,19 @@ function loadDriverDeliveries() {
         var d = Object.assign({ key: ch.key, _node: 'delivery' }, ch.val());
         if ((d.driverName || '').trim() === (_currentDriver.name || '').trim() ||
             (d.driverMobile || '').replace(/\D/g,'') === (_currentDriver.mobile || '').replace(/\D/g,'')) {
-          if (d.fullName) { ukItems.push(d); }
-          else { kuItems.push(d); if (d.deliveryPricePerKg) kuBalance += parseFloat(d.deliveryPricePerKg) || 0; }
+          // هەموو delivery (UK- و ناوخۆ) دەچنە تابی ناوخۆ
+          kuItems.push(d);
+          if (d.deliveryPricePerKg) kuBalance += parseFloat(d.deliveryPricePerKg) || 0;
         }
       });
     }
-    // intlPost node — پۆستی نێودەولەتی
+    // intlPost node — IP- دەچێتە تابی دەرەوە
     if (results[1].exists()) {
       results[1].forEach(function(ch) {
         var d = Object.assign({ key: ch.key, _node: 'intlPost' }, ch.val());
         if ((d.driverName || '').trim() === (_currentDriver.name || '').trim() ||
             (d.driverMobile || '').replace(/\D/g,'') === (_currentDriver.mobile || '').replace(/\D/g,'')) {
-          ukItems.push(d);
+          ukItems.push(d); // دەرەوە = intlPost (IP-)
         }
       });
     }
@@ -2460,17 +2460,29 @@ function buildDriverUkCard(d) {
   var lblMap = {registered:'📋 Registered',picked_up:'🚗 Picked Up',loading:'🏭 Loading',in_transit:'🚛 In Transit',sorting:'📦 Sorting',delivered:'✅ Delivered'};
   var clr = clrMap[status] || '#2b6cb0';
   var lbl = lblMap[status] || status;
+
+  // intlPost (IP-) دانەی sender/recipient هەیە — delivery دانەی fullName/phone هەیە
+  var isIntl = d._node === 'intlPost' || (d.orderNumber && d.orderNumber.toString().startsWith('IP'));
+  var s = d.sender || {};
+  var r = d.recipient || {};
+
+  var toName  = isIntl ? (r.name || s.name || '—') : (d.fullName || d.name || '—');
+  var toPhone = isIntl ? (r.tel || s.tel || '—')   : (d.phone || '—');
+  var toCity  = isIntl ? (r.postcode || r.address || '') : (d.destinationCity || '');
+  var toKala  = isIntl ? (r.kala || s.kala || '')  : (d.packageName || '');
+  var toWeight= isIntl ? (r.weight || s.weight || '') : (d.packageKg ? d.packageKg + ' kg' : '');
+
   return '<div style="background:#fff;border-radius:14px;margin-bottom:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);border:2px solid ' + clr + '22;direction:ltr;">'
     + '<div style="background:' + clr + ';padding:8px 12px;display:flex;justify-content:space-between;align-items:center;">'
       + '<span style="color:#fff;font-weight:900;font-size:.9rem;"># ' + escapeHtml(d.orderNumber||'—') + '</span>'
       + '<span style="color:#fff;font-size:.75rem;background:rgba(255,255,255,.2);padding:2px 10px;border-radius:20px;font-weight:700;">' + lbl + '</span>'
     + '</div>'
     + '<div style="padding:12px;">'
-      + '<div style="margin-bottom:6px;"><span style="font-size:.7rem;color:#718096;">To: </span><span style="font-size:.88rem;font-weight:700;color:#1a202c;">' + escapeHtml(d.fullName||'—') + '</span></div>'
-      + '<div style="font-size:.78rem;color:#4a5568;margin-bottom:4px;">📞 ' + escapeHtml(d.phone||'—') + '</div>'
-      + (d.destinationCity ? '<div style="font-size:.78rem;color:#2b6cb0;font-weight:700;margin-bottom:6px;">🏙️ ' + escapeHtml(d.destinationCity) + '</div>' : '')
-      + (d.packageName ? '<div style="font-size:.78rem;color:#4a5568;margin-bottom:8px;">📦 ' + escapeHtml(d.packageName) + (d.packageKg?' — '+d.packageKg+'kg':'') + '</div>' : '')
-      + '<div style="display:flex;justify-content:flex-end;">'
+      + '<div style="margin-bottom:5px;"><span style="font-size:.7rem;color:#718096;">To: </span><span style="font-size:.88rem;font-weight:700;color:#1a202c;">' + escapeHtml(toName) + '</span></div>'
+      + '<div style="font-size:.78rem;color:#4a5568;margin-bottom:4px;">📞 ' + escapeHtml(toPhone) + '</div>'
+      + (toCity   ? '<div style="font-size:.78rem;color:#2b6cb0;font-weight:700;margin-bottom:4px;">🏙️ ' + escapeHtml(toCity) + '</div>' : '')
+      + (toKala   ? '<div style="font-size:.78rem;color:#4a5568;margin-bottom:4px;">📦 ' + escapeHtml(toKala) + (toWeight?' — '+toWeight:'') + '</div>' : '')
+      + '<div style="display:flex;justify-content:flex-end;margin-top:6px;">'
         + '<button onclick="driverScanOrViewDelivery(\'' + d.key + '\',\'uk\')" style="padding:6px 14px;background:linear-gradient(135deg,#1a365d,#2b6cb0);color:#fff;border:none;border-radius:20px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;"><i class="fas fa-edit"></i> Update</button>'
       + '</div>'
     + '</div>'
