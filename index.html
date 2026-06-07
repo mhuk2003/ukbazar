@@ -64,6 +64,16 @@
 
     </style>
     <script>
+      function openMyGoodsTracking(){
+        var b=document.getElementById('trackingWidgetBody');
+        var c=document.getElementById('trackingChevron');
+        if(!b)return;
+        b.style.display='block';
+        if(c) c.style.transform='rotate(180deg)';
+        var section=document.getElementById('trackingSection');
+        if(section) section.scrollIntoView({behavior:'smooth',block:'start'});
+        setTimeout(function(){var inp=document.getElementById('trackingPhoneInput');if(inp)inp.focus();},400);
+      }
       function toggleTrackingWidget(){
         var b=document.getElementById('trackingWidgetBody');
         var c=document.getElementById('trackingChevron');
@@ -137,41 +147,35 @@
         <div class="container">
             <div id="trackingWidget" style="border-radius:22px;overflow:hidden;box-shadow:0 6px 32px rgba(56,161,105,.22);border:2.5px solid #48bb78;">
                 <!-- Header — هەمیشە کراوەیە، کلیک دەبێت بداخرێت -->
-                <div style="background:linear-gradient(135deg,#2f855a,#276749);padding:20px 20px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="toggleTrackingWidget()">
-                    <div style="display:flex;align-items:center;gap:14px;">
-                        <div style="width:52px;height:52px;background:rgba(255,255,255,.18);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.15);">📦</div>
+                <div style="background:linear-gradient(135deg,#2f855a,#276749);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;" onclick="toggleTrackingWidget()">
+                    <div style="display:flex;align-items:center;gap:14px;flex:1;">
+                        <div style="width:48px;height:48px;background:rgba(255,255,255,.18);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.15);">📦</div>
                         <div>
-                            <div style="color:#fff;font-weight:900;font-size:1.15rem;letter-spacing:.3px;">چاودێری کاڵاکەم</div>
-                            <div style="color:rgba(255,255,255,.85);font-size:.82rem;margin-top:3px;">ژمارەی مۆبایلت بنووسە — کاڵاکانت ببینە</div>
+                            <div style="color:#fff;font-weight:900;font-size:1.1rem;letter-spacing:.3px;">چاودێری کاڵاکەم</div>
+                            <div style="color:rgba(255,255,255,.85);font-size:.78rem;margin-top:2px;">ژمارەی مۆبایلت بنووسە — کاڵاکانت ببینە</div>
                         </div>
                     </div>
-                    <div id="trackingChevron" style="color:#fff;font-size:1.3rem;transition:transform .3s;transform:rotate(0deg);"><i class="fas fa-chevron-down"></i></div>
+                    <!-- My Goods Tracking Button -->
+                    <button onclick="event.stopPropagation();openMyGoodsTracking();" style="flex-shrink:0;background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.5);color:#fff;border-radius:30px;padding:7px 13px;font-size:.72rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;display:flex;align-items:center;gap:5px;transition:background .2s;" onmouseover="this.style.background='rgba(255,255,255,.35)'" onmouseout="this.style.background='rgba(255,255,255,.22)'">
+                        <i class="fas fa-box-open"></i> My Goods Tracking
+                    </button>
+                    <div id="trackingChevron" style="color:#fff;font-size:1.2rem;transition:transform .3s;transform:rotate(0deg);flex-shrink:0;"><i class="fas fa-chevron-down"></i></div>
                 </div>
                 <!-- Body — کراوە بە پێشکەوت -->
                 <div id="trackingWidgetBody" style="background:#f7fff9;display:none;">
-                    <div style="padding:20px 16px 10px;">
-                        <!-- ژمارەی مۆبایل -->
-                        <div style="margin-bottom:10px;">
-                            <div style="font-size:.75rem;font-weight:700;color:#276749;margin-bottom:5px;padding-right:4px;">📱 ژمارەی مۆبایل</div>
-                            <input type="tel" id="trackingPhoneInput" placeholder="07xxxxxxxxx"
-                                style="width:100%;padding:13px 16px;border:2.5px solid #68d391;border-radius:14px;font-size:1rem;outline:none;direction:ltr;font-family:inherit;background:#fff;box-sizing:border-box;"
-                                onkeydown="if(event.key==='Enter')document.getElementById('trackingCodeInput').focus()"
-                                onfocus="this.style.borderColor='#2f855a'" onblur="this.style.borderColor='#68d391'">
-                        </div>
-                        <!-- کۆد -->
+                    <div style="padding:16px 16px 10px;">
+                        <!-- یەک input — هەم مۆبایل هەم کۆد -->
+                        <div style="font-size:.75rem;font-weight:700;color:#276749;margin-bottom:6px;padding-right:4px;">📱 ژمارەی مۆبایل <span style="color:#718096;font-weight:500;">یان</span> 🔑 کۆدی پسولە</div>
                         <div style="display:flex;gap:8px;">
-                            <div style="flex:1;">
-                                <div style="font-size:.75rem;font-weight:700;color:#276749;margin-bottom:5px;padding-right:4px;">🔑  (وشەی نهێنی)</div>
-                                <input type="text" id="trackingCodeInput" placeholder="ABCD1234"
-                                    style="width:100%;padding:13px 16px;border:2.5px solid #68d391;border-radius:14px;font-size:1rem;outline:none;direction:ltr;font-family:inherit;background:#fff;text-transform:uppercase;box-sizing:border-box;"
-                                    onkeydown="if(event.key==='Enter')searchCustomerOrders()"
-                                    onfocus="this.style.borderColor='#2f855a'" onblur="this.style.borderColor='#68d391'">
-                            </div>
-                            <div style="display:flex;align-items:flex-end;">
-                                <button onclick="searchCustomerOrders()" style="padding:13px 22px;border:none;border-radius:14px;background:linear-gradient(135deg,#38a169,#276749);color:#fff;font-weight:800;cursor:pointer;font-family:inherit;font-size:1rem;white-space:nowrap;box-shadow:0 3px 12px rgba(56,161,105,.4);">
-                                    <i class="fas fa-lock-open"></i> داخلبوون
-                                </button>
-                            </div>
+                            <input type="text" id="trackingPhoneInput" placeholder="07xxxxxxxxx  یان  ABCD1234"
+                                style="flex:1;padding:13px 16px;border:2.5px solid #68d391;border-radius:14px;font-size:1rem;outline:none;direction:ltr;font-family:inherit;background:#fff;box-sizing:border-box;"
+                                onkeydown="if(event.key==='Enter')searchCustomerOrders()"
+                                oninput="this.value=this.value.toUpperCase().replace(/^([A-Z]{4}[0-9]{4}.*)$/,'$1')||this.value"
+                                onfocus="this.style.borderColor='#2f855a'" onblur="this.style.borderColor='#68d391'">
+                            <input type="hidden" id="trackingCodeInput" value="">
+                            <button onclick="searchCustomerOrders()" style="padding:13px 20px;border:none;border-radius:14px;background:linear-gradient(135deg,#38a169,#276749);color:#fff;font-weight:800;cursor:pointer;font-family:inherit;font-size:1rem;white-space:nowrap;box-shadow:0 3px 12px rgba(56,161,105,.4);">
+                                <i class="fas fa-search"></i> گەڕان
+                            </button>
                         </div>
                         <p id="trackingErr" style="color:#e53e3e;font-size:.82rem;margin:8px 0 0;text-align:center;display:none;"></p>
                     </div>
@@ -817,7 +821,7 @@
                     </p>
                     <div class="form-group">
                         <label style="font-weight:700;color:#1a202c;">Country / Region</label>
-                        <select id="ukReceiverCountry" style="direction:ltr;width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:.95rem;background:#fff;">
+                        <select id="ukReceiverCountry" onchange="onUkCountryChange(this.value)" style="direction:ltr;width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:.95rem;background:#fff;">
 <option value="United Kingdom">🇬🇧 United Kingdom</option>
 <option value="Iraq">🇮🇶 Iraq</option>
 <option value="">— Other Countries —</option>
@@ -1014,9 +1018,7 @@
 <option value="Zambia">Zambia</option>
 <option value="Zimbabwe">Zimbabwe</option>
                         </select>
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight:700;color:#1a202c;">🏙️ Destination City / شارەکە <span class="required-star">*</span></label>
+                        <div id="ukCountryNote" style="display:none;margin-top:7px;padding:8px 12px;background:#fffbeb;border:1.5px solid #f0c040;border-radius:9px;font-size:.8rem;color:#92400e;"><i class="fas fa-info-circle" style="color:#d97706;"></i> تێبینی: لەیبلی چاپکراو تەنها <strong>United Kingdom</strong> نیشان دەدات — بەبێ جیاوازی لە ولاتی هەڵبژێردراو.</div>
                         <select id="ukDestinationCity" required style="direction:ltr;width:100%;padding:10px 14px;border:2px solid #667eea;border-radius:10px;font-size:.95rem;background:#fff;font-weight:600;">
                            <option value="">— Select destination city —</option>
 
@@ -1510,113 +1512,77 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============================================================
 function printHtml(htmlContent, fileName) {
     fileName = (fileName || 'label').replace(/\.pdf$/i, '');
-
-    // پاکردنەوەی کۆدی کۆنی دوگمەکان
     var cleaned = htmlContent
         .replace(/backdrop-filter\s*:[^;"]+;?/gi, '')
         .replace(/-webkit-backdrop-filter\s*:[^;"]+;?/gi, '')
         .replace(/<div[^>]*id="(_iframeCtrl|_printCtrl|print-ctrl|_ukPrintBar|_pbar)"[^>]*>[\s\S]*?<\/div>/gi, '')
-        .replace(/<style[^>]*id="(_iframeCtrlStyle|_ukPrintBarStyle)"[^>]*>[\s\S]*?<\/style>/gi, '')
-        .replace(/<div[^>]*class="[^"]*(?:action-bar|no-print)[^"]*"[^>]*>[\s\S]*?<\/div>/gi, '');
+        .replace(/<style[^>]*id="(_iframeCtrlStyle|_ukPrintBarStyle)"[^>]*>[\s\S]*?<\/style>/gi, '');
 
-    // زیادکردنی padding-top بۆ ناوەرۆک
-    var bodyPadStyle = '<style>'
-        + '@media screen{body{padding-top:70px!important;margin-top:0!important;}}'
-        + '@media print{body{padding-top:0!important;margin:0!important;}'
+    var barStyle = '<style>'
+        + '*{box-sizing:border-box;}'
+        + '#_pbar{position:fixed;top:0;left:0;right:0;display:flex;gap:6px;'
+        + 'padding:10px 10px;background:#1a365d;z-index:2147483647;'
+        + 'box-shadow:0 3px 10px rgba(0,0,0,.4);}'
+        + '#_pbar button{flex:1;padding:13px 4px;border:none;border-radius:10px;'
+        + 'font-size:.88rem;font-weight:800;cursor:pointer;'
+        + 'font-family:Tahoma,Arial,sans-serif;}'
+        + '#_pbtn{background:#38a169;color:#fff;}'
+        + '#_dbtn{background:#3182ce;color:#fff;}'
+        + '#_cbtn{background:#e53e3e;color:#fff;}'
+        + '@media print{'
+        + '#_pbar{display:none!important;}'
+        + 'body{padding-top:0!important;margin:0!important;}'
         + '*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}}'
+        + '@media screen{body{padding-top:66px!important;}}'
         + '</style>';
+
+    var fnStr = JSON.stringify(fileName);
+    var dlFn = '<scr'+'ipt>'
+        + 'var _fn=' + fnStr + ';'
+        // داونلۆدی HTML فایل
+        + 'function _dl(){'
+        + '  try{'
+        + '    var b=new Blob([document.documentElement.outerHTML],{type:"text/html;charset=utf-8"});'
+        + '    var u=URL.createObjectURL(b);'
+        + '    var a=document.createElement("a");'
+        + '    a.href=u;a.download=_fn+".html";'
+        + '    document.body.appendChild(a);a.click();'
+        + '    setTimeout(function(){URL.revokeObjectURL(u);a.remove();},5000);'
+        + '  }catch(e){alert("هەڵە: "+e);}'
+        + '}'
+        + '<\/scr'+'ipt>';
+
+    var closeCode = "try{window.parent.document.getElementById('_ukPO').remove();}catch(e){}";
+    var bar = '<div id="_pbar">'
+        + '<button id="_pbtn" onclick="window.print()">🖨 چاپ</button>'
+        + '<button id="_dbtn" onclick="_dl()">⬇ داونلۆد</button>'
+        + '<button id="_cbtn" onclick="' + closeCode + '">✕ داخستن</button>'
+        + '</div>';
 
     var final = cleaned;
     if (/<\/head>/i.test(final)) {
-        final = final.replace(/<\/head>/i, bodyPadStyle + '</head>');
+        final = final.replace(/<\/head>/i, barStyle + dlFn + '</head>');
     } else {
-        final = bodyPadStyle + final;
+        final = barStyle + dlFn + final;
+    }
+    if (/<body[^>]*>/i.test(final)) {
+        final = final.replace(/(<body[^>]*>)/i, '$1' + bar);
+    } else {
+        final = bar + final;
     }
 
-    // سڕینەوەی overlay کۆنەکە
+    // همیشە iframe — لە PWA و موبایل ئەپ بەتەواوی کار دەکات
     var old = document.getElementById('_ukPO');
     if (old) old.remove();
-    var oldBar = document.getElementById('_ukPOBar');
-    if (oldBar) oldBar.remove();
-
-    // ── چارەسەری سەرەکی: دوگمەکان لە دەرەوەی iframe، لە DOM ئەپی سەرەکی ──
-    // ئەمە دروست کردنی دوگمەکان لە JS ئەپی سەرەکی دەکات — touch events کار دەکات
-    var bar = document.createElement('div');
-    bar.id = '_ukPOBar';
-    bar.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:2147483647;'
-        + 'display:flex;gap:8px;padding:10px;'
-        + 'padding-top:calc(10px + env(safe-area-inset-top));'
-        + 'background:#1a365d;box-shadow:0 3px 12px rgba(0,0,0,.5);'
-        + 'touch-action:manipulation;';
-
-    var btnPrint = document.createElement('button');
-    btnPrint.innerHTML = '\uD83D\uDDA8 چاپ';
-    btnPrint.style.cssText = 'flex:1;padding:14px 4px;border:none;border-radius:10px;'
-        + 'background:#38a169;color:#fff;font-size:.92rem;font-weight:800;cursor:pointer;'
-        + 'font-family:Tahoma,Arial,sans-serif;touch-action:manipulation;';
-    btnPrint.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var frm = document.getElementById('_ukPO');
-        if (frm && frm.contentWindow) {
-            try { frm.contentWindow.focus(); frm.contentWindow.print(); }
-            catch(err) { showNotification('تکایە داونلۆد بکە دواتر چاپ بکە', 'info'); }
-        }
-    });
-
-    var btnDl = document.createElement('button');
-    btnDl.innerHTML = '\u2193 داونلۆد';
-    btnDl.style.cssText = 'flex:1;padding:14px 4px;border:none;border-radius:10px;'
-        + 'background:#3182ce;color:#fff;font-size:.92rem;font-weight:800;cursor:pointer;'
-        + 'font-family:Tahoma,Arial,sans-serif;touch-action:manipulation;';
-    var _finalForDl = final;
-    var _fileNameForDl = fileName;
-    btnDl.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        try {
-            var blob = new Blob([_finalForDl], {type: 'text/html;charset=utf-8'});
-            var url = URL.createObjectURL(blob);
-            var a = document.createElement('a');
-            a.href = url;
-            a.download = _fileNameForDl + '.html';
-            document.body.appendChild(a);
-            a.click();
-            setTimeout(function(){ URL.revokeObjectURL(url); a.remove(); }, 5000);
-            showNotification('\u2705 داونلۆد دەست پێکرد');
-        } catch(err) {
-            showNotification('هەڵە: ' + err.message, 'error');
-        }
-    });
-
-    var btnClose = document.createElement('button');
-    btnClose.innerHTML = '\u2715 داخستن';
-    btnClose.style.cssText = 'flex:1;padding:14px 4px;border:none;border-radius:10px;'
-        + 'background:#e53e3e;color:#fff;font-size:.92rem;font-weight:800;cursor:pointer;'
-        + 'font-family:Tahoma,Arial,sans-serif;touch-action:manipulation;';
-    btnClose.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var frm = document.getElementById('_ukPO');
-        if (frm) frm.remove();
-        bar.remove();
-    });
-
-    bar.appendChild(btnClose);
-    bar.appendChild(btnDl);
-    bar.appendChild(btnPrint);
-
-    // iframe — تەنها بۆ نیشاندانی ناوەرۆک
     var iframe = document.createElement('iframe');
     iframe.id = '_ukPO';
-    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-downloads allow-modals allow-popups');
+    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-downloads allow-modals');
     iframe.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;'
         + 'min-height:100vh;border:0;z-index:2147483646;background:#fff;display:block;';
-
     document.body.appendChild(iframe);
-    document.body.appendChild(bar);
     iframe.srcdoc = final;
 }
+
 function _printHtmlIframe(final) { printHtml(final, 'label'); }
 
 function _openPrintPage(htmlStr, filename) {
