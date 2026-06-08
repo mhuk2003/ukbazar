@@ -8,6 +8,8 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- html5-qrcode — Live QR Scanner -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <!-- PWA -->
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#667eea">
@@ -141,12 +143,12 @@
 </header>
 
     <!-- ═══════════════════════════════════════════════════
-         TRACKING SECTION — بەشی چاودێری کاڵا (گەورە، سەرەوە)
+         TRACKING SECTION — بەشی چاودێری کاڵا (Live QR Code Integration)
     ═══════════════════════════════════════════════════ -->
     <section id="trackingSection" style="padding:12px 0 6px;">
         <div class="container">
             <div id="trackingWidget" style="border-radius:22px;overflow:hidden;box-shadow:0 6px 32px rgba(56,161,105,.22);border:2.5px solid #48bb78;">
-                <!-- Header — هەمیشە کراوەیە، کلیک دەبێت بداخرێت -->
+                <!-- Header -->
                 <div style="background:linear-gradient(135deg,#2f855a,#276749);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;" onclick="toggleTrackingWidget()">
                     <div style="display:flex;align-items:center;gap:14px;flex:1;">
                         <div style="width:48px;height:48px;background:rgba(255,255,255,.18);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.15);">📦</div>
@@ -155,16 +157,23 @@
                             <div style="color:rgba(255,255,255,.85);font-size:.78rem;margin-top:2px;"></div>
                         </div>
                     </div>
-                    <!-- My Goods Tracking Button -->
-                    <button onclick="event.stopPropagation();openMyGoodsTracking();" style="flex-shrink:0;background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.5);color:#fff;border-radius:30px;padding:7px 13px;font-size:.72rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;display:flex;align-items:center;gap:5px;transition:background .2s;" onmouseover="this.style.background='rgba(255,255,255,.35)'" onmouseout="this.style.background='rgba(255,255,255,.22)'">
-                        <i class="fas fa-box-open"></i> Trucking  parcel
+                    <!-- Live QR Scanner Button -->
+                    <button onclick="event.stopPropagation();startCustomerQR();" style="flex-shrink:0;background:#e53e3e;border:2px solid #fff;color:#fff;border-radius:30px;padding:7px 13px;font-size:.72rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;display:flex;align-items:center;gap:5px;box-shadow:0 4px 10px rgba(0,0,0,.2);">
+                        <i class="fas fa-camera"></i> سکانی ڕاستەوخۆ-Trucking  parcel
                     </button>
                     <div id="trackingChevron" style="color:#fff;font-size:1.2rem;transition:transform .3s;transform:rotate(0deg);flex-shrink:0;"><i class="fas fa-chevron-down"></i></div>
                 </div>
-                <!-- Body — کراوە بە پێشکەوت -->
+                <!-- Body -->
                 <div id="trackingWidgetBody" style="background:#f7fff9;display:none;">
+                    <!-- Live Camera Container -->
+                    <div id="customer-qr-container" style="display:none;padding:14px;background:#fff;border-bottom:2px solid #68d391;">
+                        <div style="text-align:center;margin-bottom:8px;font-size:.82rem;font-weight:700;color:#276749;">📷 QR کۆدەکە بخە بەرامبەر کامێراکە — یەکسەر دەدۆزێتەوە</div>
+                        <div id="customer-qr-reader" style="width:100%;max-width:380px;margin:0 auto;border-radius:12px;overflow:hidden;border:2px solid #2f855a;"></div>
+                        <div style="text-align:center;margin-top:10px;">
+                            <button onclick="stopCustomerQR()" style="padding:7px 22px;background:#e53e3e;color:#fff;border:none;border-radius:20px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.85rem;">✕ داخستنی کامێرا</button>
+                        </div>
+                    </div>
                     <div style="padding:16px 16px 10px;">
-                        <!-- یەک input — هەم مۆبایل هەم کۆد -->
                         <div style="font-size:.75rem;font-weight:700;color:#276749;margin-bottom:6px;padding-right:4px;">📱 ژمارەی مۆبایل <span style="color:#718096;font-weight:500;">یان</span> 🔑 کۆدی پسولە</div>
                         <div style="display:flex;gap:8px;">
                             <input type="text" id="trackingPhoneInput" placeholder="07xxxxxxxxx  یان  ABCD1234"
@@ -184,6 +193,39 @@
             </div>
         </div>
     </section>
+
+    <script>
+    // ── Customer QR Scanner (html5-qrcode) ───────────────────
+    var _customerQR = null;
+    function startCustomerQR() {
+        var body = document.getElementById('trackingWidgetBody');
+        var chevron = document.getElementById('trackingChevron');
+        if (body) body.style.display = 'block';
+        if (chevron) chevron.style.transform = 'rotate(180deg)';
+        var container = document.getElementById('customer-qr-container');
+        container.style.display = 'block';
+        container.scrollIntoView({ behavior:'smooth', block:'start' });
+        if (!_customerQR) _customerQR = new Html5Qrcode("customer-qr-reader");
+        _customerQR.start(
+            { facingMode:"environment" },
+            { fps:15, qrbox:{width:240,height:240} },
+            function(decoded) {
+                document.getElementById('trackingPhoneInput').value = decoded.trim();
+                stopCustomerQR();
+                searchCustomerOrders();
+            }
+        ).catch(function(e){
+            container.style.display='none';
+            alert('کامێرا نەکراوەبوو — مۆڵەتی کامێرا بدەرێ\n'+e);
+        });
+    }
+    function stopCustomerQR() {
+        if (_customerQR && _customerQR.isScanning) _customerQR.stop().catch(function(){});
+        var c = document.getElementById('customer-qr-container');
+        if (c) c.style.display='none';
+    }
+    </script>
+
 
     <section class="slider-section">
         <div class="container">
@@ -2227,14 +2269,12 @@ function _openPrintPage(htmlStr, filename) {
       <div style="font-size:.9rem;font-weight:800;color:#1a365d;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
         <span style="font-size:1.2rem;">📷</span> بە QR زانیاری کاڵا بخوێنەرەوە
       </div>
-      <!-- دوگمەکانی QR -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-        <!-- کامێرای ڕاستەوخۆ — live scan -->
-        <button onclick="startLiveQrScan()"
+        <button onclick="startDriverQR()"
           style="padding:14px 8px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:14px;font-size:.88rem;font-weight:800;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;box-shadow:0 4px 14px rgba(102,126,234,.4);">
           <i class="fas fa-qrcode" style="font-size:1.6rem;"></i>
           <span>📷 QR بخوێنەرەوە</span>
-          <span style="font-size:.7rem;opacity:.85;">کامێرا کراوەدەبێت</span>
+          <span style="font-size:.7rem;opacity:.85;">یەکسەر ڕاستەوخۆ</span>
         </button>
         <button onclick="driverManualEntry()"
           style="padding:14px 8px;background:#f7fafc;color:#4a5568;border:2px solid #e2e8f0;border-radius:14px;font-size:.88rem;font-weight:800;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:6px;">
@@ -2243,45 +2283,14 @@ function _openPrintPage(htmlStr, filename) {
           <span style="font-size:.7rem;color:#718096;">ژمارەی پسولە</span>
         </button>
       </div>
-
-      <!-- Live QR Viewfinder Modal -->
-      <div id="liveQrModal" style="display:none;position:fixed;inset:0;z-index:9999999;background:rgba(0,0,0,0.92);flex-direction:column;align-items:center;justify-content:center;">
-        <div style="width:100%;max-width:400px;padding:16px;box-sizing:border-box;">
-          <!-- Header -->
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <div style="color:#fff;font-weight:800;font-size:1rem;">📷 QR بخوێنەرەوە</div>
-            <button onclick="stopLiveQrScan()" style="background:rgba(255,255,255,.15);border:none;color:#fff;border-radius:50%;width:36px;height:36px;font-size:1.1rem;cursor:pointer;">✕</button>
-          </div>
-          <!-- Video -->
-          <div style="position:relative;border-radius:16px;overflow:hidden;background:#000;">
-            <video id="liveQrVideo" autoplay playsinline muted style="width:100%;display:block;max-height:60vh;object-fit:cover;"></video>
-            <!-- Scanning frame overlay -->
-            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;">
-              <div id="liveQrFrame" style="width:220px;height:220px;position:relative;">
-                <!-- Corner brackets -->
-                <div style="position:absolute;top:0;left:0;width:30px;height:30px;border-top:3px solid #38a169;border-left:3px solid #38a169;border-radius:3px 0 0 0;"></div>
-                <div style="position:absolute;top:0;right:0;width:30px;height:30px;border-top:3px solid #38a169;border-right:3px solid #38a169;border-radius:0 3px 0 0;"></div>
-                <div style="position:absolute;bottom:0;left:0;width:30px;height:30px;border-bottom:3px solid #38a169;border-left:3px solid #38a169;border-radius:0 0 0 3px;"></div>
-                <div style="position:absolute;bottom:0;right:0;width:30px;height:30px;border-bottom:3px solid #38a169;border-right:3px solid #38a169;border-radius:0 0 3px 0;"></div>
-                <!-- Scan line animation -->
-                <div id="liveQrScanLine" style="position:absolute;left:4px;right:4px;height:2px;background:linear-gradient(90deg,transparent,#38a169,transparent);animation:qrScanAnim 1.8s linear infinite;top:50%;"></div>
-              </div>
-            </div>
-            <!-- Hidden canvas for processing -->
-            <canvas id="liveQrCanvas" style="display:none;"></canvas>
-          </div>
-          <div id="liveQrStatus" style="text-align:center;color:rgba(255,255,255,.7);font-size:.82rem;margin-top:10px;">QR کۆدەکە بخە ناو چوارچێوەکە</div>
+      <!-- Driver Live QR Container -->
+      <div id="driver-qr-container" style="display:none;margin-top:8px;">
+        <div style="text-align:center;margin-bottom:8px;font-size:.82rem;font-weight:700;color:#1a365d;">📷 QR کۆدەکە بخە بەرامبەر کامێراکە — یەکسەر دەدۆزێتەوە</div>
+        <div id="driver-qr-reader" style="width:100%;border-radius:12px;overflow:hidden;border:2px solid #667eea;"></div>
+        <div style="text-align:center;margin-top:10px;">
+          <button onclick="stopDriverQR()" style="padding:7px 22px;background:#e53e3e;color:#fff;border:none;border-radius:20px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.85rem;">✕ داخستنی کامێرا</button>
         </div>
       </div>
-
-      <style>
-        @keyframes qrScanAnim {
-          0%   { top: 8px; }
-          50%  { top: calc(100% - 8px); }
-          100% { top: 8px; }
-        }
-      </style>
-
       <div id="driverQrResult" style="display:none;margin-top:10px;padding:12px;background:#f0fff4;border-radius:10px;border:2px solid #68d391;font-size:.85rem;color:#276749;"></div>
     </div>
 
@@ -2551,154 +2560,43 @@ function switchDriverTab(tab) {
   }
 }
 
-// ── QR Scanner — Live Camera ─────────────────────────────────
-var _liveQrStream = null;
-var _liveQrRAF   = null;
-var _liveQrActive = false;
 
-function _loadJsQR(cb) {
-  if (typeof jsQR !== 'undefined') { cb(); return; }
-  var s = document.createElement('script');
-  s.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';
-  s.onload = cb;
-  s.onerror = function() {
-    var s2 = document.createElement('script');
-    s2.src = 'https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsQR.min.js';
-    s2.onload = cb;
-    s2.onerror = function() {
-      document.getElementById('liveQrStatus').textContent = '❌ ئینتەرنێت پێویستە بۆ بارکردنی scanner';
-    };
-    document.head.appendChild(s2);
-  };
-  document.head.appendChild(s);
-}
+// ── Driver QR Scanner (html5-qrcode) ─────────────────────────
+var _driverQR = null;
 
-function startLiveQrScan() {
-  var modal = document.getElementById('liveQrModal');
-  modal.style.display = 'flex';
-  var status = document.getElementById('liveQrStatus');
-  status.textContent = 'کامێرا کراوەدەبێت...';
-
-  _loadJsQR(function() {
-    navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } }
-    }).then(function(stream) {
-      _liveQrStream = stream;
-      _liveQrActive = true;
-      var video = document.getElementById('liveQrVideo');
-      video.srcObject = stream;
-      video.play();
-      video.addEventListener('loadedmetadata', function() {
-        status.textContent = 'QR کۆدەکە بخە ناو چوارچێوەکە...';
-        _liveQrScanLoop();
-      });
-    }).catch(function(err) {
-      console.error('Camera error:', err);
-      modal.style.display = 'none';
-      // iOS fallback: file input با capture
-      var inp = document.getElementById('_qrFallbackInput');
-      if (!inp) {
-        inp = document.createElement('input');
-        inp.id = '_qrFallbackInput';
-        inp.type = 'file';
-        inp.accept = 'image/*';
-        inp.setAttribute('capture','environment');
-        inp.style.display = 'none';
-        inp.onchange = function(){ scanQrFromCapture(this); };
-        document.body.appendChild(inp);
-      }
-      inp.value = '';
-      inp.click();
-    });
+function startDriverQR() {
+  var container = document.getElementById('driver-qr-container');
+  if (container) {
+    container.style.display = 'block';
+    container.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }
+  if (!_driverQR) _driverQR = new Html5Qrcode("driver-qr-reader");
+  _driverQR.start(
+    { facingMode:"environment" },
+    { fps:15, qrbox:{width:240,height:240} },
+    function(decoded) {
+      stopDriverQR();
+      handleDriverQrResult(decoded.trim());
+    }
+  ).catch(function(e){
+    if (container) container.style.display='none';
+    alert('کامێرا نەکراوەبوو: ' + e);
   });
 }
 
-function _liveQrScanLoop() {
-  if (!_liveQrActive) return;
-  var video  = document.getElementById('liveQrVideo');
-  var canvas = document.getElementById('liveQrCanvas');
-  if (!video || !canvas || video.readyState < 2) {
-    _liveQrRAF = requestAnimationFrame(_liveQrScanLoop);
-    return;
-  }
-  canvas.width  = video.videoWidth;
-  canvas.height = video.videoHeight;
-  var ctx = canvas.getContext('2d');
-  ctx.drawImage(video, 0, 0);
-  var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  var code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'dontInvert' });
-  if (code && code.data) {
-    // QR دۆزرایەوە!
-    stopLiveQrScan();
-    handleDriverQrResult(code.data);
-  } else {
-    _liveQrRAF = requestAnimationFrame(_liveQrScanLoop);
-  }
+function stopDriverQR() {
+  if (_driverQR && _driverQR.isScanning) _driverQR.stop().catch(function(){});
+  var c = document.getElementById('driver-qr-container');
+  if (c) c.style.display='none';
 }
 
-function stopLiveQrScan() {
-  _liveQrActive = false;
-  if (_liveQrRAF) { cancelAnimationFrame(_liveQrRAF); _liveQrRAF = null; }
-  if (_liveQrStream) { _liveQrStream.getTracks().forEach(function(t){ t.stop(); }); _liveQrStream = null; }
-  var modal = document.getElementById('liveQrModal');
-  if (modal) modal.style.display = 'none';
-  var video = document.getElementById('liveQrVideo');
-  if (video) { video.srcObject = null; }
-}
-
-function startDriverQrScan() { startLiveQrScan(); }
+// backward compat aliases
+function startDriverQrScan()  { startDriverQR(); }
+function stopDriverQrScan()   { stopDriverQR(); }
+function startLiveQrScan()    { startDriverQR(); }
+function stopLiveQrScan()     { stopDriverQR(); }
 function _initDriverQrScanner() {}
 
-// ── QR لە وێنەی کامێرا بخوێنەرەوە (fallback بۆ iOS) ──────────
-function scanQrFromCapture(input) {
-  if (!input.files || !input.files[0]) return;
-  var file = input.files[0];
-  input.value = '';
-
-  var resultDiv = document.getElementById('driverQrResult');
-  resultDiv.style.display = 'block';
-  resultDiv.innerHTML = '<div style="text-align:center;padding:8px;"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem;color:#667eea;"></i><div style="margin-top:6px;color:#4a5568;font-size:.85rem;">QR پرۆسەس دەکرێت...</div></div>';
-
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    var img = new Image();
-    img.onload = function() {
-      var canvas = document.createElement('canvas');
-      canvas.width = img.width; canvas.height = img.height;
-      var ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0);
-      var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-      function tryJsQR() {
-        if (typeof jsQR === 'undefined') {
-          resultDiv.innerHTML = '<div style="color:#e53e3e;">❌ QR library بارنەبوو</div>'; return;
-        }
-        var code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'dontInvert' });
-        if (code && code.data) {
-          resultDiv.style.display = 'none';
-          handleDriverQrResult(code.data);
-        } else {
-          var c2 = document.createElement('canvas');
-          var sc = Math.min(800/img.width, 800/img.height, 1);
-          c2.width = img.width*sc; c2.height = img.height*sc;
-          var x2 = c2.getContext('2d');
-          x2.filter = 'contrast(1.5) brightness(1.1)';
-          x2.drawImage(img, 0, 0, c2.width, c2.height);
-          var id2 = x2.getImageData(0,0,c2.width,c2.height);
-          var c2r = jsQR(id2.data, id2.width, id2.height, { inversionAttempts: 'attemptBoth' });
-          if (c2r && c2r.data) {
-            resultDiv.style.display = 'none'; handleDriverQrResult(c2r.data);
-          } else {
-            resultDiv.innerHTML = '<div style="color:#e53e3e;font-weight:700;">❌ QR نەدۆزرایەوە — دووبارە تاقیبکەرەوە</div>';
-          }
-        }
-      }
-      _loadJsQR(tryJsQR);
-    };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(file);
-}
 
 function stopDriverQrScan() {
   var btn = document.getElementById('driverQrScanBtn');
