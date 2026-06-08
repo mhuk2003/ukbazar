@@ -133,10 +133,7 @@
                     <i class="fas fa-shipping-fast"></i>
                     <span class="btn-text" data-i18n="ukDelivery">UK-گەیاندن</span>
                 </button>
-                <button onclick="showDriverLoginModal()" id="driverNavBtn" style="display:flex;align-items:center;gap:5px;background:linear-gradient(135deg,#f56565,#e53e3e);color:#fff;border:none;border-radius:50px;padding:7px 11px;font-family:inherit;font-size:.82rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(245,101,101,.35);flex-shrink:0;">
-                    <i class="fas fa-truck"></i>
-                    <span class="btn-text">شۆفیر</span>
-                </button>
+
             </div>
         </div>
     </div>
@@ -159,7 +156,7 @@
                     </div>
                     <!-- Live QR Scanner Button -->
                     <button onclick="event.stopPropagation();startCustomerQR();" style="flex-shrink:0;background:#e53e3e;border:2px solid #fff;color:#fff;border-radius:30px;padding:7px 13px;font-size:.72rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;display:flex;align-items:center;gap:5px;box-shadow:0 4px 10px rgba(0,0,0,.2);">
-                        <i class="fas fa-camera"></i> سکانی ڕاستەوخۆ-Trucking  parcel
+                        <i class="fas fa-camera"></i> -QR-Trucking  parcel
                     </button>
                     <div id="trackingChevron" style="color:#fff;font-size:1.2rem;transition:transform .3s;transform:rotate(0deg);flex-shrink:0;"><i class="fas fa-chevron-down"></i></div>
                 </div>
@@ -216,7 +213,7 @@
             }
         ).catch(function(e){
             container.style.display='none';
-            alert('کامێرا نەکراوەبوو — مۆڵەتی کامێرا بدەرێ\n'+e);
+            alert('لە سایتەوە بەکاری بهینە/https://ukbazar.online/\n'+e);
         });
     }
     function stopCustomerQR() {
@@ -308,8 +305,8 @@
                 <a href="javascript:void(0)" class="bottom-nav-item active" onclick="showHomePage()">
                     <i class="fas fa-home"></i><span data-i18n="home">ماڵەوە</span>
                 </a>
-                <a href="javascript:void(0)" class="bottom-nav-item" onclick="showRequestModal()">
-                    <i class="fas fa-clipboard-list"></i><span data-i18n="request">داواکاری</span>
+                <a href="javascript:void(0)" class="bottom-nav-item" onclick="showDriverLoginModal()">
+                    <i class="fas fa-truck" style="font-size:1.3rem;color:#e53e3e;"></i><span>شۆفیر</span>
                 </a>
                  <a href="javascript:void(0)" class="bottom-nav-item bottom-nav-add" onclick="showAddProductModal()">
                     <i class="fas fa-plus"></i><span data-i18n="addProduct">کاڵا دابنێ</span>
