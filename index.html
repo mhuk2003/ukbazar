@@ -157,9 +157,9 @@
                             <div style="color:rgba(255,255,255,.85);font-size:.78rem;margin-top:2px;"></div>
                         </div>
                     </div>
-                    <!-- Live QR Scanner Button -->
-                    <button onclick="event.stopPropagation();startCustomerQR();" style="flex-shrink:0;background:#e53e3e;border:2px solid #fff;color:#fff;border-radius:30px;padding:7px 13px;font-size:.72rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;display:flex;align-items:center;gap:5px;box-shadow:0 4px 10px rgba(0,0,0,.2);">
-                        <i class="fas fa-camera"></i> سکانی ڕاستەوخۆ-Trucking  parcel
+                    <!-- Label / Postal Code Search Button -->
+                    <button onclick="event.stopPropagation();openMyGoodsTracking();" style="flex-shrink:0;background:#e53e3e;border:2px solid #fff;color:#fff;border-radius:30px;padding:7px 13px;font-size:.72rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;display:flex;align-items:center;gap:5px;box-shadow:0 4px 10px rgba(0,0,0,.2);">
+                        <i class="fas fa-search"></i> گەڕان بە ژمارەی لەیبل / Trucking  parcel
                     </button>
                     <div id="trackingChevron" style="color:#fff;font-size:1.2rem;transition:transform .3s;transform:rotate(0deg);flex-shrink:0;"><i class="fas fa-chevron-down"></i></div>
                 </div>
@@ -308,8 +308,8 @@
                 <a href="javascript:void(0)" class="bottom-nav-item active" onclick="showHomePage()">
                     <i class="fas fa-home"></i><span data-i18n="home">ماڵەوە</span>
                 </a>
-                <a href="javascript:void(0)" class="bottom-nav-item" onclick="showRequestModal()">
-                    <i class="fas fa-clipboard-list"></i><span data-i18n="request">داواکاری</span>
+                <a href="https://ukbazar.online/" target="_blank" class="bottom-nav-item" title="کیوئار — بکەرەوە لە سایتەکە">
+                    <img src="https://img.icons8.com/color/48/000000/qr-code.png" alt="QR" style="width:24px;height:24px;display:block;margin:0 auto 2px;"><span>QR</span>
                 </a>
                  <a href="javascript:void(0)" class="bottom-nav-item bottom-nav-add" onclick="showAddProductModal()">
                     <i class="fas fa-plus"></i><span data-i18n="addProduct">کاڵا دابنێ</span>
