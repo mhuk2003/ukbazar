@@ -5575,11 +5575,11 @@ function loadReportsAdmin() {
     var promises = [
         database.ref('products').once('value'),
         database.ref('requests').once('value'),
-        database.ref('deliveries').once('value'),
+        database.ref('delivery').once('value'),
         database.ref('intlPost').once('value'),
         database.ref('drivers').once('value'),
         database.ref('expenses').once('value'),
-        database.ref('sliders').once('value'),
+        database.ref('slider').once('value'),
         database.ref('videos').once('value'),
     ];
 
