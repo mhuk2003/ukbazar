@@ -211,11 +211,7 @@
                 stopCustomerQR();
                 searchCustomerOrders();
             }
-        ).catch(function(e){
-            container.style.display='none';
-            alert('لە سایتەوە بەکاری بهینە/https://ukbazar.online/\n'+e);
-        });
-    }
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     function stopCustomerQR() {
         if (_customerQR && _customerQR.isScanning) _customerQR.stop().catch(function(){});
         var c = document.getElementById('customer-qr-container');
