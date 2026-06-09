@@ -1116,7 +1116,9 @@ function renderDeliveryItems(items) {
         kurdishItems.forEach((d) => {
             const key = d.key;
             const orderNum = d.orderNumber || '—';
-            const qrText = encodeURIComponent('https://ukbazar.online/?track=' + encodeURIComponent(orderNum));
+            const qrText = encodeURIComponent(
+                `پسولە: ${orderNum} | نێردەر: ${d.senderName||d.name||''} ${d.senderMobile||d.mobile||''} (${d.senderLocation||d.address||''}) | وەرگر: ${d.receiverName||''} ${d.receiverMobile||''} (${d.receiverLocation||''}) | کەلوپەل: ${d.packageName||d.details||''} x${d.packageQty||''} - ${d.packageKg||''}کگ`
+            );
             const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=4&data=${qrText}`;
             html += buildKurdishLabelHtml(d, key, orderNum, qrUrl);
         });
@@ -1130,7 +1132,7 @@ function renderDeliveryItems(items) {
             const key = d.key;
             const orderNum = d.orderNumber || '—';
             const fullAddress = [d.address1, d.address2, d.city, d.county, d.postcode, 'United Kingdom'].filter(Boolean).join(', ');
-            const qrText = encodeURIComponent('https://ukbazar.online/?track=' + encodeURIComponent(orderNum));
+            const qrText = encodeURIComponent(`Order: ${orderNum} | To: ${d.fullName||''} | Tel: ${d.phone||''} | ${fullAddress} | Item: ${d.packageName||''}`);
             const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=4&data=${qrText}`;
             html += buildUkLabelHtml(d, key, orderNum, qrUrl);
         });
@@ -3502,29 +3504,6 @@ document.addEventListener('DOMContentLoaded', function() {
     updateCartBadge();
     loadVideos();
 
-    // ── Auto-tracking: ?track=ORDERNUM ──
-    (function() {
-        try {
-            var params = new URLSearchParams(window.location.search);
-            var trackCode = params.get('track');
-            if (trackCode && trackCode.trim().length > 2) {
-                setTimeout(function() {
-                    var body = document.getElementById('trackingWidgetBody');
-                    var chevron = document.getElementById('trackingChevron');
-                    var inp = document.getElementById('trackingPhoneInput');
-                    if (body) body.style.display = 'block';
-                    if (chevron) chevron.style.transform = 'rotate(180deg)';
-                    if (inp) {
-                        inp.value = trackCode.trim().toUpperCase();
-                        var section = document.getElementById('trackingSection');
-                        if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        setTimeout(function() { searchCustomerOrders(); }, 400);
-                    }
-                }, 1200);
-            }
-        } catch(e) {}
-    })();
-
     // Back to Top scroll visibility
     const backToTopBtn = document.getElementById('backToTopBtn');
     if (backToTopBtn) {
@@ -4360,7 +4339,7 @@ function printIntlPost(key) {
           + (code ? '<img src="https://flagcdn.com/h20/gb.png" style="height:14px;" alt="GB">' : '<span>🇬🇧</span>')
           + '</div></div>';
 
-        const qrData = encodeURIComponent('https://ukbazar.online/?track=' + encodeURIComponent(d.orderNumber||''));
+        const qrData = encodeURIComponent('# ' + (d.orderNumber||'') + ' | SENDER: ' + (s.name||'') + ' ' + (s.tel||'') + ' | RECIPIENT: ' + (r.name||'') + ' ' + (r.tel||'') + ' | ' + cname);
         const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=4&data=' + qrData;
 
       const html = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
@@ -5590,143 +5569,226 @@ function printDriver(key) {
 function loadReportsAdmin() {
     var content = document.getElementById('adminContent');
     if (!content) return;
-    content.innerHTML = '<div style="padding:20px;text-align:center;color:#805ad5;font-size:1rem;"><i class="fas fa-spinner fa-spin"></i> راپۆرتەکان بار دەکرێن...</div>';
 
-    var noSnap = { exists: function(){ return false; }, forEach: function(){} };
-    var safe = function(path){ return database.ref(path).once('value').catch(function(){ return noSnap; }); };
+    content.innerHTML = '<div style="padding:20px;text-align:center;color:#667eea;font-size:1rem;"><i class="fas fa-spinner fa-spin"></i> راپۆرتەکان بار دەکرێن...</div>';
 
-    Promise.all([
-        safe('products'), safe('requests'), safe('delivery'),
-        safe('intlPost'), safe('drivers'), safe('expenses'),
-        safe('slider'), safe('videos')
-    ]).then(function(snaps) {
-        var pSnap=snaps[0], rSnap=snaps[1], dSnap=snaps[2],
-            iSnap=snaps[3], drSnap=snaps[4], eSnap=snaps[5],
-            slSnap=snaps[6], vSnap=snaps[7];
+    var promises = [
+        database.ref('products').once('value'),
+        database.ref('requests').once('value'),
+        database.ref('deliveries').once('value'),
+        database.ref('intlPost').once('value'),
+        database.ref('drivers').once('value'),
+        database.ref('expenses').once('value'),
+        database.ref('sliders').once('value'),
+        database.ref('videos').once('value'),
+    ];
 
-        // کاڵاکان
-        var totalP=0, pendP=0, appP=0;
-        if(pSnap.exists()) pSnap.forEach(function(c){ c.forEach(function(p){ totalP++; var v=p.val(); if(v.status==='pending') pendP++; else if(v.status==='approved') appP++; }); });
+    Promise.all(promises).then(function(snaps) {
+        var productsSnap   = snaps[0];
+        var requestsSnap   = snaps[1];
+        var deliveriesSnap = snaps[2];
+        var intlSnap       = snaps[3];
+        var driversSnap    = snaps[4];
+        var expensesSnap   = snaps[5];
+        var slidersSnap    = snaps[6];
+        var videosSnap     = snaps[7];
 
-        // داواکاری
-        var totalR=0, pendR=0;
-        if(rSnap.exists()) rSnap.forEach(function(r){ totalR++; if((r.val().status||'pending')==='pending') pendR++; });
-
-        // گەیاندن
-        var totalD=0, pendD=0, doneD=0;
-        if(dSnap.exists()) dSnap.forEach(function(d){ totalD++; var st=d.val().status||'pending'; if(st==='pending') pendD++; else if(st==='delivered') doneD++; });
-
-        // نێودەوڵەتی
-        var totalI=0, pendI=0;
-        if(iSnap.exists()) iSnap.forEach(function(i){ totalI++; if((i.val().status||'pending')==='pending') pendI++; });
-
-        // شۆفیر
-        var totalDr=0, activeDr=0;
-        if(drSnap.exists()) drSnap.forEach(function(d){ totalDr++; if(d.val().active!==false) activeDr++; });
-
-        // خەرجی
-        var totalE=0, gbp=0, iqd=0;
-        if(eSnap.exists()) eSnap.forEach(function(e){ totalE++; var v=e.val(), a=parseFloat(v.amount)||0; if(v.currency==='GBP') gbp+=a; else if(v.currency==='IQD') iqd+=a; });
-
-        // سلایدەر/ڤیدیۆ
-        var totalSl = slSnap.exists() ? Object.keys(slSnap.val()||{}).length : 0;
-        var totalV  = vSnap.exists()  ? Object.keys(vSnap.val() ||{}).length : 0;
-
-        function card(icon, label, val, sub, color, bg) {
-            return '<div style="background:'+bg+';border:2px solid '+color+'33;border-radius:16px;padding:14px 12px;">'
-                +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">'
-                +'<div style="width:36px;height:36px;background:'+color+';border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">'
-                +'<i class="'+icon+'" style="color:#fff;font-size:.95rem;"></i></div>'
-                +'<span style="font-size:.8rem;font-weight:700;color:#2d3748;">'+label+'</span></div>'
-                +'<div style="font-size:1.6rem;font-weight:900;color:'+color+';">'+val+'</div>'
-                +'<div style="font-size:.7rem;color:#718096;margin-top:3px;">'+sub+'</div>'
-                +'</div>';
+        // ── کاڵاکان ──
+        var totalProducts = 0, pendingProducts = 0, approvedProducts = 0;
+        if (productsSnap.exists()) {
+            productsSnap.forEach(function(c) {
+                c.forEach(function(p) {
+                    totalProducts++;
+                    var v = p.val();
+                    if (v.status === 'pending') pendingProducts++;
+                    else if (v.status === 'approved') approvedProducts++;
+                });
+            });
         }
 
-        function bar(label, val, max, color) {
-            var pct = max>0 ? Math.round((val/max)*100) : 0;
+        // ── داواکاریەکان ──
+        var totalRequests = 0, pendingRequests = 0;
+        if (requestsSnap.exists()) {
+            requestsSnap.forEach(function(r) {
+                totalRequests++;
+                if ((r.val().status || 'pending') === 'pending') pendingRequests++;
+            });
+        }
+
+        // ── گەیاندنی ناوخۆ ──
+        var totalDeliveries = 0, pendingDeliveries = 0, deliveredCount = 0;
+        if (deliveriesSnap.exists()) {
+            deliveriesSnap.forEach(function(d) {
+                totalDeliveries++;
+                var st = d.val().status || 'pending';
+                if (st === 'pending') pendingDeliveries++;
+                else if (st === 'delivered') deliveredCount++;
+            });
+        }
+
+        // ── پۆستی نێودەوڵەتی ──
+        var totalIntl = 0, pendingIntl = 0;
+        if (intlSnap.exists()) {
+            intlSnap.forEach(function(i) {
+                totalIntl++;
+                if ((i.val().status || 'pending') === 'pending') pendingIntl++;
+            });
+        }
+
+        // ── شۆفیرەکان ──
+        var totalDrivers = 0, activeDrivers = 0;
+        if (driversSnap.exists()) {
+            driversSnap.forEach(function(d) {
+                totalDrivers++;
+                if (d.val().active !== false) activeDrivers++;
+            });
+        }
+
+        // ── خەرجیەکان ──
+        var totalExpenses = 0, expensesIQD = 0, expensesGBP = 0;
+        if (expensesSnap.exists()) {
+            expensesSnap.forEach(function(e) {
+                totalExpenses++;
+                var v = e.val();
+                var amt = parseFloat(v.amount) || 0;
+                if (v.currency === 'IQD') expensesIQD += amt;
+                else if (v.currency === 'GBP') expensesGBP += amt;
+            });
+        }
+
+        // ── سلایدەر و ڤیدیۆ ──
+        var totalSliders = slidersSnap.exists() ? (Object.keys(slidersSnap.val() || {}).length) : 0;
+        var totalVideos  = videosSnap.exists()  ? (Object.keys(videosSnap.val()  || {}).length) : 0;
+
+        // ── کارتەکانی پوخت ──
+        var cards = [
+            { icon:'fas fa-boxes',          label:'هەموو کاڵاکان',         value: totalProducts,      sub: approvedProducts+' پەسەندکراو / '+pendingProducts+' چاوەڕوان',   color:'#667eea','bg':'#f0f0ff' },
+            { icon:'fas fa-clipboard-list', label:'داواکاریەکان',          value: totalRequests,      sub: pendingRequests+' چاوەڕوانی وەڵام',                              color:'#ed8936','bg':'#fffaf0' },
+            { icon:'fas fa-shipping-fast',  label:'گەیاندنی ناوخۆ',       value: totalDeliveries,    sub: deliveredCount+' گەیاو / '+pendingDeliveries+' چاوەڕوان',          color:'#38a169','bg':'#f0fff4' },
+            { icon:'fas fa-globe',          label:'پۆستی نێودەوڵەتی',     value: totalIntl,          sub: pendingIntl+' چاوەڕوانی پرۆسەس',                                  color:'#3182ce','bg':'#ebf8ff' },
+            { icon:'fas fa-truck',          label:'شۆفیرەکان',            value: totalDrivers,       sub: activeDrivers+' چالاک',                                           color:'#2b6cb0','bg':'#ebf8ff' },
+            { icon:'fas fa-wallet',         label:'خەرجیەکان',            value: totalExpenses+' تۆمار', sub:'£'+expensesGBP.toFixed(0)+' GBP / '+Math.round(expensesIQD).toLocaleString()+' IQD', color:'#e53e3e','bg':'#fff5f5' },
+            { icon:'fas fa-images',         label:'سلایدەرەکان',          value: totalSliders,       sub:'فایلی پیشاندان',                                                  color:'#805ad5','bg':'#faf5ff' },
+            { icon:'fas fa-video',          label:'ڤیدیۆکان',             value: totalVideos,        sub:'ڤیدیۆی بارکراو',                                                  color:'#f56565','bg':'#fff5f5' },
+        ];
+
+        var cardsHtml = cards.map(function(c) {
+            return '<div style="background:'+c.bg+';border:2px solid '+c.color+'33;border-radius:16px;padding:16px 14px;display:flex;flex-direction:column;gap:6px;box-shadow:0 2px 10px '+c.color+'18;">'
+                + '<div style="display:flex;align-items:center;gap:8px;">'
+                +   '<div style="width:38px;height:38px;background:'+c.color+';border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">'
+                +     '<i class="'+c.icon+'" style="color:#fff;font-size:1rem;"></i>'
+                +   '</div>'
+                +   '<span style="font-size:.82rem;font-weight:700;color:#2d3748;">'+c.label+'</span>'
+                + '</div>'
+                + '<div style="font-size:1.7rem;font-weight:900;color:'+c.color+';">'+c.value+'</div>'
+                + '<div style="font-size:.72rem;color:#718096;">'+c.sub+'</div>'
+                + '</div>';
+        }).join('');
+
+        // ── چارتی بارەکان ──
+        var chartMax = Math.max(totalProducts, totalRequests, totalDeliveries, totalIntl, totalDrivers, 1);
+        var chartBars = [
+            { label:'کاڵاکان',    value: totalProducts,   color:'#667eea' },
+            { label:'داواکاری',  value: totalRequests,   color:'#ed8936' },
+            { label:'گەیاندن',   value: totalDeliveries, color:'#38a169' },
+            { label:'نێودەوڵەتی',value: totalIntl,       color:'#3182ce' },
+            { label:'شۆفیر',     value: totalDrivers,    color:'#2b6cb0' },
+        ];
+        var barsHtml = chartBars.map(function(b) {
+            var pct = chartMax > 0 ? Math.round((b.value / chartMax) * 100) : 0;
             return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">'
-                +'<div style="width:85px;font-size:.78rem;font-weight:700;color:#4a5568;text-align:right;flex-shrink:0;">'+label+'</div>'
-                +'<div style="flex:1;background:#f0f0f0;border-radius:20px;height:22px;overflow:hidden;">'
-                +'<div style="width:'+pct+'%;height:100%;background:'+color+';border-radius:20px;display:flex;align-items:center;justify-content:flex-end;">'
-                +(pct>12?'<span style="color:#fff;font-size:.7rem;font-weight:700;padding-left:10px;">'+val+'</span>':'')
-                +'</div></div>'
-                +(pct<=12?'<span style="font-size:.72rem;font-weight:700;color:#4a5568;flex-shrink:0;min-width:20px;">'+val+'</span>':'')
-                +'</div>';
-        }
+                + '<div style="width:80px;font-size:.78rem;font-weight:700;color:#4a5568;text-align:right;flex-shrink:0;">'+b.label+'</div>'
+                + '<div style="flex:1;background:#f0f0f0;border-radius:20px;height:22px;overflow:hidden;">'
+                +   '<div style="width:'+pct+'%;height:100%;background:'+b.color+';border-radius:20px;transition:width .6s;display:flex;align-items:center;justify-content:flex-end;padding-left:8px;">'
+                +     (pct > 10 ? '<span style="color:#fff;font-size:.72rem;font-weight:700;padding-left:8px;">'+b.value+'</span>' : '')
+                +   '</div>'
+                + '</div>'
+                + (pct <= 10 ? '<span style="font-size:.72rem;font-weight:700;color:#4a5568;flex-shrink:0;">'+b.value+'</span>' : '')
+                + '</div>';
+        }).join('');
 
-        function prow(label, color, val, tot) {
-            var p = tot>0 ? Math.round((val/tot)*100) : 0;
-            return '<div style="display:flex;align-items:center;gap:8px;padding:8px;background:#f9f9fb;border-radius:10px;margin-bottom:6px;">'
-                +'<div style="width:13px;height:13px;border-radius:50%;background:'+color+';flex-shrink:0;"></div>'
-                +'<div style="flex:1;font-size:.8rem;font-weight:700;color:#2d3748;">'+label+'</div>'
-                +'<div style="font-size:.85rem;font-weight:900;color:'+color+';">'+val+'</div>'
-                +'<div style="font-size:.7rem;color:#a0aec0;min-width:34px;text-align:left;">'+p+'%</div>'
-                +'</div>';
-        }
+        // ── گەیاندن پای چارت ──
+        var gTotal = totalDeliveries || 1;
+        var gDelivered = deliveredCount;
+        var gPend = pendingDeliveries;
+        var gOther = gTotal - gDelivered - gPend;
+        var pieHtml = '<div style="display:flex;flex-direction:column;gap:8px;justify-content:center;">'
+            + _reportPieRow('گەیاو','#38a169', gDelivered, gTotal)
+            + _reportPieRow('چاوەڕوان','#ed8936', gPend, gTotal)
+            + _reportPieRow('تر','#a0aec0', gOther > 0 ? gOther : 0, gTotal)
+            + '</div>';
 
-        var chMax = Math.max(totalP,totalR,totalD,totalI,totalDr,1);
         var now = new Date().toLocaleString('en-GB');
 
         content.innerHTML = '<div style="padding:14px;max-width:960px;margin:0 auto;direction:rtl;">'
 
-        // سەرپەڕە
-        +'<div style="background:linear-gradient(135deg,#6b46c1,#805ad5);border-radius:16px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">'
-        +'<div><div style="color:#fff;font-size:1.05rem;font-weight:900;"><i class="fas fa-chart-bar"></i> راپۆرتی گشتی سایت</div>'
-        +'<div style="color:rgba(255,255,255,.8);font-size:.72rem;margin-top:2px;">UK BAZAR — Control Panel</div></div>'
-        +'<div style="background:rgba(255,255,255,.15);border-radius:8px;padding:5px 12px;color:#fff;font-size:.72rem;">🕐 '+now+'</div>'
-        +'</div>'
+            // سەرپەڕە
+            + '<div style="background:linear-gradient(135deg,#6b46c1,#805ad5);border-radius:16px;padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">'
+            +   '<div>'
+            +     '<div style="color:#fff;font-size:1.1rem;font-weight:900;"><i class="fas fa-chart-bar"></i> راپۆرتی گشتی سایت</div>'
+            +     '<div style="color:rgba(255,255,255,.8);font-size:.75rem;margin-top:3px;">UK BAZAR — Control Panel</div>'
+            +   '</div>'
+            +   '<div style="background:rgba(255,255,255,.15);border-radius:10px;padding:6px 14px;color:#fff;font-size:.75rem;">🕐 نوێکراوەتەوە: '+now+'</div>'
+            + '</div>'
 
-        // کارتەکان
-        +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px;">'
-        +card('fas fa-boxes',       'هەموو کاڵاکان',    totalP, appP+' پەسەند / '+pendP+' چاوەڕوان', '#667eea','#f0f0ff')
-        +card('fas fa-clipboard-list','داواکاریەکان',    totalR, pendR+' چاوەڕوانی وەڵام',           '#ed8936','#fffaf0')
-        +card('fas fa-shipping-fast','گەیاندن ناوخۆ',   totalD, doneD+' گەیاو / '+pendD+' چاوەڕوان','#38a169','#f0fff4')
-        +card('fas fa-globe',       'پۆستی نێودەوڵەتی', totalI, pendI+' چاوەڕوان',                  '#3182ce','#ebf8ff')
-        +card('fas fa-truck',       'شۆفیرەکان',        totalDr, activeDr+' چالاک',                 '#2b6cb0','#ebf8ff')
-        +card('fas fa-wallet',      'خەرجیەکان',        totalE+' تۆمار','£'+gbp.toFixed(0)+' / '+Math.round(iqd).toLocaleString()+' IQD','#e53e3e','#fff5f5')
-        +card('fas fa-images',      'سلایدەرەکان',      totalSl,'فایلی پیشاندان',                   '#805ad5','#faf5ff')
-        +card('fas fa-video',       'ڤیدیۆکان',         totalV, 'ڤیدیۆی بارکراو',                   '#f56565','#fff5f5')
-        +'</div>'
+            // کارتەکان
+            + '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:20px;">'
+            + cardsHtml
+            + '</div>'
 
-        // چارتەکان
-        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">'
+            // چارت
+            + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">'
 
-        // بار چارت
-        +'<div style="background:#fff;border:1.5px solid #e2e8f0;border-radius:14px;padding:14px;">'
-        +'<div style="font-size:.88rem;font-weight:900;color:#2d3748;margin-bottom:12px;"><i class="fas fa-chart-bar" style="color:#805ad5;"></i> بەراوردی بەشەکان</div>'
-        +bar('کاڵاکان',   totalP, chMax,'#667eea')
-        +bar('داواکاری',  totalR, chMax,'#ed8936')
-        +bar('گەیاندن',   totalD, chMax,'#38a169')
-        +bar('نێودەوڵەتی',totalI, chMax,'#3182ce')
-        +bar('شۆفیر',     totalDr,chMax,'#2b6cb0')
-        +'</div>'
+            // بار چارت
+            +   '<div style="background:#fff;border:1.5px solid #e2e8f0;border-radius:14px;padding:16px;">'
+            +     '<div style="font-size:.9rem;font-weight:900;color:#2d3748;margin-bottom:14px;"><i class="fas fa-chart-bar" style="color:#805ad5;"></i> بەراوردی بەشەکان</div>'
+            +     barsHtml
+            +   '</div>'
 
-        // پای — بارودۆخی گەیاندن
-        +'<div style="background:#fff;border:1.5px solid #e2e8f0;border-radius:14px;padding:14px;">'
-        +'<div style="font-size:.88rem;font-weight:900;color:#2d3748;margin-bottom:12px;"><i class="fas fa-shipping-fast" style="color:#38a169;"></i> بارودۆخی گەیاندن</div>'
-        +prow('گەیاو',   '#38a169',doneD,totalD||1)
-        +prow('چاوەڕوان','#ed8936',pendD,totalD||1)
-        +prow('تر',       '#a0aec0',Math.max(0,totalD-doneD-pendD),totalD||1)
-        +'</div>'
-        +'</div>'
+            // پای چارت / گەیاندن
+            +   '<div style="background:#fff;border:1.5px solid #e2e8f0;border-radius:14px;padding:16px;">'
+            +     '<div style="font-size:.9rem;font-weight:900;color:#2d3748;margin-bottom:14px;"><i class="fas fa-shipping-fast" style="color:#38a169;"></i> بارودۆخی گەیاندن</div>'
+            +     pieHtml
+            +   '</div>'
 
-        // خەرجی پوخت
-        +'<div style="background:#fff;border:1.5px solid #e2e8f0;border-radius:14px;padding:14px;margin-bottom:14px;">'
-        +'<div style="font-size:.88rem;font-weight:900;color:#2d3748;margin-bottom:12px;"><i class="fas fa-wallet" style="color:#e53e3e;"></i> پوختی خەرجیەکان</div>'
-        +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">'
-        +'<div style="background:#f9f9fb;border-radius:12px;padding:12px;text-align:center;border:1.5px solid #e2e8f0;"><div style="font-size:.7rem;color:#718096;">هەموو تۆمار</div><div style="font-size:1.2rem;font-weight:900;color:#4a5568;">'+totalE+'</div></div>'
-        +'<div style="background:#f9f9fb;border-radius:12px;padding:12px;text-align:center;border:1.5px solid #e2e8f0;"><div style="font-size:.7rem;color:#718096;">£ GBP</div><div style="font-size:1.2rem;font-weight:900;color:#e53e3e;">'+gbp.toFixed(2)+'</div></div>'
-        +'<div style="background:#f9f9fb;border-radius:12px;padding:12px;text-align:center;border:1.5px solid #e2e8f0;"><div style="font-size:.7rem;color:#718096;">IQD دینار</div><div style="font-size:1.2rem;font-weight:900;color:#276749;">'+Math.round(iqd).toLocaleString()+'</div></div>'
-        +'</div></div>'
+            + '</div>'
 
-        // نوێکردنەوە
-        +'<div style="text-align:center;">'
-        +'<button onclick="loadReportsAdmin()" style="padding:10px 26px;background:linear-gradient(135deg,#6b46c1,#805ad5);color:#fff;border:none;border-radius:30px;font-size:.88rem;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 4px 14px rgba(107,70,193,.3);"><i class="fas fa-sync-alt"></i> نوێکردنەوەی راپۆرت</button>'
-        +'</div>'
-        +'</div>';
+            // خەرجی پوخت
+            + '<div style="background:#fff;border:1.5px solid #e2e8f0;border-radius:14px;padding:16px;margin-bottom:16px;">'
+            +   '<div style="font-size:.9rem;font-weight:900;color:#2d3748;margin-bottom:14px;"><i class="fas fa-wallet" style="color:#e53e3e;"></i> پوختی خەرجیەکان</div>'
+            +   '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">'
+            +     _reportMiniCard('هەموو تۆمارەکان', totalExpenses, '#4a5568', 'تۆمار')
+            +     _reportMiniCard('£ GBP', expensesGBP.toFixed(2), '#e53e3e', 'پاوەند')
+            +     _reportMiniCard('IQD دینار', Math.round(expensesIQD).toLocaleString(), '#276749', 'دینار')
+            +   '</div>'
+            + '</div>'
+
+            // دوگمەی نوێکردنەوە
+            + '<div style="text-align:center;margin-top:10px;">'
+            +   '<button onclick="loadReportsAdmin()" style="padding:10px 28px;background:linear-gradient(135deg,#6b46c1,#805ad5);color:#fff;border:none;border-radius:30px;font-size:.9rem;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 4px 14px rgba(107,70,193,.35);"><i class="fas fa-sync-alt"></i> نوێکردنەوەی راپۆرت</button>'
+            + '</div>'
+
+        + '</div>';
 
     }).catch(function(e) {
-        content.innerHTML = '<div style="padding:20px;text-align:center;color:#e53e3e;">هەڵە: ' + e.message + '</div>';
+        content.innerHTML = '<div style="padding:20px;text-align:center;color:#e53e3e;">هەڵە لە بارکردنی داتا: ' + e.message + '</div>';
     });
+}
+
+function _reportPieRow(label, color, value, total) {
+    var pct = total > 0 ? Math.round((value / total) * 100) : 0;
+    return '<div style="display:flex;align-items:center;gap:8px;padding:8px;background:#f9f9fb;border-radius:10px;">'
+        + '<div style="width:14px;height:14px;border-radius:50%;background:'+color+';flex-shrink:0;"></div>'
+        + '<div style="flex:1;font-size:.8rem;font-weight:700;color:#2d3748;">'+label+'</div>'
+        + '<div style="font-size:.85rem;font-weight:900;color:'+color+';">'+value+'</div>'
+        + '<div style="font-size:.72rem;color:#a0aec0;min-width:36px;text-align:left;">'+pct+'%</div>'
+        + '</div>';
+}
+
+function _reportMiniCard(label, value, color, unit) {
+    return '<div style="background:#f9f9fb;border-radius:12px;padding:12px;text-align:center;border:1.5px solid #e2e8f0;">'
+        + '<div style="font-size:.72rem;color:#718096;margin-bottom:4px;">'+label+'</div>'
+        + '<div style="font-size:1.2rem;font-weight:900;color:'+color+';">'+value+'</div>'
+        + '<div style="font-size:.68rem;color:#a0aec0;margin-top:2px;">'+unit+'</div>'
+        + '</div>';
 }
