@@ -1973,7 +1973,7 @@ function _openPrintPage(htmlStr, filename) {
           // Build and open print window using gathered Firebase data directly
           var dFb = fbData;
           var orderNumFb = dFb.orderNumber;
-          var qrDataFb = 'Order: ' + orderNumFb + ' | SENDER: ' + dFb.senderName + ' ' + dFb.senderMobile + ' | RECIPIENT: ' + dFb.receiverName + ' ' + dFb.receiverMobile + ' | ' + dFb.receiverLocation;
+          var qrDataFb = 'https://ukbazar.online/?track=' + encodeURIComponent(orderNumFb);
           var qrUrlFb = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=' + encodeURIComponent(qrDataFb);
           var borderClr = '#2b6cb0';
           var htmlFb = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
@@ -2746,7 +2746,7 @@ function buildDriverIntlDetail(d) {
   var qty       = d.packageQty || '';
   var orderNum  = d.orderNumber || d.id || '—';
 
-  var qrData = 'Order: ' + orderNum + ' | To: ' + toName + ' | Tel: ' + toPhone + ' | ' + toAddr + ' | Item: ' + pkg;
+  var qrData = 'https://ukbazar.online/?track=' + encodeURIComponent(orderNum);
   var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=6&data=' + encodeURIComponent(qrData);
 
   return ''
@@ -2881,7 +2881,7 @@ function buildDriverKuDetail(d) {
   var clr = statusColors[status] || '#667eea';
   var orderNum = d.orderNumber || d.id || '—';
 
-  var qrData = 'پسولە: ' + orderNum + ' | نێردەر: ' + (d.senderName||d.name||'') + ' ' + (d.senderMobile||d.mobile||'') + ' | وەرگر: ' + (d.receiverName||'') + ' ' + (d.receiverMobile||'');
+  var qrData = 'https://ukbazar.online/?track=' + encodeURIComponent(orderNum);
   var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=140x140&margin=4&data=' + encodeURIComponent(qrData);
 
   return ''
@@ -3006,7 +3006,7 @@ function driverPrintLabel(key) {
     }
     var d = snap.val();
     var orderNum = d.orderNumber || key;
-    var qrData = 'پسولە: ' + orderNum + ' | نێردەر: ' + (d.senderName||d.name||'') + ' ' + (d.senderMobile||d.mobile||'') + ' | وەرگر: ' + (d.receiverName||'') + ' ' + (d.receiverMobile||'');
+    var qrData = 'https://ukbazar.online/?track=' + encodeURIComponent(orderNum);
     var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=' + encodeURIComponent(qrData);
 
     var html = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
@@ -3160,7 +3160,7 @@ function printDriverScan(scanKey) {
     if (!snap.exists()) { showNotification('تۆمار نەدۆزرایەوە', 'error'); return; }
     var sc = snap.val();
     var orderNum = sc.orderNumber || scanKey;
-    var qrData = 'پسولە: ' + orderNum + ' | نێردەر: ' + (sc.senderName||'') + ' ' + (sc.senderMobile||'') + ' | وەرگر: ' + (sc.receiverName||'') + ' ' + (sc.receiverMobile||'');
+    var qrData = 'https://ukbazar.online/?track=' + encodeURIComponent(orderNum);
     var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=' + encodeURIComponent(qrData);
     var typeLabel = sc.type === 'ku' ? 'پۆستی ناوخۆ' : (sc.type === 'intl' ? 'نێودەوڵەتی' : 'UK Post');
     var borderClr = sc.type === 'ku' ? '#276749' : '#2b6cb0';
