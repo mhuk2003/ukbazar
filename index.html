@@ -213,8 +213,7 @@
             }
         ).catch(function(e){
             container.style.display='none';
-            // کامێرا ڕێگا نەدا — یەکسەر بچۆ بۆ سایت
-            window.location.href = 'https://ukbazar.online/';
+            alert('لە سایتەوە بەکاری بهینە/https://ukbazar.online/\n'+e);
         });
     }
     function stopCustomerQR() {
@@ -2579,8 +2578,7 @@ function startDriverQR() {
     }
   ).catch(function(e){
     if (container) container.style.display='none';
-    // کامێرا ڕێگا نەدا — یەکسەر بچۆ بۆ سایت
-    window.location.href = 'https://ukbazar.online/';
+    alert('کامێرا نەکراوەبوو: ' + e);
   });
 }
 
