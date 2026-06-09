@@ -1114,9 +1114,9 @@ function renderDeliveryItems(items) {
         kurdishItems.forEach((d) => {
             const key = d.key;
             const orderNum = d.orderNumber || '—';
-            const qrText = encodeURIComponent(
-                `پسولە: ${orderNum} | نێردەر: ${d.senderName||d.name||''} ${d.senderMobile||d.mobile||''} (${d.senderLocation||d.address||''}) | وەرگر: ${d.receiverName||''} ${d.receiverMobile||''} (${d.receiverLocation||''}) | کەلوپەل: ${d.packageName||d.details||''} x${d.packageQty||''} - ${d.packageKg||''}کگ`
-            );
+            // QR كۆد = لینکی چاودێری سایت
+            const trackingLink = 'https://ukbazar.online/?track=' + encodeURIComponent(orderNum);
+            const qrText = encodeURIComponent(trackingLink);
             const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=4&data=${qrText}`;
             html += buildKurdishLabelHtml(d, key, orderNum, qrUrl);
         });
@@ -1130,7 +1130,9 @@ function renderDeliveryItems(items) {
             const key = d.key;
             const orderNum = d.orderNumber || '—';
             const fullAddress = [d.address1, d.address2, d.city, d.county, d.postcode, 'United Kingdom'].filter(Boolean).join(', ');
-            const qrText = encodeURIComponent(`Order: ${orderNum} | To: ${d.fullName||''} | Tel: ${d.phone||''} | ${fullAddress} | Item: ${d.packageName||''}`);
+            // QR = tracking link
+            const trackingLink = 'https://ukbazar.online/?track=' + encodeURIComponent(orderNum);
+            const qrText = encodeURIComponent(trackingLink);
             const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=4&data=${qrText}`;
             html += buildUkLabelHtml(d, key, orderNum, qrUrl);
         });
@@ -3502,6 +3504,29 @@ document.addEventListener('DOMContentLoaded', function() {
     updateCartBadge();
     loadVideos();
 
+    // ── Auto-tracking: ?track=ORDERNUM لە URL دا ──
+    (function() {
+        try {
+            var params = new URLSearchParams(window.location.search);
+            var trackCode = params.get('track');
+            if (trackCode && trackCode.trim().length > 2) {
+                setTimeout(function() {
+                    var body = document.getElementById('trackingWidgetBody');
+                    var chevron = document.getElementById('trackingChevron');
+                    var inp = document.getElementById('trackingPhoneInput');
+                    if (body) body.style.display = 'block';
+                    if (chevron) chevron.style.transform = 'rotate(180deg)';
+                    if (inp) {
+                        inp.value = trackCode.trim().toUpperCase();
+                        var section = document.getElementById('trackingSection');
+                        if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        setTimeout(function() { searchCustomerOrders(); }, 400);
+                    }
+                }, 1200);
+            }
+        } catch(e) {}
+    })();
+
     // Back to Top scroll visibility
     const backToTopBtn = document.getElementById('backToTopBtn');
     if (backToTopBtn) {
@@ -4337,7 +4362,9 @@ function printIntlPost(key) {
           + (code ? '<img src="https://flagcdn.com/h20/gb.png" style="height:14px;" alt="GB">' : '<span>🇬🇧</span>')
           + '</div></div>';
 
-        const qrData = encodeURIComponent('# ' + (d.orderNumber||'') + ' | SENDER: ' + (s.name||'') + ' ' + (s.tel||'') + ' | RECIPIENT: ' + (r.name||'') + ' ' + (r.tel||'') + ' | ' + cname);
+        // QR = tracking link for intl post
+        const trackingLink_intl = 'https://ukbazar.online/?track=' + encodeURIComponent(d.orderNumber||'');
+        const qrData = encodeURIComponent(trackingLink_intl);
         const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=4&data=' + qrData;
 
       const html = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
@@ -4604,107 +4631,147 @@ function _doResetPass(key) {
         .catch(function() { showNotification('هەڵە!', 'error'); });
 }
 
+
 // ==================== Balance & Expenses Admin ====================
+
+var _EXP_CAT_ICONS = {
+    'کرێ':'🏠','مووچە':'👤','گواستنەوە':'🚚','کاڵا':'📦',
+    'پارەی پارک':'🅿️','خۆراک':'🍽️','تەکنەلۆجیا':'💻',
+    'ئەندازیاری':'🔧','بڕوانامە':'📋','تر':'📌'
+};
+var _EXP_CAT_COLORS = {
+    'کرێ':'#667eea','مووچە':'#ed8936','گواستنەوە':'#3182ce','کاڵا':'#805ad5',
+    'پارەی پارک':'#38b2ac','خۆراک':'#e53e3e','تەکنەلۆجیا':'#2b6cb0',
+    'ئەندازیاری':'#d97706','بڕوانامە':'#276749','تر':'#718096'
+};
+
+function _expFmt(amount, currency) {
+    var n = parseFloat(amount || 0);
+    if (currency === 'IQD') return n.toLocaleString('en') + ' IQD';
+    var sym = currency === 'EUR' ? '€' : currency === 'USD' ? '$' : '£';
+    return sym + n.toFixed(2);
+}
+
+function _expSumByCurrency(list) {
+    var t = {};
+    list.forEach(function(e) {
+        var c = e.currency || 'GBP';
+        t[c] = (t[c] || 0) + (parseFloat(e.amount) || 0);
+    });
+    return t;
+}
+
+function _expFmtTotals(totals) {
+    var parts = [];
+    if (totals['GBP']) parts.push('£' + totals['GBP'].toFixed(2));
+    if (totals['EUR']) parts.push('€' + totals['EUR'].toFixed(2));
+    if (totals['USD']) parts.push('$' + totals['USD'].toFixed(2));
+    if (totals['IQD']) parts.push(Math.round(totals['IQD']).toLocaleString() + ' IQD');
+    return parts.length ? parts.join(' + ') : '—';
+}
+
 function loadBalanceAdmin() {
-    const content = document.getElementById('adminContent');
+    var content = document.getElementById('adminContent');
     if (!content) return;
 
-    content.innerHTML = `
-    <div style="padding:16px;max-width:900px;margin:0 auto;direction:rtl;">
+    var catOptions = Object.keys(_EXP_CAT_ICONS).map(function(k) {
+        return '<option value="' + k + '">' + _EXP_CAT_ICONS[k] + ' ' + k + '</option>';
+    }).join('');
 
-      <!-- سەرەوە: کارتەکانی پوخت -->
-      <div id="bal-summary" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;"></div>
+    content.innerHTML = '<div style="padding:16px;max-width:900px;margin:0 auto;direction:rtl;">'
 
-      <!-- فۆرمی زیادکردنی خەرجی -->
-      <div style="background:#fff;border:2px solid #276749;border-radius:14px;padding:16px;margin-bottom:20px;">
-        <div style="font-size:1rem;font-weight:900;color:#276749;margin-bottom:12px;"><i class="fas fa-plus-circle"></i> خەرجیی نوێ زیاد بکە</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div>
-            <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:4px;">١ — ناوی خەرجی</label>
-            <input id="exp-name" type="text" placeholder="بۆ نموونە: کرێی مەخزەن" style="width:100%;padding:8px 10px;border:1.5px solid #c6f6d5;border-radius:8px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
-          </div>
-          <div>
-            <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:4px;">٢ — بری پارە</label>
-            <div style="display:flex;gap:5px;">
-              <select id="exp-currency" style="padding:8px 6px;border:1.5px solid #c6f6d5;border-radius:8px;font-size:.82rem;font-family:inherit;background:#fff;min-width:70px;flex-shrink:0;">
-                <option value="GBP">£ GBP</option>
-                <option value="EUR">€ EUR</option>
-                <option value="USD">$ USD</option>
-                <option value="IQD">IQD دینار</option>
-              </select>
-              <input id="exp-amount" type="number" min="0" step="0.01" placeholder="0.00" style="flex:1;padding:8px 10px;border:1.5px solid #c6f6d5;border-radius:8px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
-            </div>
-          </div>
-          <div>
-            <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:4px;">٣ — بابەت / جۆر</label>
-            <select id="exp-category" style="width:100%;padding:8px 10px;border:1.5px solid #c6f6d5;border-radius:8px;font-size:.85rem;font-family:inherit;box-sizing:border-box;background:#fff;">
-              <option value="">— جۆری خەرجی هەڵبژێرە —</option>
-              <option value="کرێ">🏠 کرێ</option>
-              <option value="مووچە">👤 مووچە</option>
-              <option value="گواستنەوە">🚚 گواستنەوە</option>
-              <option value="کاڵا">📦 کڕینی کاڵا</option>
-              <option value="پارەی پارک">🅿️ پارەی پارک</option>
-              <option value="خۆراک">🍽️ خۆراک</option>
-              <option value="تەکنەلۆجیا">💻 تەکنەلۆجیا</option>
-              <option value="ئەندازیاری">🔧 ئەندازیاری</option>
-              <option value="بڕوانامە">📋 بڕوانامە</option>
-              <option value="تر">📌 تر</option>
-            </select>
-          </div>
-          <div>
-            <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:4px;">٤ — بەروار</label>
-            <input id="exp-date" type="date" style="width:100%;padding:8px 10px;border:1.5px solid #c6f6d5;border-radius:8px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
-          </div>
-        </div>
-        <div style="margin-top:10px;">
-          <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:4px;">تێبینی (ئارەزوومەندانە)</label>
-          <input id="exp-note" type="text" placeholder="تێبینی..." style="width:100%;padding:8px 10px;border:1.5px solid #c6f6d5;border-radius:8px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
-        </div>
-        <div style="margin-top:12px;display:flex;gap:8px;">
-          <button onclick="saveExpense()" style="flex:1;padding:10px;background:linear-gradient(135deg,#276749,#38a169);color:#fff;border:none;border-radius:10px;font-size:.9rem;font-weight:800;cursor:pointer;font-family:inherit;"><i class="fas fa-save"></i> پاشەکەوتکردن</button>
-          <button onclick="clearExpenseForm()" style="padding:10px 16px;background:#e2e8f0;color:#2d3748;border:none;border-radius:10px;font-size:.85rem;cursor:pointer;font-family:inherit;">پاككردنەوە</button>
-        </div>
-      </div>
+        // ── کارتەکانی پوخت ──
+        + '<div id="bal-summary" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px;"></div>'
 
-      <!-- فیلتەر و گەڕان -->
-      <div style="background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:12px;margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-        <input id="exp-search" type="text" placeholder="🔍 گەڕان..." oninput="filterExpenses()" style="flex:1;min-width:140px;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-family:inherit;">
-        <select id="exp-filter-cat" onchange="filterExpenses()" style="padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-family:inherit;background:#fff;">
-          <option value="">هەموو بابەتەکان</option>
-          <option value="کرێ">🏠 کرێ</option>
-          <option value="مووچە">👤 مووچە</option>
-          <option value="گواستنەوە">🚚 گواستنەوە</option>
-          <option value="کاڵا">📦 کڕینی کاڵا</option>
-          <option value="پارەی پارک">🅿️ پارەی پارک</option>
-          <option value="خۆراک">🍽️ خۆراک</option>
-          <option value="تەکنەلۆجیا">💻 تەکنەلۆجیا</option>
-          <option value="ئەندازیاری">🔧 ئەندازیاری</option>
-          <option value="بڕوانامە">📋 بڕوانامە</option>
-          <option value="تر">📌 تر</option>
-        </select>
-        <select id="exp-filter-month" onchange="filterExpenses()" style="padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-family:inherit;background:#fff;">
-          <option value="">هەموو مانگەکان</option>
-          <option value="01">کانوونی دووەم</option><option value="02">شوبات</option>
-          <option value="03">ئازار</option><option value="04">نیسان</option>
-          <option value="05">ئایار</option><option value="06">حوزەیران</option>
-          <option value="07">تەممووز</option><option value="08">ئاب</option>
-          <option value="09">ئەیلوول</option><option value="10">تشرینی یەکەم</option>
-          <option value="11">تشرینی دووەم</option><option value="12">کانوونی یەکەم</option>
-        </select>
-      </div>
+        // ── فۆرمی زیادکردن ──
+        + '<div style="background:#fff;border:2px solid #276749;border-radius:14px;padding:16px;margin-bottom:16px;">'
+          + '<div style="font-size:1rem;font-weight:900;color:#276749;margin-bottom:12px;"><i class="fas fa-plus-circle"></i> خەرجیی نوێ زیاد بکە</div>'
+          + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">'
+            + '<div>'
+              + '<label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:4px;">١ — ناوی خەرجی</label>'
+              + '<input id="exp-name" type="text" placeholder="بۆ نموونە: کرێی مەخزەن" style="width:100%;padding:8px 10px;border:1.5px solid #c6f6d5;border-radius:8px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">'
+            + '</div>'
+            + '<div>'
+              + '<label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:4px;">٢ — بری پارە</label>'
+              + '<div style="display:flex;gap:5px;">'
+                + '<select id="exp-currency" style="padding:8px 6px;border:1.5px solid #c6f6d5;border-radius:8px;font-size:.82rem;font-family:inherit;background:#fff;min-width:70px;flex-shrink:0;">'
+                  + '<option value="GBP">£ GBP</option><option value="EUR">€ EUR</option>'
+                  + '<option value="USD">$ USD</option><option value="IQD">IQD دینار</option>'
+                + '</select>'
+                + '<input id="exp-amount" type="number" min="0" step="0.01" placeholder="0.00" style="flex:1;padding:8px 10px;border:1.5px solid #c6f6d5;border-radius:8px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">'
+              + '</div>'
+            + '</div>'
+            + '<div>'
+              + '<label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:4px;">٣ — بابەت / جۆر</label>'
+              + '<select id="exp-category" style="width:100%;padding:8px 10px;border:1.5px solid #c6f6d5;border-radius:8px;font-size:.85rem;font-family:inherit;box-sizing:border-box;background:#fff;">'
+                + '<option value="">— جۆری خەرجی هەڵبژێرە —</option>' + catOptions
+              + '</select>'
+            + '</div>'
+            + '<div>'
+              + '<label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:4px;">٤ — بەروار</label>'
+              + '<input id="exp-date" type="date" style="width:100%;padding:8px 10px;border:1.5px solid #c6f6d5;border-radius:8px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">'
+            + '</div>'
+          + '</div>'
+          + '<div style="margin-top:10px;">'
+            + '<label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:4px;">تێبینی (ئارەزوومەندانە)</label>'
+            + '<input id="exp-note" type="text" placeholder="تێبینی..." style="width:100%;padding:8px 10px;border:1.5px solid #c6f6d5;border-radius:8px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">'
+          + '</div>'
+          + '<div style="margin-top:12px;display:flex;gap:8px;">'
+            + '<button onclick="saveExpense()" style="flex:1;padding:10px;background:linear-gradient(135deg,#276749,#38a169);color:#fff;border:none;border-radius:10px;font-size:.9rem;font-weight:800;cursor:pointer;font-family:inherit;"><i class="fas fa-save"></i> پاشەکەوتکردن</button>'
+            + '<button onclick="clearExpenseForm()" style="padding:10px 16px;background:#e2e8f0;color:#2d3748;border:none;border-radius:10px;font-size:.85rem;cursor:pointer;font-family:inherit;">پاككردنەوە</button>'
+          + '</div>'
+        + '</div>'
 
-      <!-- لیستی خەرجیەکان -->
-      <div id="exp-list" style="display:flex;flex-direction:column;gap:8px;"></div>
-    </div>`;
+        // ── فیلتەر ──
+        + '<div style="background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:10px 12px;margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">'
+          + '<input id="exp-search" type="text" placeholder="🔍 گەڕان بە ناو یان تێبینی..." oninput="filterExpenses()" style="flex:1;min-width:140px;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-family:inherit;">'
+          + '<select id="exp-filter-cat" onchange="filterExpenses()" style="padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-family:inherit;background:#fff;">'
+            + '<option value="">هەموو جۆرەکان</option>' + catOptions
+          + '</select>'
+          + '<select id="exp-filter-month" onchange="filterExpenses()" style="padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-family:inherit;background:#fff;">'
+            + '<option value="">هەموو مانگەکان</option>'
+            + '<option value="01">کانوونی دووەم</option><option value="02">شوبات</option>'
+            + '<option value="03">ئازار</option><option value="04">نیسان</option>'
+            + '<option value="05">ئایار</option><option value="06">حوزەیران</option>'
+            + '<option value="07">تەممووز</option><option value="08">ئاب</option>'
+            + '<option value="09">ئەیلوول</option><option value="10">تشرینی یەکەم</option>'
+            + '<option value="11">تشرینی دووەم</option><option value="12">کانوونی یەکەم</option>'
+          + '</select>'
+        + '</div>'
 
-    // تەرخانکردنی بەرواری ئەمرۆ
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('exp-date').value = today;
+        // ── ئەنجامی فیلتەر ──
+        + '<div id="exp-filter-bar" style="display:none;background:#ebf8ff;border:1.5px solid #bee3f8;border-radius:10px;padding:8px 12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">'
+          + '<span id="exp-filter-info" style="font-size:.78rem;color:#2b6cb0;font-weight:700;"></span>'
+          + '<button onclick="_expClearFilters()" style="background:none;border:none;color:#3182ce;cursor:pointer;font-family:inherit;font-size:.78rem;font-weight:700;">✕ پاككردنەوەی فیلتەر</button>'
+        + '</div>'
 
+        // ── دوگمەی Excel ──
+        + '<div style="display:flex;justify-content:flex-start;margin-bottom:10px;">'
+          + '<button onclick="exportExpensesToExcel()" style="display:flex;align-items:center;gap:7px;background:linear-gradient(135deg,#1d6f42,#217346);color:#fff;border:none;border-radius:10px;padding:9px 18px;font-size:.88rem;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 2px 8px rgba(29,111,66,.3);">'
+            + '<i class="fas fa-file-excel" style="font-size:1rem;"></i>'
+            + ' داگرتنی Excel — هەموو خەرجیەکان'
+          + '</button>'
+        + '</div>'
+
+        // ── لیست ──
+        + '<div id="exp-list" style="display:flex;flex-direction:column;gap:8px;"></div>'
+
+        // ── پانێلی وردەکاری (چەپ بە ژێر) ──
+        + '<div id="exp-detail-panel" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;overflow-y:auto;padding:16px;" onclick="_expCloseDetail(event)">'
+          + '<div id="exp-detail-inner" style="background:#fff;border-radius:18px;max-width:480px;margin:0 auto;overflow:hidden;direction:rtl;" onclick="event.stopPropagation()">'
+          + '</div>'
+        + '</div>'
+
+    + '</div>';
+
+    document.getElementById('exp-date').value = new Date().toISOString().split('T')[0];
     _loadExpensesFromDB();
 }
 
 function _loadExpensesFromDB() {
+    var listEl = document.getElementById('exp-list');
+    if (listEl) listEl.innerHTML = '<div style="text-align:center;padding:30px;color:#667eea;"><i class="fas fa-spinner fa-spin"></i> بارەکەیە...</div>';
+
     database.ref('expenses').orderByChild('timestamp').once('value', function(snap) {
         window._expensesCache = [];
         snap.forEach(function(ch) {
@@ -4712,113 +4779,135 @@ function _loadExpensesFromDB() {
         });
         _renderExpenses(window._expensesCache);
         _renderBalanceSummary(window._expensesCache);
+    }, function() {
+        if (listEl) listEl.innerHTML = '<div style="text-align:center;padding:30px;color:#e53e3e;">هەڵەی بارکردن</div>';
     });
 }
 
 function _renderBalanceSummary(list) {
-    const el = document.getElementById('bal-summary');
+    var el = document.getElementById('bal-summary');
     if (!el) return;
 
-    // کۆکردنەوە بە جیاوازی دراو
-    function sumByCurrency(items) {
-        var totals = {};
-        items.forEach(function(e) {
-            var cur = e.currency || 'GBP';
-            totals[cur] = (totals[cur] || 0) + (parseFloat(e.amount) || 0);
-        });
-        return totals;
-    }
-    function fmtTotals(totals) {
-        var parts = [];
-        if (totals['GBP']) parts.push('£' + totals['GBP'].toFixed(2));
-        if (totals['EUR']) parts.push('€' + totals['EUR'].toFixed(2));
-        if (totals['USD']) parts.push('$' + totals['USD'].toFixed(2));
-        if (totals['IQD']) parts.push(Math.round(totals['IQD']).toLocaleString() + ' IQD');
-        return parts.length ? parts.join(' + ') : '—';
-    }
+    var today = new Date().toISOString().split('T')[0];
+    var m = new Date().toISOString().slice(0,7);
+    var todayItems = list.filter(function(e){ return (e.date||'').startsWith(today); });
+    var monthItems = list.filter(function(e){ return (e.date||'').startsWith(m); });
 
-    const today  = new Date().toISOString().split('T')[0];
-    const m      = new Date().toISOString().slice(0,7);
-    const todayItems = list.filter(e => (e.date||'').startsWith(today));
-    const monthItems = list.filter(e => (e.date||'').startsWith(m));
-
-    const cards = [
-        { icon:'fas fa-list',        label:'کۆی خەرجیەکان', val: list.length + ' تۆمار',            color:'#1a365d', bg:'#ebf8ff' },
-        { icon:'fas fa-coins',       label:'کۆی گشتی',      val: fmtTotals(sumByCurrency(list)),     color:'#276749', bg:'#f0fff4' },
-        { icon:'fas fa-calendar-day',label:'خەرجی ئەمرۆ',   val: fmtTotals(sumByCurrency(todayItems)),color:'#d97706', bg:'#fffbeb' },
-        { icon:'fas fa-calendar-alt',label:'خەرجی ئەم مانگە',val: fmtTotals(sumByCurrency(monthItems)),color:'#c53030', bg:'#fff5f5' },
+    var cards = [
+        { icon:'fas fa-list',         label:'کۆی تۆمارەکان', val: list.length + ' تۆمار',                          color:'#1a365d', bg:'#ebf8ff' },
+        { icon:'fas fa-coins',        label:'کۆی گشتی',       val: _expFmtTotals(_expSumByCurrency(list)),          color:'#276749', bg:'#f0fff4' },
+        { icon:'fas fa-calendar-day', label:'خەرجی ئەمرۆ',    val: _expFmtTotals(_expSumByCurrency(todayItems))||'—', color:'#d97706', bg:'#fffbeb' },
+        { icon:'fas fa-calendar-alt', label:'خەرجی ئەم مانگە',val: _expFmtTotals(_expSumByCurrency(monthItems))||'—',color:'#c53030', bg:'#fff5f5' },
     ];
-    el.innerHTML = cards.map(c =>
-        `<div style="background:${c.bg};border:1.5px solid ${c.color}33;border-radius:10px;padding:7px 12px;display:flex;align-items:center;gap:8px;flex:1;min-width:130px;">
-          <i class="${c.icon}" style="font-size:1rem;color:${c.color};flex-shrink:0;"></i>
-          <div>
-            <div style="font-size:.65rem;color:#718096;font-weight:700;line-height:1.2;">${c.label}</div>
-            <div style="font-size:.82rem;font-weight:900;color:${c.color};line-height:1.3;">${c.val}</div>
-          </div>
-        </div>`
-    ).join('');
+    el.innerHTML = cards.map(function(c) {
+        return '<div style="background:' + c.bg + ';border:1.5px solid ' + c.color + '33;border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:8px;">'
+            + '<i class="' + c.icon + '" style="font-size:1.1rem;color:' + c.color + ';flex-shrink:0;"></i>'
+            + '<div>'
+              + '<div style="font-size:.65rem;color:#718096;font-weight:700;line-height:1.2;">' + c.label + '</div>'
+              + '<div style="font-size:.84rem;font-weight:900;color:' + c.color + ';line-height:1.3;">' + c.val + '</div>'
+            + '</div>'
+          + '</div>';
+    }).join('');
 }
 
 function _renderExpenses(list) {
-    const el = document.getElementById('exp-list');
+    var el = document.getElementById('exp-list');
     if (!el) return;
+
+    // نوێکردنەوەی بارەی فیلتەر
+    var bar = document.getElementById('exp-filter-bar');
+    var info = document.getElementById('exp-filter-info');
+    var q   = (document.getElementById('exp-search') ? document.getElementById('exp-search').value : '') || '';
+    var cat = (document.getElementById('exp-filter-cat') ? document.getElementById('exp-filter-cat').value : '') || '';
+    var mon = (document.getElementById('exp-filter-month') ? document.getElementById('exp-filter-month').value : '') || '';
+    var isFiltered = q || cat || mon;
+    if (bar) bar.style.display = isFiltered ? 'flex' : 'none';
+    if (info && isFiltered) {
+        info.textContent = list.length + ' تۆمار دۆزراوە — کۆی: ' + _expFmtTotals(_expSumByCurrency(list));
+    }
+
     if (!list.length) {
-        el.innerHTML = '<div style="text-align:center;padding:30px;color:#a0aec0;font-size:.9rem;">هیچ خەرجیەک نییە</div>';
+        el.innerHTML = '<div style="text-align:center;padding:40px 20px;color:#a0aec0;">'
+            + '<div style="font-size:2.2rem;margin-bottom:8px;">🔍</div>'
+            + '<div style="font-weight:700;font-size:.9rem;">هیچ خەرجیەک نەدۆزرایەوە</div>'
+            + '</div>';
         return;
     }
-    el.innerHTML = list.map(e => {
-        const sym = e.currency === 'EUR' ? '€' : e.currency === 'USD' ? '$' : e.currency === 'IQD' ? '' : '£';
-        const curLabel = e.currency === 'IQD' ? (parseFloat(e.amount||0).toFixed(0) + ' IQD') : (sym + parseFloat(e.amount||0).toFixed(2));
-        return `
-        <div style="background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
-          <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">
-            <div style="background:#f0fff4;border:1.5px solid #c6f6d5;border-radius:8px;padding:6px 10px;text-align:center;min-width:52px;">
-              <div style="font-size:.95rem;font-weight:900;color:#276749;">${curLabel}</div>
-            </div>
-            <div style="min-width:0;">
-              <div style="font-size:.88rem;font-weight:800;color:#1a202c;">${e.name||'—'}</div>
-              <div style="font-size:.73rem;color:#718096;margin-top:2px;">
-                <span style="background:#e2e8f0;border-radius:5px;padding:1px 6px;">${e.category||'تر'}</span>
-                &nbsp;${e.date||''}
-                ${e.note ? ' &nbsp;— ' + e.note : ''}
-              </div>
-            </div>
-          </div>
-          <div style="display:flex;gap:6px;">
-            <button onclick="viewExpense('${e.key}')" style="background:#ebf8ff;color:#2b6cb0;border:none;border-radius:8px;padding:6px 10px;font-size:.8rem;cursor:pointer;">👁️ بینین</button>
-            <button onclick="printExpense('${e.key}')" style="background:#f0fff4;color:#276749;border:none;border-radius:8px;padding:6px 10px;font-size:.8rem;cursor:pointer;">🖨️ چاپ</button>
-            <button onclick="deleteExpense('${e.key}')" style="background:#fed7d7;color:#c53030;border:none;border-radius:8px;padding:6px 10px;font-size:.8rem;cursor:pointer;">🗑️</button>
-          </div>
-        </div>`}).join('');
+
+    el.innerHTML = list.map(function(e) {
+        var cat  = e.category || 'تر';
+        var icon = _EXP_CAT_ICONS[cat]  || '📌';
+        var clr  = _EXP_CAT_COLORS[cat] || '#718096';
+        var amt  = _expFmt(e.amount, e.currency);
+
+        return '<div style="background:#fff;border:1.5px solid #e2e8f0;border-radius:13px;padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:box-shadow .15s;" '
+            + 'onmouseover="this.style.boxShadow=\'0 4px 16px rgba(0,0,0,.1)\'" '
+            + 'onmouseout="this.style.boxShadow=\'none\'" '
+            + 'onclick="viewExpense(\'' + e.key + '\')">'
+
+            // ئایکۆن + بری پارە
+            + '<div style="background:' + clr + '18;border:1.5px solid ' + clr + '44;border-radius:10px;padding:8px 10px;text-align:center;min-width:58px;flex-shrink:0;">'
+              + '<div style="font-size:1.25rem;line-height:1;">' + icon + '</div>'
+              + '<div style="font-size:.82rem;font-weight:900;color:' + clr + ';margin-top:2px;white-space:nowrap;">' + amt + '</div>'
+            + '</div>'
+
+            // زانیاریەکان
+            + '<div style="flex:1;min-width:0;">'
+              + '<div style="font-size:.9rem;font-weight:800;color:#1a202c;margin-bottom:3px;">' + escapeHtml(e.name||'—') + '</div>'
+              + '<div style="display:flex;flex-wrap:wrap;gap:4px;align-items:center;">'
+                + '<span style="background:' + clr + '18;color:' + clr + ';border-radius:6px;padding:1px 8px;font-size:.7rem;font-weight:700;">' + cat + '</span>'
+                + (e.date ? '<span style="font-size:.72rem;color:#a0aec0;">' + escapeHtml(e.date) + '</span>' : '')
+                + (e.note ? '<span style="font-size:.72rem;color:#718096;font-style:italic;">— ' + escapeHtml(e.note) + '</span>' : '')
+              + '</div>'
+            + '</div>'
+
+            // دوگمەکان
+            + '<div style="display:flex;flex-direction:column;gap:5px;flex-shrink:0;">'
+              + '<button onclick="event.stopPropagation();printExpense(\'' + e.key + '\')" style="background:#f0fff4;color:#276749;border:none;border-radius:7px;padding:5px 9px;font-size:.75rem;cursor:pointer;">🖨️</button>'
+              + '<button onclick="event.stopPropagation();deleteExpense(\'' + e.key + '\')" style="background:#fed7d7;color:#c53030;border:none;border-radius:7px;padding:5px 9px;font-size:.75rem;cursor:pointer;">🗑️</button>'
+            + '</div>'
+
+            + '<div style="color:#d1d5db;font-size:1.1rem;flex-shrink:0;">›</div>'
+        + '</div>';
+    }).join('');
 }
 
 function filterExpenses() {
     if (!window._expensesCache) return;
-    const q    = (document.getElementById('exp-search').value||'').toLowerCase();
-    const cat  = document.getElementById('exp-filter-cat').value;
-    const mon  = document.getElementById('exp-filter-month').value;
-    const list = window._expensesCache.filter(e => {
-        const matchQ   = !q   || (e.name||'').toLowerCase().includes(q) || (e.note||'').toLowerCase().includes(q);
-        const matchCat = !cat || e.category === cat;
-        const matchMon = !mon || (e.date||'').slice(5,7) === mon;
-        return matchQ && matchCat && matchMon;
+    var q   = ((document.getElementById('exp-search')||{}).value||'').toLowerCase();
+    var cat = (document.getElementById('exp-filter-cat')||{}).value||'';
+    var mon = (document.getElementById('exp-filter-month')||{}).value||'';
+    var list = window._expensesCache.filter(function(e) {
+        var mQ   = !q   || (e.name||'').toLowerCase().includes(q) || (e.note||'').toLowerCase().includes(q);
+        var mCat = !cat || e.category === cat;
+        var mMon = !mon || (e.date||'').slice(5,7) === mon;
+        return mQ && mCat && mMon;
     });
     _renderExpenses(list);
     _renderBalanceSummary(list);
 }
 
+function _expClearFilters() {
+    var s = document.getElementById('exp-search'); if(s) s.value = '';
+    var c = document.getElementById('exp-filter-cat'); if(c) c.value = '';
+    var m = document.getElementById('exp-filter-month'); if(m) m.value = '';
+    filterExpenses();
+}
+
 function saveExpense() {
-    const name     = (document.getElementById('exp-name').value||'').trim();
-    const amount   = parseFloat(document.getElementById('exp-amount').value||'0');
-    const currency = (document.getElementById('exp-currency') ? document.getElementById('exp-currency').value : 'GBP') || 'GBP';
-    const category = document.getElementById('exp-category').value;
-    const date     = document.getElementById('exp-date').value;
-    const note     = (document.getElementById('exp-note').value||'').trim();
+    var name     = ((document.getElementById('exp-name')||{}).value||'').trim();
+    var amount   = parseFloat((document.getElementById('exp-amount')||{}).value||'0');
+    var currency = (document.getElementById('exp-currency')||{value:'GBP'}).value || 'GBP';
+    var category = (document.getElementById('exp-category')||{}).value||'';
+    var date     = (document.getElementById('exp-date')||{}).value||'';
+    var note     = ((document.getElementById('exp-note')||{}).value||'').trim();
+
     if (!name)     { showNotification('ناوی خەرجی بنووسە!', 'error'); return; }
     if (!amount)   { showNotification('بری پارە بنووسە!', 'error'); return; }
     if (!category) { showNotification('بابەتی خەرجی هەڵبژێرە!', 'error'); return; }
     if (!date)     { showNotification('بەروار دیاری بکە!', 'error'); return; }
-    const data = { name, amount, currency, category, date, note, timestamp: Date.now() };
+
+    var data = { name: name, amount: amount, currency: currency, category: category, date: date, note: note, timestamp: Date.now() };
     database.ref('expenses').push(data).then(function() {
         showNotification('خەرجی زیادکرا ✅');
         clearExpenseForm();
@@ -4827,7 +4916,7 @@ function saveExpense() {
 }
 
 function clearExpenseForm() {
-    ['exp-name','exp-note'].forEach(id => { var el=document.getElementById(id); if(el) el.value=''; });
+    ['exp-name','exp-note'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
     var a=document.getElementById('exp-amount'); if(a) a.value='';
     var cur=document.getElementById('exp-currency'); if(cur) cur.value='GBP';
     var c=document.getElementById('exp-category'); if(c) c.value='';
@@ -4842,91 +4931,285 @@ function deleteExpense(key) {
     }).catch(function() { showNotification('هەڵە!', 'error'); });
 }
 
+// ── پانێلی وردەکاری (ئوڤەرلەی) ──
 function viewExpense(key) {
-    const e = (window._expensesCache||[]).find(x => x.key === key);
+    var e = (window._expensesCache||[]).find(function(x){ return x.key === key; });
     if (!e) return;
 
-    const modal = document.createElement('div');
-    modal.id = 'expViewModal';
-    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;';
-    modal.innerHTML = `
-    <div style="background:#fff;border-radius:16px;padding:0;width:100%;max-width:420px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.25);">
-      <!-- هێدەر -->
-      <div style="background:linear-gradient(135deg,#276749,#38a169);padding:16px 18px;display:flex;justify-content:space-between;align-items:center;">
-        <div style="color:#fff;font-size:1rem;font-weight:900;"><i class="fas fa-wallet"></i> وردەکاری خەرجی</div>
-        <button onclick="document.getElementById('expViewModal').remove()" style="background:rgba(255,255,255,.2);color:#fff;border:none;border-radius:8px;padding:5px 10px;cursor:pointer;font-size:.9rem;">✕</button>
-      </div>
-      <!-- بری پارە - گەورە -->
-      <div style="text-align:center;padding:20px 18px 10px;border-bottom:1.5px solid #e2e8f0;">
-        <div style="font-size:2.2rem;font-weight:900;color:#276749;">${e.currency==='EUR'?'€':e.currency==='USD'?'$':e.currency==='IQD'?'':' £'}${e.currency==='IQD'?parseFloat(e.amount||0).toFixed(0)+' IQD':parseFloat(e.amount||0).toFixed(2)}</div>
-        <div style="font-size:1rem;font-weight:800;color:#1a202c;margin-top:4px;">${e.name||'—'}</div>
-      </div>
-      <!-- وردەکاریەکان -->
-      <div style="padding:14px 18px;display:flex;flex-direction:column;gap:10px;">
-        <div style="display:flex;justify-content:space-between;padding:8px 12px;background:#f7fafc;border-radius:8px;">
-          <span style="font-size:.82rem;font-weight:700;color:#718096;">📂 بابەت</span>
-          <span style="font-size:.82rem;font-weight:800;color:#1a202c;">${e.category||'تر'}</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;padding:8px 12px;background:#f7fafc;border-radius:8px;">
-          <span style="font-size:.82rem;font-weight:700;color:#718096;">📅 بەروار</span>
-          <span style="font-size:.82rem;font-weight:800;color:#1a202c;">${e.date||'—'}</span>
-        </div>
-        ${e.note ? `<div style="padding:8px 12px;background:#fffbeb;border-radius:8px;border:1px solid #fde68a;">
-          <div style="font-size:.75rem;font-weight:700;color:#d97706;margin-bottom:3px;">📝 تێبینی</div>
-          <div style="font-size:.82rem;font-weight:700;color:#1a202c;">${e.note}</div>
-        </div>` : ''}
-        <div style="display:flex;justify-content:space-between;padding:8px 12px;background:#f7fafc;border-radius:8px;">
-          <span style="font-size:.78rem;font-weight:700;color:#a0aec0;">🕐 تۆمارکرا</span>
-          <span style="font-size:.78rem;color:#a0aec0;">${e.timestamp ? new Date(e.timestamp).toLocaleString('en-GB') : '—'}</span>
-        </div>
-      </div>
-      <!-- دوگمەکان -->
-      <div style="padding:12px 18px;display:flex;gap:8px;border-top:1.5px solid #e2e8f0;">
-        <button onclick="printExpense('${key}');document.getElementById('expViewModal').remove();" style="flex:1;padding:10px;background:linear-gradient(135deg,#276749,#38a169);color:#fff;border:none;border-radius:10px;font-size:.88rem;font-weight:800;cursor:pointer;font-family:inherit;"><i class="fas fa-print"></i> چاپکردن</button>
-        <button onclick="document.getElementById('expViewModal').remove()" style="padding:10px 16px;background:#e2e8f0;color:#2d3748;border:none;border-radius:10px;font-size:.85rem;cursor:pointer;font-family:inherit;">داخستن</button>
-      </div>
-    </div>`;
-    document.body.appendChild(modal);
-    modal.addEventListener('click', function(ev){ if(ev.target===modal) modal.remove(); });
+    var panel = document.getElementById('exp-detail-panel');
+    var inner = document.getElementById('exp-detail-inner');
+    if (!panel || !inner) return;
+
+    var cat  = e.category || 'تر';
+    var icon = _EXP_CAT_ICONS[cat]  || '📌';
+    var clr  = _EXP_CAT_COLORS[cat] || '#718096';
+    var amt  = _expFmt(e.amount, e.currency);
+
+    // خەرجیی هاوشێوە (هەمان جۆر، جگە لە خۆی)
+    var similar = (window._expensesCache||[]).filter(function(x){ return x.category === cat && x.key !== key; }).slice(0,4);
+    var similarHtml = '';
+    if (similar.length) {
+        similarHtml = '<div style="margin:0 16px 16px;">'
+          + '<div style="font-size:.78rem;font-weight:800;color:#4a5568;margin-bottom:8px;">' + icon + ' خەرجیی هاوشێوەی تر (' + cat + ')</div>'
+          + '<div style="background:#f7fafc;border:1.5px solid #e2e8f0;border-radius:10px;overflow:hidden;">'
+          + similar.map(function(x, i) {
+              return '<div onclick="viewExpense(\'' + x.key + '\')" style="display:flex;justify-content:space-between;align-items:center;padding:9px 12px;'
+                  + (i < similar.length-1 ? 'border-bottom:1px solid #edf2f7;' : '') + 'cursor:pointer;">'
+                + '<div>'
+                  + '<div style="font-size:.82rem;font-weight:700;color:#1a202c;">' + escapeHtml(x.name||'—') + '</div>'
+                  + '<div style="font-size:.7rem;color:#a0aec0;">' + (x.date||'') + '</div>'
+                + '</div>'
+                + '<span style="font-size:.85rem;font-weight:900;color:' + clr + ';">' + _expFmt(x.amount, x.currency) + '</span>'
+              + '</div>';
+          }).join('')
+          + '</div></div>';
+    }
+
+    inner.innerHTML =
+        // هێدەر
+        '<div style="background:' + clr + ';padding:16px 18px;display:flex;justify-content:space-between;align-items:center;">'
+          + '<div style="color:#fff;font-size:1rem;font-weight:900;">' + icon + ' وردەکاری خەرجی</div>'
+          + '<button onclick="_expCloseDetail()" style="background:rgba(255,255,255,.2);color:#fff;border:none;border-radius:8px;padding:6px 12px;cursor:pointer;font-family:inherit;font-size:.9rem;font-weight:700;">✕ داخستن</button>'
+        + '</div>'
+
+        // بری پارەی گەورە
+        + '<div style="text-align:center;padding:22px 18px 14px;border-bottom:1.5px solid #e2e8f0;">'
+          + '<div style="font-size:2.5rem;font-weight:900;color:' + clr + ';">' + amt + '</div>'
+          + '<div style="font-size:1rem;font-weight:800;color:#1a202c;margin-top:4px;">' + escapeHtml(e.name||'—') + '</div>'
+          + '<div style="display:inline-flex;align-items:center;gap:5px;background:' + clr + '18;color:' + clr + ';border-radius:20px;padding:3px 14px;font-size:.78rem;font-weight:700;margin-top:6px;">' + icon + ' ' + cat + '</div>'
+        + '</div>'
+
+        // ڕیزەکان
+        + '<div style="padding:14px 16px;display:flex;flex-direction:column;gap:8px;">'
+
+          + '<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:#f7fafc;border-radius:8px;">'
+            + '<span style="font-size:.82rem;font-weight:700;color:#718096;">📅 بەروار</span>'
+            + '<span style="font-size:.84rem;font-weight:800;color:#1a202c;">' + escapeHtml(e.date||'—') + '</span>'
+          + '</div>'
+
+          + '<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:#f7fafc;border-radius:8px;">'
+            + '<span style="font-size:.82rem;font-weight:700;color:#718096;">💱 جۆری دراو</span>'
+            + '<span style="font-size:.84rem;font-weight:800;color:#1a202c;">' + (e.currency||'GBP') + '</span>'
+          + '</div>'
+
+          + (e.note ? '<div style="padding:9px 12px;background:#fffbeb;border-radius:8px;border:1px solid #fde68a;">'
+              + '<div style="font-size:.72rem;font-weight:700;color:#d97706;margin-bottom:3px;">📝 تێبینی</div>'
+              + '<div style="font-size:.84rem;font-weight:700;color:#1a202c;">' + escapeHtml(e.note) + '</div>'
+            + '</div>' : '')
+
+          + '<div style="padding:9px 12px;background:#f7fafc;border-radius:8px;">'
+            + '<div style="font-size:.7rem;color:#a0aec0;margin-bottom:2px;">🕐 کاتی تۆمارکردن</div>'
+            + '<div style="font-size:.78rem;font-weight:700;color:#718096;">' + (e.timestamp ? new Date(e.timestamp).toLocaleString('en-GB') : '—') + '</div>'
+          + '</div>'
+
+          // کارتی کۆی جۆر
+          + (function(){
+              var sameAll = (window._expensesCache||[]).filter(function(x){ return x.category === cat; });
+              var total = _expFmtTotals(_expSumByCurrency(sameAll));
+              return '<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:' + clr + '12;border:1.5px solid ' + clr + '33;border-radius:8px;">'
+                + '<span style="font-size:.8rem;font-weight:700;color:' + clr + ';">کۆی خەرجی ' + cat + ' (' + sameAll.length + ' تۆمار)</span>'
+                + '<span style="font-size:.85rem;font-weight:900;color:' + clr + ';">' + total + '</span>'
+              + '</div>';
+          })()
+
+        + '</div>'
+
+        // دوگمەکان
+        + '<div style="padding:12px 16px;display:flex;gap:8px;border-top:1.5px solid #e2e8f0;">'
+          + '<button onclick="printExpense(\'' + key + '\');_expCloseDetail()" style="flex:1;padding:10px;background:linear-gradient(135deg,#276749,#38a169);color:#fff;border:none;border-radius:10px;font-size:.88rem;font-weight:800;cursor:pointer;font-family:inherit;"><i class="fas fa-print"></i> چاپکردن</button>'
+          + '<button onclick="deleteExpense(\'' + key + '\');_expCloseDetail()" style="padding:10px 14px;background:#fff5f5;color:#c53030;border:1.5px solid #fed7d7;border-radius:10px;font-size:.85rem;cursor:pointer;font-family:inherit;"><i class="fas fa-trash"></i></button>'
+          + '<button onclick="_expCloseDetail()" style="padding:10px 14px;background:#e2e8f0;color:#2d3748;border:none;border-radius:10px;font-size:.85rem;cursor:pointer;font-family:inherit;">داخستن</button>'
+        + '</div>'
+
+        + similarHtml;
+
+    panel.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function _expCloseDetail(ev) {
+    if (ev && ev.target !== document.getElementById('exp-detail-panel')) return;
+    var panel = document.getElementById('exp-detail-panel');
+    if (panel) panel.style.display = 'none';
+    document.body.style.overflow = '';
 }
 
 function printExpense(key) {
-    const e = (window._expensesCache||[]).find(x => x.key === key);
+    var e = (window._expensesCache||[]).find(function(x){ return x.key === key; });
     if (!e) return;
-    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
-    <style>
-      @page{size:A5 portrait;margin:10mm;}
-      body{font-family:Arial,sans-serif;direction:rtl;margin:0;padding:0;color:#111;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-      .header{background:#276749;color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-radius:8px 8px 0 0;}
-      .amount{text-align:center;padding:18px;border-bottom:2px dashed #c6f6d5;}
-      .rows{padding:12px 16px;display:flex;flex-direction:column;gap:8px;}
-      .row{display:flex;justify-content:space-between;padding:7px 10px;background:#f7fafc;border-radius:7px;font-size:.85rem;}
-      .row span{color:#666;font-weight:700;}
-      .row strong{color:#111;}
-      .footer{text-align:center;font-size:.72rem;color:#aaa;margin-top:16px;border-top:1px dashed #e2e8f0;padding-top:8px;}
-      @media print{button{display:none!important;}}
-    </style>
-    </head><body>
-    <div style="border:2px solid #276749;border-radius:8px;max-width:400px;margin:0 auto;">
-      <div class="header">
-        <div style="font-size:.95rem;font-weight:900;">🏢 UK POST — KING STREET</div>
-        <div style="font-size:.8rem;opacity:.85;">${e.date||''}</div>
-      </div>
-      <div class="amount">
-        <div style="font-size:2rem;font-weight:900;color:#276749;">${e.currency==='EUR'?'€':e.currency==='USD'?'$':e.currency==='IQD'?'':'£'}${e.currency==='IQD'?parseFloat(e.amount||0).toFixed(0)+' IQD':parseFloat(e.amount||0).toFixed(2)}</div>
-        <div style="font-size:1rem;font-weight:800;margin-top:5px;">${e.name||'—'}</div>
-      </div>
-      <div class="rows">
-        <div class="row"><span>📂 بابەت:</span><strong>${e.category||'تر'}</strong></div>
-        <div class="row"><span>📅 بەروار:</span><strong>${e.date||'—'}</strong></div>
-        ${e.note ? `<div class="row" style="background:#fffbeb;"><span>📝 تێبینی:</span><strong>${e.note}</strong></div>` : ''}
-        <div class="row"><span>🕐 تۆمارکرا:</span><strong>${e.timestamp ? new Date(e.timestamp).toLocaleString('en-GB') : '—'}</strong></div>
-      </div>
-      <div class="footer">UK POST - KING STREET &nbsp;|&nbsp; 07755436275 / 07507472656</div>
-    </div>
-    <script>window.onload=function(){window.print();}<\/script>
-    </body></html>`;
+    var html = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
+    + '<style>'
+    + '@page{size:A5 portrait;margin:10mm;}'
+    + 'body{font-family:Arial,sans-serif;direction:rtl;margin:0;padding:0;color:#111;-webkit-print-color-adjust:exact;print-color-adjust:exact;}'
+    + '.header{background:#276749;color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-radius:8px 8px 0 0;}'
+    + '.amount{text-align:center;padding:18px;border-bottom:2px dashed #c6f6d5;}'
+    + '.rows{padding:12px 16px;display:flex;flex-direction:column;gap:8px;}'
+    + '.row{display:flex;justify-content:space-between;padding:7px 10px;background:#f7fafc;border-radius:7px;font-size:.85rem;}'
+    + '.row span{color:#666;font-weight:700;}'
+    + '.row strong{color:#111;}'
+    + '.footer{text-align:center;font-size:.72rem;color:#aaa;margin-top:16px;border-top:1px dashed #e2e8f0;padding-top:8px;}'
+    + '@media print{button{display:none!important;}}'
+    + '</style></head><body>'
+    + '<div style="border:2px solid #276749;border-radius:8px;max-width:400px;margin:0 auto;">'
+      + '<div class="header">'
+        + '<div style="font-size:.95rem;font-weight:900;">🏢 UK POST — KING STREET</div>'
+        + '<div style="font-size:.8rem;opacity:.85;">' + (e.date||'') + '</div>'
+      + '</div>'
+      + '<div class="amount">'
+        + '<div style="font-size:2rem;font-weight:900;color:#276749;">' + _expFmt(e.amount, e.currency) + '</div>'
+        + '<div style="font-size:1rem;font-weight:800;margin-top:5px;">' + (e.name||'—') + '</div>'
+      + '</div>'
+      + '<div class="rows">'
+        + '<div class="row"><span>📂 بابەت:</span><strong>' + (e.category||'تر') + '</strong></div>'
+        + '<div class="row"><span>📅 بەروار:</span><strong>' + (e.date||'—') + '</strong></div>'
+        + (e.note ? '<div class="row" style="background:#fffbeb;"><span>📝 تێبینی:</span><strong>' + e.note + '</strong></div>' : '')
+        + '<div class="row"><span>🕐 تۆمارکرا:</span><strong>' + (e.timestamp ? new Date(e.timestamp).toLocaleString('en-GB') : '—') + '</strong></div>'
+      + '</div>'
+      + '<div class="footer">UK POST - KING STREET &nbsp;|&nbsp; 07755436275 / 07507472656</div>'
+    + '</div>'
+    + '<script>window.onload=function(){window.print();}<\/script>'
+    + '</body></html>';
     _mobilePrint(html, 'expense-' + (e.name||key));
+}
+
+// ============================================================
+// exportExpensesToExcel — داگرتنی هەموو خەرجیەکان بۆ Excel
+// ============================================================
+function exportExpensesToExcel() {
+    var list = window._expensesCache || [];
+    if (!list.length) { showNotification('هیچ خەرجیەک نییە بۆ داگرتن!', 'error'); return; }
+
+    // ── کۆکردنەوەی کۆی هەر دراوێک ──
+    var totals = {};
+    list.forEach(function(e) {
+        var c = e.currency || 'GBP';
+        totals[c] = (totals[c] || 0) + (parseFloat(e.amount) || 0);
+    });
+
+    // ── ساتەکانی پوخت (خانەکانی کۆ) ──
+    var summaryRows = [
+        ['📊 پوختەی خەرجیەکان — UK POST KING STREET'],
+        ['بەرواری داگرتن:', new Date().toLocaleString('en-GB')],
+        ['کۆی تۆمارەکان:', list.length + ' تۆمار'],
+        [],
+        ['💷 کۆی هەر دراوێک:'],
+    ];
+    if (totals['GBP']) summaryRows.push(['GBP (£)', '£' + totals['GBP'].toFixed(2)]);
+    if (totals['EUR']) summaryRows.push(['EUR (€)', '€' + totals['EUR'].toFixed(2)]);
+    if (totals['USD']) summaryRows.push(['USD ($)', '$' + totals['USD'].toFixed(2)]);
+    if (totals['IQD']) summaryRows.push(['IQD (دینار)', Math.round(totals['IQD']).toLocaleString() + ' IQD']);
+    summaryRows.push([]);
+
+    // ── کۆکردنەوە بە جۆر ──
+    var byCat = {};
+    list.forEach(function(e) {
+        var cat = e.category || 'تر';
+        if (!byCat[cat]) byCat[cat] = [];
+        byCat[cat].push(e);
+    });
+    summaryRows.push(['📂 کۆی هەر جۆرێک:']);
+    summaryRows.push(['جۆر', 'ژمارەی تۆمار', 'کۆی بری']);
+    Object.keys(byCat).forEach(function(cat) {
+        var items = byCat[cat];
+        var catTotals = {};
+        items.forEach(function(e) {
+            var c = e.currency || 'GBP';
+            catTotals[c] = (catTotals[c] || 0) + (parseFloat(e.amount) || 0);
+        });
+        var totalStr = Object.keys(catTotals).map(function(c) {
+            if (c === 'IQD') return Math.round(catTotals[c]).toLocaleString() + ' IQD';
+            var s = c === 'EUR' ? '€' : c === 'USD' ? '$' : '£';
+            return s + catTotals[c].toFixed(2);
+        }).join(' + ');
+        summaryRows.push([(_EXP_CAT_ICONS[cat]||'') + ' ' + cat, items.length, totalStr]);
+    });
+
+    // ── هێڵی سەرەوەی لیست ──
+    var headers = ['#', 'ناوی خەرجی', 'بری پارە', 'دراو', 'جۆر', 'بەروار', 'تێبینی', 'کاتی تۆمارکردن'];
+
+    // ── ڕیزەکانی لیست ──
+    var dataRows = list.map(function(e, i) {
+        return [
+            i + 1,
+            e.name || '—',
+            parseFloat(e.amount || 0),
+            e.currency || 'GBP',
+            ((_EXP_CAT_ICONS[e.category] || '') + ' ' + (e.category || 'تر')).trim(),
+            e.date || '—',
+            e.note || '',
+            e.timestamp ? new Date(e.timestamp).toLocaleString('en-GB') : '—'
+        ];
+    });
+
+    // ── دروستکردنی فایلی Excel (XML Spreadsheet) ──
+    var nl = '\r\n';
+    var xmlRows = '';
+
+    // زیادکردنی ڕیزەکانی پوخت
+    summaryRows.forEach(function(row) {
+        xmlRows += '<Row>' + (row.length ? row.map(function(cell) {
+            var val = (cell === null || cell === undefined) ? '' : cell;
+            var isNum = typeof val === 'number';
+            return '<Cell><Data ss:Type="' + (isNum ? 'Number' : 'String') + '">' + String(val).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</Data></Cell>';
+        }).join('') : '') + '</Row>' + nl;
+    });
+
+    // هێڵی سەرووی لیست
+    xmlRows += '<Row>'
+        + headers.map(function(h) {
+            return '<Cell ss:StyleID="header"><Data ss:Type="String">' + h + '</Data></Cell>';
+        }).join('')
+        + '</Row>' + nl;
+
+    // داتای لیست
+    dataRows.forEach(function(row) {
+        xmlRows += '<Row>' + row.map(function(cell, ci) {
+            var val = (cell === null || cell === undefined) ? '' : cell;
+            var isNum = (ci === 0 || ci === 2);
+            return '<Cell' + (ci === 0 ? ' ss:StyleID="num"' : ci === 2 ? ' ss:StyleID="bold"' : '') + '>'
+                + '<Data ss:Type="' + (isNum ? 'Number' : 'String') + '">'
+                + String(val).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+                + '</Data></Cell>';
+        }).join('') + '</Row>' + nl;
+    });
+
+    var xml = '<?xml version="1.0" encoding="UTF-8"?>' + nl
+        + '<?mso-application progid="Excel.Sheet"?>' + nl
+        + '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"' + nl
+        + ' xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">' + nl
+        + '<Styles>' + nl
+        + '<Style ss:ID="header"><Font ss:Bold="1" ss:Size="10" ss:Color="#FFFFFF"/><Interior ss:Color="#276749" ss:Pattern="Solid"/></Style>' + nl
+        + '<Style ss:ID="bold"><Font ss:Bold="1"/></Style>' + nl
+        + '<Style ss:ID="num"><Alignment ss:Horizontal="Center"/></Style>' + nl
+        + '</Styles>' + nl
+        + '<Worksheet ss:Name="خەرجیەکان">' + nl
+        + '<Table ss:DefaultColumnWidth="100">' + nl
+        + '<Column ss:Width="35"/>'   // #
+        + '<Column ss:Width="160"/>'  // ناو
+        + '<Column ss:Width="80"/>'   // بری
+        + '<Column ss:Width="55"/>'   // دراو
+        + '<Column ss:Width="100"/>'  // جۆر
+        + '<Column ss:Width="90"/>'   // بەروار
+        + '<Column ss:Width="160"/>'  // تێبینی
+        + '<Column ss:Width="140"/>'  // کات
+        + nl
+        + xmlRows
+        + '</Table>' + nl
+        + '</Worksheet>' + nl
+        + '</Workbook>';
+
+    // ── داگرتن ──
+    var blob = new Blob([xml], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+    var url  = URL.createObjectURL(blob);
+    var a    = document.createElement('a');
+    var dateStr = new Date().toISOString().slice(0,10);
+    a.href     = url;
+    a.download = 'UK-POST-خەرجیەکان-' + dateStr + '.xls';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function() { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
+
+    showNotification('Excel داگیرا ✅ — ' + list.length + ' تۆمار');
 }
 
 // ============================================================
