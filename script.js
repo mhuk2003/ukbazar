@@ -781,6 +781,8 @@ function showAdminTab(tab) {
         loadBalanceAdmin();
     } else if (tab === 'reports') {
         loadReportsAdmin();
+    } else if (tab === 'users') {
+        loadUsersAdmin();
     }
 }
 
@@ -2891,15 +2893,13 @@ function createProductCard(product) {
         '<div class="qty-selector" id="qty-' + safeId + '" style="display:none;">' +
         '<div class="qty-row"><button class="qty-btn qty-minus" onclick="changeQty(\'' + safeId + '\', -1)">−</button><span class="qty-value" id="qtyval-' + safeId + '">1</span><button class="qty-btn qty-plus" onclick="changeQty(\'' + safeId + '\', 1)">+</button><span class="qty-label">' + (window.t ? window.t('pieces') : 'دانە') + '</span></div>' +
         '<button class="btn btn-confirm-cart" onclick="confirmAddToCart(\'' + safeId + '\', \'' + safeMobile + '\', \'' + safeName + '\')"><i class="fas fa-check"></i> ' + (window.t ? window.t('add_to_cart') : 'زیادکردن بۆ سەبەتە') + '</button></div>' +
-        '<div class="product-actions">' +
-        '<button class="btn btn-primary btn-small" onclick="showQtySelector(\'' + safeId + '\')"><i class="fas fa-cart-plus"></i> <span class="btn-text">' + (window.t ? window.t('cart_btn') : 'سەبەتە') + '</span></button>' +
-        '<button class="btn btn-secondary btn-small" onclick="showFibModal()"><i class="fas fa-credit-card"></i> <span class="btn-text">FIB پارەدان</span></button>' +
-        '<button id="wl-' + safeId + '" class="btn btn-small" onclick="toggleWishlist(\'' + safeId + '\')" style="background:#fff0f0;color:#e53e3e;border:1.5px solid #fed7d7;min-width:36px;"><i class="fas fa-heart" id="wl-icon-' + safeId + '"></i></button>' +
-        '</div>' +
-        // بارکردنی خێرا — سەبەتە و دڵخواز ژێر کاڵا
+        // دوگمەی خێرا ژێر کاڵا — سەبەتە، دڵخواز، FIB
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;">' +
         '<button onclick="showQtySelector(\'' + safeId + '\')" style="padding:9px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:10px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px;"><i class="fas fa-shopping-cart"></i> سەبەتە</button>' +
         '<button id="wl2-' + safeId + '" onclick="toggleWishlist(\'' + safeId + '\')" style="padding:9px;background:#fff0f0;color:#e53e3e;border:1.5px solid #fed7d7;border-radius:10px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px;"><i class="far fa-heart" id="wl2-icon-' + safeId + '"></i> دڵخواز</button>' +
+        '</div>' +
+        '<div style="margin-top:6px;">' +
+        '<button onclick="showFibModal()" style="width:100%;padding:9px;background:linear-gradient(135deg,#1a365d,#2b6cb0);color:#fff;border:none;border-radius:10px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px;"><i class="fas fa-credit-card"></i> FIB پارەدان</button>' +
         '</div>' +
         '</div></div>';
 }
@@ -5629,6 +5629,7 @@ function loadReportsAdmin() {
         database.ref('expenses').once('value'),
         database.ref('slider').once('value'),
         database.ref('videos').once('value'),
+        database.ref('siteUsers').once('value'),
     ];
 
     Promise.all(promises).then(function(snaps) {
@@ -5640,6 +5641,7 @@ function loadReportsAdmin() {
         var expensesSnap   = snaps[5];
         var slidersSnap    = snaps[6];
         var videosSnap     = snaps[7];
+        var usersSnap      = snaps[8];
 
         // ── کاڵاکان ──
         var totalProducts = 0, pendingProducts = 0, approvedProducts = 0;
@@ -5708,16 +5710,32 @@ function loadReportsAdmin() {
         var totalSliders = slidersSnap.exists() ? (Object.keys(slidersSnap.val() || {}).length) : 0;
         var totalVideos  = videosSnap.exists()  ? (Object.keys(videosSnap.val()  || {}).length) : 0;
 
+        // ── بەکارهێنەران ──
+        var totalUsers = 0;
+        // Firebase
+        if (usersSnap && usersSnap.exists()) {
+            totalUsers += Object.keys(usersSnap.val() || {}).length;
+        }
+        // localStorage (بەبێ دووبارەبوون)
+        try {
+            var lsU = JSON.parse(localStorage.getItem('ukbazar_siteUsers') || '{}');
+            var fbKeys = (usersSnap && usersSnap.exists()) ? Object.keys(usersSnap.val() || {}) : [];
+            Object.keys(lsU).forEach(function(k) {
+                if (fbKeys.indexOf(k) === -1) totalUsers++;
+            });
+        } catch(e) {}
+
         // ── کارتەکانی پوخت ──
         var cards = [
-            { icon:'fas fa-boxes',          label:'هەموو کاڵاکان',         value: totalProducts,      sub: approvedProducts+' پەسەندکراو / '+pendingProducts+' چاوەڕوان',   color:'#667eea','bg':'#f0f0ff' },
-            { icon:'fas fa-clipboard-list', label:'داواکاریەکان',          value: totalRequests,      sub: pendingRequests+' چاوەڕوانی وەڵام',                              color:'#ed8936','bg':'#fffaf0' },
-            { icon:'fas fa-shipping-fast',  label:'گەیاندنی ناوخۆ',       value: totalDeliveries,    sub: deliveredCount+' گەیاو / '+pendingDeliveries+' چاوەڕوان',          color:'#38a169','bg':'#f0fff4' },
-            { icon:'fas fa-globe',          label:'پۆستی نێودەوڵەتی',     value: totalIntl,          sub: pendingIntl+' چاوەڕوانی پرۆسەس',                                  color:'#3182ce','bg':'#ebf8ff' },
-            { icon:'fas fa-truck',          label:'شۆفیرەکان',            value: totalDrivers,       sub: activeDrivers+' چالاک',                                           color:'#2b6cb0','bg':'#ebf8ff' },
-            { icon:'fas fa-wallet',         label:'خەرجیەکان',            value: totalExpenses+' تۆمار', sub:'£'+expensesGBP.toFixed(0)+' GBP / '+Math.round(expensesIQD).toLocaleString()+' IQD', color:'#e53e3e','bg':'#fff5f5' },
-            { icon:'fas fa-images',         label:'سلایدەرەکان',          value: totalSliders,       sub:'فایلی پیشاندان',                                                  color:'#805ad5','bg':'#faf5ff' },
-            { icon:'fas fa-video',          label:'ڤیدیۆکان',             value: totalVideos,        sub:'ڤیدیۆی بارکراو',                                                  color:'#f56565','bg':'#fff5f5' },
+            { icon:'fas fa-boxes',          label:'هەموو کاڵاکان',         value: totalProducts,      sub: approvedProducts+' پەسەندکراو / '+pendingProducts+' چاوەڕوان',   color:'#667eea', bg:'#f0f0ff' },
+            { icon:'fas fa-clipboard-list', label:'داواکاریەکان',          value: totalRequests,      sub: pendingRequests+' چاوەڕوانی وەڵام',                              color:'#ed8936', bg:'#fffaf0' },
+            { icon:'fas fa-shipping-fast',  label:'گەیاندنی ناوخۆ',       value: totalDeliveries,    sub: deliveredCount+' گەیاو / '+pendingDeliveries+' چاوەڕوان',         color:'#38a169', bg:'#f0fff4' },
+            { icon:'fas fa-globe',          label:'پۆستی نێودەوڵەتی',     value: totalIntl,          sub: pendingIntl+' چاوەڕوانی پرۆسەس',                                 color:'#3182ce', bg:'#ebf8ff' },
+            { icon:'fas fa-truck',          label:'شۆفیرەکان',            value: totalDrivers,       sub: activeDrivers+' چالاک',                                          color:'#2b6cb0', bg:'#ebf8ff' },
+            { icon:'fas fa-users',          label:'بەکارهێنەران',         value: totalUsers,         sub: 'ئەکاونتی تۆمارکراو',                                            color:'#dd6b20', bg:'#fffaf0' },
+            { icon:'fas fa-wallet',         label:'خەرجیەکان',            value: totalExpenses+' تۆمار', sub:'£'+expensesGBP.toFixed(0)+' GBP / '+Math.round(expensesIQD).toLocaleString()+' IQD', color:'#e53e3e', bg:'#fff5f5' },
+            { icon:'fas fa-images',         label:'سلایدەرەکان',          value: totalSliders,       sub:'فایلی پیشاندان',                                                 color:'#805ad5', bg:'#faf5ff' },
+            { icon:'fas fa-video',          label:'ڤیدیۆکان',             value: totalVideos,        sub:'ڤیدیۆی بارکراو',                                                 color:'#f56565', bg:'#fff5f5' },
         ];
 
         var cardsHtml = cards.map(function(c) {
@@ -5734,13 +5752,14 @@ function loadReportsAdmin() {
         }).join('');
 
         // ── چارتی بارەکان ──
-        var chartMax = Math.max(totalProducts, totalRequests, totalDeliveries, totalIntl, totalDrivers, 1);
+        var chartMax = Math.max(totalProducts, totalRequests, totalDeliveries, totalIntl, totalDrivers, totalUsers, 1);
         var chartBars = [
-            { label:'کاڵاکان',    value: totalProducts,   color:'#667eea' },
-            { label:'داواکاری',  value: totalRequests,   color:'#ed8936' },
-            { label:'گەیاندن',   value: totalDeliveries, color:'#38a169' },
-            { label:'نێودەوڵەتی',value: totalIntl,       color:'#3182ce' },
-            { label:'شۆفیر',     value: totalDrivers,    color:'#2b6cb0' },
+            { label:'کاڵاکان',      value: totalProducts,   color:'#667eea' },
+            { label:'داواکاری',    value: totalRequests,   color:'#ed8936' },
+            { label:'گەیاندن',     value: totalDeliveries, color:'#38a169' },
+            { label:'نێودەوڵەتی',  value: totalIntl,       color:'#3182ce' },
+            { label:'شۆفیر',       value: totalDrivers,    color:'#2b6cb0' },
+            { label:'بەکارهێنەر', value: totalUsers,      color:'#dd6b20' },
         ];
         var barsHtml = chartBars.map(function(b) {
             var pct = chartMax > 0 ? Math.round((b.value / chartMax) * 100) : 0;
@@ -5808,6 +5827,18 @@ function loadReportsAdmin() {
             +     _reportMiniCard('هەموو تۆمارەکان', totalExpenses, '#4a5568', 'تۆمار')
             +     _reportMiniCard('£ GBP', expensesGBP.toFixed(2), '#e53e3e', 'پاوەند')
             +     _reportMiniCard('IQD دینار', Math.round(expensesIQD).toLocaleString(), '#276749', 'دینار')
+            +   '</div>'
+            + '</div>'
+
+            // بەکارهێنەران پوخت
+            + '<div style="background:#fff;border:1.5px solid #fed7aa;border-radius:14px;padding:16px;margin-bottom:16px;">'
+            +   '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">'
+            +     '<div style="font-size:.9rem;font-weight:900;color:#2d3748;"><i class="fas fa-users" style="color:#dd6b20;"></i> بەکارهێنەران</div>'
+            +     '<button onclick="showAdminTab(\'users\')" style="padding:6px 16px;background:linear-gradient(135deg,#c05621,#dd6b20);color:#fff;border:none;border-radius:20px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;"><i class="fas fa-arrow-left"></i> بینینی هەموو</button>'
+            +   '</div>'
+            +   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">'
+            +     _reportMiniCard('کۆی بەکارهێنەران', totalUsers, '#dd6b20', 'ئەکاونت')
+            +     _reportMiniCard('تۆمارکراو', totalUsers > 0 ? '✅' : '—', '#276749', totalUsers > 0 ? 'چالاک' : 'بەتاڵ')
             +   '</div>'
             + '</div>'
 
@@ -6132,61 +6163,75 @@ function _resetAuthBtn() {
 }
 
 function _renderUserProfilePanel() {
-  var authForm = document.getElementById('userAuthForm');
+  var authForm   = document.getElementById('userAuthForm');
   var profilePanel = document.getElementById('userProfilePanel');
   var headerName = document.getElementById('userProfileNameDisplay');
-  var headerSub = document.getElementById('userProfileSubDisplay');
-  var avatarLg = document.getElementById('userProfileAvatarLg');
-  var tips = document.getElementById('userAuthTips');
+  var headerSub  = document.getElementById('userProfileSubDisplay');
+  var avatarLg   = document.getElementById('userProfileAvatarLg');
+  var tips       = document.getElementById('userAuthTips');
+
+  // ئەگەر مۆدال هێشتا لە DOM نییە — وەستە
+  if (!authForm || !profilePanel || !headerName) return;
 
   if (_currentUser) {
     authForm.style.display = 'none';
     profilePanel.style.display = 'block';
     if (tips) tips.style.display = 'none';
 
-    var name = _currentUser.name || _currentUser.username || 'بەکارهێنەر';
+    var name    = _currentUser.name || _currentUser.username || 'بەکارهێنەر';
     var initial = name.charAt(0).toUpperCase();
     var wlCount = _getWishlist().length;
 
     headerName.textContent = '👋 بەخێربێیت، ' + name + '!';
-    headerSub.innerHTML = wlCount > 0
+    if (headerSub) headerSub.innerHTML = wlCount > 0
       ? '<span style="background:rgba(255,255,255,.2);padding:2px 10px;border-radius:20px;">❤️ ' + wlCount + ' دڵخواز</span>'
       : '<span style="opacity:.75;">پرۆفایلەکەت بەڕێوەببە</span>';
 
-    avatarLg.textContent = initial;
-    avatarLg.style.background = 'rgba(255,255,255,.3)';
-    avatarLg.style.fontWeight = '900';
-    avatarLg.style.fontSize = '1.8rem';
-    avatarLg.style.color = '#fff';
+    if (avatarLg) {
+      avatarLg.textContent    = initial;
+      avatarLg.style.background  = 'rgba(255,255,255,.3)';
+      avatarLg.style.fontWeight  = '900';
+      avatarLg.style.fontSize    = '1.8rem';
+      avatarLg.style.color       = '#fff';
+    }
 
-    document.getElementById('userPanelName').textContent = name;
-    document.getElementById('userPanelEmail').textContent = _currentUser.email || _currentUser.username || '';
+    var panelName = document.getElementById('userPanelName');
+    var panelEmail = document.getElementById('userPanelEmail');
+    var panelInitial = document.getElementById('userPanelInitial');
+    var panelJoined = document.getElementById('userPanelJoined');
     var mobileEl = document.getElementById('userPanelMobile');
+
+    if (panelName)    panelName.textContent    = name;
+    if (panelEmail)   panelEmail.textContent   = _currentUser.email || _currentUser.username || '';
+    if (panelInitial) panelInitial.textContent = initial;
+    if (panelJoined)  panelJoined.textContent  = _currentUser.joinedAt || '—';
     if (mobileEl && _currentUser.mobile) {
-      mobileEl.textContent = '📱 ' + _currentUser.mobile;
+      mobileEl.textContent  = '📱 ' + _currentUser.mobile;
       mobileEl.style.display = 'block';
     }
-    document.getElementById('userPanelInitial').textContent = initial;
-    document.getElementById('userPanelJoined').textContent = _currentUser.joinedAt || '—';
 
     var wlBtn = document.querySelector('[onclick="showUserWishlist()"]');
     if (wlBtn) wlBtn.innerHTML = '<i class="fas fa-heart" style="color:#e53e3e;"></i> دڵخوازەکانم'
       + (wlCount > 0 ? ' <span style="background:#e53e3e;color:#fff;border-radius:20px;padding:1px 7px;font-size:.72rem;">' + wlCount + '</span>' : '');
 
   } else {
-    authForm.style.display = 'block';
+    authForm.style.display   = 'block';
     profilePanel.style.display = 'none';
-    if (tips) tips.style.display = 'flex';
+    if (tips)      tips.style.display      = 'flex';
+    if (headerSub) headerSub.textContent   = '';
     headerName.textContent = 'بەخێربێیت!';
-    if (headerSub) headerSub.textContent = '';
-    avatarLg.textContent = '👤';
-    avatarLg.style.fontWeight = 'normal';
-    avatarLg.style.fontSize = '2rem';
-    document.getElementById('userEmailInput').value = '';
-    document.getElementById('userPasswordInput').value = '';
-    if (document.getElementById('userNameInput')) document.getElementById('userNameInput').value = '';
-    if (document.getElementById('userMobileInput')) document.getElementById('userMobileInput').value = '';
-    document.getElementById('userAuthError').style.display = 'none';
+    if (avatarLg) { avatarLg.textContent = '👤'; avatarLg.style.fontWeight = 'normal'; avatarLg.style.fontSize = '2rem'; }
+
+    var ei = document.getElementById('userEmailInput');
+    var pi = document.getElementById('userPasswordInput');
+    var ni = document.getElementById('userNameInput');
+    var mi = document.getElementById('userMobileInput');
+    var er = document.getElementById('userAuthError');
+    if (ei) ei.value = '';
+    if (pi) pi.value = '';
+    if (ni) ni.value = '';
+    if (mi) mi.value = '';
+    if (er) er.style.display = 'none';
     switchUserTab('login');
   }
 }
@@ -6456,3 +6501,129 @@ document.addEventListener('click', function(e) {
   if (e.target === document.getElementById('userOrdersModal'))   closeUserOrdersModal();
   if (e.target === document.getElementById('userWishlistModal')) closeUserWishlistModal();
 });
+
+// ════════════════════════════════════════════════════════════════
+//  ADMIN — بەکارهێنەران
+// ════════════════════════════════════════════════════════════════
+
+function loadUsersAdmin() {
+    var content = document.getElementById('adminContent');
+    if (!content) return;
+    content.innerHTML = '<div style="text-align:center;padding:40px;color:#718096;"><i class="fas fa-spinner fa-spin" style="font-size:2rem;"></i><div style="margin-top:10px;">بارکردن...</div></div>';
+
+    var usersRef = _isFileProtocol()
+        ? null
+        : database.ref('siteUsers');
+
+    function renderUsers(usersObj) {
+        var users = [];
+        if (usersObj) {
+            Object.keys(usersObj).forEach(function(k) {
+                users.push(Object.assign({ _key: k }, usersObj[k]));
+            });
+        }
+        // لە localStorage ش زیاد بکە
+        try {
+            var lsUsers = JSON.parse(localStorage.getItem('ukbazar_siteUsers') || '{}');
+            Object.keys(lsUsers).forEach(function(k) {
+                if (!users.find(function(u){ return u._key === k; })) {
+                    users.push(Object.assign({ _key: k, _local: true }, lsUsers[k]));
+                }
+            });
+        } catch(e) {}
+
+        // رێزکردن — تازەترین سەرەوە
+        users.sort(function(a, b) { return (b.joinedTs || 0) - (a.joinedTs || 0); });
+
+        if (users.length === 0) {
+            content.innerHTML = '<div style="text-align:center;padding:60px 20px;color:#a0aec0;">'
+                + '<div style="font-size:3rem;margin-bottom:12px;">👥</div>'
+                + '<div style="font-size:1rem;font-weight:700;color:#4a5568;">هیچ بەکارهێنەرێک تۆمار نەکراوە</div>'
+                + '</div>';
+            return;
+        }
+
+        var html = '<div style="padding:4px 0 14px;">'
+            // سەرپەڕە
+            + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">'
+            + '<div style="font-weight:900;font-size:1.1rem;color:#2d3748;"><i class="fas fa-users" style="color:#dd6b20;margin-left:6px;"></i> بەکارهێنەران <span style="background:#dd6b20;color:#fff;border-radius:20px;padding:2px 10px;font-size:.8rem;">' + users.length + '</span></div>'
+            + '<input onkeyup="filterUsersAdmin(this.value)" placeholder="🔍 گەڕان..." style="padding:8px 14px;border:1.5px solid #e2e8f0;border-radius:20px;font-size:.85rem;font-family:inherit;outline:none;min-width:180px;">'
+            + '</div>'
+            + '<div id="usersAdminList">';
+
+        users.forEach(function(u) {
+            var initial = (u.name || u.username || '?').charAt(0).toUpperCase();
+            var colors = ['#667eea','#38a169','#e53e3e','#d69e2e','#805ad5','#dd6b20','#3182ce'];
+            var clr = colors[initial.charCodeAt(0) % colors.length];
+            var badge = u._local
+                ? '<span style="background:#e2e8f0;color:#718096;font-size:.65rem;padding:1px 7px;border-radius:10px;">Local</span>'
+                : '<span style="background:#c6f6d5;color:#276749;font-size:.65rem;padding:1px 7px;border-radius:10px;">Firebase</span>';
+
+            html += '<div class="user-admin-card" data-name="' + escapeHtml((u.name||'') + ' ' + (u.username||'') + ' ' + (u.mobile||'') + ' ' + (u.email||'')).toLowerCase() + '" '
+                + 'style="background:#fff;border:1.5px solid #e2e8f0;border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">'
+                // ئەواتار
+                + '<div style="width:46px;height:46px;background:' + clr + ';border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:900;color:#fff;flex-shrink:0;">' + initial + '</div>'
+                // زانیاری
+                + '<div style="flex:1;min-width:120px;">'
+                + '<div style="font-weight:900;font-size:.95rem;color:#1a202c;">' + escapeHtml(u.name || u.username || '—') + ' ' + badge + '</div>'
+                + '<div style="font-size:.78rem;color:#718096;margin-top:2px;">'
+                + (u.username ? '<span style="margin-left:10px;">👤 ' + escapeHtml(u.username) + '</span>' : '')
+                + (u.email    ? '<span style="margin-left:10px;">📧 ' + escapeHtml(u.email) + '</span>' : '')
+                + (u.mobile   ? '<span style="margin-left:10px;">📱 ' + escapeHtml(u.mobile) + '</span>' : '')
+                + '</div>'
+                + '<div style="font-size:.72rem;color:#a0aec0;margin-top:3px;">📅 ' + escapeHtml(u.joinedAt || '—') + '</div>'
+                + '</div>'
+                // دوگمەی سڕینەوە
+                + '<button onclick="deleteUserAdmin(\'' + escapeHtml(u._key) + '\', \'' + (u._local ? 'local' : 'firebase') + '\', \'' + escapeHtml(u.name || u.username || '') + '\')" '
+                + 'style="padding:7px 14px;background:#fff5f5;color:#c53030;border:1.5px solid #fed7d7;border-radius:10px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0;white-space:nowrap;">'
+                + '<i class="fas fa-trash"></i> سڕینەوە</button>'
+                + '</div>';
+        });
+
+        html += '</div></div>';
+        content.innerHTML = html;
+    }
+
+    if (_isFileProtocol()) {
+        renderUsers(null);
+    } else {
+        usersRef.once('value').then(function(snap) {
+            renderUsers(snap.exists() ? snap.val() : null);
+        }).catch(function() {
+            content.innerHTML = '<div style="text-align:center;padding:30px;color:#e53e3e;">هەڵەی پەیوەندی</div>';
+        });
+    }
+}
+
+function filterUsersAdmin(val) {
+    var v = val.toLowerCase();
+    document.querySelectorAll('.user-admin-card').forEach(function(card) {
+        card.style.display = (v === '' || card.dataset.name.includes(v)) ? '' : 'none';
+    });
+}
+
+function deleteUserAdmin(key, source, name) {
+    if (!confirm('دڵنیایت لە سڕینەوەی ئەکاونتی «' + name + '»؟\nئەم کارە گەڕاندنەوەی نییە.')) return;
+
+    function afterDelete() {
+        showNotification('ئەکاونتی ' + name + ' سڕایەوە 🗑️');
+        loadUsersAdmin();
+    }
+
+    // لە localStorage سڕەوە
+    try {
+        var lsUsers = JSON.parse(localStorage.getItem('ukbazar_siteUsers') || '{}');
+        if (lsUsers[key]) {
+            delete lsUsers[key];
+            localStorage.setItem('ukbazar_siteUsers', JSON.stringify(lsUsers));
+        }
+    } catch(e) {}
+
+    if (source === 'firebase' && !_isFileProtocol()) {
+        database.ref('siteUsers/' + key).remove()
+            .then(afterDelete)
+            .catch(function() { showNotification('هەڵە لە سڕینەوە', 'error'); });
+    } else {
+        afterDelete();
+    }
+}
