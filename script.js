@@ -5938,18 +5938,18 @@ function switchUserTab(tab) {
   if (errDiv) errDiv.style.display = 'none';
 
   if (tab === 'login') {
-    loginBtn.style.background = 'linear-gradient(135deg,#667eea,#764ba2)';
-    loginBtn.style.color = '#fff';
+    loginBtn.style.background = '#fff';
+    loginBtn.style.color = '#0f1e3d';
     regBtn.style.background = 'transparent';
-    regBtn.style.color = '#718096';
+    regBtn.style.color = 'rgba(255,255,255,.45)';
     nameField.style.display = 'none';
     var mf = document.getElementById('userMobileField'); if (mf) mf.style.display = 'none';
     if (submitBtn) submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> <span id="userAuthSubmitText">چوونەژوورەوە</span>';
   } else {
-    regBtn.style.background = 'linear-gradient(135deg,#667eea,#764ba2)';
-    regBtn.style.color = '#fff';
+    regBtn.style.background = '#fff';
+    regBtn.style.color = '#0f1e3d';
     loginBtn.style.background = 'transparent';
-    loginBtn.style.color = '#718096';
+    loginBtn.style.color = 'rgba(255,255,255,.45)';
     nameField.style.display = 'block';
     var mf2 = document.getElementById('userMobileField'); if (mf2) mf2.style.display = 'block';
     if (submitBtn) submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> <span id="userAuthSubmitText">تۆمارکردن</span>';
@@ -6236,15 +6236,17 @@ function _saveUserSession() {
 
 // جێبەجێکردنی دەرئەنجامی چوونەژوورەوە لەسەر UI هێدەر
 function _applyUserSession() {
-  // تەنها bottom nav نوێ بکەوە — دوگمەی هێدەر سڕدرایەوە
-  var bnAvatar = document.getElementById('bottomNavProfileAvatar');
+  var bnSvg     = document.getElementById('bottomNavProfileSvg');
+  var bnInitial = document.getElementById('bottomNavProfileInitial');
 
   if (_currentUser) {
     var initial = (_currentUser.name || _currentUser.username || 'U').charAt(0).toUpperCase();
-    if (bnAvatar) { bnAvatar.textContent = initial; bnAvatar.style.background = 'linear-gradient(135deg,#38a169,#276749)'; }
+    if (bnSvg)     bnSvg.style.display     = 'none';
+    if (bnInitial) { bnInitial.textContent = initial; bnInitial.style.display = 'flex'; }
     _updateProfileBadgeCounts();
   } else {
-    if (bnAvatar) { bnAvatar.textContent = '👤'; bnAvatar.style.background = 'linear-gradient(135deg,#667eea,#764ba2)'; }
+    if (bnSvg)     bnSvg.style.display     = 'block';
+    if (bnInitial) bnInitial.style.display = 'none';
   }
 }
 
@@ -6617,18 +6619,13 @@ function loadUsersAdmin() {
     if (!content) return;
     content.innerHTML = '<div style="text-align:center;padding:40px;color:#718096;"><i class="fas fa-spinner fa-spin" style="font-size:2rem;"></i><div style="margin-top:10px;">بارکردن...</div></div>';
 
-    var usersRef = _isFileProtocol()
-        ? null
-        : database.ref('siteUsers');
-
-    function renderUsers(usersObj) {
+    function renderUsers(usersObj, requestsObj) {
         var users = [];
         if (usersObj) {
             Object.keys(usersObj).forEach(function(k) {
                 users.push(Object.assign({ _key: k }, usersObj[k]));
             });
         }
-        // لە localStorage ش زیاد بکە
         try {
             var lsUsers = JSON.parse(localStorage.getItem('ukbazar_siteUsers') || '{}');
             Object.keys(lsUsers).forEach(function(k) {
@@ -6638,7 +6635,6 @@ function loadUsersAdmin() {
             });
         } catch(e) {}
 
-        // رێزکردن — تازەترین سەرەوە
         users.sort(function(a, b) { return (b.joinedTs || 0) - (a.joinedTs || 0); });
 
         if (users.length === 0) {
@@ -6649,8 +6645,45 @@ function loadUsersAdmin() {
             return;
         }
 
+        // ژمارەی داواکاری بۆ هەر بەکارهێنەر
+        var orderCounts = {};
+        if (requestsObj) {
+            Object.values(requestsObj).forEach(function(r) {
+                var rKey  = r.userKey  || '';
+                var rName = (r.userName || r.name || '').toLowerCase();
+                users.forEach(function(u) {
+                    var uName = (u.name || u.username || '').toLowerCase();
+                    if ((rKey && rKey === u._key) || (uName && uName === rName)) {
+                        orderCounts[u._key] = (orderCounts[u._key] || 0) + 1;
+                    }
+                });
+            });
+        }
+        // localStorage orders
+        try {
+            var lsOrders = JSON.parse(localStorage.getItem('ukbazar_orders') || '[]');
+            lsOrders.forEach(function(r) {
+                var rKey  = r.userKey  || '';
+                var rName = (r.userName || r.name || '').toLowerCase();
+                users.forEach(function(u) {
+                    var uName = (u.name || u.username || '').toLowerCase();
+                    if ((rKey && rKey === u._key) || (uName && uName === rName)) {
+                        orderCounts[u._key] = (orderCounts[u._key] || 0) + 1;
+                    }
+                });
+            });
+        } catch(e) {}
+
+        // ژمارەی دڵخواز لە localStorage
+        function getWlCount(u) {
+            try {
+                var wlKey = 'ukbazar_wl_' + (u._key || u.username || '');
+                var wl = JSON.parse(localStorage.getItem(wlKey) || '[]');
+                return wl.length;
+            } catch(e) { return 0; }
+        }
+
         var html = '<div style="padding:4px 0 14px;">'
-            // سەرپەڕە
             + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">'
             + '<div style="font-weight:900;font-size:1.1rem;color:#2d3748;"><i class="fas fa-users" style="color:#dd6b20;margin-left:6px;"></i> بەکارهێنەران <span style="background:#dd6b20;color:#fff;border-radius:20px;padding:2px 10px;font-size:.8rem;">' + users.length + '</span></div>'
             + '<input onkeyup="filterUsersAdmin(this.value)" placeholder="🔍 گەڕان..." style="padding:8px 14px;border:1.5px solid #e2e8f0;border-radius:20px;font-size:.85rem;font-family:inherit;outline:none;min-width:180px;">'
@@ -6659,14 +6692,19 @@ function loadUsersAdmin() {
 
         users.forEach(function(u) {
             var initial = (u.name || u.username || '?').charAt(0).toUpperCase();
-            var colors = ['#667eea','#38a169','#e53e3e','#d69e2e','#805ad5','#dd6b20','#3182ce'];
-            var clr = colors[initial.charCodeAt(0) % colors.length];
-            var badge = u._local
+            var colors  = ['#667eea','#38a169','#e53e3e','#d69e2e','#805ad5','#dd6b20','#3182ce'];
+            var clr     = colors[initial.charCodeAt(0) % colors.length];
+            var badge   = u._local
                 ? '<span style="background:#e2e8f0;color:#718096;font-size:.65rem;padding:1px 7px;border-radius:10px;">Local</span>'
                 : '<span style="background:#c6f6d5;color:#276749;font-size:.65rem;padding:1px 7px;border-radius:10px;">Firebase</span>';
 
+            var ordCount = orderCounts[u._key] || 0;
+            var wlCount  = getWlCount(u);
+
             html += '<div class="user-admin-card" data-name="' + escapeHtml((u.name||'') + ' ' + (u.username||'') + ' ' + (u.mobile||'') + ' ' + (u.email||'')).toLowerCase() + '" '
-                + 'style="background:#fff;border:1.5px solid #e2e8f0;border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">'
+                + 'style="background:#fff;border:1.5px solid #e2e8f0;border-radius:14px;padding:14px 16px;margin-bottom:10px;">'
+
+                + '<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">'
                 // ئەواتار
                 + '<div style="width:46px;height:46px;background:' + clr + ';border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:900;color:#fff;flex-shrink:0;">' + initial + '</div>'
                 // زانیاری
@@ -6674,15 +6712,25 @@ function loadUsersAdmin() {
                 + '<div style="font-weight:900;font-size:.95rem;color:#1a202c;">' + escapeHtml(u.name || u.username || '—') + ' ' + badge + '</div>'
                 + '<div style="font-size:.78rem;color:#718096;margin-top:2px;">'
                 + (u.username ? '<span style="margin-left:10px;">👤 ' + escapeHtml(u.username) + '</span>' : '')
-                + (u.email    ? '<span style="margin-left:10px;">📧 ' + escapeHtml(u.email) + '</span>' : '')
-                + (u.mobile   ? '<span style="margin-left:10px;">📱 ' + escapeHtml(u.mobile) + '</span>' : '')
+                + (u.email    ? '<span style="margin-left:10px;">📧 ' + escapeHtml(u.email)    + '</span>' : '')
+                + (u.mobile   ? '<span style="margin-left:10px;">📱 ' + escapeHtml(u.mobile)   + '</span>' : '')
                 + '</div>'
                 + '<div style="font-size:.72rem;color:#a0aec0;margin-top:3px;">📅 ' + escapeHtml(u.joinedAt || '—') + '</div>'
                 + '</div>'
                 // دوگمەی سڕینەوە
                 + '<button onclick="deleteUserAdmin(\'' + escapeHtml(u._key) + '\', \'' + (u._local ? 'local' : 'firebase') + '\', \'' + escapeHtml(u.name || u.username || '') + '\')" '
-                + 'style="padding:7px 14px;background:#fff5f5;color:#c53030;border:1.5px solid #fed7d7;border-radius:10px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0;white-space:nowrap;">'
+                + 'style="padding:7px 14px;background:#fff5f5;color:#c53030;border:1.5px solid #fed7d7;border-radius:10px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0;">'
                 + '<i class="fas fa-trash"></i> سڕینەوە</button>'
+                + '</div>'
+
+                // ── ژمارەی داواکاری و دڵخواز ──
+                + '<div style="display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid #f0f0f0;">'
+                + '<span style="background:#f0fff4;color:#276749;border:1px solid #c6f6d5;border-radius:20px;padding:3px 12px;font-size:.75rem;font-weight:700;display:flex;align-items:center;gap:4px;">'
+                + '<i class="fas fa-box" style="font-size:.7rem;"></i> داواکاری: <strong>' + ordCount + '</strong></span>'
+                + '<span style="background:#fff5f5;color:#c53030;border:1px solid #fed7d7;border-radius:20px;padding:3px 12px;font-size:.75rem;font-weight:700;display:flex;align-items:center;gap:4px;">'
+                + '<i class="fas fa-heart" style="font-size:.7rem;"></i> دڵخواز: <strong>' + wlCount + '</strong></span>'
+                + '</div>'
+
                 + '</div>';
         });
 
@@ -6690,15 +6738,31 @@ function loadUsersAdmin() {
         content.innerHTML = html;
     }
 
-    if (_isFileProtocol()) {
-        renderUsers(null);
-    } else {
-        usersRef.once('value').then(function(snap) {
-            renderUsers(snap.exists() ? snap.val() : null);
-        }).catch(function() {
-            content.innerHTML = '<div style="text-align:center;padding:30px;color:#e53e3e;">هەڵەی پەیوەندی</div>';
+    // هەمیشە Firebase تێست بکە — file:// ش
+    function fetchAndRender() {
+        content.innerHTML = '<div style="text-align:center;padding:40px;color:#718096;"><i class="fas fa-spinner fa-spin" style="font-size:2rem;"></i><div style="margin-top:10px;">بارکردن...</div></div>';
+        Promise.all([
+            database.ref('siteUsers').once('value'),
+            database.ref('requests').once('value')
+        ]).then(function(snaps) {
+            renderUsers(
+                snaps[0].exists() ? snaps[0].val() : null,
+                snaps[1].exists() ? snaps[1].val() : null
+            );
+        }).catch(function(err) {
+            // Firebase کێشەی هەیە — localStorage تەنها + دوگمەی دووبارەهەوڵدان
+            renderUsers(null, null);
+            var listEl = document.getElementById('usersAdminList');
+            if (listEl) {
+                var warn = document.createElement('div');
+                warn.style.cssText = 'background:#fffbeb;border:1px solid #f6e05e;border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:.82rem;color:#744210;display:flex;align-items:center;justify-content:space-between;gap:10px;';
+                warn.innerHTML = '<span>⚠️ Firebase پەیوەندی نییە — تەنها Local نیشاندەدرێت</span>'
+                    + '<button onclick="loadUsersAdmin()" style="padding:5px 14px;background:#dd6b20;color:#fff;border:none;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">🔄 دووبارە</button>';
+                listEl.insertBefore(warn, listEl.firstChild);
+            }
         });
     }
+    fetchAndRender();
 }
 
 function filterUsersAdmin(val) {
