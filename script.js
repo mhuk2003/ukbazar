@@ -6062,6 +6062,14 @@ function _registerUser(name, emailOrUser, pass) {
 }
 
 function _loginUser(emailOrUser, pass) {
+  // ئەگەر بەکارهێنەرێکی تر چووەژوورەوە بوو — پێشتر دەرببە
+  if (_currentUser) {
+    var curId = (_currentUser.email || _currentUser.username || '').toLowerCase();
+    if (curId !== emailOrUser.toLowerCase()) {
+      _currentUser = null;
+      try { localStorage.removeItem('ukbazar_user'); } catch(e) {}
+    }
+  }
   if (_isFileProtocol()) {
     var users = _lsGetUsers();
     var found = null;
@@ -6131,14 +6139,19 @@ function _applyUserSession() {
   // label هەمیشە "پرۆفایل"
   if (label) label.textContent = 'پرۆفایل';
 
+  // bottom nav avatar
+  var bnAvatar = document.getElementById('bottomNavProfileAvatar');
+
   if (_currentUser) {
     var initial = (_currentUser.name || _currentUser.username || 'U').charAt(0).toUpperCase();
     if (avatar) { avatar.textContent = initial; avatar.style.background = 'rgba(255,255,255,.3)'; }
     if (dot)    dot.style.display = 'block';
+    if (bnAvatar) { bnAvatar.textContent = initial; bnAvatar.style.background = 'linear-gradient(135deg,#38a169,#276749)'; }
     _updateProfileBadgeCounts();
   } else {
     if (avatar) { avatar.textContent = '👤'; avatar.style.background = 'rgba(255,255,255,.2)'; }
     if (dot)    dot.style.display = 'none';
+    if (bnAvatar) { bnAvatar.textContent = '👤'; bnAvatar.style.background = 'linear-gradient(135deg,#667eea,#764ba2)'; }
   }
 }
 
