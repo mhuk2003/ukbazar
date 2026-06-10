@@ -6046,6 +6046,12 @@ function _registerUser(name, emailOrUser, pass) {
     };
     usersRef.push(newUser).then(function(ref) {
       var userWithKey = Object.assign({ key: ref.key }, newUser);
+      // backup لە localStorage
+      try {
+        var lsU = _lsGetUsers();
+        lsU[ref.key] = userWithKey;
+        _lsSaveUsers(lsU);
+      } catch(e) {}
       _currentUser = userWithKey;
       _saveUserSession();
       _applyUserSession();
@@ -6070,14 +6076,26 @@ function _loginUser(emailOrUser, pass) {
       try { localStorage.removeItem('ukbazar_user'); } catch(e) {}
     }
   }
+
+  var hashVal = _hashPass(pass);
+
+  // هەمیشە localStorage پشکنین بکە (بۆ هەر پرۆتۆکۆلێک)
+  function checkLocalStorage() {
+    try {
+      var lsUsers = _lsGetUsers();
+      var found = null;
+      Object.values(lsUsers).forEach(function(u) {
+        var matchId = (u.email||'').toLowerCase() === emailOrUser.toLowerCase() ||
+                      (u.username||'').toLowerCase() === emailOrUser.toLowerCase() ||
+                      (u.name||'').toLowerCase() === emailOrUser.toLowerCase();
+        if (matchId && u.passHash === hashVal) found = u;
+      });
+      return found;
+    } catch(e) { return null; }
+  }
+
   if (_isFileProtocol()) {
-    var users = _lsGetUsers();
-    var found = null;
-    Object.values(users).forEach(function(u) {
-      var matchId = (u.email||'').toLowerCase() === emailOrUser.toLowerCase() ||
-                    (u.username||'').toLowerCase() === emailOrUser.toLowerCase();
-      if (matchId && u.passHash === _hashPass(pass)) found = u;
-    });
+    var found = checkLocalStorage();
     if (!found) { _resetAuthBtn(); _showUserError('ناوی بەکارهێنەر یان وشەی نهینی هەڵەیە'); return; }
     _currentUser = found;
     _saveUserSession();
@@ -6086,19 +6104,29 @@ function _loginUser(emailOrUser, pass) {
     showNotification('بەخێربێیت دووبارە، ' + (found.name || found.username) + ' 👋');
     return;
   }
-  var usersRef = database.ref('siteUsers');
-  usersRef.once('value').then(function(snap) {
+
+  // Firebase + localStorage هەردووکیان
+  database.ref('siteUsers').once('value').then(function(snap) {
     var found = null;
+
+    // ١. گەڕان لە Firebase
     if (snap.exists()) {
       snap.forEach(function(ch) {
         var u = ch.val();
         var matchId = (u.email || '').toLowerCase() === emailOrUser.toLowerCase() ||
-                      (u.username || '').toLowerCase() === emailOrUser.toLowerCase();
-        if (matchId && u.passHash === _hashPass(pass)) {
+                      (u.username || '').toLowerCase() === emailOrUser.toLowerCase() ||
+                      (u.name || '').toLowerCase() === emailOrUser.toLowerCase();
+        if (matchId && u.passHash === hashVal) {
           found = Object.assign({ key: ch.key }, u);
         }
       });
     }
+
+    // ٢. ئەگەر لە Firebase نەدۆزرا — localStorage چێک بکە
+    if (!found) {
+      found = checkLocalStorage();
+    }
+
     if (!found) {
       _resetAuthBtn();
       _showUserError('ناوی بەکارهێنەر یان وشەی نهینی هەڵەیە');
@@ -6110,8 +6138,18 @@ function _loginUser(emailOrUser, pass) {
     _renderUserProfilePanel();
     showNotification('بەخێربێیت دووبارە، ' + (found.name || found.username) + ' 👋');
   }).catch(function() {
-    _resetAuthBtn();
-    _showUserError('هەڵەی پەیوەندی، دووبارە هەوڵ بدەوە');
+    // ئەگەر Firebase سەرکەوتوو نەبوو — localStorage تەنها تێست بکە
+    var found = checkLocalStorage();
+    if (found) {
+      _currentUser = found;
+      _saveUserSession();
+      _applyUserSession();
+      _renderUserProfilePanel();
+      showNotification('بەخێربێیت دووبارە، ' + (found.name || found.username) + ' 👋');
+    } else {
+      _resetAuthBtn();
+      _showUserError('هەڵەی پەیوەندی — دووبارە هەوڵ بدەوە');
+    }
   });
 }
 
@@ -6130,27 +6168,14 @@ function _saveUserSession() {
 
 // جێبەجێکردنی دەرئەنجامی چوونەژوورەوە لەسەر UI هێدەر
 function _applyUserSession() {
-  var btn = document.getElementById('userProfileBtn');
-  if (!btn) return;
-  var avatar = document.getElementById('userProfileAvatar');
-  var label  = document.getElementById('userProfileBtnLabel');
-  var dot    = document.getElementById('userProfileDot');
-
-  // label هەمیشە "پرۆفایل"
-  if (label) label.textContent = 'پرۆفایل';
-
-  // bottom nav avatar
+  // تەنها bottom nav نوێ بکەوە — دوگمەی هێدەر سڕدرایەوە
   var bnAvatar = document.getElementById('bottomNavProfileAvatar');
 
   if (_currentUser) {
     var initial = (_currentUser.name || _currentUser.username || 'U').charAt(0).toUpperCase();
-    if (avatar) { avatar.textContent = initial; avatar.style.background = 'rgba(255,255,255,.3)'; }
-    if (dot)    dot.style.display = 'block';
     if (bnAvatar) { bnAvatar.textContent = initial; bnAvatar.style.background = 'linear-gradient(135deg,#38a169,#276749)'; }
     _updateProfileBadgeCounts();
   } else {
-    if (avatar) { avatar.textContent = '👤'; avatar.style.background = 'rgba(255,255,255,.2)'; }
-    if (dot)    dot.style.display = 'none';
     if (bnAvatar) { bnAvatar.textContent = '👤'; bnAvatar.style.background = 'linear-gradient(135deg,#667eea,#764ba2)'; }
   }
 }
