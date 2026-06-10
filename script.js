@@ -2895,7 +2895,13 @@ function createProductCard(product) {
         '<button class="btn btn-primary btn-small" onclick="showQtySelector(\'' + safeId + '\')"><i class="fas fa-cart-plus"></i> <span class="btn-text">' + (window.t ? window.t('cart_btn') : 'سەبەتە') + '</span></button>' +
         '<button class="btn btn-secondary btn-small" onclick="showFibModal()"><i class="fas fa-credit-card"></i> <span class="btn-text">FIB پارەدان</span></button>' +
         '<button id="wl-' + safeId + '" class="btn btn-small" onclick="toggleWishlist(\'' + safeId + '\')" style="background:#fff0f0;color:#e53e3e;border:1.5px solid #fed7d7;min-width:36px;"><i class="fas fa-heart" id="wl-icon-' + safeId + '"></i></button>' +
-        '</div></div></div>';
+        '</div>' +
+        // بارکردنی خێرا — سەبەتە و دڵخواز ژێر کاڵا
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;">' +
+        '<button onclick="showQtySelector(\'' + safeId + '\')" style="padding:9px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:10px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px;"><i class="fas fa-shopping-cart"></i> سەبەتە</button>' +
+        '<button id="wl2-' + safeId + '" onclick="toggleWishlist(\'' + safeId + '\')" style="padding:9px;background:#fff0f0;color:#e53e3e;border:1.5px solid #fed7d7;border-radius:10px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px;"><i class="far fa-heart" id="wl2-icon-' + safeId + '"></i> دڵخواز</button>' +
+        '</div>' +
+        '</div></div>';
 }
 
 // Product card carousel navigation helpers
@@ -5884,6 +5890,7 @@ function switchUserTab(tab) {
     regBtn.style.background = 'transparent';
     regBtn.style.color = '#718096';
     nameField.style.display = 'none';
+    var mf = document.getElementById('userMobileField'); if (mf) mf.style.display = 'none';
     if (submitBtn) submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> <span id="userAuthSubmitText">چوونەژوورەوە</span>';
   } else {
     regBtn.style.background = 'linear-gradient(135deg,#667eea,#764ba2)';
@@ -5891,6 +5898,7 @@ function switchUserTab(tab) {
     loginBtn.style.background = 'transparent';
     loginBtn.style.color = '#718096';
     nameField.style.display = 'block';
+    var mf2 = document.getElementById('userMobileField'); if (mf2) mf2.style.display = 'block';
     if (submitBtn) submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> <span id="userAuthSubmitText">تۆمارکردن</span>';
   }
 }
@@ -5959,8 +5967,9 @@ function _lsSaveUsers(users) {
 }
 
 function _registerUser(name, emailOrUser, pass) {
+  var mobileVal = (document.getElementById('userMobileInput') ? document.getElementById('userMobileInput').value.trim() : '');
+
   if (_isFileProtocol()) {
-    // فایل پرۆتۆکۆل: localStorage بەکاردەهێنین
     var users = _lsGetUsers();
     var exists = Object.values(users).some(function(u) {
       return (u.email||'').toLowerCase() === emailOrUser.toLowerCase() ||
@@ -5968,7 +5977,7 @@ function _registerUser(name, emailOrUser, pass) {
     });
     if (exists) { _resetAuthBtn(); _showUserError('ئەم ناوی بەکارهێنەر یان ئیمەیلە پێشتر تۆمار کراوە'); return; }
     var key = 'u' + Date.now();
-    var newUser = { key: key, name: name, email: emailOrUser.includes('@') ? emailOrUser : '', username: emailOrUser.includes('@') ? emailOrUser.split('@')[0] : emailOrUser, passHash: _hashPass(pass), joinedAt: new Date().toLocaleString(), joinedTs: Date.now() };
+    var newUser = { key: key, name: name, mobile: mobileVal, email: emailOrUser.includes('@') ? emailOrUser : '', username: emailOrUser.includes('@') ? emailOrUser.split('@')[0] : emailOrUser, passHash: _hashPass(pass), joinedAt: new Date().toLocaleString(), joinedTs: Date.now() };
     users[key] = newUser;
     _lsSaveUsers(users);
     _currentUser = newUser;
@@ -5979,7 +5988,6 @@ function _registerUser(name, emailOrUser, pass) {
     return;
   }
   var usersRef = database.ref('siteUsers');
-  // پشکنین ئایا بەکارهێنەر هەیە
   usersRef.once('value').then(function(snap) {
     var exists = false;
     if (snap.exists()) {
@@ -5998,6 +6006,7 @@ function _registerUser(name, emailOrUser, pass) {
     }
     var newUser = {
       name: name,
+      mobile: mobileVal,
       email: emailOrUser.includes('@') ? emailOrUser : '',
       username: emailOrUser.includes('@') ? emailOrUser.split('@')[0] : emailOrUser,
       passHash: _hashPass(pass),
@@ -6152,6 +6161,11 @@ function _renderUserProfilePanel() {
 
     document.getElementById('userPanelName').textContent = name;
     document.getElementById('userPanelEmail').textContent = _currentUser.email || _currentUser.username || '';
+    var mobileEl = document.getElementById('userPanelMobile');
+    if (mobileEl && _currentUser.mobile) {
+      mobileEl.textContent = '📱 ' + _currentUser.mobile;
+      mobileEl.style.display = 'block';
+    }
     document.getElementById('userPanelInitial').textContent = initial;
     document.getElementById('userPanelJoined').textContent = _currentUser.joinedAt || '—';
 
@@ -6171,6 +6185,7 @@ function _renderUserProfilePanel() {
     document.getElementById('userEmailInput').value = '';
     document.getElementById('userPasswordInput').value = '';
     if (document.getElementById('userNameInput')) document.getElementById('userNameInput').value = '';
+    if (document.getElementById('userMobileInput')) document.getElementById('userMobileInput').value = '';
     document.getElementById('userAuthError').style.display = 'none';
     switchUserTab('login');
   }
@@ -6196,21 +6211,27 @@ function _saveWishlist(list) {
   } catch(e) {}
 }
 
-// هەڵگرتن دەرئەنجامی ❤️ لە سەر کارد
 function _refreshWishlistIcons() {
   var wl = _getWishlist();
   var ids = wl.map(function(i) { return i.productId; });
   document.querySelectorAll('[id^="wl-icon-"]').forEach(function(icon) {
     var pid = icon.id.replace('wl-icon-', '');
     var btn = document.getElementById('wl-' + pid);
-    if (ids.indexOf(pid) !== -1) {
-      icon.style.color = '#e53e3e';
-      if (btn) { btn.style.background = '#ffe4e6'; btn.style.borderColor = '#fca5a5'; }
-    } else {
-      icon.style.color = '#e53e3e';
-      if (btn) { btn.style.background = '#fff0f0'; btn.style.borderColor = '#fed7d7'; }
+    var inWl = ids.indexOf(pid) !== -1;
+    icon.className = inWl ? 'fas fa-heart' : 'far fa-heart';
+    if (btn) { btn.style.background = inWl ? '#ffe4e6' : '#fff0f0'; btn.style.borderColor = inWl ? '#fca5a5' : '#fed7d7'; }
+  });
+  // دوگمەکانی ژێر کاڵا
+  document.querySelectorAll('[id^="wl2-icon-"]').forEach(function(icon) {
+    var pid = icon.id.replace('wl2-icon-', '');
+    var btn = document.getElementById('wl2-' + pid);
+    var inWl = ids.indexOf(pid) !== -1;
+    icon.className = inWl ? 'fas fa-heart' : 'far fa-heart';
+    if (btn) {
+      btn.style.background = inWl ? '#ffe4e6' : '#fff0f0';
+      btn.style.borderColor = inWl ? '#fca5a5' : '#fed7d7';
+      btn.innerHTML = '<i class="' + (inWl ? 'fas' : 'far') + ' fa-heart" id="wl2-icon-' + pid + '"></i> ' + (inWl ? 'دڵخوازکرا ❤️' : 'دڵخواز');
     }
-    icon.className = ids.indexOf(pid) !== -1 ? 'fas fa-heart' : 'far fa-heart';
   });
 }
 
