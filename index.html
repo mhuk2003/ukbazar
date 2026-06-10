@@ -3288,6 +3288,12 @@ document.addEventListener('click', function(e) {
           <input id="userNameInput" type="text" placeholder="ناوت بنووسە..." style="width:100%;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:.9rem;font-family:inherit;outline:none;box-sizing:border-box;transition:border-color .2s;" onfocus="this.style.borderColor='#667eea'" onblur="this.style.borderColor='#e2e8f0'">
         </div>
 
+        <!-- فیلدی مۆبایل (تەنها لە تۆمارکردن) -->
+        <div id="userMobileField" style="display:none;margin-bottom:12px;">
+          <label style="font-size:.8rem;font-weight:700;color:#4a5568;display:block;margin-bottom:5px;">📱 ژمارەی مۆبایل</label>
+          <input id="userMobileInput" type="tel" placeholder="مەسەلا: 07701234567" style="width:100%;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:.9rem;font-family:inherit;outline:none;box-sizing:border-box;transition:border-color .2s;direction:ltr;" onfocus="this.style.borderColor='#667eea'" onblur="this.style.borderColor='#e2e8f0'">
+        </div>
+
         <!-- ناو یان ئیمەیل -->
         <div style="margin-bottom:12px;">
           <label style="font-size:.8rem;font-weight:700;color:#4a5568;display:block;margin-bottom:5px;">📧 ئیمەیل یان ناوی بەکارهێنەر</label>
@@ -3318,6 +3324,7 @@ document.addEventListener('click', function(e) {
             <div>
               <div id="userPanelName" style="font-weight:900;font-size:1rem;color:#1a202c;"></div>
               <div id="userPanelEmail" style="font-size:.78rem;color:#718096;"></div>
+              <div id="userPanelMobile" style="font-size:.78rem;color:#718096;display:none;"></div>
             </div>
           </div>
           <div style="border-top:1px solid #e2e8f0;padding-top:10px;font-size:.78rem;color:#718096;">
