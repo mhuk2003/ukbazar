@@ -5999,7 +5999,32 @@ function _lsSaveUsers(users) {
 
 function _registerUser(name, emailOrUser, pass) {
   var mobileVal = (document.getElementById('userMobileInput') ? document.getElementById('userMobileInput').value.trim() : '');
+  var hashVal = _hashPass(pass);
+  var newUserData = {
+    name: name,
+    mobile: mobileVal,
+    email: emailOrUser.includes('@') ? emailOrUser : '',
+    username: emailOrUser.includes('@') ? emailOrUser.split('@')[0] : emailOrUser,
+    passHash: hashVal,
+    joinedAt: new Date().toLocaleString(),
+    joinedTs: Date.now()
+  };
 
+  function _finishRegister(userWithKey) {
+    // هەمیشە localStorage backup
+    try {
+      var lsU = _lsGetUsers();
+      lsU[userWithKey.key] = userWithKey;
+      _lsSaveUsers(lsU);
+    } catch(e) {}
+    _currentUser = userWithKey;
+    _saveUserSession();
+    _applyUserSession();
+    _renderUserProfilePanel();
+    showNotification('بەخێربێیت ' + name + ' 🎉');
+  }
+
+  // ئەگەر file:// — تەنها localStorage
   if (_isFileProtocol()) {
     var users = _lsGetUsers();
     var exists = Object.values(users).some(function(u) {
@@ -6008,16 +6033,11 @@ function _registerUser(name, emailOrUser, pass) {
     });
     if (exists) { _resetAuthBtn(); _showUserError('ئەم ناوی بەکارهێنەر یان ئیمەیلە پێشتر تۆمار کراوە'); return; }
     var key = 'u' + Date.now();
-    var newUser = { key: key, name: name, mobile: mobileVal, email: emailOrUser.includes('@') ? emailOrUser : '', username: emailOrUser.includes('@') ? emailOrUser.split('@')[0] : emailOrUser, passHash: _hashPass(pass), joinedAt: new Date().toLocaleString(), joinedTs: Date.now() };
-    users[key] = newUser;
-    _lsSaveUsers(users);
-    _currentUser = newUser;
-    _saveUserSession();
-    _applyUserSession();
-    _renderUserProfilePanel();
-    showNotification('بەخێربێیت ' + name + ' 🎉');
+    _finishRegister(Object.assign({ key: key }, newUserData));
     return;
   }
+
+  // هەمیشە Firebase
   var usersRef = database.ref('siteUsers');
   usersRef.once('value').then(function(snap) {
     var exists = false;
@@ -6030,40 +6050,34 @@ function _registerUser(name, emailOrUser, pass) {
         }
       });
     }
+    // ئەگەر لە localStorage ش هەبوو
+    try {
+      var lsU = _lsGetUsers();
+      Object.values(lsU).forEach(function(u) {
+        if ((u.email||'').toLowerCase() === emailOrUser.toLowerCase() ||
+            (u.username||'').toLowerCase() === emailOrUser.toLowerCase()) {
+          exists = true;
+        }
+      });
+    } catch(e) {}
+
     if (exists) {
       _resetAuthBtn();
       _showUserError('ئەم ناوی بەکارهێنەر یان ئیمەیلە پێشتر تۆمار کراوە');
       return;
     }
-    var newUser = {
-      name: name,
-      mobile: mobileVal,
-      email: emailOrUser.includes('@') ? emailOrUser : '',
-      username: emailOrUser.includes('@') ? emailOrUser.split('@')[0] : emailOrUser,
-      passHash: _hashPass(pass),
-      joinedAt: new Date().toLocaleString(),
-      joinedTs: Date.now()
-    };
-    usersRef.push(newUser).then(function(ref) {
-      var userWithKey = Object.assign({ key: ref.key }, newUser);
-      // backup لە localStorage
-      try {
-        var lsU = _lsGetUsers();
-        lsU[ref.key] = userWithKey;
-        _lsSaveUsers(lsU);
-      } catch(e) {}
-      _currentUser = userWithKey;
-      _saveUserSession();
-      _applyUserSession();
-      _renderUserProfilePanel();
-      showNotification('بەخێربێیت ' + name + ' 🎉');
-    }).catch(function() {
-      _resetAuthBtn();
-      _showUserError('هەڵەی پەیوەندی، دووبارە هەوڵ بدەوە');
+    usersRef.push(newUserData).then(function(ref) {
+      _finishRegister(Object.assign({ key: ref.key }, newUserData));
+    }).catch(function(err) {
+      // Firebase سەرکەوتوو نەبوو — localStorage backup
+      var key = 'u' + Date.now();
+      _finishRegister(Object.assign({ key: key }, newUserData));
+      showNotification('⚠️ تۆمارکرا — بەڵام پەیوەندی Firebase نییە', 'warning');
     });
   }).catch(function() {
-    _resetAuthBtn();
-    _showUserError('هەڵەی پەیوەندی');
+    // Firebase کێشە — localStorage بەکاربێ
+    var key = 'u' + Date.now();
+    _finishRegister(Object.assign({ key: key }, newUserData));
   });
 }
 
