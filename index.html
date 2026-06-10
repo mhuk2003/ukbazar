@@ -28,7 +28,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-      /* Hide any language switcher injected by i18n.js to avoid duplicates */
+      // Hide any language switcher injected by i18n.js to avoid duplicates 
       .lang-switcher-external, #i18nLangBar, [data-i18n-bar],
       body > div.lang-bar:not([id]),
       header .lang-bar-auto { display: none !important; }
@@ -301,6 +301,7 @@
                 <button class="admin-tab" onclick="showAdminTab('drivers')" style="background:linear-gradient(135deg,#1a365d,#2b6cb0);color:#fff;"><i class="fas fa-truck"></i> شۆفیرەکان</button>
                 <button class="admin-tab" onclick="showAdminTab('balance')" style="background:linear-gradient(135deg,#276749,#38a169);color:#fff;"><i class="fas fa-wallet"></i> بالانس و خەرجی</button>
                 <button class="admin-tab" onclick="showAdminTab('reports')" style="background:linear-gradient(135deg,#6b46c1,#805ad5);color:#fff;"><i class="fas fa-chart-bar"></i> راپۆرت</button>
+                <button class="admin-tab" onclick="showAdminTab('users')" style="background:linear-gradient(135deg,#c05621,#dd6b20);color:#fff;"><i class="fas fa-users"></i> بەکارهێنەران</button>
                 <button class="admin-tab tab-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> دەرچوون</button>
             </div>
             <div id="adminContent"></div>
@@ -1702,21 +1703,21 @@ function _openPrintPage(htmlStr, filename) {
       '.action-bar button{flex:1;padding:12px 8px;border:none;border-radius:10px;font-size:.95rem;font-weight:800;cursor:pointer;font-family:inherit;}' +
       '.btn-x{background:linear-gradient(135deg,#e53e3e,#c53030);color:#fff;}' +
       '.btn-p{background:linear-gradient(135deg,#276749,#38a169);color:#fff;}' +
-      /* Header */
+      // Header 
       '.hdr{display:flex;align-items:center;justify-content:space-between;padding:3px 7px 4px;border-bottom:2px solid #1a1a1a;background:#fff;}' +
       '.hdr-l{display:flex;align-items:center;gap:4px;}' +
       '.hdr-title{font-size:1rem;font-weight:900;color:#000;letter-spacing:.5px;}' +
       '.hdr-sub{font-size:.6rem;font-weight:700;color:#444;}' +
       '.hdr-id{font-size:1.05rem;font-weight:900;color:#000;border:2.5px solid #000;border-radius:4px;padding:2px 8px;letter-spacing:1px;}' +
-      /* Body */
+      // Body 
       '.body{display:flex;flex:1;}' +
       '.qrc{width:22mm;flex-shrink:0;display:flex;flex-direction:column;align-items:center;padding:5px 3px 4px;border-left:1.5px dashed #bbb;gap:3px;}' +
       '.qrc img{width:18mm;height:18mm;border:1px solid #ddd;border-radius:2px;}' +
       '.qrc small{font-size:.42rem;color:#888;text-align:center;margin-top:2px;font-weight:700;}' +
       '.info{flex:1;min-width:0;}' +
-      /* Section headers */
+      // Section headers 
       '.sec{background:#1a1a1a;color:#fff;padding:3px 7px;font-size:.72rem;font-weight:900;letter-spacing:.3px;display:flex;align-items:center;gap:4px;}' +
-      /* Table */
+      // Table 
       'table{width:100%;border-collapse:collapse;}' +
       'tr{border-bottom:1px solid #e0e0e0;}' +
       'tr:last-child{border-bottom:none;}' +
@@ -1724,7 +1725,7 @@ function _openPrintPage(htmlStr, filename) {
       'td.lb{font-size:.7rem;font-weight:900;color:#555;width:36%;white-space:nowrap;}' +
       'td.vl{font-size:.82rem;font-weight:900;color:#000;word-break:break-word;}' +
       'td.vl.hi{font-size:.9rem;font-weight:900;color:#000;}' +
-      /* Footer */
+      // Footer 
       '.ftr{border-top:1.5px solid #ccc;padding:2px 7px;display:flex;justify-content:space-between;align-items:center;background:#f5f5f5;}' +
       '.ftr span{font-size:.52rem;font-weight:700;color:#666;}' +
       '@media print{' +
@@ -1747,7 +1748,7 @@ function _openPrintPage(htmlStr, filename) {
         '<button class="btn-p" onclick="window.print()">🖨 چاپ</button>' +
       '</div>' +
       '<div class="page">' +
-       /* Header — کوردی: تەنها King Street */
+       // Header — کوردی: تەنها King Street 
 
         '<div class="hdr">' +
 
@@ -1766,11 +1767,11 @@ function _openPrintPage(htmlStr, filename) {
         '</div>' + 
 
 
-        /* Body: QR left + info right */
+        // Body: QR left + info right 
         '<div class="body">' +
-          /* Info section */
+          // Info section 
           '<div class="info">' +
-            /* Sender */
+            // Sender 
             '<div class="sec">📤 Sender · نێردەر</div>' +
             '<table>' +
               row('ناوی تەواو', senderName) +
@@ -1778,7 +1779,7 @@ function _openPrintPage(htmlStr, filename) {
               row('📞 ژمارە ٢', senderPhone2) +
               row('📍 شوێن', senderLoc) +
             '</table>' +
-            /* Receiver */
+            // Receiver 
             '<div class="sec">📬 Receiver · وەرگر</div>' +
             '<table>' +
               '<tr><td class="lb">ناوی تەواو</td><td class="vl hi">' + (recvName||'—') + '</td></tr>' +
@@ -1786,7 +1787,7 @@ function _openPrintPage(htmlStr, filename) {
               row('📞 ژمارە ٢', recvPhone2) +
               row('📍 شوێن', recvLoc) +
             '</table>' +
-            /* Package */
+            // Package 
             '<div class="sec">📦 Package Info · زانیاری کەلوپەل</div>' +
             '<table>' +
               row('کەلوپەل', pkgName) +
@@ -1799,7 +1800,7 @@ function _openPrintPage(htmlStr, filename) {
               row('📅 بەروار', dateText) +
             '</table>' +
           '</div>' +
-          /* QR code */
+          // QR code 
           '<div class="qrc">' +
             (qrSrc ? '<img src="' + qrSrc + '" alt="QR">' : '<div style="width:18mm;height:18mm;background:#eee;border:1px solid #ccc;border-radius:2px;"></div>') +
             '<small>کیوئار کۆد<br>Scan for info</small>' +
@@ -2058,20 +2059,20 @@ function _openPrintPage(htmlStr, filename) {
       '*{box-sizing:border-box;margin:0;padding:0;}',
       'html,body{width:210mm;font-family:"Segoe UI",Arial,sans-serif;background:#fff;color:#000;}',
       '.page{width:210mm;min-height:297mm;padding:10mm 12mm;padding-top:70px;display:flex;flex-direction:column;gap:6mm;}',
-      /* ── Header ── */
+      // ── Header ── 
       '.hdr{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #000;padding-bottom:5mm;flex-shrink:0;}',
       '.hdr-id{font-size:2.4rem;font-weight:900;color:#000;letter-spacing:2px;}',
       '.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}',
       '.hdr-country{font-size:1.5rem;font-weight:900;color:#000;}',
       '.hdr-date{font-size:.9rem;font-weight:700;color:#444;}',
-      /* ── Section box ── */
+      // ── Section box ── 
       '.section{border:2px solid #999;border-radius:4px;overflow:hidden;flex:1;}',
       '.sec-head{display:flex;align-items:center;justify-content:space-between;background:#f0f0f0;border-bottom:2px solid #999;padding:4mm 8mm;}',
       '.sec-label{display:flex;align-items:baseline;gap:8px;}',
       '.sec-en{font-size:1.3rem;font-weight:900;color:#000;text-transform:uppercase;letter-spacing:1px;}',
       '.sec-dash{font-size:1.2rem;font-weight:400;color:#666;margin:0 4px;}',
       '.sec-ku{font-size:1.1rem;font-weight:900;color:#333;}',
-      /* ── Table ── */
+      // ── Table ── 
       '.sec-table{width:100%;border-collapse:collapse;}',
       '.sec-table tr{border-bottom:1.5px solid #e0e0e0;}',
       '.sec-table tr:last-child{border-bottom:none;}',
@@ -2080,10 +2081,10 @@ function _openPrintPage(htmlStr, filename) {
       '.sec-table td.val{font-size:1.3rem;font-weight:900;color:#000;word-break:break-word;}',
       '.sec-table td.val.hi{font-size:1.5rem;font-weight:900;color:#000;}',
       '.sec-table tr.notes-row td{font-size:.9rem;font-weight:600;color:#aaa;padding:2.5mm 8mm;}',
-      /* ── Footer bar ── */
+      // ── Footer bar ── 
       '.ftr{flex-shrink:0;border-top:2px solid #bbb;padding-top:3mm;display:flex;justify-content:space-between;align-items:center;}',
       '.ftr-text{font-size:.95rem;font-weight:900;color:#555;letter-spacing:.3px;}',
-      /* ── Flag ── */
+      // ── Flag ── 
       '.flag{width:60px;height:30px;flex-shrink:0;}',
       '@media print{',
         '.no-print{display:none!important;visibility:hidden;}',
@@ -2148,8 +2149,8 @@ function _openPrintPage(htmlStr, filename) {
         + '<button onclick="window.print()" style="flex:1;padding:13px;background:linear-gradient(135deg,#276749,#38a169);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;font-family:Tahoma,Arial,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">&#128424; چاپ کردن</button>'
         + '</div>'
       + '<div class="page">'
-        /* ─── Header: IP number left, flag+country+date right ─── */
-       /* ─── Header: IP number left, flag+country+date right ─── */
+        // ─── Header: IP number left, flag+country+date right ─── 
+       // ─── Header: IP number left, flag+country+date right ─── 
         + '<div class="hdr">'
           + '<div class="hdr-id"># ' + ipLabel + '</div>'
           + '<div class="hdr-right">'
@@ -2160,11 +2161,11 @@ function _openPrintPage(htmlStr, filename) {
             + '<div class="hdr-date">' + dateStr + '</div>'
           + '</div>'
         + '</div>'
-        /* ─── SENDER section ─── */
+        // ─── SENDER section ─── 
         + senderSection
-        /* ─── recipient section ─── */
+        // ─── recipient section ─── 
         + recvSection
-        /* ─── Footer ─── */
+        // ─── Footer ─── 
         + '<div class="ftr">'
           + '<span class="ftr-text">KING STREET — UK POST &nbsp;|&nbsp; 07755436275 / 07507472656</span>'
           + flagSvg
@@ -3261,12 +3262,12 @@ document.addEventListener('click', function(e) {
       <!-- تێبینیەکان — تەنها کاتێک چوونەژوورەنەبووبێت -->
       <div id="userAuthTips" style="margin-top:14px;display:flex;flex-direction:column;gap:7px;text-align:right;">
         <div style="background:rgba(255,255,255,.15);border-radius:10px;padding:8px 12px;font-size:.78rem;color:#fff;display:flex;align-items:center;gap:8px;">
-          <span style="font-size:1rem;">1️⃣</span>
-          <span>خۆت تۆمار بکە — ئەکاونتی تایبەتت هەبێت</span>
+          <span style="background:rgba(255,255,255,.25);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:900;flex-shrink:0;">1</span>
+          <span>کلیک بکە لە <strong>🛒 سەبەتە</strong> یان <strong>❤️ دڵخواز</strong> ژێر هەر کاڵا</span>
         </div>
         <div style="background:rgba(255,255,255,.15);border-radius:10px;padding:8px 12px;font-size:.78rem;color:#fff;display:flex;align-items:center;gap:8px;">
-          <span style="font-size:1rem;">2️⃣</span>
-          <span>سودمەند بە لە داشکاندن و داواکارییەکان</span>
+          <span style="background:rgba(255,255,255,.25);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:900;flex-shrink:0;">2</span>
+          <span>لە پرۆفایل بیبینە و سودمەند بە لە <strong>داشکاندنەکان</strong></span>
         </div>
       </div>
     </div>
