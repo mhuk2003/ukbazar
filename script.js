@@ -5877,17 +5877,39 @@ function _reportMiniCard(label, value, color, unit) {
 // ════════════════════════════════════════════════════════════════
 
 var _currentUser = null; // بەکارهێنەری ئێستا
-var _userAuthTab = 'login'; // 'login' یان 'register'
+var _userAuthTab = 'login';
 
-// بارکردن لە localStorage لە سەرەتا
+// ════════════════════════════════
+// SESSION KEY — هەر جهازێک یەکسانە
+// ════════════════════════════════
+var _SESSION_KEY = 'ukbazar_user';
+
+// بارکردنی سێشن لە سەرەتا
 (function initUserSession() {
   try {
-    var saved = localStorage.getItem('ukbazar_user');
+    var saved = localStorage.getItem(_SESSION_KEY);
     if (saved) {
-      _currentUser = JSON.parse(saved);
-      _applyUserSession();
+      var u = JSON.parse(saved);
+      // پشکنین ئایا هێشتا دروستە — بەرواری تەمەن ٣٠ ڕۆژ
+      var age = Date.now() - (u._savedAt || 0);
+      if (age < 30 * 24 * 60 * 60 * 1000) {
+        _currentUser = u;
+        // نوێکردنەوەی زانیاری لە Firebase
+        if (!_isFileProtocol() && u.key) {
+          database.ref('siteUsers/' + u.key).once('value').then(function(snap) {
+            if (snap.exists()) {
+              _currentUser = Object.assign({ key: u.key }, snap.val(), { _savedAt: Date.now() });
+              _saveUserSession();
+            }
+          }).catch(function() {});
+        }
+        _applyUserSession();
+      } else {
+        // تەمەن تێپەڕیوە — پاک بکەرەوە
+        localStorage.removeItem(_SESSION_KEY);
+      }
     }
-  } catch(e) {}
+  } catch(e) { localStorage.removeItem(_SESSION_KEY); }
 })();
 
 function showUserProfileModal() {
@@ -6148,6 +6170,12 @@ function _loginUser(emailOrUser, pass) {
     }
     _currentUser = found;
     _saveUserSession();
+    // backup لە localStorage بۆ cross-device
+    try {
+      var lsU = _lsGetUsers();
+      lsU[found.key || ('u'+Date.now())] = found;
+      _lsSaveUsers(lsU);
+    } catch(e) {}
     _applyUserSession();
     _renderUserProfilePanel();
     showNotification('بەخێربێیت دووبارە، ' + (found.name || found.username) + ' 👋');
@@ -6169,15 +6197,41 @@ function _loginUser(emailOrUser, pass) {
 
 function logoutUser() {
   if (!confirm('دڵنیایت دەتەوێت دەربچیت؟')) return;
+
   _currentUser = null;
-  try { localStorage.removeItem('ukbazar_user'); } catch(e) {}
+
+  // پاکردنەوەی هەموو سێشنەکان
+  try {
+    localStorage.removeItem(_SESSION_KEY);
+    sessionStorage.clear();
+    // تەنها کلیلەکانی پرۆفایل پاک بکەرەوە — نەک هەموویان
+    var keysToRemove = [];
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (k && (k.startsWith('ukbazar_wl_') || k === _SESSION_KEY)) {
+        keysToRemove.push(k);
+      }
+    }
+    keysToRemove.forEach(function(k) { localStorage.removeItem(k); });
+  } catch(e) {}
+
   _applyUserSession();
-  _renderUserProfilePanel();
   showNotification('سەرکەوتووانە دەرچوویت 👋');
+
+  // دوگمەکی مۆدال دابخە
+  var modal = document.getElementById('userProfileModal');
+  if (modal) modal.style.display = 'none';
+  document.body.style.overflow = '';
+
+  // ڕیفرێش بۆ پاکترکردنی هەموو حاڵەت — نیم چرکە دواکەوتن
+  setTimeout(function() { window.location.reload(); }, 800);
 }
 
 function _saveUserSession() {
-  try { localStorage.setItem('ukbazar_user', JSON.stringify(_currentUser)); } catch(e) {}
+  try {
+    var toSave = Object.assign({}, _currentUser, { _savedAt: Date.now() });
+    localStorage.setItem(_SESSION_KEY, JSON.stringify(toSave));
+  } catch(e) {}
 }
 
 // جێبەجێکردنی دەرئەنجامی چوونەژوورەوە لەسەر UI هێدەر
