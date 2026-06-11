@@ -12,7 +12,7 @@
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <!-- PWA -->
     <link rel="manifest" href="./manifest.json">
-    <meta name="theme-color" content="#0F2D5E">
+    <meta name="theme-color" content="#434b57">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -39,14 +39,15 @@
       .nav-buttons{
         display:flex;
         flex-wrap:nowrap;
-        gap:4px;
+        gap:6px;
         align-items:center;
-        justify-content:flex-end;
+        justify-content:center;
         overflow-x:auto;
         -webkit-overflow-scrolling:touch;
         scrollbar-width:none;
         padding-bottom:2px;
         max-width:100%;
+        width:100%;
       }
       .nav-buttons::-webkit-scrollbar{display:none;}
       .nav-buttons button{
@@ -99,7 +100,7 @@
         <h2 class="banner-title">UK BAZAR</h2>
         <p class="banner-slogan">World Online Shopping</p>
         
-        <div class="banner-image" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0F2D5E,#071A38);">
+        <div class="banner-image" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#434b57,#2d3340);">
             <span style="font-size:2.5rem;font-weight:900;color:#fff;letter-spacing:2px;text-shadow:0 2px 8px rgba(0,0,0,0.2);">UK BAZAR</span>
         </div>
         
@@ -111,7 +112,7 @@
     <div class="container">
         <!-- Language Switcher -->
         <div style="display:flex;justify-content:center;gap:6px;padding:6px 0 2px;">
-            <button onclick="setLang('ku')" id="langBtn-ku" style="padding:4px 14px;border-radius:20px;border:1.5px solid #0F2D5E;background:#0F2D5E;color:#fff;font-weight:700;font-size:.82rem;cursor:pointer;">KU</button>
+            <button onclick="setLang('ku')" id="langBtn-ku" style="padding:4px 14px;border-radius:20px;border:1.5px solid #434b57;background:#434b57;color:#fff;font-weight:700;font-size:.82rem;cursor:pointer;">KU</button>
             <button onclick="setLang('en')" id="langBtn-en" style="padding:4px 14px;border-radius:20px;border:1.5px solid #ccc;background:#fff;color:#555;font-weight:700;font-size:.82rem;cursor:pointer;">EN</button>
             <button onclick="setLang('ar')" id="langBtn-ar" style="padding:4px 14px;border-radius:20px;border:1.5px solid #ccc;background:#fff;color:#555;font-weight:700;font-size:.82rem;cursor:pointer;">AR</button>
         </div>
@@ -124,7 +125,7 @@
             </div>
 
             <div class="nav-buttons">
-                <button onclick="showVideosModal()" style="display:flex;align-items:center;gap:5px;background:linear-gradient(135deg,#2E6DB4,#0F2D5E);color:#fff;border:none;border-radius:50px;padding:7px 11px;font-family:inherit;font-size:.82rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(245,101,101,.35);flex-shrink:0;"><i class="fas fa-play-circle"></i><span data-i18n="videos">ڤیدیۆکان</span></button>
+                <button onclick="showVideosModal()" style="display:flex;align-items:center;gap:5px;background:linear-gradient(135deg,#FF6B6B,#DC3545);color:#fff;border:none;border-radius:50px;padding:7px 11px;font-family:inherit;font-size:.82rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(245,101,101,.35);flex-shrink:0;"><i class="fas fa-play-circle"></i><span data-i18n="videos">ڤیدیۆکان</span></button>
                 <button class="btn-delivery-ku" onclick="showDeliveryModal()" style="flex-shrink:0;">
                     <i class="fas fa-shipping-fast"></i>
                     <span class="btn-text" data-i18n="kuDelivery">گەیاندن</span>
@@ -145,9 +146,9 @@
     ═══════════════════════════════════════════════════ -->
     <section id="trackingSection" style="padding:12px 0 6px;">
         <div class="container">
-            <div id="trackingWidget" style="border-radius:22px;overflow:hidden;box-shadow:0 6px 32px rgba(56,161,105,.22);border:2.5px solid #2E6DB4;">
+            <div id="trackingWidget" style="border-radius:22px;overflow:hidden;box-shadow:0 6px 32px rgba(67,75,87,.22);border:2.5px solid #434b57;">
                 <!-- Header -->
-                <div style="background:linear-gradient(135deg,#2f855a,#0F2D5E);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;" onclick="toggleTrackingWidget()">
+                <div style="background:linear-gradient(135deg,#434b57,#2d3340);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;" onclick="toggleTrackingWidget()">
                     <div style="display:flex;align-items:center;gap:14px;flex:1;">
                         <div style="width:48px;height:48px;background:rgba(255,255,255,.18);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.15);">📦</div>
                         <div>
@@ -156,7 +157,7 @@
                         </div>
                     </div>
                     <!-- Live QR Scanner Button -->
-                    <button onclick="event.stopPropagation();startCustomerQR();" style="flex-shrink:0;background:#0F2D5E;border:2px solid #fff;color:#fff;border-radius:30px;padding:7px 13px;font-size:.72rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;display:flex;align-items:center;gap:5px;box-shadow:0 4px 10px rgba(0,0,0,.2);">
+                    <button onclick="event.stopPropagation();startCustomerQR();" style="flex-shrink:0;background:#FFCC00;border:2px solid #fff;color:#2d3340;border-radius:30px;padding:7px 13px;font-size:.72rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;display:flex;align-items:center;gap:5px;box-shadow:0 4px 10px rgba(0,0,0,.2);">
                         <i class="fas fa-camera"></i> -QR-Trucking  parcel
                     </button>
                     <div id="trackingChevron" style="color:#fff;font-size:1.2rem;transition:transform .3s;transform:rotate(0deg);flex-shrink:0;"><i class="fas fa-chevron-down"></i></div>
@@ -164,27 +165,27 @@
                 <!-- Body -->
                 <div id="trackingWidgetBody" style="background:#f7fff9;display:none;">
                     <!-- Live Camera Container -->
-                    <div id="customer-qr-container" style="display:none;padding:14px;background:#fff;border-bottom:2px solid #5B9BD5;">
-                        <div style="text-align:center;margin-bottom:8px;font-size:.82rem;font-weight:700;color:#0F2D5E;">📷 QR کۆدەکە بخە بەرامبەر کامێراکە — یەکسەر دەدۆزێتەوە</div>
+                    <div id="customer-qr-container" style="display:none;padding:14px;background:#fff;border-bottom:2px solid #8492a6;">
+                        <div style="text-align:center;margin-bottom:8px;font-size:.82rem;font-weight:700;color:#2d3340;">📷 QR کۆدەکە بخە بەرامبەر کامێراکە — یەکسەر دەدۆزێتەوە</div>
                         <div id="customer-qr-reader" style="width:100%;max-width:380px;margin:0 auto;border-radius:12px;overflow:hidden;border:2px solid #2f855a;"></div>
                         <div style="text-align:center;margin-top:10px;">
-                            <button onclick="stopCustomerQR()" style="padding:7px 22px;background:#0F2D5E;color:#fff;border:none;border-radius:20px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.85rem;">✕ داخستنی کامێرا</button>
+                            <button onclick="stopCustomerQR()" style="padding:7px 22px;background:#DC3545;color:#fff;border:none;border-radius:20px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.85rem;">✕ داخستنی کامێرا</button>
                         </div>
                     </div>
                     <div style="padding:16px 16px 10px;">
-                        <div style="font-size:.75rem;font-weight:700;color:#0F2D5E;margin-bottom:6px;padding-right:4px;">📱 ژمارەی مۆبایل <span style="color:#718096;font-weight:500;">یان</span> 🔑 کۆدی پسولە</div>
+                        <div style="font-size:.75rem;font-weight:700;color:#2d3340;margin-bottom:6px;padding-right:4px;">📱 ژمارەی مۆبایل <span style="color:#8492a6;font-weight:500;">یان</span> 🔑 کۆدی پسولە</div>
                         <div style="display:flex;gap:8px;">
                             <input type="text" id="trackingPhoneInput" placeholder="07xxxxxxxxx  یان  ABCD1234"
-                                style="flex:1;padding:13px 16px;border:2.5px solid #5B9BD5;border-radius:14px;font-size:1rem;outline:none;direction:ltr;font-family:inherit;background:#fff;box-sizing:border-box;"
+                                style="flex:1;padding:13px 16px;border:2.5px solid #8492a6;border-radius:14px;font-size:1rem;outline:none;direction:ltr;font-family:inherit;background:#fff;box-sizing:border-box;"
                                 onkeydown="if(event.key==='Enter')searchCustomerOrders()"
                                 oninput="this.value=this.value.toUpperCase().replace(/^([A-Z]{4}[0-9]{4}.*)$/,'$1')||this.value"
-                                onfocus="this.style.borderColor='#2f855a'" onblur="this.style.borderColor='#5B9BD5'">
+                                onfocus="this.style.borderColor='#2f855a'" onblur="this.style.borderColor='#8492a6'">
                             <input type="hidden" id="trackingCodeInput" value="">
-                            <button onclick="searchCustomerOrders()" style="padding:13px 20px;border:none;border-radius:14px;background:linear-gradient(135deg,#1A4A8A,#0F2D5E);color:#fff;font-weight:800;cursor:pointer;font-family:inherit;font-size:1rem;white-space:nowrap;box-shadow:0 3px 12px rgba(56,161,105,.4);">
+                            <button onclick="searchCustomerOrders()" style="padding:13px 20px;border:none;border-radius:14px;background:linear-gradient(135deg,#434b57,#2d3340);color:#fff;font-weight:800;cursor:pointer;font-family:inherit;font-size:1rem;white-space:nowrap;box-shadow:0 3px 12px rgba(56,161,105,.4);">
                                 <i class="fas fa-search"></i> گەڕان
                             </button>
                         </div>
-                        <p id="trackingErr" style="color:#0F2D5E;font-size:.82rem;margin:8px 0 0;text-align:center;display:none;"></p>
+                        <p id="trackingErr" style="color:#DC3545;font-size:.82rem;margin:8px 0 0;text-align:center;display:none;"></p>
                     </div>
                     <div id="trackingResults" style="padding:0 16px 16px;"></div>
                 </div>
@@ -260,7 +261,7 @@
     <!-- Video Section -->
     <section class="videos-section" id="videosSection" style="display:none;">
         <div class="container">
-            <h2 class="section-title" style="display:flex;align-items:center;gap:8px;"><span style="color:#2E6DB4;">&#9654;</span> ڤیدیۆکان</h2>
+            <h2 class="section-title" style="display:flex;align-items:center;gap:8px;"><span style="color:#FF6B6B;">&#9654;</span> ڤیدیۆکان</h2>
             <div class="videos-grid" id="videosGrid"></div>
         </div>
     </section>
@@ -292,10 +293,10 @@
                 <button class="admin-tab" onclick="showAdminTab('addSlider')"><i class="fas fa-images"></i> سلایدەر</button>
                 <button class="admin-tab" onclick="showAdminTab('videos')"><i class="fas fa-video"></i> &#x06DA;&#x06CC;&#x062F;&#x06CC;&#x06C6;</button>
                 <button class="admin-tab" onclick="showAdminTab('addProduct')"><i class="fas fa-plus-circle"></i> زیادکردن</button>
-                <button class="admin-tab" onclick="showAdminTab('drivers')" style="background:linear-gradient(135deg,#071A38,#1A4A8A);color:#fff;"><i class="fas fa-truck"></i> شۆفیرەکان</button>
-                <button class="admin-tab" onclick="showAdminTab('balance')" style="background:linear-gradient(135deg,#0F2D5E,#1A4A8A);color:#fff;"><i class="fas fa-wallet"></i> بالانس و خەرجی</button>
-                <button class="admin-tab" onclick="showAdminTab('reports')" style="background:linear-gradient(135deg,#071A38,#0F2D5E);color:#fff;"><i class="fas fa-chart-bar"></i> راپۆرت</button>
-                <button class="admin-tab" onclick="showAdminTab('users')" style="background:linear-gradient(135deg,#071A38,#1A4A8A);color:#fff;"><i class="fas fa-users"></i> بەکارهێنەران</button>
+                <button class="admin-tab" onclick="showAdminTab('drivers')" style="background:linear-gradient(135deg,#2d3340,#434b57);color:#fff;"><i class="fas fa-truck"></i> شۆفیرەکان</button>
+                <button class="admin-tab" onclick="showAdminTab('balance')" style="background:linear-gradient(135deg,#2d3340,#434b57);color:#fff;"><i class="fas fa-wallet"></i> بالانس و خەرجی</button>
+                <button class="admin-tab" onclick="showAdminTab('reports')" style="background:linear-gradient(135deg,#2d3340,#434b57);color:#fff;"><i class="fas fa-chart-bar"></i> راپۆرت</button>
+                <button class="admin-tab" onclick="showAdminTab('users')" style="background:linear-gradient(135deg,#C49A00,#E6B800);color:#fff;"><i class="fas fa-users"></i> بەکارهێنەران</button>
                 <button class="admin-tab tab-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> دەرچوون</button>
             </div>
             <div id="adminContent"></div>
@@ -309,7 +310,7 @@
                     <i class="fas fa-home"></i><span data-i18n="home">ماڵەوە</span>
                 </a>
                 <a href="javascript:void(0)" class="bottom-nav-item" onclick="showDriverLoginModal()">
-                    <i class="fas fa-truck" style="font-size:1.3rem;color:#0F2D5E;"></i><span>شۆفیر</span>
+                    <i class="fas fa-truck" style="font-size:1.3rem;color:#DC3545;"></i><span>شۆفیر</span>
                 </a>
                  <a href="javascript:void(0)" class="bottom-nav-item bottom-nav-add" onclick="showAddProductModal()">
                     <i class="fas fa-plus"></i><span data-i18n="addProduct">کاڵا دابنێ</span>
@@ -318,12 +319,12 @@
                     <span id="bottomNavProfileAvatar" style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;margin:0 auto 2px;">
                       <!-- ئایکۆنی پرۆفایل SVG -->
                       <svg id="bottomNavProfileSvg" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 64 64">
-                        <circle cx="32" cy="32" r="32" fill="#071A38"/>
+                        <circle cx="32" cy="32" r="32" fill="#2d3340"/>
                         <circle cx="32" cy="24" r="11" fill="#ffffff"/>
                         <path d="M8 56 c0-14 10-22 24-22 s24 8 24 22" fill="#ffffff"/>
                       </svg>
                       <!-- کاتی چوونەژوورەوە: پیتی ناو -->
-                      <span id="bottomNavProfileInitial" style="display:none;width:26px;height:26px;background:#071A38;border-radius:50%;font-size:.78rem;font-weight:900;color:#fff;align-items:center;justify-content:center;border:2px solid #4a7c9e;"></span>
+                      <span id="bottomNavProfileInitial" style="display:none;width:26px;height:26px;background:#2d3340;border-radius:50%;font-size:.78rem;font-weight:900;color:#fff;align-items:center;justify-content:center;border:2px solid #4a7c9e;"></span>
                     </span>
                     <span>پرۆفایل</span>
                 </a>
@@ -450,7 +451,7 @@
 <div id="privacyPage" style="display:none; position:fixed; inset:0; z-index:99999; background:#f0f4ff; overflow-y:auto;">
 
     <!-- Top Bar -->
-    <div style="background:linear-gradient(135deg,#0F2D5E,#071A38); padding:16px 20px; display:flex; align-items:center; gap:14px; position:sticky; top:0; z-index:10; box-shadow:0 2px 12px rgba(0,0,0,0.2);">
+    <div style="background:linear-gradient(135deg,#434b57,#2d3340); padding:16px 20px; display:flex; align-items:center; gap:14px; position:sticky; top:0; z-index:10; box-shadow:0 2px 12px rgba(0,0,0,0.2);">
         <button onclick="closePrivacyPage()"
                 style="background:rgba(255,255,255,0.2); border:none; color:#fff; width:38px; height:38px; border-radius:50%; font-size:1.1rem; cursor:pointer; flex-shrink:0;">
             ← 
@@ -462,13 +463,13 @@
     </div>
 
     <!-- Content -->
-    <div style="max-width:800px; margin:0 auto; padding:28px 20px 60px; font-family:'Segoe UI',Arial,sans-serif; direction:ltr; text-align:left; color:#0F2D5E; line-height:1.8; font-size:0.95rem;">
+    <div style="max-width:800px; margin:0 auto; padding:28px 20px 60px; font-family:'Segoe UI',Arial,sans-serif; direction:ltr; text-align:left; color:#1a1a2e; line-height:1.8; font-size:0.95rem;">
 
         <!-- Intro -->
-        <div style="background:#fff; border-radius:14px; padding:24px; margin-bottom:20px; box-shadow:0 2px 12px rgba(102,126,234,0.1); border-left:4px solid #0F2D5E;">
+        <div style="background:#fff; border-radius:14px; padding:24px; margin-bottom:20px; box-shadow:0 2px 12px rgba(102,126,234,0.1); border-left:4px solid #434b57;">
             <p>This Privacy Notice for <strong>UK POST LTD</strong> (doing business as <strong>UK BAZAR</strong>) describes how and why we might access, collect, store, use, and/or share your personal information when you use our services, including when you:</p>
-            <ul style="margin:12px 0 0 20px; display:flex; flex-direction:column; gap:6px; color:#4a5568;">
-                <li>Visit our website at <a href="https://www.ukbazar.online" style="color:#0F2D5E;">www.ukbazar.online</a></li>
+            <ul style="margin:12px 0 0 20px; display:flex; flex-direction:column; gap:6px; color:#5a6476;">
+                <li>Visit our website at <a href="https://www.ukbazar.online" style="color:#434b57;">www.ukbazar.online</a></li>
                 <li>Download and use our mobile application (UK BAZAR)</li>
                 <li>Engage with us in other related ways, including marketing or events</li>
             </ul>
@@ -479,21 +480,21 @@
 
         <!-- Summary -->
         <div style="background:#fff; border-radius:14px; padding:24px; margin-bottom:20px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
-            <h2 style="color:#0F2D5E; font-size:1.05rem; margin:0 0 14px; display:flex; align-items:center; gap:8px;">📋 SUMMARY OF KEY POINTS</h2>
+            <h2 style="color:#434b57; font-size:1.05rem; margin:0 0 14px; display:flex; align-items:center; gap:8px;">📋 SUMMARY OF KEY POINTS</h2>
             <div style="display:flex; flex-direction:column; gap:12px;">
-                <div style="background:#f7f9ff; border-radius:8px; padding:12px 16px; border-left:3px solid #0F2D5E;">
+                <div style="background:#F5F7FA; border-radius:8px; padding:12px 16px; border-left:3px solid #434b57;">
                     <strong>Personal information:</strong> We may process personal information depending on how you interact with our Services.
                 </div>
-                <div style="background:#f7f9ff; border-radius:8px; padding:12px 16px; border-left:3px solid #2E6DB4;">
+                <div style="background:#F5F7FA; border-radius:8px; padding:12px 16px; border-left:3px solid #5a6476;">
                     <strong>Sensitive information:</strong> We do <u>not</u> process sensitive personal information.
                 </div>
-                <div style="background:#f7f9ff; border-radius:8px; padding:12px 16px; border-left:3px solid #2E6DB4;">
+                <div style="background:#F5F7FA; border-radius:8px; padding:12px 16px; border-left:3px solid #5a6476;">
                     <strong>Third parties:</strong> We do <u>not</u> collect any information from third parties.
                 </div>
-                <div style="background:#f7f9ff; border-radius:8px; padding:12px 16px; border-left:3px solid #0F2D5E;">
+                <div style="background:#F5F7FA; border-radius:8px; padding:12px 16px; border-left:3px solid #434b57;">
                     <strong>Processing:</strong> We process your information to provide, improve, and administer our Services, for security and fraud prevention, and to comply with law.
                 </div>
-                <div style="background:#f7f9ff; border-radius:8px; padding:12px 16px; border-left:3px solid #2E6DB4;">
+                <div style="background:#F5F7FA; border-radius:8px; padding:12px 16px; border-left:3px solid #FFCC00;">
                     <strong>Security:</strong> We have adequate processes in place to protect your personal information, but no transmission over the internet can be guaranteed 100% secure.
                 </div>
             </div>
@@ -501,8 +502,8 @@
 
         <!-- TOC -->
         <div style="background:#fff; border-radius:14px; padding:24px; margin-bottom:20px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
-            <h2 style="color:#0F2D5E; font-size:1.05rem; margin:0 0 14px;">📑 TABLE OF CONTENTS</h2>
-            <ol style="margin:0 0 0 20px; display:flex; flex-direction:column; gap:8px; color:#4a5568;">
+            <h2 style="color:#434b57; font-size:1.05rem; margin:0 0 14px;">📑 TABLE OF CONTENTS</h2>
+            <ol style="margin:0 0 0 20px; display:flex; flex-direction:column; gap:8px; color:#5a6476;">
                 <li>What information do we collect?</li>
                 <li>How do we process your information?</li>
                 <li>When and with whom do we share your personal information?</li>
@@ -518,46 +519,46 @@
         <div style="display:flex; flex-direction:column; gap:16px;">
 
             <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
-                <h3 style="color:#0F2D5E; font-size:1rem; margin:0 0 10px;">1. WHAT INFORMATION DO WE COLLECT?</h3>
-                <p style="margin:0; color:#4a5568;">We collect personal information that you voluntarily provide to us when you use our Services, including name, phone number, delivery address, and payment information necessary to process your orders.</p>
+                <h3 style="color:#434b57; font-size:1rem; margin:0 0 10px;">1. WHAT INFORMATION DO WE COLLECT?</h3>
+                <p style="margin:0; color:#5a6476;">We collect personal information that you voluntarily provide to us when you use our Services, including name, phone number, delivery address, and payment information necessary to process your orders.</p>
             </div>
 
             <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
-                <h3 style="color:#0F2D5E; font-size:1rem; margin:0 0 10px;">2. HOW DO WE PROCESS YOUR INFORMATION?</h3>
-                <p style="margin:0; color:#4a5568;">We process your information to fulfil and manage your orders, provide customer support, send you updates about your delivery, and improve our Services. We process your information only when we have a valid legal reason to do so.</p>
+                <h3 style="color:#434b57; font-size:1rem; margin:0 0 10px;">2. HOW DO WE PROCESS YOUR INFORMATION?</h3>
+                <p style="margin:0; color:#5a6476;">We process your information to fulfil and manage your orders, provide customer support, send you updates about your delivery, and improve our Services. We process your information only when we have a valid legal reason to do so.</p>
             </div>
 
             <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
-                <h3 style="color:#0F2D5E; font-size:1rem; margin:0 0 10px;">3. WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?</h3>
-                <p style="margin:0; color:#4a5568;">We may share your information with delivery partners and service providers strictly necessary to complete your order. We do <strong>not</strong> sell your personal data to third parties.</p>
+                <h3 style="color:#434b57; font-size:1rem; margin:0 0 10px;">3. WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?</h3>
+                <p style="margin:0; color:#5a6476;">We may share your information with delivery partners and service providers strictly necessary to complete your order. We do <strong>not</strong> sell your personal data to third parties.</p>
             </div>
 
             <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
-                <h3 style="color:#0F2D5E; font-size:1rem; margin:0 0 10px;">4. DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES?</h3>
-                <p style="margin:0; color:#4a5568;">We may use cookies and similar tracking technologies to improve your browsing experience and analyse site traffic. You can control cookies through your browser settings.</p>
+                <h3 style="color:#434b57; font-size:1rem; margin:0 0 10px;">4. DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES?</h3>
+                <p style="margin:0; color:#5a6476;">We may use cookies and similar tracking technologies to improve your browsing experience and analyse site traffic. You can control cookies through your browser settings.</p>
             </div>
 
             <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
-                <h3 style="color:#0F2D5E; font-size:1rem; margin:0 0 10px;">5. HOW LONG DO WE KEEP YOUR INFORMATION?</h3>
-                <p style="margin:0; color:#4a5568;">We keep your personal information only for as long as necessary to fulfil the purposes outlined in this notice, unless a longer retention period is required by law.</p>
+                <h3 style="color:#434b57; font-size:1rem; margin:0 0 10px;">5. HOW LONG DO WE KEEP YOUR INFORMATION?</h3>
+                <p style="margin:0; color:#5a6476;">We keep your personal information only for as long as necessary to fulfil the purposes outlined in this notice, unless a longer retention period is required by law.</p>
             </div>
 
             <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
-                <h3 style="color:#0F2D5E; font-size:1rem; margin:0 0 10px;">6. HOW DO WE KEEP YOUR INFORMATION SAFE?</h3>
-                <p style="margin:0; color:#4a5568;">We have implemented appropriate technical and organisational security measures to protect your personal information. However, no electronic transmission over the internet can be guaranteed 100% secure, so we cannot promise that hackers or other unauthorised third parties will not be able to defeat our security.</p>
+                <h3 style="color:#434b57; font-size:1rem; margin:0 0 10px;">6. HOW DO WE KEEP YOUR INFORMATION SAFE?</h3>
+                <p style="margin:0; color:#5a6476;">We have implemented appropriate technical and organisational security measures to protect your personal information. However, no electronic transmission over the internet can be guaranteed 100% secure, so we cannot promise that hackers or other unauthorised third parties will not be able to defeat our security.</p>
             </div>
 
             <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
-    <h3 style="color:#0F2D5E; font-size:1rem; margin:0 0 10px;">7. WHAT ARE YOUR PRIVACY RIGHTS?</h3>
-    <p style="margin:0; color:#4a5568;">
+    <h3 style="color:#434b57; font-size:1rem; margin:0 0 10px;">7. WHAT ARE YOUR PRIVACY RIGHTS?</h3>
+    <p style="margin:0; color:#5a6476;">
         Depending on your location, you may have the right to request access to, correction of, or deletion of your personal information. 
         To exercise your rights, contact us at 
 <a href="mailto:info@ukbazar.online" class="footer-email-link"><i class="fas fa-envelope"></i><span>info@ukbazar.online</span></a>      </p>
 </div>
 
 <div style="background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(102,126,234,0.1);">
-    <h3 style="color:#0F2D5E; font-size:1rem; margin:0 0 10px;">8. CONTROLS</h3>
-    <p style="margin:0; color:#4a5568;">
+    <h3 style="color:#434b57; font-size:1rem; margin:0 0 10px;">8. CONTROLS</h3>
+    <p style="margin:0; color:#5a6476;">
         You may review, change, or terminate your account at any time. 
         If you have questions or comments about your privacy rights, contact us at 
 <a href="mailto:info@ukbazar.online" class="footer-email-link"><i class="fas fa-envelope"></i><span>info@ukbazar.online</span></a>    </p>
@@ -566,7 +567,7 @@
         </div>
 
         <!-- Footer -->
-        <div style="background:#0F2D5E; border-radius:14px; padding:20px; margin-top:28px; text-align:center; color:#fff;">
+        <div style="background:#434b57; border-radius:14px; padding:20px; margin-top:28px; text-align:center; color:#fff;">
     <p style="margin:0 0 6px; font-weight:700; font-size:1rem;">UK POST LTD — UK BAZAR</p>
     
     <p style="margin:0; font-size:0.82rem; opacity:.85;">
@@ -580,7 +581,7 @@
         <!-- Close Button Bottom -->
         <div style="text-align:center; margin-top:24px;">
             <button onclick="closePrivacyPage()"
-                    style="background:linear-gradient(135deg,#0F2D5E,#071A38); color:#fff; border:none; padding:14px 40px; border-radius:50px; font-size:1rem; font-weight:700; cursor:pointer; box-shadow:0 4px 15px rgba(102,126,234,0.4);">
+                    style="background:linear-gradient(135deg,#434b57,#2d3340); color:#fff; border:none; padding:14px 40px; border-radius:50px; font-size:1rem; font-weight:700; cursor:pointer; box-shadow:0 4px 15px rgba(102,126,234,0.4);">
                 ← گەڕانەوە بۆ سایت
             </button>
         </div>
@@ -802,78 +803,78 @@
                 <h2 style="direction:ltr;font-size:1.1rem;"><i class="fas fa-shipping-fast"></i> UK Delivery</h2>
             </div>
             <!-- Tabs -->
-            <div style="display:flex;border-bottom:2px solid #e2e8f0;margin-bottom:18px;">
+            <div style="display:flex;border-bottom:2px solid #dee2e6;margin-bottom:18px;">
                 <button id="ukTab-sender" onclick="ukSwitchTab('sender')"
-                    style="flex:1;padding:11px 0;border:none;background:none;font-weight:700;font-size:.95rem;cursor:pointer;border-bottom:3px solid #0F2D5E;color:#0F2D5E;transition:all .2s;">
+                    style="flex:1;padding:11px 0;border:none;background:none;font-weight:700;font-size:.95rem;cursor:pointer;border-bottom:3px solid #434b57;color:#434b57;transition:all .2s;">
                     📤 Sender
                 </button>
                 <button id="ukTab-receiver" onclick="ukSwitchTab('receiver')"
-                    style="flex:1;padding:11px 0;border:none;background:none;font-weight:700;font-size:.95rem;cursor:pointer;border-bottom:3px solid transparent;color:#718096;transition:all .2s;">
+                    style="flex:1;padding:11px 0;border:none;background:none;font-weight:700;font-size:.95rem;cursor:pointer;border-bottom:3px solid transparent;color:#8492a6;transition:all .2s;">
                     📬 Receiver
                 </button>
             </div>
             <form id="ukDeliveryForm">
                 <!-- SENDER -->
                 <div id="ukPanel-sender">
-                    <p style="font-size:.82rem;color:#718096;margin-bottom:14px;background:#f0f4ff;border-radius:8px;padding:8px 12px;">
-                        <i class="fas fa-info-circle" style="color:#0F2D5E;"></i> Enter the <strong>sender's</strong> details — the person sending from the UK.
+                    <p style="font-size:.82rem;color:#8492a6;margin-bottom:14px;background:#f0f4ff;border-radius:8px;padding:8px 12px;">
+                        <i class="fas fa-info-circle" style="color:#434b57;"></i> Enter the <strong>sender's</strong> details — the person sending from the UK.
                     </p>
                     <div class="form-group">
-                        <label style="font-weight:700;color:#071A38;">Full name <span class="required-star">*</span></label>
+                        <label style="font-weight:700;color:#1a1a2e;">Full name <span class="required-star">*</span></label>
                         <input type="text" id="ukFullName" placeholder="Full name" required style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700;color:#071A38;">Phone number <span class="required-star">*</span></label>
+                        <label style="font-weight:700;color:#1a1a2e;">Phone number <span class="required-star">*</span></label>
                         <input type="tel" id="ukPhone" placeholder="+44" required style="direction:ltr;">
-                        <small style="color:#718096;font-size:.78rem;">May be used to assist delivery</small>
+                        <small style="color:#8492a6;font-size:.78rem;">May be used to assist delivery</small>
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700;color:#071A38;">Company name <span style="font-weight:400;color:#718096;">(optional)</span></label>
+                        <label style="font-weight:700;color:#1a1a2e;">Company name <span style="font-weight:400;color:#8492a6;">(optional)</span></label>
                         <input type="text" id="ukCompany" placeholder="Company name" style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700;color:#071A38;">Postcode <span class="required-star">*</span></label>
+                        <label style="font-weight:700;color:#1a1a2e;">Postcode <span class="required-star">*</span></label>
                         <input type="text" id="ukPostcode" placeholder="Enter your area postcode" required style="direction:ltr;text-transform:uppercase;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700;color:#071A38;">Address line 1 <span class="required-star">*</span></label>
+                        <label style="font-weight:700;color:#1a1a2e;">Address line 1 <span class="required-star">*</span></label>
                         <input type="text" id="ukAddress1" placeholder="Start typing your address..." required style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700;color:#071A38;">Address Line 2 <span style="font-weight:400;color:#718096;">(optional)</span></label>
+                        <label style="font-weight:700;color:#1a1a2e;">Address Line 2 <span style="font-weight:400;color:#8492a6;">(optional)</span></label>
                         <input type="text" id="ukAddress2" placeholder="Apartment, suite, unit, floor, etc." style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700;color:#071A38;">Town / City <span class="required-star">*</span></label>
+                        <label style="font-weight:700;color:#1a1a2e;">Town / City <span class="required-star">*</span></label>
                         <input type="text" id="ukCity" placeholder="Town or city" required style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700;color:#071A38;">County <span style="font-weight:400;color:#718096;">(if applicable)</span></label>
+                        <label style="font-weight:700;color:#1a1a2e;">County <span style="font-weight:400;color:#8492a6;">(if applicable)</span></label>
                         <input type="text" id="ukCounty" placeholder="County" style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700;color:#071A38;">Delivery instructions <span style="font-weight:400;color:#718096;">(optional)</span></label>
+                        <label style="font-weight:700;color:#1a1a2e;">Delivery instructions <span style="font-weight:400;color:#8492a6;">(optional)</span></label>
                         <textarea id="ukDeliveryNote" placeholder="Notes, preferences, access codes..." rows="3" style="direction:ltr;"></textarea>
                     </div>
                     <div class="form-actions" style="gap:10px;margin-top:4px;">
                         <button type="button" class="btn btn-secondary" onclick="closeModal('ukDeliveryModal')"
-                            style="flex:1;background:#e2e8f0;color:#0F2D5E;border:none;font-weight:700;font-size:1rem;border-radius:50px;padding:12px;cursor:pointer;">
+                            style="flex:1;background:#dee2e6;color:#1a1a2e;border:none;font-weight:700;font-size:1rem;border-radius:50px;padding:12px;cursor:pointer;">
                             ✕ Cancel
                         </button>
                         <button type="button" class="btn btn-primary" onclick="ukGoToReceiver()"
-                            style="flex:1;background:#0F2D5E;color:#fff;border:none;font-weight:700;font-size:1rem;border-radius:50px;padding:12px;cursor:pointer;">
+                            style="flex:1;background:#434b57;color:#fff;border:none;font-weight:700;font-size:1rem;border-radius:50px;padding:12px;cursor:pointer;">
                             Next →
                         </button>
                     </div>
                 </div>
                 <!-- RECEIVER -->
                 <div id="ukPanel-receiver" style="display:none;">
-                    <p style="font-size:.82rem;color:#718096;margin-bottom:14px;background:#EFF6FF;border-radius:8px;padding:8px 12px;">
-                        <i class="fas fa-info-circle" style="color:#1A4A8A;"></i> Enter the <strong>receiver's</strong> details — the person receiving the parcel.
+                    <p style="font-size:.82rem;color:#8492a6;margin-bottom:14px;background:#F5F7FA;border-radius:8px;padding:8px 12px;">
+                        <i class="fas fa-info-circle" style="color:#E6B800;"></i> Enter the <strong>receiver's</strong> details — the person receiving the parcel.
                     </p>
                     <div class="form-group">
-                        <label style="font-weight:700;color:#071A38;">Country / Region</label>
-                        <select id="ukReceiverCountry" onchange="onUkCountryChange(this.value)" style="direction:ltr;width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:.95rem;background:#fff;">
+                        <label style="font-weight:700;color:#1a1a2e;">Country / Region</label>
+                        <select id="ukReceiverCountry" onchange="onUkCountryChange(this.value)" style="direction:ltr;width:100%;padding:10px 14px;border:1.5px solid #dee2e6;border-radius:10px;font-size:.95rem;background:#fff;">
 <option value="United Kingdom">🇬🇧 United Kingdom</option>
 <option value="Iraq">🇮🇶 Iraq</option>
 <option value="">— Other Countries —</option>
@@ -1070,8 +1071,8 @@
 <option value="Zambia">Zambia</option>
 <option value="Zimbabwe">Zimbabwe</option>
                         </select>
-                        <div id="ukCountryNote" style="display:none;margin-top:7px;padding:8px 12px;background:#EFF6FF;border:1.5px solid #FFCC00;border-radius:9px;font-size:.8rem;color:#92400e;"><i class="fas fa-info-circle" style="color:#1A4A8A;"></i> تێبینی: لەیبلی چاپکراو تەنها <strong>United Kingdom</strong> نیشان دەدات — بەبێ جیاوازی لە ولاتی هەڵبژێردراو.</div>
-                        <select id="ukDestinationCity" required style="direction:ltr;width:100%;padding:10px 14px;border:2px solid #0F2D5E;border-radius:10px;font-size:.95rem;background:#fff;font-weight:600;">
+                        <div id="ukCountryNote" style="display:none;margin-top:7px;padding:8px 12px;background:#F5F7FA;border:1.5px solid #FFCC00;border-radius:9px;font-size:.8rem;color:#92400e;"><i class="fas fa-info-circle" style="color:#E6B800;"></i> تێبینی: لەیبلی چاپکراو تەنها <strong>United Kingdom</strong> نیشان دەدات — بەبێ جیاوازی لە ولاتی هەڵبژێردراو.</div>
+                        <select id="ukDestinationCity" required style="direction:ltr;width:100%;padding:10px 14px;border:2px solid #434b57;border-radius:10px;font-size:.95rem;background:#fff;font-weight:600;">
                            <option value="">— Select destination city —</option>
 
 <!-- سەرەکی -->
@@ -1121,73 +1122,73 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700;color:#071A38;">Full name <span class="required-star">*</span></label>
+                        <label style="font-weight:700;color:#1a1a2e;">Full name <span class="required-star">*</span></label>
                         <input type="text" id="ukReceiverName" placeholder="Full name" required style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700;color:#071A38;">Phone number <span class="required-star">*</span></label>
+                        <label style="font-weight:700;color:#1a1a2e;">Phone number <span class="required-star">*</span></label>
                         <input type="tel" id="ukReceiverPhone" placeholder="+44 or +964" required style="direction:ltr;">
-                        <small style="color:#718096;font-size:.78rem;">May be used to assist delivery</small>
+                        <small style="color:#8492a6;font-size:.78rem;">May be used to assist delivery</small>
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700;color:#071A38;">Company name <span style="font-weight:400;color:#718096;">(optional)</span></label>
+                        <label style="font-weight:700;color:#1a1a2e;">Company name <span style="font-weight:400;color:#8492a6;">(optional)</span></label>
                         <input type="text" id="ukReceiverCompany" placeholder="Company name" style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700;color:#071A38;">Postcode <span style="font-weight:400;color:#718096;">(if applicable)</span></label>
+                        <label style="font-weight:700;color:#1a1a2e;">Postcode <span style="font-weight:400;color:#8492a6;">(if applicable)</span></label>
                         <input type="text" id="ukReceiverPostcode" placeholder="Enter postcode or area code" style="direction:ltr;text-transform:uppercase;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700;color:#071A38;">Address line 1 <span class="required-star">*</span></label>
+                        <label style="font-weight:700;color:#1a1a2e;">Address line 1 <span class="required-star">*</span></label>
                         <input type="text" id="ukReceiverAddress1" placeholder="Start typing your address..." required style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700;color:#071A38;">Address Line 2 <span style="font-weight:400;color:#718096;">(optional)</span></label>
+                        <label style="font-weight:700;color:#1a1a2e;">Address Line 2 <span style="font-weight:400;color:#8492a6;">(optional)</span></label>
                         <input type="text" id="ukReceiverAddress2" placeholder="Apartment, suite, unit, floor, etc." style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700;color:#071A38;">Town / City <span class="required-star">*</span></label>
+                        <label style="font-weight:700;color:#1a1a2e;">Town / City <span class="required-star">*</span></label>
                         <input type="text" id="ukReceiverCity" placeholder="Town or city" required style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700;color:#071A38;">County / Province <span style="font-weight:400;color:#718096;">(if applicable)</span></label>
+                        <label style="font-weight:700;color:#1a1a2e;">County / Province <span style="font-weight:400;color:#8492a6;">(if applicable)</span></label>
                         <input type="text" id="ukReceiverCounty" placeholder="County or province" style="direction:ltr;">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700;color:#071A38;">Delivery instructions <span style="font-weight:400;color:#718096;">(optional)</span></label>
+                        <label style="font-weight:700;color:#1a1a2e;">Delivery instructions <span style="font-weight:400;color:#8492a6;">(optional)</span></label>
                         <textarea id="ukReceiverNote" placeholder="Notes, preferences, access codes..." rows="3" style="direction:ltr;"></textarea>
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700;color:#071A38;">Package / Item description <span class="required-star">*</span></label>
+                        <label style="font-weight:700;color:#1a1a2e;">Package / Item description <span class="required-star">*</span></label>
                         <input type="text" id="ukPackageName" placeholder="What are you sending?" required style="direction:ltr;">
                     </div>
                     <div style="display:flex;gap:10px;">
                         <div class="form-group" style="flex:1;">
-                            <label style="font-weight:700;color:#071A38;font-size:.88rem;">Qty (pcs)</label>
+                            <label style="font-weight:700;color:#1a1a2e;font-size:.88rem;">Qty (pcs)</label>
                             <input type="number" id="ukPackageQty" placeholder="1" min="1" style="direction:ltr;">
                         </div>
                         <div class="form-group" style="flex:1;">
-                            <label style="font-weight:700;color:#071A38;font-size:.88rem;">Weight (kg)</label>
+                            <label style="font-weight:700;color:#1a1a2e;font-size:.88rem;">Weight (kg)</label>
                             <input type="number" id="ukPackageKg" placeholder="0.0" min="0" step="0.1" style="direction:ltr;">
                         </div>
                     </div>
                     <div style="display:flex;gap:10px;">
                         <div class="form-group" style="flex:1;">
-                            <label style="font-weight:700;color:#071A38;font-size:.88rem;">Item Price / نرخی کاڵا</label>
+                            <label style="font-weight:700;color:#1a1a2e;font-size:.88rem;">Item Price / نرخی کاڵا</label>
                             <input type="text" id="ukItemPrice" placeholder="e.g. £50 / $60" style="direction:ltr;">
                         </div>
                         <div class="form-group" style="flex:1;">
-                            <label style="font-weight:700;color:#071A38;font-size:.88rem;">Delivery / kg · نرخی گەیاندن/کیلۆ</label>
+                            <label style="font-weight:700;color:#1a1a2e;font-size:.88rem;">Delivery / kg · نرخی گەیاندن/کیلۆ</label>
                             <input type="text" id="ukDeliveryPerKg" placeholder="e.g. £5/kg" style="direction:ltr;">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:700;color:#071A38;font-size:.88rem;">Payment <span style="font-weight:400;color:#718096;">(optional)</span></label>
+                        <label style="font-weight:700;color:#1a1a2e;font-size:.88rem;">Payment <span style="font-weight:400;color:#8492a6;">(optional)</span></label>
                         <input type="text" id="ukPayment" placeholder="e.g. £50 paid / unpaid" style="direction:ltr;">
                     </div>
                     <div class="form-actions" style="gap:10px;margin-top:4px;">
                         <button type="button" onclick="ukSwitchTab('sender')"
-                            style="flex:1;background:#e2e8f0;color:#0F2D5E;border:none;font-weight:700;font-size:1rem;border-radius:50px;padding:12px;cursor:pointer;">
+                            style="flex:1;background:#dee2e6;color:#1a1a2e;border:none;font-weight:700;font-size:1rem;border-radius:50px;padding:12px;cursor:pointer;">
                             ← Back
                         </button>
                         <button type="submit" class="btn btn-primary"
@@ -1209,7 +1210,7 @@
                 </button>
                 <h2>💳 پارەدان بە FIB کوردستان</h2>
             </div>
-            <div class="fib-card" style="background: linear-gradient(135deg, #071A38, #1e40af); padding: 30px; border-radius: 12px; text-align: center; color: white; margin-bottom: 20px;">
+            <div class="fib-card" style="background: linear-gradient(135deg, #2d3340, #1e40af); padding: 30px; border-radius: 12px; text-align: center; color: white; margin-bottom: 20px;">
                 <p>ژمارەی حیساب</p>
                 <h3 style="font-size: 2rem; letter-spacing: 2px;">7769654490</h3>
             </div>
@@ -1223,7 +1224,7 @@
     <div id="videosModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.75);z-index:999999;align-items:center;justify-content:center;padding:16px;">
         <div style="background:#fff;border-radius:16px;width:95vw;max-width:960px;max-height:88vh;overflow-y:auto;position:relative;direction:rtl;">
             <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #eee;position:sticky;top:0;background:#fff;z-index:2;">
-                <h2 style="margin:0;font-size:1.1rem;display:flex;align-items:center;gap:8px;"><span style="color:#2E6DB4;">&#9654;</span> ڤیدیۆکان</h2>
+                <h2 style="margin:0;font-size:1.1rem;display:flex;align-items:center;gap:8px;"><span style="color:#FF6B6B;">&#9654;</span> ڤیدیۆکان</h2>
     
                 <button onclick="closeVideosModal()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#666;padding:4px 8px;">✕</button>
             </div>
@@ -1232,7 +1233,7 @@
     </div>
 
     <!-- Back to Top -->
-    <button id="backToTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:24px;left:24px;z-index:9999;background:linear-gradient(135deg,#0F2D5E,#071A38);color:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:1.2rem;cursor:pointer;box-shadow:0 2px 8px rgba(102,126,234,0.4);opacity:0.4;transition:opacity 0.3s;">↑</button>
+    <button id="backToTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:24px;left:24px;z-index:9999;background:linear-gradient(135deg,#434b57,#2d3340);color:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:1.2rem;cursor:pointer;box-shadow:0 2px 8px rgba(102,126,234,0.4);opacity:0.4;transition:opacity 0.3s;">↑</button>
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -1507,9 +1508,9 @@ function applyTranslations() {
     const btn = document.getElementById('langBtn-' + l);
     if (!btn) return;
     if (l === currentLang) {
-      btn.style.background = '#0F2D5E';
+      btn.style.background = '#434b57';
       btn.style.color = '#fff';
-      btn.style.borderColor = '#0F2D5E';
+      btn.style.borderColor = '#434b57';
     } else {
       btn.style.background = '#fff';
       btn.style.color = '#555';
@@ -1573,14 +1574,14 @@ function printHtml(htmlContent, fileName) {
     var barStyle = '<style>'
         + '*{box-sizing:border-box;}'
         + '#_pbar{position:fixed;top:0;left:0;right:0;display:flex;gap:6px;'
-        + 'padding:10px 10px;background:#071A38;z-index:2147483647;'
+        + 'padding:10px 10px;background:#2d3340;z-index:2147483647;'
         + 'box-shadow:0 3px 10px rgba(0,0,0,.4);}'
         + '#_pbar button{flex:1;padding:13px 4px;border:none;border-radius:10px;'
         + 'font-size:.88rem;font-weight:800;cursor:pointer;'
         + 'font-family:Tahoma,Arial,sans-serif;}'
-        + '#_pbtn{background:#1A4A8A;color:#fff;}'
-        + '#_dbtn{background:#2E6DB4;color:#fff;}'
-        + '#_cbtn{background:#0F2D5E;color:#fff;}'
+        + '#_pbtn{background:#434b57;color:#fff;}'
+        + '#_dbtn{background:#5a6476;color:#fff;}'
+        + '#_cbtn{background:#DC3545;color:#fff;}'
         + '@media print{'
         + '#_pbar{display:none!important;}'
         + 'body{padding-top:0!important;margin:0!important;}'
@@ -1703,10 +1704,10 @@ function _openPrintPage(htmlStr, filename) {
       '*{box-sizing:border-box;}' +
       'body{font-family:"Segoe UI",Arial,sans-serif;background:#fff;margin:0;padding:0;width:100mm;direction:rtl;}' +
       '.page{background:#fff;border:2.5px dashed #c8a000;width:100mm;min-height:148mm;overflow:hidden;display:flex;flex-direction:column;}' +
-      '.action-bar{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;gap:8px;padding:8px 10px;background:#fff;border-bottom:1.5px solid #e2e8f0;box-shadow:0 2px 8px rgba(0,0,0,.1);}' +
+      '.action-bar{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;gap:8px;padding:8px 10px;background:#fff;border-bottom:1.5px solid #dee2e6;box-shadow:0 2px 8px rgba(0,0,0,.1);}' +
       '.action-bar button{flex:1;padding:12px 8px;border:none;border-radius:10px;font-size:.95rem;font-weight:800;cursor:pointer;font-family:inherit;}' +
-      '.btn-x{background:linear-gradient(135deg,#0F2D5E,#071A38);color:#fff;}' +
-      '.btn-p{background:linear-gradient(135deg,#0F2D5E,#1A4A8A);color:#fff;}' +
+      '.btn-x{background:linear-gradient(135deg,#DC3545,#B02A37);color:#fff;}' +
+      '.btn-p{background:linear-gradient(135deg,#2d3340,#434b57);color:#fff;}' +
       // Header 
       '.hdr{display:flex;align-items:center;justify-content:space-between;padding:3px 7px 4px;border-bottom:2px solid #1a1a1a;background:#fff;}' +
       '.hdr-l{display:flex;align-items:center;gap:4px;}' +
@@ -1988,7 +1989,7 @@ function _openPrintPage(htmlStr, filename) {
           var orderNumFb = dFb.orderNumber;
           var qrDataFb = 'Order: ' + orderNumFb + ' | SENDER: ' + dFb.senderName + ' ' + dFb.senderMobile + ' | RECIPIENT: ' + dFb.receiverName + ' ' + dFb.receiverMobile + ' | ' + dFb.receiverLocation;
           var qrUrlFb = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=' + encodeURIComponent(qrDataFb);
-          var borderClr = '#1A4A8A';
+          var borderClr = '#434b57';
           var htmlFb = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
             + '<meta name="viewport" content="width=device-width,initial-scale=1">'
             + '<style>'
@@ -2000,13 +2001,13 @@ function _openPrintPage(htmlStr, filename) {
             + '.box{border:3px solid '+borderClr+';border-radius:12px;padding:12px;}'
             + '.hdr{background:'+borderClr+';color:#fff;padding:10px 14px;font-size:1rem;font-weight:900;display:flex;justify-content:space-between;align-items:center;border-radius:8px;margin-bottom:12px;}'
             + '.grid{display:flex;gap:10px;margin-bottom:10px;}'
-            + '.col{flex:1;border:1.5px solid #e2e8f0;border-radius:8px;padding:9px;text-align:right;}'
-            + '.lbl{font-size:.65rem;color:#718096;margin-bottom:3px;}'
-            + '.val{font-size:.88rem;font-weight:700;color:#071A38;}'
-            + '.tel{font-size:.78rem;color:#4a5568;margin-top:2px;}'
-            + '.loc{font-size:.72rem;color:#718096;margin-top:2px;}'
-            + '.pkg{display:flex;align-items:center;justify-content:space-between;background:#EFF6FF;border-radius:8px;padding:10px 12px;margin-bottom:10px;}'
-            + '.foot{display:flex;justify-content:space-between;font-size:.65rem;color:#a0aec0;border-top:1px dashed #e2e8f0;padding-top:8px;}'
+            + '.col{flex:1;border:1.5px solid #dee2e6;border-radius:8px;padding:9px;text-align:right;}'
+            + '.lbl{font-size:.65rem;color:#8492a6;margin-bottom:3px;}'
+            + '.val{font-size:.88rem;font-weight:700;color:#1a1a2e;}'
+            + '.tel{font-size:.78rem;color:#5a6476;margin-top:2px;}'
+            + '.loc{font-size:.72rem;color:#8492a6;margin-top:2px;}'
+            + '.pkg{display:flex;align-items:center;justify-content:space-between;background:#F5F7FA;border-radius:8px;padding:10px 12px;margin-bottom:10px;}'
+            + '.foot{display:flex;justify-content:space-between;font-size:.65rem;color:#adb5bd;border-top:1px dashed #dee2e6;padding-top:8px;}'
             + '@media print{body{padding:0!important;margin:0!important;}.content{padding:0!important;}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}}'
             + '</style></head><body>'
             + '<div class="content">'
@@ -2014,23 +2015,23 @@ function _openPrintPage(htmlStr, filename) {
             + '<div class="hdr"><span>🌍 نێودەوڵەتی &mdash; UK BAZAR</span><span># ' + escapeHtml(orderNumFb) + '</span></div>'
             + '<div class="grid">'
               + '<div class="col" style="border-right:3px solid '+borderClr+';">'
-                + '<div class="lbl">&#071A38; نێردەر</div>'
+                + '<div class="lbl">&#2d3340; نێردەر</div>'
                 + '<div class="val">' + escapeHtml(dFb.senderName||'&mdash;') + '</div>'
-                + (dFb.senderMobile ? '<div class="tel">&#071A38; ' + escapeHtml(dFb.senderMobile) + '</div>' : '')
+                + (dFb.senderMobile ? '<div class="tel">&#2d3340; ' + escapeHtml(dFb.senderMobile) + '</div>' : '')
                 + (dFb.senderLocation ? '<div class="loc">&#128205; ' + escapeHtml(dFb.senderLocation) + '</div>' : '')
-                + (dFb.senderKala ? '<div class="loc">&#071A38; ' + escapeHtml(dFb.senderKala) + (dFb.senderWeight?' — '+escapeHtml(dFb.senderWeight)+'کگ':'') + '</div>' : '')
+                + (dFb.senderKala ? '<div class="loc">&#2d3340; ' + escapeHtml(dFb.senderKala) + (dFb.senderWeight?' — '+escapeHtml(dFb.senderWeight)+'کگ':'') + '</div>' : '')
               + '</div>'
               + '<div class="col">'
                 + '<div class="lbl">&#128229; وەرگر</div>'
                 + '<div class="val">' + escapeHtml(dFb.receiverName||'&mdash;') + '</div>'
-                + (dFb.receiverMobile ? '<div class="tel">&#071A38; ' + escapeHtml(dFb.receiverMobile) + '</div>' : '')
+                + (dFb.receiverMobile ? '<div class="tel">&#2d3340; ' + escapeHtml(dFb.receiverMobile) + '</div>' : '')
                 + (dFb.receiverLocation ? '<div class="loc">&#128205; ' + escapeHtml(dFb.receiverLocation) + '</div>' : '')
-                + (dFb.receiverKala ? '<div class="loc">&#071A38; ' + escapeHtml(dFb.receiverKala) + (dFb.receiverWeight?' — '+escapeHtml(dFb.receiverWeight)+'کگ':'') + '</div>' : '')
+                + (dFb.receiverKala ? '<div class="loc">&#2d3340; ' + escapeHtml(dFb.receiverKala) + (dFb.receiverWeight?' — '+escapeHtml(dFb.receiverWeight)+'کگ':'') + '</div>' : '')
               + '</div>'
             + '</div>'
             + '<div class="pkg">'
               + '<div>'
-                + '<div class="lbl">&#071A38; کاڵا</div>'
+                + '<div class="lbl">&#2d3340; کاڵا</div>'
                 + '<div style="font-size:.88rem;font-weight:700;">' + escapeHtml(dFb.packageName||'&mdash;') + (dFb.packageKg?' &mdash; '+escapeHtml(dFb.packageKg)+'کگ':'') + '</div>'
                 + (dFb.deliveryNote ? '<div class="loc" style="margin-top:4px;">&#128221; '+escapeHtml(dFb.deliveryNote)+'</div>' : '')
               + '</div>'
@@ -2148,9 +2149,9 @@ function _openPrintPage(htmlStr, filename) {
       + '<meta name="viewport" content="width=device-width,initial-scale=1">'
       + '<title>IP Label — ' + ipLabel + '</title>'
       + '<style>' + css + '</style></head><body>'
-      + '<div class="no-print" style="position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;gap:10px;padding:10px 12px;background:#fff;border-bottom:1px solid #e2e8f0;box-shadow:0 2px 8px rgba(0,0,0,.08);">'
-        + '<button onclick="' + closeJs + '" style="flex:1;padding:13px;background:linear-gradient(135deg,#0F2D5E,#071A38);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;font-family:Tahoma,Arial,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">&#x2715; داخستن</button>'
-        + '<button onclick="window.print()" style="flex:1;padding:13px;background:linear-gradient(135deg,#0F2D5E,#1A4A8A);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;font-family:Tahoma,Arial,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">&#128424; چاپ کردن</button>'
+      + '<div class="no-print" style="position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;gap:10px;padding:10px 12px;background:#fff;border-bottom:1px solid #dee2e6;box-shadow:0 2px 8px rgba(0,0,0,.08);">'
+        + '<button onclick="' + closeJs + '" style="flex:1;padding:13px;background:linear-gradient(135deg,#DC3545,#B02A37);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;font-family:Tahoma,Arial,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">&#x2715; داخستن</button>'
+        + '<button onclick="window.print()" style="flex:1;padding:13px;background:linear-gradient(135deg,#2d3340,#434b57);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;font-family:Tahoma,Arial,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">&#128424; چاپ کردن</button>'
         + '</div>'
       + '<div class="page">'
         // ─── Header: IP number left, flag+country+date right ─── 
@@ -2210,7 +2211,7 @@ function _openPrintPage(htmlStr, filename) {
 ═══════════════════════════════════════════════════ -->
 <div id="driverLoginModal" class="modal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;">
   <div style="background:#fff;border-radius:20px;max-width:380px;width:92%;padding:0;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3);animation:driverModalIn .3s ease;">
-    <div style="background:linear-gradient(135deg,#071A38,#1A4A8A);padding:24px 20px 20px;text-align:center;position:relative;">
+    <div style="background:linear-gradient(135deg,#2d3340,#434b57);padding:24px 20px 20px;text-align:center;position:relative;">
       <button onclick="closeDriverLoginModal()" style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
       <div id="driverLoginAvatar" style="width:72px;height:72px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:2rem;overflow:hidden;border:3px solid rgba(255,255,255,0.4);">🚗</div>
       <h2 style="color:#fff;font-size:1.2rem;font-weight:900;margin:0 0 4px;">پۆرتاڵی شۆفیر</h2>
@@ -2218,21 +2219,21 @@ function _openPrintPage(htmlStr, filename) {
     </div>
     <div style="padding:24px 20px;">
       <div style="margin-bottom:14px;">
-        <div style="font-size:.78rem;font-weight:700;color:#4a5568;margin-bottom:6px;">👤 ناوی کارمەند</div>
+        <div style="font-size:.78rem;font-weight:700;color:#5a6476;margin-bottom:6px;">👤 ناوی کارمەند</div>
         <input type="text" id="driverLoginUsername" placeholder="ناوی بەکارهێنەر..." 
-          style="width:100%;padding:12px 14px;border:2px solid #e2e8f0;border-radius:12px;font-size:.95rem;font-family:inherit;outline:none;box-sizing:border-box;"
-          onfocus="this.style.borderColor='#1A4A8A'" onblur="this.style.borderColor='#e2e8f0';_previewDriverAvatar(this.value)"
+          style="width:100%;padding:12px 14px;border:2px solid #dee2e6;border-radius:12px;font-size:.95rem;font-family:inherit;outline:none;box-sizing:border-box;"
+          onfocus="this.style.borderColor='#434b57'" onblur="this.style.borderColor='#dee2e6';_previewDriverAvatar(this.value)"
           onkeydown="if(event.key==='Enter')document.getElementById('driverLoginPassword').focus()">
       </div>
       <div style="margin-bottom:18px;">
-        <div style="font-size:.78rem;font-weight:700;color:#4a5568;margin-bottom:6px;">🔑 وشەی تێپەڕ</div>
+        <div style="font-size:.78rem;font-weight:700;color:#5a6476;margin-bottom:6px;">🔑 وشەی تێپەڕ</div>
         <input type="password" id="driverLoginPassword" placeholder="وشەی تێپەڕ..." 
-          style="width:100%;padding:12px 14px;border:2px solid #e2e8f0;border-radius:12px;font-size:.95rem;font-family:inherit;outline:none;box-sizing:border-box;"
-          onfocus="this.style.borderColor='#1A4A8A'" onblur="this.style.borderColor='#e2e8f0'"
+          style="width:100%;padding:12px 14px;border:2px solid #dee2e6;border-radius:12px;font-size:.95rem;font-family:inherit;outline:none;box-sizing:border-box;"
+          onfocus="this.style.borderColor='#434b57'" onblur="this.style.borderColor='#dee2e6'"
           onkeydown="if(event.key==='Enter')driverLogin()">
       </div>
-      <p id="driverLoginErr" style="color:#0F2D5E;font-size:.82rem;text-align:center;margin:0 0 12px;display:none;"></p>
-      <button onclick="driverLogin()" style="width:100%;padding:14px;background:linear-gradient(135deg,#071A38,#1A4A8A);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:800;cursor:pointer;font-family:inherit;">
+      <p id="driverLoginErr" style="color:#DC3545;font-size:.82rem;text-align:center;margin:0 0 12px;display:none;"></p>
+      <button onclick="driverLogin()" style="width:100%;padding:14px;background:linear-gradient(135deg,#2d3340,#434b57);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:800;cursor:pointer;font-family:inherit;">
         <i class="fas fa-sign-in-alt"></i> داخلبوون
       </button>
     </div>
@@ -2244,7 +2245,7 @@ function _openPrintPage(htmlStr, filename) {
 ═══════════════════════════════════════════════════ -->
 <div id="driverDashboard" style="display:none;position:fixed;inset:0;z-index:99998;background:#f0f4ff;overflow-y:auto;direction:rtl;font-family:'Noto Sans Arabic',sans-serif;">
   <!-- Dashboard Header -->
-  <div style="background:linear-gradient(135deg,#071A38,#1A4A8A);padding:16px 16px 12px;position:sticky;top:0;z-index:10;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+  <div style="background:linear-gradient(135deg,#2d3340,#434b57);padding:16px 16px 12px;position:sticky;top:0;z-index:10;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
     <div style="display:flex;align-items:center;justify-content:space-between;max-width:600px;margin:0 auto;">
       <div style="display:flex;align-items:center;gap:12px;">
         <div id="driverHeaderAvatar" style="width:44px;height:44px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;overflow:hidden;flex-shrink:0;">🚗</div>
@@ -2262,12 +2263,12 @@ function _openPrintPage(htmlStr, filename) {
   <div style="max-width:600px;margin:0 auto;padding:16px;">
     <!-- Balance Cards -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
-      <div style="background:linear-gradient(135deg,#0F2D5E,#1A4A8A);border-radius:16px;padding:16px;color:#fff;text-align:center;">
+      <div style="background:linear-gradient(135deg,#2d3340,#434b57);border-radius:16px;padding:16px;color:#fff;text-align:center;">
         <div style="font-size:.75rem;opacity:.85;margin-bottom:6px;">💰 بالانسی ناوخۆ</div>
         <div id="driverKuBalance" style="font-size:1.6rem;font-weight:900;">٠</div>
         <div style="font-size:.7rem;opacity:.75;margin-top:4px;">دینار کوردستانی</div>
       </div>
-      <div style="background:linear-gradient(135deg,#071A38,#071A38);border-radius:16px;padding:16px;color:#fff;text-align:center;">
+      <div style="background:linear-gradient(135deg,#2d3340,#2d3340);border-radius:16px;padding:16px;color:#fff;text-align:center;">
         <div style="font-size:.75rem;opacity:.85;margin-bottom:6px;">🇬🇧 گەیاندنی دەرەوە</div>
         <div id="driverUkCount" style="font-size:1.6rem;font-weight:900;">٠</div>
         <div style="font-size:.7rem;opacity:.75;margin-top:4px;">تۆماری UK</div>
@@ -2275,48 +2276,48 @@ function _openPrintPage(htmlStr, filename) {
     </div>
 
     <!-- QR Scanner Section -->
-    <div style="background:#fff;border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,0.07);border:2px solid #e2e8f0;">
-      <div style="font-size:.9rem;font-weight:800;color:#071A38;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+    <div style="background:#fff;border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,0.07);border:2px solid #dee2e6;">
+      <div style="font-size:.9rem;font-weight:800;color:#2d3340;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
         <span style="font-size:1.2rem;">📷</span> بە QR زانیاری کاڵا بخوێنەرەوە
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
         <button onclick="startDriverQR()"
-          style="padding:14px 8px;background:linear-gradient(135deg,#0F2D5E,#071A38);color:#fff;border:none;border-radius:14px;font-size:.88rem;font-weight:800;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;box-shadow:0 4px 14px rgba(102,126,234,.4);">
+          style="padding:14px 8px;background:linear-gradient(135deg,#434b57,#2d3340);color:#fff;border:none;border-radius:14px;font-size:.88rem;font-weight:800;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;box-shadow:0 4px 14px rgba(102,126,234,.4);">
           <i class="fas fa-qrcode" style="font-size:1.6rem;"></i>
           <span>📷 QR بخوێنەرەوە</span>
           <span style="font-size:.7rem;opacity:.85;">یەکسەر ڕاستەوخۆ</span>
         </button>
         <button onclick="driverManualEntry()"
-          style="padding:14px 8px;background:#EFF6FF;color:#4a5568;border:2px solid #e2e8f0;border-radius:14px;font-size:.88rem;font-weight:800;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:6px;">
+          style="padding:14px 8px;background:#F5F7FA;color:#5a6476;border:2px solid #dee2e6;border-radius:14px;font-size:.88rem;font-weight:800;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:6px;">
           <i class="fas fa-keyboard" style="font-size:1.6rem;"></i>
           <span>⌨️ دەستی</span>
-          <span style="font-size:.7rem;color:#718096;">ژمارەی پسولە</span>
+          <span style="font-size:.7rem;color:#8492a6;">ژمارەی پسولە</span>
         </button>
       </div>
       <!-- Driver Live QR Container -->
       <div id="driver-qr-container" style="display:none;margin-top:8px;">
-        <div style="text-align:center;margin-bottom:8px;font-size:.82rem;font-weight:700;color:#071A38;">📷 QR کۆدەکە بخە بەرامبەر کامێراکە — یەکسەر دەدۆزێتەوە</div>
-        <div id="driver-qr-reader" style="width:100%;border-radius:12px;overflow:hidden;border:2px solid #0F2D5E;"></div>
+        <div style="text-align:center;margin-bottom:8px;font-size:.82rem;font-weight:700;color:#2d3340;">📷 QR کۆدەکە بخە بەرامبەر کامێراکە — یەکسەر دەدۆزێتەوە</div>
+        <div id="driver-qr-reader" style="width:100%;border-radius:12px;overflow:hidden;border:2px solid #434b57;"></div>
         <div style="text-align:center;margin-top:10px;">
-          <button onclick="stopDriverQR()" style="padding:7px 22px;background:#0F2D5E;color:#fff;border:none;border-radius:20px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.85rem;">✕ داخستنی کامێرا</button>
+          <button onclick="stopDriverQR()" style="padding:7px 22px;background:#DC3545;color:#fff;border:none;border-radius:20px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.85rem;">✕ داخستنی کامێرا</button>
         </div>
       </div>
-      <div id="driverQrResult" style="display:none;margin-top:10px;padding:12px;background:#EFF6FF;border-radius:10px;border:2px solid #5B9BD5;font-size:.85rem;color:#0F2D5E;"></div>
+      <div id="driverQrResult" style="display:none;margin-top:10px;padding:12px;background:#F5F7FA;border-radius:10px;border:2px solid #8492a6;font-size:.85rem;color:#2d3340;"></div>
     </div>
 
     <div style="display:flex;background:#fff;border-radius:14px;padding:4px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,0.07);gap:2px;">
       <button onclick="switchDriverTab('ku')" id="driverTabKu"
-        style="flex:1;padding:9px 4px;border:none;border-radius:10px;font-family:inherit;font-size:.8rem;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#0F2D5E,#1A4A8A);color:#fff;transition:all .2s;">
+        style="flex:1;padding:9px 4px;border:none;border-radius:10px;font-family:inherit;font-size:.8rem;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#2d3340,#434b57);color:#fff;transition:all .2s;">
         🇮🇶 ناوخۆ <span style="font-size:.65rem;opacity:.8;">(UK / کوردستان)</span>
       </button>
       <button onclick="switchDriverTab('uk')" id="driverTabUk"
-        style="flex:1;padding:9px 4px;border:none;border-radius:10px;font-family:inherit;font-size:.8rem;font-weight:700;cursor:pointer;background:transparent;color:#718096;transition:all .2s;">
+        style="flex:1;padding:9px 4px;border:none;border-radius:10px;font-family:inherit;font-size:.8rem;font-weight:700;cursor:pointer;background:transparent;color:#8492a6;transition:all .2s;">
         🌍 دەرەوە <span style="font-size:.65rem;opacity:.8;">(IP-)</span>
       </button>
       <button onclick="switchDriverTab('saved')" id="driverTabSaved"
-        style="flex:1;padding:9px 4px;border:none;border-radius:10px;font-family:inherit;font-size:.8rem;font-weight:700;cursor:pointer;background:transparent;color:#718096;transition:all .2s;position:relative;">
+        style="flex:1;padding:9px 4px;border:none;border-radius:10px;font-family:inherit;font-size:.8rem;font-weight:700;cursor:pointer;background:transparent;color:#8492a6;transition:all .2s;position:relative;">
         📋 پاشەکەوتکراو
-        <span id="driverSavedBadge" style="display:none;position:absolute;top:4px;right:4px;background:#0F2D5E;color:#fff;font-size:.6rem;width:16px;height:16px;border-radius:50%;line-height:16px;text-align:center;"></span>
+        <span id="driverSavedBadge" style="display:none;position:absolute;top:4px;right:4px;background:#DC3545;color:#fff;font-size:.6rem;width:16px;height:16px;border-radius:50%;line-height:16px;text-align:center;"></span>
       </button>
     </div>
 
@@ -2428,8 +2429,8 @@ function loadDriverDeliveries() {
   if (!_currentDriver) return;
   var kuList = document.getElementById('driverKuList');
   var ukList = document.getElementById('driverUkList');
-  kuList.innerHTML = '<div style="text-align:center;padding:20px;color:#718096;">بارکردن...</div>';
-  ukList.innerHTML = '<div style="text-align:center;padding:20px;color:#718096;">بارکردن...</div>';
+  kuList.innerHTML = '<div style="text-align:center;padding:20px;color:#8492a6;">بارکردن...</div>';
+  ukList.innerHTML = '<div style="text-align:center;padding:20px;color:#8492a6;">بارکردن...</div>';
 
   Promise.all([
     database.ref('delivery').once('value'),
@@ -2468,29 +2469,29 @@ function loadDriverDeliveries() {
 
     // Render KU list
     if (kuItems.length === 0) {
-      kuList.innerHTML = '<div style="text-align:center;padding:30px;color:#a0aec0;"><div style="font-size:2.5rem;margin-bottom:10px;">📦</div><div>هیچ تۆماری ناوخۆ نییە</div></div>';
+      kuList.innerHTML = '<div style="text-align:center;padding:30px;color:#adb5bd;"><div style="font-size:2.5rem;margin-bottom:10px;">📦</div><div>هیچ تۆماری ناوخۆ نییە</div></div>';
     } else {
       kuList.innerHTML = kuItems.map(function(d) { return buildDriverKuCard(d); }).join('');
     }
 
     // Render UK list
     if (ukItems.length === 0) {
-      ukList.innerHTML = '<div style="text-align:center;padding:30px;color:#a0aec0;"><div style="font-size:2.5rem;margin-bottom:10px;">🌍</div><div>هیچ تۆماری دەرەوە نییە</div></div>';
+      ukList.innerHTML = '<div style="text-align:center;padding:30px;color:#adb5bd;"><div style="font-size:2.5rem;margin-bottom:10px;">🌍</div><div>هیچ تۆماری دەرەوە نییە</div></div>';
     } else {
       ukList.innerHTML = ukItems.map(function(d) { return buildDriverUkCard(d); }).join('');
     }
   }).catch(function() {
-    kuList.innerHTML = '<div style="text-align:center;color:#0F2D5E;padding:16px;">هەڵە لە بارکردن</div>';
+    kuList.innerHTML = '<div style="text-align:center;color:#DC3545;padding:16px;">هەڵە لە بارکردن</div>';
   });
 }
 
 function buildDriverKuCard(d) {
   var status = d.status || 'registered';
-  var statusColors = {registered:'#0F2D5E',picked_up:'#2E6DB4',loading:'#E6B800',in_transit:'#2E6DB4',sorting:'#0F2D5E',delivered:'#1A4A8A'};
+  var statusColors = {registered:'#434b57',picked_up:'#FFCC00',loading:'#E6B800',in_transit:'#5a6476',sorting:'#434b57',delivered:'#434b57'};
   var statusLabels = {registered:'📋 تۆماركراوە',picked_up:'🚗 وەرگیراو',loading:'🏭 بارکراوە',in_transit:'🚛 لەڕێگادایە',sorting:'📦 دابەشکردن',delivered:'✅ گەیشتووە'};
-  var clr = statusColors[status] || '#0F2D5E';
+  var clr = statusColors[status] || '#434b57';
   var lbl = statusLabels[status] || status;
-  var price = d.deliveryPricePerKg ? '<span style="background:#e6fffa;color:#0F2D5E;padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:700;">💰 ' + d.deliveryPricePerKg + ' IQD</span>' : '';
+  var price = d.deliveryPricePerKg ? '<span style="background:#e6fffa;color:#2d3340;padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:700;">💰 ' + d.deliveryPricePerKg + ' IQD</span>' : '';
   return '<div style="background:#fff;border-radius:14px;margin-bottom:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);border:2px solid ' + clr + '22;">'
     + '<div style="background:' + clr + ';padding:8px 12px;display:flex;justify-content:space-between;align-items:center;">'
       + '<span style="color:#fff;font-weight:900;font-size:.9rem;"># ' + escapeHtml(d.orderNumber||'—') + '</span>'
@@ -2498,13 +2499,13 @@ function buildDriverKuCard(d) {
     + '</div>'
     + '<div style="padding:12px;">'
       + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">'
-        + '<div><div style="font-size:.7rem;color:#718096;margin-bottom:2px;">📤 نێردەر</div><div style="font-size:.85rem;font-weight:700;color:#071A38;">' + escapeHtml(d.senderName||d.name||'—') + '</div><div style="font-size:.78rem;color:#4a5568;">' + escapeHtml(d.senderMobile||d.mobile||'—') + '</div></div>'
-        + '<div><div style="font-size:.7rem;color:#718096;margin-bottom:2px;">📥 وەرگر</div><div style="font-size:.85rem;font-weight:700;color:#071A38;">' + escapeHtml(d.receiverName||'—') + '</div><div style="font-size:.78rem;color:#4a5568;">' + escapeHtml(d.receiverMobile||'—') + '</div></div>'
+        + '<div><div style="font-size:.7rem;color:#8492a6;margin-bottom:2px;">📤 نێردەر</div><div style="font-size:.85rem;font-weight:700;color:#1a1a2e;">' + escapeHtml(d.senderName||d.name||'—') + '</div><div style="font-size:.78rem;color:#5a6476;">' + escapeHtml(d.senderMobile||d.mobile||'—') + '</div></div>'
+        + '<div><div style="font-size:.7rem;color:#8492a6;margin-bottom:2px;">📥 وەرگر</div><div style="font-size:.85rem;font-weight:700;color:#1a1a2e;">' + escapeHtml(d.receiverName||'—') + '</div><div style="font-size:.78rem;color:#5a6476;">' + escapeHtml(d.receiverMobile||'—') + '</div></div>'
       + '</div>'
-      + (d.packageName ? '<div style="font-size:.78rem;color:#4a5568;margin-bottom:6px;">📦 ' + escapeHtml(d.packageName) + (d.packageKg?' — '+d.packageKg+'کگ':'') + '</div>' : '')
+      + (d.packageName ? '<div style="font-size:.78rem;color:#5a6476;margin-bottom:6px;">📦 ' + escapeHtml(d.packageName) + (d.packageKg?' — '+d.packageKg+'کگ':'') + '</div>' : '')
       + '<div style="display:flex;align-items:center;justify-content:space-between;">'
         + price
-        + '<button onclick="driverScanOrViewDelivery(\'' + d.key + '\',\'ku\')" style="padding:6px 14px;background:linear-gradient(135deg,#0F2D5E,#1A4A8A);color:#fff;border:none;border-radius:20px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;"><i class="fas fa-eye"></i> بینین</button>'
+        + '<button onclick="driverScanOrViewDelivery(\'' + d.key + '\',\'ku\')" style="padding:6px 14px;background:linear-gradient(135deg,#2d3340,#434b57);color:#fff;border:none;border-radius:20px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;"><i class="fas fa-eye"></i> بینین</button>'
       + '</div>'
     + '</div>'
   + '</div>';
@@ -2512,9 +2513,9 @@ function buildDriverKuCard(d) {
 
 function buildDriverUkCard(d) {
   var status = d.status || 'registered';
-  var clrMap = {registered:'#0F2D5E',picked_up:'#2E6DB4',loading:'#E6B800',in_transit:'#2E6DB4',sorting:'#0F2D5E',delivered:'#1A4A8A'};
+  var clrMap = {registered:'#434b57',picked_up:'#FFCC00',loading:'#E6B800',in_transit:'#5a6476',sorting:'#434b57',delivered:'#434b57'};
   var lblMap = {registered:'📋 Registered',picked_up:'🚗 Picked Up',loading:'🏭 Loading',in_transit:'🚛 In Transit',sorting:'📦 Sorting',delivered:'✅ Delivered'};
-  var clr = clrMap[status] || '#1A4A8A';
+  var clr = clrMap[status] || '#434b57';
   var lbl = lblMap[status] || status;
 
   // intlPost (IP-) دانەی sender/recipient هەیە — delivery دانەی fullName/phone هەیە
@@ -2534,12 +2535,12 @@ function buildDriverUkCard(d) {
       + '<span style="color:#fff;font-size:.75rem;background:rgba(255,255,255,.2);padding:2px 10px;border-radius:20px;font-weight:700;">' + lbl + '</span>'
     + '</div>'
     + '<div style="padding:12px;">'
-      + '<div style="margin-bottom:5px;"><span style="font-size:.7rem;color:#718096;">To: </span><span style="font-size:.88rem;font-weight:700;color:#071A38;">' + escapeHtml(toName) + '</span></div>'
-      + '<div style="font-size:.78rem;color:#4a5568;margin-bottom:4px;">📞 ' + escapeHtml(toPhone) + '</div>'
-      + (toCity   ? '<div style="font-size:.78rem;color:#1A4A8A;font-weight:700;margin-bottom:4px;">🏙️ ' + escapeHtml(toCity) + '</div>' : '')
-      + (toKala   ? '<div style="font-size:.78rem;color:#4a5568;margin-bottom:4px;">📦 ' + escapeHtml(toKala) + (toWeight?' — '+toWeight:'') + '</div>' : '')
+      + '<div style="margin-bottom:5px;"><span style="font-size:.7rem;color:#8492a6;">To: </span><span style="font-size:.88rem;font-weight:700;color:#1a1a2e;">' + escapeHtml(toName) + '</span></div>'
+      + '<div style="font-size:.78rem;color:#5a6476;margin-bottom:4px;">📞 ' + escapeHtml(toPhone) + '</div>'
+      + (toCity   ? '<div style="font-size:.78rem;color:#434b57;font-weight:700;margin-bottom:4px;">🏙️ ' + escapeHtml(toCity) + '</div>' : '')
+      + (toKala   ? '<div style="font-size:.78rem;color:#5a6476;margin-bottom:4px;">📦 ' + escapeHtml(toKala) + (toWeight?' — '+toWeight:'') + '</div>' : '')
       + '<div style="display:flex;justify-content:flex-end;margin-top:6px;">'
-        + '<button onclick="driverScanOrViewDelivery(\'' + d.key + '\',\'uk\')" style="padding:6px 14px;background:linear-gradient(135deg,#071A38,#1A4A8A);color:#fff;border:none;border-radius:20px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;"><i class="fas fa-edit"></i> Update</button>'
+        + '<button onclick="driverScanOrViewDelivery(\'' + d.key + '\',\'uk\')" style="padding:6px 14px;background:linear-gradient(135deg,#2d3340,#434b57);color:#fff;border:none;border-radius:20px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;"><i class="fas fa-edit"></i> Update</button>'
       + '</div>'
     + '</div>'
   + '</div>';
@@ -2554,19 +2555,19 @@ function switchDriverTab(tab) {
   var savedList = document.getElementById('driverSavedList');
 
   // reset all
-  [kuBtn, ukBtn, savedBtn].forEach(function(b){ if(b){ b.style.background='transparent'; b.style.color='#718096'; } });
+  [kuBtn, ukBtn, savedBtn].forEach(function(b){ if(b){ b.style.background='transparent'; b.style.color='#8492a6'; } });
   [kuList, ukList, savedList].forEach(function(l){ if(l) l.style.display='none'; });
 
   if (tab === 'ku') {
     kuList.style.display = 'block';
-    kuBtn.style.background = 'linear-gradient(135deg,#0F2D5E,#1A4A8A)'; kuBtn.style.color = '#fff';
+    kuBtn.style.background = 'linear-gradient(135deg,#2d3340,#434b57)'; kuBtn.style.color = '#fff';
   } else if (tab === 'saved') {
     savedList.style.display = 'block';
-    savedBtn.style.background = 'linear-gradient(135deg,#744210,#1A4A8A)'; savedBtn.style.color = '#fff';
+    savedBtn.style.background = 'linear-gradient(135deg,#744210,#E6B800)'; savedBtn.style.color = '#fff';
     loadDriverSavedScans();
   } else {
     ukList.style.display = 'block';
-    ukBtn.style.background = 'linear-gradient(135deg,#071A38,#1A4A8A)'; ukBtn.style.color = '#fff';
+    ukBtn.style.background = 'linear-gradient(135deg,#2d3340,#434b57)'; ukBtn.style.color = '#fff';
   }
 }
 
@@ -2668,14 +2669,14 @@ function handleDriverQrResult(text) {
   if (orderNum) {
     doSearch(orderNum, false).then(function(found) {
       if (!found && plainNum) return doSearch(plainNum, true);
-      if (!found) resultDiv.innerHTML = '<div style="color:#0F2D5E;">❌ تۆمار نەدۆزرایەوە<br><small style="color:#718096;">' + escapeHtml(text.substring(0,120)) + '</small></div>';
-    }).catch(function() { resultDiv.innerHTML = '<div style="color:#0F2D5E;">❌ هەڵەی پەیوەندی</div>'; });
+      if (!found) resultDiv.innerHTML = '<div style="color:#DC3545;">❌ تۆمار نەدۆزرایەوە<br><small style="color:#8492a6;">' + escapeHtml(text.substring(0,120)) + '</small></div>';
+    }).catch(function() { resultDiv.innerHTML = '<div style="color:#DC3545;">❌ هەڵەی پەیوەندی</div>'; });
   } else if (plainNum) {
     doSearch(plainNum, true).then(function(found) {
-      if (!found) resultDiv.innerHTML = '<div style="color:#0F2D5E;">❌ تۆمار نەدۆزرایەوە: <strong>' + escapeHtml(plainNum) + '</strong></div>';
-    }).catch(function() { resultDiv.innerHTML = '<div style="color:#0F2D5E;">❌ هەڵەی پەیوەندی</div>'; });
+      if (!found) resultDiv.innerHTML = '<div style="color:#DC3545;">❌ تۆمار نەدۆزرایەوە: <strong>' + escapeHtml(plainNum) + '</strong></div>';
+    }).catch(function() { resultDiv.innerHTML = '<div style="color:#DC3545;">❌ هەڵەی پەیوەندی</div>'; });
   } else {
-    resultDiv.innerHTML = '<div style="color:#0F2D5E;">❌ فۆرماتی QR ناشناسراو</div><div style="margin-top:6px;font-size:.75rem;color:#718096;word-break:break-all;">' + escapeHtml(text.substring(0,200)) + '</div>';
+    resultDiv.innerHTML = '<div style="color:#DC3545;">❌ فۆرماتی QR ناشناسراو</div><div style="margin-top:6px;font-size:.75rem;color:#8492a6;word-break:break-all;">' + escapeHtml(text.substring(0,200)) + '</div>';
   }
 }
 
@@ -2735,9 +2736,9 @@ function closeDriverDetailModal() {
 
 function buildDriverIntlDetail(d) {
   var status = d.status || 'registered';
-  var statusColors = {registered:'#0F2D5E',picked_up:'#2E6DB4',loading:'#E6B800',in_transit:'#2E6DB4',sorting:'#0F2D5E',delivered:'#1A4A8A'};
+  var statusColors = {registered:'#434b57',picked_up:'#FFCC00',loading:'#E6B800',in_transit:'#5a6476',sorting:'#434b57',delivered:'#434b57'};
   var statusLabels = {registered:'📋 Registered',picked_up:'🚗 Picked Up',loading:'🏭 Loading',in_transit:'🚛 In Transit',sorting:'📦 Sorting',delivered:'✅ Delivered'};
-  var clr = statusColors[status] || '#1A4A8A';
+  var clr = statusColors[status] || '#434b57';
 
   // ————————————————————————————————————————————
   // چارەسەری ڕاستەوخۆ: intlPost داتای نێردەر و وەرگر لەناو
@@ -2764,66 +2765,66 @@ function buildDriverIntlDetail(d) {
 
   return ''
   // Header
-  + '<div style="background:linear-gradient(135deg,#071A38,#1A4A8A);padding:14px 16px;text-align:center;position:relative;">'
+  + '<div style="background:linear-gradient(135deg,#2d3340,#434b57);padding:14px 16px;text-align:center;position:relative;">'
     + '<button onclick="closeDriverDetailModal()" style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,.25);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:.9rem;cursor:pointer;line-height:30px;">✕</button>'
     + '<div style="color:#fff;font-weight:900;font-size:1.2rem;">🌍 Order # ' + escapeHtml(orderNum) + '</div>'
     + '<div style="color:rgba(255,255,255,.8);font-size:.75rem;margin-top:2px;">International Post</div>'
   + '</div>'
 
   // لەیبل
-  + '<div id="driverLabelPrint_' + d.key + '" style="margin:14px 14px 0;border:2px dashed #1A4A8A;border-radius:14px;padding:14px;background:#fff;direction:ltr;">'
+  + '<div id="driverLabelPrint_' + d.key + '" style="margin:14px 14px 0;border:2px dashed #434b57;border-radius:14px;padding:14px;background:#fff;direction:ltr;">'
 
     // TO + QR
     + '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px;">'
       + '<div style="flex:1;">'
-        + '<div style="font-size:.62rem;color:#718096;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">📬 TO</div>'
-        + '<div style="font-size:.95rem;font-weight:900;color:#071A38;">' + escapeHtml(toName) + '</div>'
-        + '<div style="font-size:.8rem;color:#4a5568;">📞 ' + escapeHtml(toPhone) + '</div>'
-        + (d.destinationCity ? '<div style="font-size:.85rem;color:#1A4A8A;font-weight:800;margin-top:2px;">🏙️ ' + escapeHtml(d.destinationCity) + '</div>' : '')
-        + (d.address1 ? '<div style="font-size:.72rem;color:#718096;">' + escapeHtml(d.address1) + (d.postcode?' '+escapeHtml(d.postcode):'') + '</div>' : '')
+        + '<div style="font-size:.62rem;color:#8492a6;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">📬 TO</div>'
+        + '<div style="font-size:.95rem;font-weight:900;color:#1a1a2e;">' + escapeHtml(toName) + '</div>'
+        + '<div style="font-size:.8rem;color:#5a6476;">📞 ' + escapeHtml(toPhone) + '</div>'
+        + (d.destinationCity ? '<div style="font-size:.85rem;color:#434b57;font-weight:800;margin-top:2px;">🏙️ ' + escapeHtml(d.destinationCity) + '</div>' : '')
+        + (d.address1 ? '<div style="font-size:.72rem;color:#8492a6;">' + escapeHtml(d.address1) + (d.postcode?' '+escapeHtml(d.postcode):'') + '</div>' : '')
       + '</div>'
       + '<div style="text-align:center;flex-shrink:0;">'
-        + '<img src="' + qrUrl + '" style="width:88px;height:88px;border-radius:6px;border:1.5px solid #e2e8f0;display:block;">'
-        + '<div style="font-size:.6rem;color:#718096;margin-top:2px;">' + escapeHtml(orderNum) + '</div>'
+        + '<img src="' + qrUrl + '" style="width:88px;height:88px;border-radius:6px;border:1.5px solid #dee2e6;display:block;">'
+        + '<div style="font-size:.6rem;color:#8492a6;margin-top:2px;">' + escapeHtml(orderNum) + '</div>'
       + '</div>'
     + '</div>'
 
-    + '<div style="border-top:1.5px dashed #DBEAFE;margin-bottom:10px;"></div>'
+    + '<div style="border-top:1.5px dashed #E8EBF0;margin-bottom:10px;"></div>'
 
     // FROM
     + '<div style="margin-bottom:10px;">'
-      + '<div style="font-size:.62rem;color:#718096;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">📤 FROM</div>'
-      + '<div style="font-size:.85rem;font-weight:700;color:#071A38;">' + escapeHtml(fromName) + '</div>'
-      + '<div style="font-size:.78rem;color:#4a5568;">📞 ' + escapeHtml(fromPhone) + '</div>'
-      + (fromAddr !== '—' ? '<div style="font-size:.72rem;color:#718096;">📍 ' + escapeHtml(fromAddr) + '</div>' : '')
+      + '<div style="font-size:.62rem;color:#8492a6;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">📤 FROM</div>'
+      + '<div style="font-size:.85rem;font-weight:700;color:#1a1a2e;">' + escapeHtml(fromName) + '</div>'
+      + '<div style="font-size:.78rem;color:#5a6476;">📞 ' + escapeHtml(fromPhone) + '</div>'
+      + (fromAddr !== '—' ? '<div style="font-size:.72rem;color:#8492a6;">📍 ' + escapeHtml(fromAddr) + '</div>' : '')
     + '</div>'
 
     // Package + Status
     + '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">'
-      + '<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:5px 10px;font-size:.78rem;color:#1e40af;font-weight:700;">📦 ' + escapeHtml(pkg) + (kg?' — '+kg+'kg':'') + (qty?' x'+qty:'') + '</div>'
+      + '<div style="background:#F5F7FA;border:1px solid #bfdbfe;border-radius:8px;padding:5px 10px;font-size:.78rem;color:#1e40af;font-weight:700;">📦 ' + escapeHtml(pkg) + (kg?' — '+kg+'kg':'') + (qty?' x'+qty:'') + '</div>'
       + '<div style="background:' + clr + '22;border:1.5px solid ' + clr + '66;border-radius:8px;padding:5px 10px;font-size:.78rem;font-weight:700;color:' + clr + ';">' + (statusLabels[status]||status) + '</div>'
     + '</div>'
-    + (d.driverName ? '<div style="margin-top:8px;font-size:.72rem;color:#718096;border-top:1px dashed #e2e8f0;padding-top:6px;">🚗 Driver: ' + escapeHtml(d.driverName) + '</div>' : '')
+    + (d.driverName ? '<div style="margin-top:8px;font-size:.72rem;color:#8492a6;border-top:1px dashed #dee2e6;padding-top:6px;">🚗 Driver: ' + escapeHtml(d.driverName) + '</div>' : '')
   + '</div>'
 
   // Update box
-  + '<div style="margin:12px 14px 0;background:#EFF6FF;border:1.5px solid #FFCC00;border-radius:12px;padding:12px;">'
-    + '<div style="font-size:.8rem;font-weight:800;color:#1A4A8A;margin-bottom:8px;"><i class="fas fa-truck"></i> Update Delivery</div>'
-    + '<select id="driverUkStatus" style="width:100%;padding:9px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-family:inherit;outline:none;background:#fff;margin-bottom:8px;">'
+  + '<div style="margin:12px 14px 0;background:#F5F7FA;border:1.5px solid #FFCC00;border-radius:12px;padding:12px;">'
+    + '<div style="font-size:.8rem;font-weight:800;color:#E6B800;margin-bottom:8px;"><i class="fas fa-truck"></i> Update Delivery</div>'
+    + '<select id="driverUkStatus" style="width:100%;padding:9px;border:1.5px solid #dee2e6;border-radius:8px;font-size:.82rem;font-family:inherit;outline:none;background:#fff;margin-bottom:8px;">'
       + '<option value="registered" ' + (status==='registered'?'selected':'') + '>📋 Registered</option>'
       + '<option value="picked_up" ' + (status==='picked_up'?'selected':'') + '>🚗 Picked Up</option>'
       + '<option value="in_transit" ' + (status==='in_transit'?'selected':'') + '>🚛 In Transit</option>'
       + '<option value="sorting" ' + (status==='sorting'?'selected':'') + '>📦 Sorting</option>'
       + '<option value="delivered" ' + (status==='delivered'?'selected':'') + '>✅ Delivered</option>'
     + '</select>'
-    + '<textarea id="driverUkNotes" rows="2" placeholder="Delivery notes..." style="width:100%;padding:9px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-family:inherit;outline:none;box-sizing:border-box;resize:none;">' + escapeHtml(d.deliveryNote||'') + '</textarea>'
+    + '<textarea id="driverUkNotes" rows="2" placeholder="Delivery notes..." style="width:100%;padding:9px;border:1.5px solid #dee2e6;border-radius:8px;font-size:.82rem;font-family:inherit;outline:none;box-sizing:border-box;resize:none;">' + escapeHtml(d.deliveryNote||'') + '</textarea>'
   + '</div>'
 
   // دوگمەکان
   + '<div style="padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">'
-    + '<button onclick="window.ipPrint?window.ipPrint(\''+d.key+'\'):driverPrintLabel(\''+d.key+'\')" style="padding:12px;background:linear-gradient(135deg,#071A38,#1A4A8A);color:#fff;border:none;border-radius:12px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;"><i class="fas fa-print"></i> Print</button>'
-    + '<button onclick="saveDriverIntlUpdate(\'' + d.key + '\',\'' + (d._node||'intlPost') + '\')" style="padding:12px;background:linear-gradient(135deg,#0F2D5E,#1A4A8A);color:#fff;border:none;border-radius:12px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;"><i class="fas fa-save"></i> Save</button>'
-    + '<button onclick="closeDriverDetailModal()" style="grid-column:span 2;padding:10px;background:#EFF6FF;color:#4a5568;border:2px solid #e2e8f0;border-radius:12px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;">Cancel</button>'
+    + '<button onclick="window.ipPrint?window.ipPrint(\''+d.key+'\'):driverPrintLabel(\''+d.key+'\')" style="padding:12px;background:linear-gradient(135deg,#2d3340,#434b57);color:#fff;border:none;border-radius:12px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;"><i class="fas fa-print"></i> Print</button>'
+    + '<button onclick="saveDriverIntlUpdate(\'' + d.key + '\',\'' + (d._node||'intlPost') + '\')" style="padding:12px;background:linear-gradient(135deg,#2d3340,#434b57);color:#fff;border:none;border-radius:12px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;"><i class="fas fa-save"></i> Save</button>'
+    + '<button onclick="closeDriverDetailModal()" style="grid-column:span 2;padding:10px;background:#F5F7FA;color:#5a6476;border:2px solid #dee2e6;border-radius:12px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;">Cancel</button>'
   + '</div>';
 }
 
@@ -2889,72 +2890,72 @@ function saveDriverUkUpdate(key) { saveDriverIntlUpdate(key, 'intlPost'); }
 // ============================================================
 function buildDriverKuDetail(d) {
   var status = d.status || 'registered';
-  var statusColors = {registered:'#0F2D5E',picked_up:'#2E6DB4',loading:'#E6B800',in_transit:'#2E6DB4',sorting:'#0F2D5E',delivered:'#1A4A8A'};
+  var statusColors = {registered:'#434b57',picked_up:'#FFCC00',loading:'#E6B800',in_transit:'#5a6476',sorting:'#434b57',delivered:'#434b57'};
   var statusLabels = {registered:'📋 تۆماركراوە',picked_up:'🚗 وەرگیراو',loading:'🏭 بارکراوە',in_transit:'🚛 لەڕێگادایە',sorting:'📦 دابەشکردن',delivered:'✅ گەیشتووە'};
-  var clr = statusColors[status] || '#0F2D5E';
+  var clr = statusColors[status] || '#434b57';
   var orderNum = d.orderNumber || d.id || '—';
 
   var qrData = 'پسولە: ' + orderNum + ' | نێردەر: ' + (d.senderName||d.name||'') + ' ' + (d.senderMobile||d.mobile||'') + ' | وەرگر: ' + (d.receiverName||'') + ' ' + (d.receiverMobile||'');
   var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=140x140&margin=4&data=' + encodeURIComponent(qrData);
 
   return ''
-  + '<div style="background:linear-gradient(135deg,#0F2D5E,#1A4A8A);padding:14px 16px;text-align:center;position:relative;">'
+  + '<div style="background:linear-gradient(135deg,#2d3340,#434b57);padding:14px 16px;text-align:center;position:relative;">'
     + '<button onclick="closeDriverDetailModal()" style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,.25);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:.9rem;cursor:pointer;line-height:30px;">✕</button>'
     + '<div style="color:#fff;font-weight:900;font-size:1.2rem;">🇮🇶 پسولە # ' + escapeHtml(orderNum) + '</div>'
     + '<div style="color:rgba(255,255,255,.8);font-size:.75rem;margin-top:2px;">پۆستی ناوخۆ</div>'
   + '</div>'
 
   // لەیبل
-  + '<div style="margin:14px 14px 0;border:2px dashed #1A4A8A;border-radius:14px;padding:14px;background:#fff;direction:rtl;">'
+  + '<div style="margin:14px 14px 0;border:2px dashed #434b57;border-radius:14px;padding:14px;background:#fff;direction:rtl;">'
 
     // نێردەر + وەرگر + QR
     + '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px;">'
       + '<div style="flex:1;">'
-        + '<div style="font-size:.62rem;color:#718096;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">📤 نێردەر</div>'
-        + '<div style="font-size:.95rem;font-weight:900;color:#071A38;">' + escapeHtml(d.senderName||d.name||'—') + '</div>'
-        + '<div style="font-size:.8rem;color:#4a5568;">📞 ' + escapeHtml(d.senderMobile||d.mobile||'—') + '</div>'
-        + (d.senderLocation||d.address ? '<div style="font-size:.72rem;color:#718096;">📍 ' + escapeHtml(d.senderLocation||d.address||'') + '</div>' : '')
+        + '<div style="font-size:.62rem;color:#8492a6;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">📤 نێردەر</div>'
+        + '<div style="font-size:.95rem;font-weight:900;color:#1a1a2e;">' + escapeHtml(d.senderName||d.name||'—') + '</div>'
+        + '<div style="font-size:.8rem;color:#5a6476;">📞 ' + escapeHtml(d.senderMobile||d.mobile||'—') + '</div>'
+        + (d.senderLocation||d.address ? '<div style="font-size:.72rem;color:#8492a6;">📍 ' + escapeHtml(d.senderLocation||d.address||'') + '</div>' : '')
         + '<div style="height:8px;"></div>'
-        + '<div style="font-size:.62rem;color:#718096;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">📥 وەرگر</div>'
-        + '<div style="font-size:.95rem;font-weight:900;color:#071A38;">' + escapeHtml(d.receiverName||'—') + '</div>'
-        + '<div style="font-size:.8rem;color:#4a5568;">📞 ' + escapeHtml(d.receiverMobile||'—') + '</div>'
-        + (d.receiverLocation ? '<div style="font-size:.72rem;color:#718096;">📍 ' + escapeHtml(d.receiverLocation) + '</div>' : '')
+        + '<div style="font-size:.62rem;color:#8492a6;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">📥 وەرگر</div>'
+        + '<div style="font-size:.95rem;font-weight:900;color:#1a1a2e;">' + escapeHtml(d.receiverName||'—') + '</div>'
+        + '<div style="font-size:.8rem;color:#5a6476;">📞 ' + escapeHtml(d.receiverMobile||'—') + '</div>'
+        + (d.receiverLocation ? '<div style="font-size:.72rem;color:#8492a6;">📍 ' + escapeHtml(d.receiverLocation) + '</div>' : '')
       + '</div>'
       + '<div style="text-align:center;flex-shrink:0;">'
-        + '<img src="' + qrUrl + '" style="width:88px;height:88px;border-radius:6px;border:1.5px solid #e2e8f0;display:block;">'
-        + '<div style="font-size:.6rem;color:#718096;margin-top:2px;">' + escapeHtml(orderNum) + '</div>'
+        + '<img src="' + qrUrl + '" style="width:88px;height:88px;border-radius:6px;border:1.5px solid #dee2e6;display:block;">'
+        + '<div style="font-size:.6rem;color:#8492a6;margin-top:2px;">' + escapeHtml(orderNum) + '</div>'
       + '</div>'
     + '</div>'
 
-    + '<div style="border-top:1.5px dashed #DBEAFE;margin-bottom:10px;"></div>'
+    + '<div style="border-top:1.5px dashed #E8EBF0;margin-bottom:10px;"></div>'
 
     // کاڵا + ستاتەس
     + '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">'
-      + '<div style="background:#EFF6FF;border:1px solid #9ae6b4;border-radius:8px;padding:5px 10px;font-size:.78rem;color:#0F2D5E;font-weight:700;">📦 ' + escapeHtml(d.packageName||d.details||'—') + (d.packageKg?' — '+d.packageKg+'کگ':'') + (d.packageQty?' x'+d.packageQty:'') + '</div>'
+      + '<div style="background:#F5F7FA;border:1px solid #9ae6b4;border-radius:8px;padding:5px 10px;font-size:.78rem;color:#2d3340;font-weight:700;">📦 ' + escapeHtml(d.packageName||d.details||'—') + (d.packageKg?' — '+d.packageKg+'کگ':'') + (d.packageQty?' x'+d.packageQty:'') + '</div>'
       + '<div style="background:' + clr + '22;border:1.5px solid ' + clr + '66;border-radius:8px;padding:5px 10px;font-size:.78rem;font-weight:700;color:' + clr + ';">' + (statusLabels[status]||status) + '</div>'
     + '</div>'
-    + (d.deliveryNote ? '<div style="margin-top:8px;font-size:.72rem;color:#718096;border-top:1px dashed #e2e8f0;padding-top:6px;">📝 ' + escapeHtml(d.deliveryNote) + '</div>' : '')
-    + (d.driverName ? '<div style="margin-top:6px;font-size:.72rem;color:#718096;">🚗 شۆفیر: ' + escapeHtml(d.driverName) + '</div>' : '')
+    + (d.deliveryNote ? '<div style="margin-top:8px;font-size:.72rem;color:#8492a6;border-top:1px dashed #dee2e6;padding-top:6px;">📝 ' + escapeHtml(d.deliveryNote) + '</div>' : '')
+    + (d.driverName ? '<div style="margin-top:6px;font-size:.72rem;color:#8492a6;">🚗 شۆفیر: ' + escapeHtml(d.driverName) + '</div>' : '')
   + '</div>'
 
   // Update box
-  + '<div style="margin:12px 14px 0;background:#EFF6FF;border:1.5px solid #9ae6b4;border-radius:12px;padding:12px;">'
-    + '<div style="font-size:.8rem;font-weight:800;color:#0F2D5E;margin-bottom:8px;"><i class="fas fa-truck"></i> نوێکردنەوەی ستاتەس</div>'
-    + '<select id="driverKuStatus" style="width:100%;padding:9px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-family:inherit;outline:none;background:#fff;margin-bottom:8px;">'
+  + '<div style="margin:12px 14px 0;background:#F5F7FA;border:1.5px solid #9ae6b4;border-radius:12px;padding:12px;">'
+    + '<div style="font-size:.8rem;font-weight:800;color:#2d3340;margin-bottom:8px;"><i class="fas fa-truck"></i> نوێکردنەوەی ستاتەس</div>'
+    + '<select id="driverKuStatus" style="width:100%;padding:9px;border:1.5px solid #dee2e6;border-radius:8px;font-size:.82rem;font-family:inherit;outline:none;background:#fff;margin-bottom:8px;">'
       + '<option value="registered" ' + (status==='registered'?'selected':'') + '>📋 تۆماركراوە</option>'
       + '<option value="picked_up" ' + (status==='picked_up'?'selected':'') + '>🚗 وەرگیراو</option>'
       + '<option value="in_transit" ' + (status==='in_transit'?'selected':'') + '>🚛 لەڕێگادایە</option>'
       + '<option value="sorting" ' + (status==='sorting'?'selected':'') + '>📦 دابەشکردن</option>'
       + '<option value="delivered" ' + (status==='delivered'?'selected':'') + '>✅ گەیشتووە</option>'
     + '</select>'
-    + '<textarea id="driverKuNotes" rows="2" placeholder="تیبینی..." style="width:100%;padding:9px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-family:inherit;outline:none;box-sizing:border-box;resize:none;">' + escapeHtml(d.deliveryNote||'') + '</textarea>'
+    + '<textarea id="driverKuNotes" rows="2" placeholder="تیبینی..." style="width:100%;padding:9px;border:1.5px solid #dee2e6;border-radius:8px;font-size:.82rem;font-family:inherit;outline:none;box-sizing:border-box;resize:none;">' + escapeHtml(d.deliveryNote||'') + '</textarea>'
   + '</div>'
 
   // دوگمەکان
   + '<div style="padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">'
-    + '<button onclick="driverPrintLabel(\'' + d.key + '\')" style="padding:12px;background:linear-gradient(135deg,#0F2D5E,#1A4A8A);color:#fff;border:none;border-radius:12px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;"><i class="fas fa-print"></i> پرینت</button>'
-    + '<button onclick="saveDriverKuUpdate(\'' + d.key + '\')" style="padding:12px;background:linear-gradient(135deg,#071A38,#1A4A8A);color:#fff;border:none;border-radius:12px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;"><i class="fas fa-save"></i> پاشەکەوت</button>'
-    + '<button onclick="closeDriverDetailModal()" style="grid-column:span 2;padding:10px;background:#EFF6FF;color:#4a5568;border:2px solid #e2e8f0;border-radius:12px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;">داخستن</button>'
+    + '<button onclick="driverPrintLabel(\'' + d.key + '\')" style="padding:12px;background:linear-gradient(135deg,#2d3340,#434b57);color:#fff;border:none;border-radius:12px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;"><i class="fas fa-print"></i> پرینت</button>'
+    + '<button onclick="saveDriverKuUpdate(\'' + d.key + '\')" style="padding:12px;background:linear-gradient(135deg,#2d3340,#434b57);color:#fff;border:none;border-radius:12px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;"><i class="fas fa-save"></i> پاشەکەوت</button>'
+    + '<button onclick="closeDriverDetailModal()" style="grid-column:span 2;padding:10px;background:#F5F7FA;color:#5a6476;border:2px solid #dee2e6;border-radius:12px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;">داخستن</button>'
   + '</div>';
 }
 
@@ -3024,34 +3025,34 @@ function driverPrintLabel(key) {
 
     var html = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
       + '<style>@page{size:A5;margin:8mm;} body{font-family:"Tahoma","Arial",sans-serif;direction:rtl;margin:0;padding:0;} '
-      + '.box{border:3px solid #0F2D5E;border-radius:10px;padding:12px;} '
-      + '.hdr{background:#0F2D5E;color:#fff;padding:8px 14px;font-size:1rem;font-weight:900;display:flex;justify-content:space-between;border-radius:6px;margin-bottom:10px;} '
-      + '.grid{display:flex;gap:12px;margin-bottom:10px;} .col{flex:1;border:1.5px solid #e2e8f0;border-radius:6px;padding:8px;} '
-      + '.lbl{font-size:.65rem;color:#718096;margin-bottom:2px;} .val{font-size:.85rem;font-weight:700;color:#071A38;} '
-      + '.tel{font-size:.78rem;color:#4a5568;} .loc{font-size:.7rem;color:#718096;}'
+      + '.box{border:3px solid #2d3340;border-radius:10px;padding:12px;} '
+      + '.hdr{background:#2d3340;color:#fff;padding:8px 14px;font-size:1rem;font-weight:900;display:flex;justify-content:space-between;border-radius:6px;margin-bottom:10px;} '
+      + '.grid{display:flex;gap:12px;margin-bottom:10px;} .col{flex:1;border:1.5px solid #dee2e6;border-radius:6px;padding:8px;} '
+      + '.lbl{font-size:.65rem;color:#8492a6;margin-bottom:2px;} .val{font-size:.85rem;font-weight:700;color:#1a1a2e;} '
+      + '.tel{font-size:.78rem;color:#5a6476;} .loc{font-size:.7rem;color:#8492a6;}'
       + '</style></head><body>'
       + '<div class="box">'
       + '<div class="hdr"><span>🇮🇶 پۆستی ناوخۆ — UK BAZAR</span><span># ' + escapeHtml(orderNum) + '</span></div>'
       + '<div class="grid">'
-        + '<div class="col" style="border-right:3px solid #0F2D5E;">'
+        + '<div class="col" style="border-right:3px solid #2d3340;">'
           + '<div class="lbl">📤 نێردەر</div>'
           + '<div class="val">' + escapeHtml(d.senderName||d.name||'—') + '</div>'
           + '<div class="tel">📞 ' + escapeHtml(d.senderMobile||d.mobile||'—') + '</div>'
           + (d.senderLocation||d.address ? '<div class="loc">📍 ' + escapeHtml(d.senderLocation||d.address||'') + '</div>' : '')
         + '</div>'
-        + '<div class="col" style="border-right:3px solid #1A4A8A;">'
+        + '<div class="col" style="border-right:3px solid #434b57;">'
           + '<div class="lbl">📥 وەرگر</div>'
           + '<div class="val">' + escapeHtml(d.receiverName||'—') + '</div>'
           + '<div class="tel">📞 ' + escapeHtml(d.receiverMobile||'—') + '</div>'
           + (d.receiverLocation ? '<div class="loc">📍 ' + escapeHtml(d.receiverLocation) + '</div>' : '')
         + '</div>'
       + '</div>'
-      + '<div style="display:flex;align-items:center;justify-content:space-between;background:#EFF6FF;border-radius:8px;padding:8px 12px;margin-bottom:8px;">'
+      + '<div style="display:flex;align-items:center;justify-content:space-between;background:#F5F7FA;border-radius:8px;padding:8px 12px;margin-bottom:8px;">'
         + '<div><div class="lbl">📦 کاڵا</div><div style="font-size:.85rem;font-weight:700;">' + escapeHtml(d.packageName||d.details||'—') + (d.packageKg?' — '+d.packageKg+'کگ':'') + '</div></div>'
         + '<img src="' + qrUrl + '" style="width:90px;height:90px;border-radius:4px;">'
       + '</div>'
-      + (d.deliveryNote ? '<div style="font-size:.75rem;color:#718096;border-top:1px dashed #e2e8f0;padding-top:6px;">📝 ' + escapeHtml(d.deliveryNote) + '</div>' : '')
-      + '<div style="text-align:center;font-size:.65rem;color:#a0aec0;margin-top:8px;border-top:1px dashed #e2e8f0;padding-top:6px;">' + (d.timestamp||'') + ' — UK BAZAR</div>'
+      + (d.deliveryNote ? '<div style="font-size:.75rem;color:#8492a6;border-top:1px dashed #dee2e6;padding-top:6px;">📝 ' + escapeHtml(d.deliveryNote) + '</div>' : '')
+      + '<div style="text-align:center;font-size:.65rem;color:#adb5bd;margin-top:8px;border-top:1px dashed #dee2e6;padding-top:6px;">' + (d.timestamp||'') + ' — UK BAZAR</div>'
       + '</div>'
       + ''
       + '</body></html>';
@@ -3083,11 +3084,11 @@ function loadDriverSavedScans() {
   if (!_currentDriver) return;
   var container = document.getElementById('driverSavedList');
   if (!container) return;
-  container.innerHTML = '<div style="text-align:center;padding:24px;color:#718096;"><i class="fas fa-spinner fa-spin"></i> بارکردن...</div>';
+  container.innerHTML = '<div style="text-align:center;padding:24px;color:#8492a6;"><i class="fas fa-spinner fa-spin"></i> بارکردن...</div>';
 
   database.ref('driverScans/' + _currentDriver.key).once('value').then(function(snap) {
     if (!snap.exists()) {
-      container.innerHTML = '<div style="text-align:center;padding:32px;color:#a0aec0;"><div style="font-size:2.5rem;margin-bottom:10px;">📋</div><div>هیچ تۆمارێکی پاشەکەوتکراو نییە</div><div style="font-size:.78rem;margin-top:6px;">کاتێک کاڵایەک Save دەکەیت، ئێرە دەبینرێت</div></div>';
+      container.innerHTML = '<div style="text-align:center;padding:32px;color:#adb5bd;"><div style="font-size:2.5rem;margin-bottom:10px;">📋</div><div>هیچ تۆمارێکی پاشەکەوتکراو نییە</div><div style="font-size:.78rem;margin-top:6px;">کاتێک کاڵایەک Save دەکەیت، ئێرە دەبینرێت</div></div>';
       return;
     }
 
@@ -3095,21 +3096,21 @@ function loadDriverSavedScans() {
     snap.forEach(function(ch) { items.push(Object.assign({ scanKey: ch.key }, ch.val())); });
     items.sort(function(a, b) { return (b.savedAt||'') > (a.savedAt||'') ? 1 : -1; });
 
-    var typeColors = { ku: '#1A4A8A', uk: '#1A4A8A', intl: '#1A4A8A' };
+    var typeColors = { ku: '#434b57', uk: '#434b57', intl: '#434b57' };
     var typeLabels = { ku: '🇮🇶 ناوخۆ', uk: '🇬🇧 UK', intl: '🌍 نێودەوڵەتی' };
-    var statusColors = {registered:'#0F2D5E',picked_up:'#2E6DB4',loading:'#E6B800',in_transit:'#2E6DB4',sorting:'#0F2D5E',delivered:'#1A4A8A'};
+    var statusColors = {registered:'#434b57',picked_up:'#FFCC00',loading:'#E6B800',in_transit:'#5a6476',sorting:'#434b57',delivered:'#434b57'};
     var statusLabels = {registered:'📋 تۆماركراوە',picked_up:'🚗 وەرگیراو',loading:'🏭 بارکراوە',in_transit:'🚛 لەڕێگادایە',sorting:'📦 دابەشکردن',delivered:'✅ گەیشتووە'};
 
     var html = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">'
       + '<div style="font-size:.85rem;font-weight:800;color:#744210;">📋 پاشەکەوتکراوەکان (' + items.length + ')</div>'
-      + '<button onclick="clearAllDriverScans()" style="padding:5px 12px;background:#EFF6FF;color:#071A38;border:1.5px solid #DBEAFE;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;"><i class="fas fa-trash"></i> سڕینەوەی هەموو</button>'
+      + '<button onclick="clearAllDriverScans()" style="padding:5px 12px;background:#FFF5F5;color:#B02A37;border:1.5px solid #FFCDD2;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;"><i class="fas fa-trash"></i> سڕینەوەی هەموو</button>'
       + '</div>';
 
     html += '<div style="display:flex;flex-direction:column;gap:10px;">';
     items.forEach(function(sc) {
-      var typeClr = typeColors[sc.type] || '#0F2D5E';
+      var typeClr = typeColors[sc.type] || '#434b57';
       var typeLbl = typeLabels[sc.type] || sc.type || '—';
-      var stClr = statusColors[sc.status] || '#0F2D5E';
+      var stClr = statusColors[sc.status] || '#434b57';
       var stLbl = statusLabels[sc.status] || sc.status || '—';
 
       html += '<div style="background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);border:2px solid ' + stClr + '22;">'
@@ -3124,22 +3125,22 @@ function loadDriverSavedScans() {
         // جەستە
         + '<div style="padding:10px 12px;">'
           + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">'
-            + '<div><div style="font-size:.68rem;color:#718096;">📤 نێردەر</div>'
+            + '<div><div style="font-size:.68rem;color:#8492a6;">📤 نێردەر</div>'
               + '<div style="font-size:.82rem;font-weight:700;">' + escapeHtml(sc.senderName||'—') + '</div>'
-              + '<div style="font-size:.75rem;color:#4a5568;">' + escapeHtml(sc.senderMobile||'') + '</div>'
+              + '<div style="font-size:.75rem;color:#5a6476;">' + escapeHtml(sc.senderMobile||'') + '</div>'
             + '</div>'
-            + '<div><div style="font-size:.68rem;color:#718096;">📥 وەرگر</div>'
+            + '<div><div style="font-size:.68rem;color:#8492a6;">📥 وەرگر</div>'
               + '<div style="font-size:.82rem;font-weight:700;">' + escapeHtml(sc.receiverName||'—') + '</div>'
-              + '<div style="font-size:.75rem;color:#4a5568;">' + escapeHtml(sc.receiverMobile||'') + '</div>'
+              + '<div style="font-size:.75rem;color:#5a6476;">' + escapeHtml(sc.receiverMobile||'') + '</div>'
             + '</div>'
           + '</div>'
-          + (sc.packageName ? '<div style="font-size:.75rem;color:#4a5568;margin-bottom:6px;">📦 ' + escapeHtml(sc.packageName) + (sc.packageKg?' — '+sc.packageKg+'کگ':'') + '</div>' : '')
-          + (sc.deliveryNote ? '<div style="font-size:.72rem;color:#718096;margin-bottom:6px;">📝 ' + escapeHtml(sc.deliveryNote) + '</div>' : '')
-          + '<div style="font-size:.65rem;color:#a0aec0;margin-bottom:8px;">💾 پاشەکەوتکرا: ' + escapeHtml(sc.savedAt||'') + '</div>'
+          + (sc.packageName ? '<div style="font-size:.75rem;color:#5a6476;margin-bottom:6px;">📦 ' + escapeHtml(sc.packageName) + (sc.packageKg?' — '+sc.packageKg+'کگ':'') + '</div>' : '')
+          + (sc.deliveryNote ? '<div style="font-size:.72rem;color:#8492a6;margin-bottom:6px;">📝 ' + escapeHtml(sc.deliveryNote) + '</div>' : '')
+          + '<div style="font-size:.65rem;color:#adb5bd;margin-bottom:8px;">💾 پاشەکەوتکرا: ' + escapeHtml(sc.savedAt||'') + '</div>'
           // دوگمەکان
           + '<div style="display:flex;gap:6px;">'
-            + '<button onclick="printDriverScan(\'' + sc.scanKey + '\')" style="flex:1;padding:8px;background:linear-gradient(135deg,#0F2D5E,#1A4A8A);color:#fff;border:none;border-radius:10px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:4px;"><i class="fas fa-print"></i> پرینت</button>'
-            + '<button onclick="deleteDriverScan(\'' + sc.scanKey + '\')" style="padding:8px 12px;background:#EFF6FF;color:#071A38;border:1.5px solid #DBEAFE;border-radius:10px;font-size:.78rem;cursor:pointer;"><i class="fas fa-trash"></i></button>'
+            + '<button onclick="printDriverScan(\'' + sc.scanKey + '\')" style="flex:1;padding:8px;background:linear-gradient(135deg,#2d3340,#434b57);color:#fff;border:none;border-radius:10px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:4px;"><i class="fas fa-print"></i> پرینت</button>'
+            + '<button onclick="deleteDriverScan(\'' + sc.scanKey + '\')" style="padding:8px 12px;background:#FFF5F5;color:#B02A37;border:1.5px solid #FFCDD2;border-radius:10px;font-size:.78rem;cursor:pointer;"><i class="fas fa-trash"></i></button>'
           + '</div>'
         + '</div>'
       + '</div>';
@@ -3147,7 +3148,7 @@ function loadDriverSavedScans() {
     html += '</div>';
     container.innerHTML = html;
   }).catch(function() {
-    container.innerHTML = '<div style="text-align:center;color:#0F2D5E;padding:20px;">هەڵە لە بارکردن</div>';
+    container.innerHTML = '<div style="text-align:center;color:#DC3545;padding:20px;">هەڵە لە بارکردن</div>';
   });
 }
 
@@ -3176,7 +3177,7 @@ function printDriverScan(scanKey) {
     var qrData = 'پسولە: ' + orderNum + ' | نێردەر: ' + (sc.senderName||'') + ' ' + (sc.senderMobile||'') + ' | وەرگر: ' + (sc.receiverName||'') + ' ' + (sc.receiverMobile||'');
     var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=' + encodeURIComponent(qrData);
     var typeLabel = sc.type === 'ku' ? 'پۆستی ناوخۆ' : (sc.type === 'intl' ? 'نێودەوڵەتی' : 'UK Post');
-    var borderClr = sc.type === 'ku' ? '#0F2D5E' : '#1A4A8A';
+    var borderClr = sc.type === 'ku' ? '#2d3340' : '#434b57';
 
     var html = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
       + '<meta name="viewport" content="width=device-width,initial-scale=1">'
@@ -3189,13 +3190,13 @@ function printDriverScan(scanKey) {
       + '.box{border:3px solid ' + borderClr + ';border-radius:12px;padding:12px;}'
       + '.hdr{background:' + borderClr + ';color:#fff;padding:10px 14px;font-size:1rem;font-weight:900;display:flex;justify-content:space-between;align-items:center;border-radius:8px;margin-bottom:12px;}'
       + '.grid{display:flex;gap:10px;margin-bottom:10px;}'
-      + '.col{flex:1;border:1.5px solid #e2e8f0;border-radius:8px;padding:9px;text-align:right;}'
-      + '.lbl{font-size:.65rem;color:#718096;margin-bottom:3px;}'
-      + '.val{font-size:.88rem;font-weight:700;color:#071A38;}'
-      + '.tel{font-size:.78rem;color:#4a5568;margin-top:2px;}'
-      + '.loc{font-size:.72rem;color:#718096;margin-top:2px;}'
-      + '.pkg{display:flex;align-items:center;justify-content:space-between;background:#EFF6FF;border-radius:8px;padding:10px 12px;margin-bottom:10px;}'
-      + '.foot{display:flex;justify-content:space-between;font-size:.65rem;color:#a0aec0;border-top:1px dashed #e2e8f0;padding-top:8px;}'
+      + '.col{flex:1;border:1.5px solid #dee2e6;border-radius:8px;padding:9px;text-align:right;}'
+      + '.lbl{font-size:.65rem;color:#8492a6;margin-bottom:3px;}'
+      + '.val{font-size:.88rem;font-weight:700;color:#1a1a2e;}'
+      + '.tel{font-size:.78rem;color:#5a6476;margin-top:2px;}'
+      + '.loc{font-size:.72rem;color:#8492a6;margin-top:2px;}'
+      + '.pkg{display:flex;align-items:center;justify-content:space-between;background:#F5F7FA;border-radius:8px;padding:10px 12px;margin-bottom:10px;}'
+      + '.foot{display:flex;justify-content:space-between;font-size:.65rem;color:#adb5bd;border-top:1px dashed #dee2e6;padding-top:8px;}'
       + '@media print{'
       + '  body{padding:0!important;margin:0!important;}'
       + '  .content{padding:0!important;}'
@@ -3208,21 +3209,21 @@ function printDriverScan(scanKey) {
       + '<div class="hdr"><span>' + typeLabel + ' &mdash; UK BAZAR</span><span># ' + escapeHtml(orderNum) + '</span></div>'
       + '<div class="grid">'
         + '<div class="col" style="border-right:3px solid ' + borderClr + ';">'
-          + '<div class="lbl">&#071A38; نێردەر</div>'
+          + '<div class="lbl">&#2d3340; نێردەر</div>'
           + '<div class="val">' + escapeHtml(sc.senderName||'&mdash;') + '</div>'
-          + '<div class="tel">&#071A38; ' + escapeHtml(sc.senderMobile||'') + '</div>'
+          + '<div class="tel">&#2d3340; ' + escapeHtml(sc.senderMobile||'') + '</div>'
           + (sc.senderLocation ? '<div class="loc">&#128205; ' + escapeHtml(sc.senderLocation) + '</div>' : '')
         + '</div>'
         + '<div class="col">'
           + '<div class="lbl">&#128229; وەرگر</div>'
           + '<div class="val">' + escapeHtml(sc.receiverName||'&mdash;') + '</div>'
-          + '<div class="tel">&#071A38; ' + escapeHtml(sc.receiverMobile||'') + '</div>'
+          + '<div class="tel">&#2d3340; ' + escapeHtml(sc.receiverMobile||'') + '</div>'
           + (sc.receiverLocation ? '<div class="loc">&#128205; ' + escapeHtml(sc.receiverLocation) + '</div>' : '')
         + '</div>'
       + '</div>'
       + '<div class="pkg">'
         + '<div style="text-align:right;">'
-          + '<div class="lbl">&#071A38; کاڵا</div>'
+          + '<div class="lbl">&#2d3340; کاڵا</div>'
           + '<div style="font-size:.88rem;font-weight:700;">' + escapeHtml(sc.packageName||'&mdash;') + (sc.packageKg?' &mdash; '+sc.packageKg+'کگ':'') + '</div>'
           + (sc.deliveryNote ? '<div class="loc" style="margin-top:4px;">&#128221; ' + escapeHtml(sc.deliveryNote) + '</div>' : '')
         + '</div>'
@@ -3254,14 +3255,14 @@ document.addEventListener('click', function(e) {
      USER PROFILE MODAL — مۆدالی پرۆفایل بەکارهێنەر
 ═══════════════════════════════════════════════════ -->
 <div id="userProfileModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);overflow-y:auto;">
-  <div style="max-width:400px;margin:40px auto 20px;background:#071A38;border-radius:20px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.6);position:relative;">
+  <div style="max-width:400px;margin:40px auto 20px;background:#2d3340;border-radius:20px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.6);position:relative;">
 
     <!-- هێدر -->
-    <div id="userProfileHeader" style="background:#071A38;padding:30px 20px 22px;text-align:center;position:relative;border-bottom:1px solid rgba(255,255,255,.08);">
+    <div id="userProfileHeader" style="background:#2d3340;padding:30px 20px 22px;text-align:center;position:relative;border-bottom:1px solid rgba(255,255,255,.08);">
       <button onclick="closeUserProfileModal()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,.1);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:.9rem;cursor:pointer;line-height:30px;">✕</button>
 
       <!-- ئایکۆنی پرۆفایل -->
-      <div id="userProfileAvatarLg" style="width:74px;height:74px;background:#071A38;border:2px solid rgba(255,255,255,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+      <div id="userProfileAvatarLg" style="width:74px;height:74px;background:#2d3340;border:2px solid rgba(255,255,255,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" viewBox="0 0 64 64">
           <circle cx="32" cy="22" r="14" fill="white" opacity="0.95"/>
           <path d="M4 62 c0-18 12-28 28-28 s28 10 28 28" fill="white" opacity="0.95"/>
@@ -3274,25 +3275,25 @@ document.addEventListener('click', function(e) {
       <!-- تێبینیەکان -->
       <div id="userAuthTips" style="margin-top:16px;display:flex;flex-direction:column;gap:8px;text-align:right;">
         <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:9px 13px;font-size:.77rem;color:#fff;display:flex;align-items:center;gap:9px;">
-          <span style="background:#fff;color:#071A38;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;flex-shrink:0;">1</span>
+          <span style="background:#fff;color:#2d3340;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;flex-shrink:0;">1</span>
           <span>کلیک بکە لە <strong>🛒 سەبەتە</strong> یان <strong>❤️ دڵخواز</strong> ژێر هەر کاڵا</span>
         </div>
         <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:9px 13px;font-size:.77rem;color:#fff;display:flex;align-items:center;gap:9px;">
-          <span style="background:#fff;color:#071A38;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;flex-shrink:0;">2</span>
+          <span style="background:#fff;color:#2d3340;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;flex-shrink:0;">2</span>
           <span>لە پرۆفایل بیبینە و سودمەند بە لە <strong>داشکاندنەکان</strong></span>
         </div>
       </div>
     </div>
 
     <!-- ناوەرۆک -->
-    <div id="userProfileBody" style="padding:22px;background:#071A38;">
+    <div id="userProfileBody" style="padding:22px;background:#2d3340;">
 
       <!-- فۆرمی چوونەژوورەوە / تۆمارکردن -->
       <div id="userAuthForm">
 
         <!-- تابەکان -->
         <div style="display:flex;background:rgba(255,255,255,.07);border-radius:10px;padding:3px;margin-bottom:20px;">
-          <button id="tabLoginBtn" onclick="switchUserTab('login')" style="flex:1;padding:9px;border:none;border-radius:8px;font-family:inherit;font-size:.85rem;font-weight:800;cursor:pointer;background:#fff;color:#071A38;transition:all .2s;">چوونەژوورەوە</button>
+          <button id="tabLoginBtn" onclick="switchUserTab('login')" style="flex:1;padding:9px;border:none;border-radius:8px;font-family:inherit;font-size:.85rem;font-weight:800;cursor:pointer;background:#fff;color:#2d3340;transition:all .2s;">چوونەژوورەوە</button>
           <button id="tabRegisterBtn" onclick="switchUserTab('register')" style="flex:1;padding:9px;border:none;border-radius:8px;font-family:inherit;font-size:.85rem;font-weight:700;cursor:pointer;background:transparent;color:rgba(255,255,255,.45);transition:all .2s;">تۆمارکردن</button>
         </div>
 
@@ -3322,10 +3323,10 @@ document.addEventListener('click', function(e) {
         </div>
 
         <!-- هەڵە -->
-        <div id="userAuthError" style="display:none;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:#93C5FD;border-radius:9px;padding:10px 14px;font-size:.82rem;margin-bottom:14px;text-align:center;"></div>
+        <div id="userAuthError" style="display:none;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:#fca5a5;border-radius:9px;padding:10px 14px;font-size:.82rem;margin-bottom:14px;text-align:center;"></div>
 
         <!-- دوگمەی سەرەکی -->
-        <button id="userAuthSubmitBtn" onclick="submitUserAuth()" style="width:100%;padding:13px;background:#fff;color:#071A38;border:none;border-radius:11px;font-size:.95rem;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:.3px;transition:opacity .2s;">
+        <button id="userAuthSubmitBtn" onclick="submitUserAuth()" style="width:100%;padding:13px;background:#fff;color:#2d3340;border:none;border-radius:11px;font-size:.95rem;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:.3px;transition:opacity .2s;">
           <i class="fas fa-sign-in-alt"></i> <span id="userAuthSubmitText">چوونەژوورەوە</span>
         </button>
       </div>
@@ -3334,7 +3335,7 @@ document.addEventListener('click', function(e) {
       <div id="userProfilePanel" style="display:none;">
         <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:13px;padding:14px 16px;margin-bottom:14px;">
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
-            <div style="width:44px;height:44px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:#071A38;flex-shrink:0;" id="userPanelInitial">U</div>
+            <div style="width:44px;height:44px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:#2d3340;flex-shrink:0;" id="userPanelInitial">U</div>
             <div>
               <div id="userPanelName" style="font-weight:900;font-size:.95rem;color:#fff;"></div>
               <div id="userPanelEmail" style="font-size:.76rem;color:rgba(255,255,255,.5);"></div>
@@ -3366,7 +3367,7 @@ document.addEventListener('click', function(e) {
 <div id="userOrdersModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10000;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);overflow-y:auto;">
   <div style="max-width:480px;margin:24px auto 20px;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3);">
     <!-- هێدر -->
-    <div style="background:linear-gradient(135deg,#0F2D5E,#1A4A8A);padding:18px 20px;display:flex;align-items:center;gap:12px;">
+    <div style="background:linear-gradient(135deg,#2d3340,#434b57);padding:18px 20px;display:flex;align-items:center;gap:12px;">
       <button onclick="closeUserOrdersModal()" style="background:rgba(255,255,255,.2);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;flex-shrink:0;">←</button>
       <div>
         <div style="color:#fff;font-weight:900;font-size:1.05rem;">📦 داواکارییەکانم</div>
@@ -3375,7 +3376,7 @@ document.addEventListener('click', function(e) {
     </div>
     <!-- ناوەرۆک -->
     <div id="userOrdersList" style="padding:16px;min-height:160px;">
-      <div style="text-align:center;padding:40px 0;color:#a0aec0;"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem;"></i></div>
+      <div style="text-align:center;padding:40px 0;color:#adb5bd;"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem;"></i></div>
     </div>
   </div>
 </div>
@@ -3386,7 +3387,7 @@ document.addEventListener('click', function(e) {
 <div id="userWishlistModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10000;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);overflow-y:auto;">
   <div style="max-width:480px;margin:24px auto 20px;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3);">
     <!-- هێدر -->
-    <div style="background:linear-gradient(135deg,#071A38,#0F2D5E);padding:18px 20px;display:flex;align-items:center;gap:12px;">
+    <div style="background:linear-gradient(135deg,#B02A37,#DC3545);padding:18px 20px;display:flex;align-items:center;gap:12px;">
       <button onclick="closeUserWishlistModal()" style="background:rgba(255,255,255,.2);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;flex-shrink:0;">←</button>
       <div>
         <div style="color:#fff;font-weight:900;font-size:1.05rem;">❤️ دڵخوازەکانم</div>
@@ -3395,7 +3396,7 @@ document.addEventListener('click', function(e) {
     </div>
     <!-- ناوەرۆک -->
     <div id="userWishlistGrid" style="padding:16px;min-height:160px;">
-      <div style="text-align:center;padding:40px 0;color:#a0aec0;"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem;"></i></div>
+      <div style="text-align:center;padding:40px 0;color:#adb5bd;"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem;"></i></div>
     </div>
   </div>
 </div>
