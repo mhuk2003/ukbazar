@@ -1,14 +1,18 @@
 
 :root {
-    --primary: #667eea;
-    --primary-dark: #5a67d8;
-    --secondary: #48bb78;
-    --danger: #f56565;
-    --warning: #ed8936;
-    --dark: #2d3748;
-    --light: #f7fafc;
-    --gray: #718096;
-    --border: #e2e8f0;
+    --primary:      #D40511;
+    --primary-dark: #A50008;
+    --secondary:    #FFCC00;
+    --accent:       #E6B800;
+    --danger:       #D40511;
+    --warning:      #FFCC00;
+    --success:      #2E7D32;
+    --dark:         #1C1C1C;
+    --light:        #FFFDE7;
+    --gray:         #5C5C5C;
+    --border:       #E0D9C8;
+    --bg-main:      #FFFDE7;
+    --text-main:    #1C1C1C;
 }
 
 * {
@@ -22,7 +26,7 @@ html {
 }
 
 body {
-    background: #f4f6fb;
+    background: #FFFDE7;
     min-height: 100vh;
     color: var(--dark);
     direction: rtl;
@@ -44,7 +48,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #D40511, #A50008);
     z-index: 9999;
     display: flex;
     align-items: center;
@@ -88,9 +92,9 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 
 .banner-title {
     font-size: 1.8rem;
-    color: #2d3748;
+    color: #1C1C1C;
     margin: 5px 0;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #D40511, #A50008);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -119,7 +123,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 
 .spinner-small {
     border: 3px solid #e2e8f0;
-    border-top: 3px solid #667eea;
+    border-top: 3px solid #D40511;
     border-radius: 50%;
     width: 35px;
     height: 35px;
@@ -200,7 +204,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 .logo-text {
     font-size: 1.4rem;
     font-weight: 800;
-    background: linear-gradient(135deg, var(--primary), #764ba2);
+    background: linear-gradient(135deg, var(--primary), #A50008);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     white-space: nowrap;
@@ -267,7 +271,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .btn-delivery-ku {
-    background: linear-gradient(135deg, #f0c040, #e6a800);
+    background: linear-gradient(135deg, #FFCC00, #E6B800);
     color: #1a1a1a !important;
     font-weight: 800;
     font-size: 0.82rem !important;
@@ -278,13 +282,13 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .btn-delivery-ku:hover {
-    background: linear-gradient(135deg, #ffd700, #f0c040);
+    background: linear-gradient(135deg, #FFCC00, #FFCC00);
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(224, 168, 0, 0.45);
 }
 
 .btn-delivery-uk {
-    background: linear-gradient(135deg, #f0c040, #e6a800);
+    background: linear-gradient(135deg, #FFCC00, #E6B800);
     color: #1a1a1a !important;
     font-weight: 800;
     font-size: 0.82rem !important;
@@ -295,7 +299,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .btn-delivery-uk:hover {
-    background: linear-gradient(135deg, #ffd700, #f0c040);
+    background: linear-gradient(135deg, #FFCC00, #FFCC00);
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(224, 168, 0, 0.45);
 }
@@ -324,22 +328,22 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary), #764ba2);
+    background: linear-gradient(135deg, var(--primary), #A50008);
     color: white;
 }
 
 .btn-secondary {
-    background: linear-gradient(135deg, var(--secondary), #38a169);
+    background: linear-gradient(135deg, var(--secondary), #FFCC00);
     color: white;
 }
 
 .btn-warning {
-    background: linear-gradient(135deg, var(--warning), #dd6b20);
+    background: linear-gradient(135deg, var(--warning), #E6B800);
     color: white;
 }
 
 .btn-danger {
-    background: linear-gradient(135deg, var(--danger), #c53030);
+    background: linear-gradient(135deg, var(--danger), #A50008);
     color: white;
 }
 
@@ -393,7 +397,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 
 .search-box:focus-within {
     box-shadow: 0 4px 22px rgba(102, 126, 234, 0.28);
-    border-color: #764ba2;
+    border-color: #A50008;
 }
 
 .search-box input {
@@ -413,7 +417,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .search-box button {
-    background: linear-gradient(135deg, var(--primary), #764ba2);
+    background: linear-gradient(135deg, var(--primary), #A50008);
     border: none;
     color: white;
     padding: 10px 20px;
@@ -473,7 +477,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .category-btn:hover, .category-btn.active {
-    background: linear-gradient(135deg, var(--primary), #764ba2);
+    background: linear-gradient(135deg, var(--primary), #A50008);
     color: white;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.28);
@@ -610,7 +614,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     transform: translateX(-50%);
     width: 100px;
     height: 4px;
-    background: linear-gradient(135deg, var(--primary), #764ba2);
+    background: linear-gradient(135deg, var(--primary), #A50008);
     border-radius: 2px;
 }
 
@@ -757,7 +761,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .btn-fib {
-    background: linear-gradient(135deg, #1e3a8a, #2563eb);
+    background: linear-gradient(135deg, #A50008, #2563eb);
     color: white;
 }
 
@@ -1060,7 +1064,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 .footer-email-link i {
     width: 32px;
     height: 32px;
-    background: linear-gradient(135deg, var(--primary), #764ba2);
+    background: linear-gradient(135deg, var(--primary), #A50008);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -1098,7 +1102,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: linear-gradient(135deg, var(--primary), #764ba2);
+    background: linear-gradient(135deg, var(--primary), #A50008);
     border: none;
     color: #fff;
     font-size: 0.82rem;
@@ -1281,7 +1285,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--primary), #764ba2);
+    background: linear-gradient(135deg, var(--primary), #A50008);
     border-radius: 50%;
     color: white;
     font-size: 1rem;
@@ -1333,7 +1337,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .footer-links li a:hover {
-    background: linear-gradient(135deg, var(--primary), #764ba2);
+    background: linear-gradient(135deg, var(--primary), #A50008);
     color: white;
     transform: translateX(-5px);
 }
@@ -1449,7 +1453,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .modal-header {
-    background: linear-gradient(135deg, var(--primary), #764ba2);
+    background: linear-gradient(135deg, var(--primary), #A50008);
     border-radius: 20px 20px 0 0;
     padding: 16px 44px 16px 20px;
     margin-bottom: 0;
@@ -1717,7 +1721,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .admin-tab.active {
-    background: linear-gradient(135deg, var(--primary), #764ba2);
+    background: linear-gradient(135deg, var(--primary), #A50008);
     color: white;
     border-color: transparent;
     box-shadow: 0 5px 16px rgba(102,126,234,0.38);
@@ -1725,12 +1729,12 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .admin-tab.tab-logout {
-    background: #fff5f5;
-    border-color: #fca5a5;
-    color: #e53e3e;
+    background: #FFF8F8;
+    border-color: #FF8A80;
+    color: #D40511;
 }
 .admin-tab.tab-logout:hover {
-    background: #e53e3e;
+    background: #D40511;
     color: #fff;
     border-color: transparent;
     box-shadow: 0 5px 14px rgba(229,62,62,0.3);
@@ -1932,7 +1936,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     top: 24px;
     left: 50%;
     transform: translateX(-50%) translateY(-200px);
-    background: #1a202c !important;
+    background: #1C1C1C !important;
     color: #ffffff !important;
     padding: 14px 28px;
     border-radius: 14px;
@@ -1945,7 +1949,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     min-width: 260px;
     text-align: center;
     border: none;
-    border-bottom: 4px solid #48bb78;
+    border-bottom: 4px solid #FFD54F;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1962,11 +1966,11 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .notification.error {
-    border-bottom-color: #f56565 !important;
+    border-bottom-color: #FF4444 !important;
 }
 
 .notification.info {
-    border-bottom-color: #667eea !important;
+    border-bottom-color: #D40511 !important;
 }
 
 /* Responsive Design - Comprehensive */
@@ -2244,7 +2248,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 /* ==================== Improved Delivery Label Styles ==================== */
 .delivery-section-header {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #D40511, #A50008);
     color: white;
     padding: 12px 20px;
     border-radius: 12px;
@@ -2261,7 +2265,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .delivery-section-header.uk-header {
-    background: linear-gradient(135deg, #f0c040, #d4a017);
+    background: linear-gradient(135deg, #FFCC00, #d4a017);
     color: #1a1a1a;
     margin-top: 30px;
 }
@@ -2291,7 +2295,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     justify-content: space-between;
     align-items: center;
     padding: 12px 16px;
-    background: #f8fafc;
+    background: #FFFDE7;
     border-bottom: 1px solid #e2e8f0;
 }
 
@@ -2299,7 +2303,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #D40511, #A50008);
     color: white;
     padding: 6px 14px;
     border-radius: 20px;
@@ -2312,7 +2316,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .label-order-badge.uk-badge {
-    background: linear-gradient(135deg, #f0c040, #d4a017);
+    background: linear-gradient(135deg, #FFCC00, #d4a017);
     color: #1a1a1a;
 }
 
@@ -2340,24 +2344,24 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .label-action-btn.print-btn {
-    color: #48bb78;
+    color: #FFD54F;
 }
 
 .label-action-btn.print-btn:hover {
-    background: #48bb78;
+    background: #FFD54F;
     color: white;
-    border-color: #48bb78;
+    border-color: #FFD54F;
     transform: scale(1.05);
 }
 
 .label-action-btn.delete-btn {
-    color: #f56565;
+    color: #FF4444;
 }
 
 .label-action-btn.delete-btn:hover {
-    background: #f56565;
+    background: #FF4444;
     color: white;
-    border-color: #f56565;
+    border-color: #FF4444;
     transform: scale(1.05);
 }
 
@@ -2380,11 +2384,11 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .label-info-card.sender-card {
-    border-right: 3px solid #667eea;
+    border-right: 3px solid #D40511;
 }
 
 .label-info-card.receiver-card {
-    border-right: 3px solid #48bb78;
+    border-right: 3px solid #FFD54F;
 }
 
 .info-card-title {
@@ -2425,7 +2429,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .info-value {
-    color: #2d3748;
+    color: #1C1C1C;
     font-weight: 600;
     text-align: left;
     word-break: break-word;
@@ -2441,7 +2445,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .label-package-card {
-    background: linear-gradient(135deg, #f8fafc, #ffffff);
+    background: linear-gradient(135deg, #FFFDE7, #ffffff);
     border-radius: 12px;
     padding: 12px;
     margin-bottom: 16px;
@@ -2451,7 +2455,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 .package-title {
     font-weight: 700;
     font-size: 0.85rem;
-    color: #667eea;
+    color: #D40511;
     margin-bottom: 10px;
     display: flex;
     align-items: center;
@@ -2481,7 +2485,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 .detail-value {
     font-size: 0.9rem;
     font-weight: 700;
-    color: #2d3748;
+    color: #1C1C1C;
 }
 
 .label-driver-card {
@@ -2495,7 +2499,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 .driver-title {
     font-weight: 700;
     font-size: 0.85rem;
-    color: #ed8936;
+    color: #FFCC00;
     margin-bottom: 10px;
     display: flex;
     align-items: center;
@@ -2533,7 +2537,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 .input-group input:focus,
 .input-group textarea:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #D40511;
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
@@ -2542,7 +2546,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 .save-driver-btn {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #D40511, #A50008);
     color: white;
     border: none;
     padding: 8px 16px;
@@ -2602,24 +2606,24 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 
 /* UK Label specific styles */
 .delivery-label-card.uk-label {
-    border-left: 3px solid #f0c040;
+    border-left: 3px solid #FFCC00;
 }
 
 .delivery-label-card.uk-label .info-card-title {
-    color: #d97706;
+    color: #E6B800;
 }
 
 .delivery-label-card.uk-label .package-title {
-    color: #d97706;
+    color: #E6B800;
 }
 
 .uk-grid .uk-receiver {
-    border-left: 3px solid #f0c040;
+    border-left: 3px solid #FFCC00;
     border-right: none;
 }
 
 .uk-grid .uk-package {
-    border-left: 3px solid #667eea;
+    border-left: 3px solid #D40511;
     border-right: none;
 }
 
@@ -2684,15 +2688,15 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 
 /* ==================== Quantity Selector ==================== */
-.qty-selector{background:#f0f4ff;border:1.5px solid #667eea;border-radius:12px;padding:10px 12px;margin:8px 0 6px;animation:fadeInDown 0.2s ease;}
+.qty-selector{background:#f0f4ff;border:1.5px solid #D40511;border-radius:12px;padding:10px 12px;margin:8px 0 6px;animation:fadeInDown 0.2s ease;}
 @keyframes fadeInDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 .qty-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px;}
-.qty-btn{width:32px;height:32px;border-radius:50%;border:none;background:#667eea;color:#fff;font-size:1.2rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+.qty-btn{width:32px;height:32px;border-radius:50%;border:none;background:#D40511;color:#fff;font-size:1.2rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
 .qty-btn:active{background:#4c5ec4;}
-.qty-btn.qty-minus{background:#e2e8f0;color:#2d3748;}
-.qty-value{font-size:1.3rem;font-weight:800;color:#2d3748;min-width:28px;text-align:center;}
+.qty-btn.qty-minus{background:#e2e8f0;color:#1C1C1C;}
+.qty-value{font-size:1.3rem;font-weight:800;color:#1C1C1C;min-width:28px;text-align:center;}
 .qty-label{font-size:.85rem;color:#718096;font-weight:600;}
-.btn-confirm-cart{width:100%;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:50px;padding:9px 0;font-size:.92rem;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-confirm-cart{width:100%;background:linear-gradient(135deg,#D40511,#A50008);color:#fff;border:none;border-radius:50px;padding:9px 0;font-size:.92rem;font-weight:700;cursor:pointer;font-family:inherit;}
 
 /* ==================== Video Section ==================== */
 .videos-section{padding:10px 0 0;}
@@ -2716,9 +2720,9 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
 }
 .direct-video-wrap .video-play-btn{cursor:pointer;}
 .video-info{padding:10px 12px 12px;}
-.video-title{font-size:.92rem;font-weight:700;color:#2d3748;margin-bottom:4px;line-height:1.35;}
+.video-title{font-size:.92rem;font-weight:700;color:#1C1C1C;margin-bottom:4px;line-height:1.35;}
 .video-desc{font-size:.78rem;color:#718096;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-.video-uploader{font-size:.75rem;color:#667eea;font-weight:600;}
+.video-uploader{font-size:.75rem;color:#D40511;font-weight:600;}
 /* ✅ ڤیدیۆ گرید — هەمیشە ٢ ستوون لە مۆبایل */
 .videos-grid{grid-template-columns:repeat(2,1fr)!important;}
 @media(max-width:600px){.videos-grid{grid-template-columns:repeat(2,1fr)!important;gap:10px;}}
@@ -2803,7 +2807,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, div {
     .product-name { 
         font-size: 0.78rem; 
         font-weight: 700;
-        color: #1a202c;
+        color: #1C1C1C;
     }
     .product-price {
         font-size: 0.88rem;
@@ -2836,13 +2840,13 @@ html { scroll-behavior: smooth; }
 .section-title {
     font-size: 1.6rem;
     font-weight: 800;
-    color: #1a202c;
+    color: #1C1C1C;
     margin-bottom: 18px;
     padding-bottom: 12px;
 }
 
 /* Products grid background */
-.products-section { background: #f4f6fb; }
+.products-section { background: #FFFDE7; }
 
 /* Category section sticky scroll hint */
 .category-filter-section {
