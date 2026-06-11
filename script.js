@@ -2893,13 +2893,11 @@ function createProductCard(product) {
         '<div class="qty-selector" id="qty-' + safeId + '" style="display:none;">' +
         '<div class="qty-row"><button class="qty-btn qty-minus" onclick="changeQty(\'' + safeId + '\', -1)">−</button><span class="qty-value" id="qtyval-' + safeId + '">1</span><button class="qty-btn qty-plus" onclick="changeQty(\'' + safeId + '\', 1)">+</button><span class="qty-label">' + (window.t ? window.t('pieces') : 'دانە') + '</span></div>' +
         '<button class="btn btn-confirm-cart" onclick="confirmAddToCart(\'' + safeId + '\', \'' + safeMobile + '\', \'' + safeName + '\')"><i class="fas fa-check"></i> ' + (window.t ? window.t('add_to_cart') : 'زیادکردن بۆ سەبەتە') + '</button></div>' +
-        // دوگمەی خێرا ژێر کاڵا — سەبەتە، دڵخواز، FIB
-        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;">' +
-        '<button onclick="showQtySelector(\'' + safeId + '\')" style="padding:9px;background:linear-gradient(135deg,#434b57,#2d3340);color:#fff;border:none;border-radius:10px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px;"><i class="fas fa-shopping-cart"></i> سەبەتە</button>' +
-        '<button id="wl2-' + safeId + '" onclick="toggleWishlist(\'' + safeId + '\')" style="padding:9px;background:#fff0f0;color:#DC3545;border:1.5px solid #FFCDD2;border-radius:10px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px;"><i class="far fa-heart" id="wl2-icon-' + safeId + '"></i> دڵخواز</button>' +
-        '</div>' +
-        '<div style="margin-top:6px;">' +
-        '<button onclick="showFibModal()" style="width:100%;padding:9px;background:linear-gradient(135deg,#2d3340,#434b57);color:#fff;border:none;border-radius:10px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px;"><i class="fas fa-credit-card"></i> FIB پارەدان</button>' +
+        // دوگمەی ئایکۆن تەنها — ٣ دوگمە
+        '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;">' +
+        '<button onclick="showQtySelector(\'' + safeId + '\')" title="سەبەتە" style="padding:10px;background:#434b57;color:#fff;border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="fas fa-shopping-cart" style="font-size:.95rem;"></i></button>' +
+        '<button onclick="showFibModal()" title="FIB پارەدان" style="padding:10px;background:#FFCC00;color:#2d3340;border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="fas fa-credit-card" style="font-size:.95rem;"></i></button>' +
+        '<button id="wl2-' + safeId + '" onclick="toggleWishlist(\'' + safeId + '\')" title="دڵخواز" style="padding:10px;background:#fff;color:#DC3545;border:1.5px solid #FFCDD2;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="far fa-heart" id="wl2-icon-' + safeId + '" style="font-size:.95rem;"></i></button>' +
         '</div>' +
         '</div></div>';
 }
@@ -6374,16 +6372,16 @@ function _refreshWishlistIcons() {
     icon.className = inWl ? 'fas fa-heart' : 'far fa-heart';
     if (btn) { btn.style.background = inWl ? '#ffe4e6' : '#fff0f0'; btn.style.borderColor = inWl ? '#fca5a5' : '#FFCDD2'; }
   });
-  // دوگمەکانی ژێر کاڵا
+  // دوگمەکانی ژێر کاڵا — ئایکۆن تەنها
   document.querySelectorAll('[id^="wl2-icon-"]').forEach(function(icon) {
     var pid = icon.id.replace('wl2-icon-', '');
     var btn = document.getElementById('wl2-' + pid);
     var inWl = ids.indexOf(pid) !== -1;
     icon.className = inWl ? 'fas fa-heart' : 'far fa-heart';
     if (btn) {
-      btn.style.background = inWl ? '#ffe4e6' : '#fff0f0';
-      btn.style.borderColor = inWl ? '#fca5a5' : '#FFCDD2';
-      btn.innerHTML = '<i class="' + (inWl ? 'fas' : 'far') + ' fa-heart" id="wl2-icon-' + pid + '"></i> ' + (inWl ? 'دڵخوازکرا ❤️' : 'دڵخواز');
+      btn.style.background  = inWl ? '#FFCDD2' : '#fff';
+      btn.style.borderColor = inWl ? '#DC3545' : '#FFCDD2';
+      btn.style.color = '#DC3545';
     }
   });
 }
