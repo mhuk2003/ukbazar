@@ -2874,7 +2874,7 @@ function performSearch() {
     s.textContent = `
         .pc-carousel { position:relative; overflow:hidden; background:#f0f2f5; border-radius:12px 12px 0 0; }
         .pc-slides { display:flex; transition:transform 0.35s cubic-bezier(.4,0,.2,1); will-change:transform; }
-        .pc-slide { min-width:100%; position:relative; }
+        .pc-slide { flex-shrink:0; position:relative; }
         .pc-slide img { width:100%; aspect-ratio:1/1; object-fit:cover; display:block; cursor:zoom-in; }
         .pc-img-caption { position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.52); color:#fff; font-size:.75rem; padding:5px 10px; text-align:center; pointer-events:none; min-height:0; max-height:56px; overflow:hidden; display:none; }
         .pc-img-caption.has-text { display:block; }
@@ -2986,9 +2986,9 @@ function createProductCard(product) {
         const safeImgUrl = (imgUrl || DEFAULT_PRODUCT_IMAGE).replace(/'/g, "\\'");
         const desc = descs[i] || '';
         const safeDesc = escapeHtml(desc);
-        return '<div class="pc-slide">' +
+        return '<div class="pc-slide" style="width:' + (100/images.length) + '%;flex-shrink:0;">' +
             '<img src="' + (imgUrl || DEFAULT_PRODUCT_IMAGE) + '" alt="" loading="lazy" ' +
-            'onclick="openProductGallery(JSON.parse(this.closest(\'.product-card\').dataset.images), JSON.parse(this.closest(\'.product-card\').dataset.descs), ' + i + ')" ' +
+            'onclick="showProductDetail(\'' + safeId + '\')" ' +
             'onerror="this.onerror=null;this.src=\'' + DEFAULT_PRODUCT_IMAGE + '\'">' +
             (desc ? '<div class="pc-img-caption has-text">' + safeDesc + '</div>' : '<div class="pc-img-caption"></div>') +
             '</div>';
@@ -2999,8 +2999,8 @@ function createProductCard(product) {
     }).join('') : '';
 
     const arrowsHtml = images.length > 1 ?
-        '<button class="pc-arrow left" onclick="pcNav(\'' + safeId + '\',-1)"><i class="fas fa-chevron-right"></i></button>' +
-        '<button class="pc-arrow right" onclick="pcNav(\'' + safeId + '\',1)"><i class="fas fa-chevron-left"></i></button>' : '';
+        '<button class="pc-arrow left" onclick="event.stopPropagation();pcNav(\'' + safeId + '\',-1)"><i class="fas fa-chevron-right"></i></button>' +
+        '<button class="pc-arrow right" onclick="event.stopPropagation();pcNav(\'' + safeId + '\',1)"><i class="fas fa-chevron-left"></i></button>' : '';
 
     const dotsRow = images.length > 1 ? '<div class="pc-dots" id="pcdots-' + safeId + '">' + dotsHtml + '</div>' : '';
 
@@ -3008,25 +3008,24 @@ function createProductCard(product) {
     const safeDescsJson  = JSON.stringify(descs).replace(/"/g, '&quot;');
 
     return '<div class="product-card" id="card-' + safeId + '" data-images="' + safeImagesJson + '" data-descs="' + safeDescsJson + '" data-pcidx="0">' +
-        '<div class="pc-carousel" id="pc-' + safeId + '">' +
-        '<div class="pc-slides" id="pcslides-' + safeId + '">' + slidesHtml + '</div>' +
+        '<div class="pc-carousel" id="pc-' + safeId + '" style="cursor:pointer;" onclick="showProductDetail(\'' + safeId + '\')">' +
+        '<div class="pc-slides" id="pcslides-' + safeId + '" style="width:' + (images.length * 100) + '%;">' + slidesHtml + '</div>' +
         arrowsHtml +
         '</div>' +
         dotsRow +
         '<div class="product-info">' +
         '<div class="product-category">' + (product.category || 'هەموویی') + '</div>' +
-        '<h3 class="product-name" title="' + (product.name || '') + '">' + productName + '</h3>' +
-        '<div class="product-price">' + (product.price || '0') + ' ' + (product.currency || 'IQD') + '</div>' +
-        '<div class="product-seller"><i class="fas fa-user"></i> ' + sellerName + '</div>' +
-        '<div class="product-location" title="' + (product.location || '') + '"><i class="fas fa-map-marker-alt"></i> ' + location + '</div>' +
+        '<h3 class="product-name" title="' + (product.name || '') + '" style="cursor:pointer;" onclick="showProductDetail(\'' + safeId + '\')">' + productName + '</h3>' +
+        '<div class="product-price" style="cursor:pointer;" onclick="showProductDetail(\'' + safeId + '\')">' + (product.price || '0') + ' ' + (product.currency || 'IQD') + '</div>' +
         '<div class="qty-selector" id="qty-' + safeId + '" style="display:none;">' +
         '<div class="qty-row"><button class="qty-btn qty-minus" onclick="changeQty(\'' + safeId + '\', -1)">−</button><span class="qty-value" id="qtyval-' + safeId + '">1</span><button class="qty-btn qty-plus" onclick="changeQty(\'' + safeId + '\', 1)">+</button><span class="qty-label">' + (window.t ? window.t('pieces') : 'دانە') + '</span></div>' +
         '<button class="btn btn-confirm-cart" onclick="confirmAddToCart(\'' + safeId + '\', \'' + safeMobile + '\', \'' + safeName + '\')"><i class="fas fa-check"></i> ' + (window.t ? window.t('add_to_cart') : 'زیادکردن بۆ سەبەتە') + '</button></div>' +
-        // دوگمەی ئایکۆن تەنها — ٣ دوگمە
-        '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;">' +
-        '<button onclick="showQtySelector(\'' + safeId + '\')" title="سەبەتە" style="padding:10px;background:#434b57;color:#fff;border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="fas fa-shopping-cart" style="font-size:.95rem;"></i></button>' +
-        '<button onclick="showFibModal()" title="FIB پارەدان" style="padding:10px;background:#FFCC00;color:#2d3340;border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="fas fa-credit-card" style="font-size:.95rem;"></i></button>' +
-        '<button id="wl2-' + safeId + '" onclick="toggleWishlist(\'' + safeId + '\')" title="دڵخواز" style="padding:10px;background:#fff;color:#DC3545;border:1.5px solid #FFCDD2;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="far fa-heart" id="wl2-icon-' + safeId + '" style="font-size:.95rem;"></i></button>' +
+        // دوگمەکان — ٤ دوگمە: وردەکاری + سەبەتە + FIB + دڵخواز
+        '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:5px;margin-top:8px;">' +
+        '<button onclick="showProductDetail(\'' + safeId + '\')" title="وردەکاری" style="padding:9px 4px;background:#f0f4ff;color:#3B5BDB;border:1.5px solid #BAC8FF;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="fas fa-info-circle" style="font-size:.9rem;"></i></button>' +
+        '<button onclick="showQtySelector(\'' + safeId + '\')" title="سەبەتە" style="padding:9px 4px;background:#434b57;color:#fff;border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="fas fa-shopping-cart" style="font-size:.9rem;"></i></button>' +
+        '<button onclick="showFibModal()" title="FIB پارەدان" style="padding:9px 4px;background:#FFCC00;color:#2d3340;border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="fas fa-credit-card" style="font-size:.9rem;"></i></button>' +
+        '<button id="wl2-' + safeId + '" onclick="toggleWishlist(\'' + safeId + '\')" title="دڵخواز" style="padding:9px 4px;background:#fff;color:#DC3545;border:1.5px solid #FFCDD2;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="far fa-heart" id="wl2-icon-' + safeId + '" style="font-size:.9rem;"></i></button>' +
         '</div>' +
         '</div></div>';
 }
@@ -3086,6 +3085,143 @@ function pcGoTo(cardId, idx) {
         activeCard = null;
     }, {passive:true});
 })();
+// ==================== Product Detail Modal ====================
+function showProductDetail(productId) {
+    var card = document.getElementById('card-' + productId);
+    if (!card) return;
+
+    database.ref('products/' + productId).once('value', function(snap) {
+        if (!snap.exists()) return;
+        var p = snap.val();
+
+        var images = [];
+        if (p.images && p.images.length) {
+            images = p.images.filter(function(u){ return u && u.length > 0; });
+        }
+        if (images.length === 0) images = [''];
+
+        var old = document.getElementById('_pdModal');
+        if (old) old.remove();
+
+        // ---- گرید وێنەکان ----
+        var cols = images.length === 1 ? 1 : images.length === 2 ? 2 : images.length === 3 ? 3 : 2;
+        var gridHtml = '<div style="display:grid;grid-template-columns:repeat('+cols+',1fr);gap:3px;background:#000;">'
+            + images.map(function(src, i){
+                var h = (images.length === 1) ? '300' : (images.length === 3 && i === 0) ? '200' : '140';
+                var span = (images.length === 3 && i === 0) ? 'grid-column:1/4;' : '';
+                return '<div style="'+span+'height:'+h+'px;overflow:hidden;cursor:zoom-in;" onclick="_pdZoom('+i+')">' + '<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;"></div>';
+            }).join('') + '</div>';
+
+        var waNum = (p.sellerMobile || '').replace(/\D/g,'');
+        var waLink = 'https://wa.me/' + (waNum.startsWith('0') ? '964'+waNum.slice(1) : waNum);
+        var descHtml = p.description ? '<div style="background:#F8F9FA;border-radius:10px;padding:10px 12px;font-size:.82rem;color:#5a6476;line-height:1.7;margin-top:4px;">' + escapeHtml(p.description) + '</div>' : '';
+
+        var modal = document.createElement('div');
+        modal.id = '_pdModal';
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99999;display:flex;align-items:flex-end;justify-content:center;';
+
+        modal.innerHTML =
+            '<div style="background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;box-shadow:0 -8px 32px rgba(0,0,0,.2);">'
+            + '<div style="text-align:center;padding:10px 0 4px;"><div style="width:40px;height:4px;background:#dee2e6;border-radius:4px;display:inline-block;"></div></div>'
+            // گرید وێنەکان
+            + gridHtml
+            // زانیارییەکان
+            + '<div style="padding:16px 18px 24px;">'
+            + '<div style="font-size:.75rem;color:#888;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px;">' + escapeHtml(p.category||'') + '</div>'
+            + '<div style="font-size:1.15rem;font-weight:900;color:#1a1a2e;margin-bottom:8px;">' + escapeHtml(p.name||'') + '</div>'
+            + '<div style="font-size:1.4rem;font-weight:900;color:#3B5BDB;margin-bottom:14px;">' + escapeHtml(String(p.price||'0')) + ' ' + escapeHtml(p.currency||'IQD') + '</div>'
+            + '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">'
+            +   '<div style="display:flex;align-items:center;gap:8px;font-size:.85rem;"><span style="color:#888;width:80px;flex-shrink:0;">👤 فرۆشیار</span><span style="font-weight:700;color:#2d3340;">' + escapeHtml(p.sellerName||'نادیار') + '</span></div>'
+            +   '<div style="display:flex;align-items:center;gap:8px;font-size:.85rem;"><span style="color:#888;width:80px;flex-shrink:0;">📱 مۆبایل</span><span style="font-weight:700;color:#2d3340;direction:ltr;">' + escapeHtml(p.sellerMobile||'نادیار') + '</span></div>'
+            +   '<div style="display:flex;align-items:center;gap:8px;font-size:.85rem;"><span style="color:#888;width:80px;flex-shrink:0;">📍 شوێن</span><span style="font-weight:700;color:#2d3340;">' + escapeHtml(p.location||'نادیار') + '</span></div>'
+            + '</div>'
+            + (p.description ? '<div style="font-size:.78rem;font-weight:700;color:#5a6476;margin-bottom:5px;">📝 وردەکاری</div>' + descHtml : '')
+            + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px;">'
+            +   '<a href="' + waLink + '" target="_blank" style="padding:13px;background:#25D366;color:#fff;border:none;border-radius:12px;font-size:.9rem;font-weight:900;cursor:pointer;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;"><i class=\"fab fa-whatsapp\"></i> پەیوەندی</a>'
+            +   '<button id="_pdCartBtn" style="padding:13px;background:#434b57;color:#fff;border:none;border-radius:12px;font-size:.9rem;font-weight:900;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;"><i class=\"fas fa-shopping-cart\"></i> سەبەتە</button>'
+            + '</div>'
+            + '</div>'
+            + '</div>';
+
+        // ---- لایتبۆکسی گەورەکردن ----
+        // ---- لایتبۆکسی گەورەکردن ----
+        window._pdZoom = function(startIdx) {
+            var old2 = document.getElementById('_pdLightbox');
+            if (old2) old2.remove();
+
+            var lbIdx = startIdx;
+            var lbTotal = images.length;
+
+            var lb = document.createElement('div');
+            lb.id = '_pdLightbox';
+            lb.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:999999;display:flex;align-items:center;justify-content:center;';
+
+            // ئایکۆنی دانەی وێنە
+            var counterEl = document.createElement('div');
+            counterEl.id = '_lbCounter';
+            counterEl.style.cssText = 'position:absolute;top:16px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.75);font-size:.85rem;z-index:5;pointer-events:none;';
+            counterEl.textContent = (lbIdx+1) + ' / ' + lbTotal;
+
+            // دوگمەی داخستن
+            var closeBtn = document.createElement('button');
+            closeBtn.style.cssText = 'position:absolute;top:12px;right:12px;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:50%;width:42px;height:42px;font-size:1.3rem;cursor:pointer;z-index:5;';
+            closeBtn.textContent = '✕';
+            closeBtn.onclick = function(e) { e.stopPropagation(); lb.remove(); };
+
+            // وێنەی سەرەکی
+            var imgEl = document.createElement('img');
+            imgEl.id = '_lbImg';
+            imgEl.src = images[lbIdx] || '';
+            imgEl.style.cssText = 'max-width:94vw;max-height:88vh;object-fit:contain;border-radius:6px;user-select:none;';
+
+            lb.appendChild(counterEl);
+            lb.appendChild(closeBtn);
+            lb.appendChild(imgEl);
+
+            // دوگمەی ❮ ❯
+            if (lbTotal > 1) {
+                var prevBtn = document.createElement('button');
+                prevBtn.style.cssText = 'position:absolute;left:10px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.18);color:#fff;border:none;border-radius:50%;width:46px;height:46px;font-size:1.4rem;cursor:pointer;z-index:5;display:flex;align-items:center;justify-content:center;';
+                prevBtn.textContent = '❮';
+                prevBtn.onclick = function(e) { e.stopPropagation(); goLb(-1); };
+
+                var nextBtn = document.createElement('button');
+                nextBtn.style.cssText = 'position:absolute;right:10px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.18);color:#fff;border:none;border-radius:50%;width:46px;height:46px;font-size:1.4rem;cursor:pointer;z-index:5;display:flex;align-items:center;justify-content:center;';
+                nextBtn.textContent = '❯';
+                nextBtn.onclick = function(e) { e.stopPropagation(); goLb(1); };
+
+                lb.appendChild(prevBtn);
+                lb.appendChild(nextBtn);
+            }
+
+            function goLb(dir) {
+                lbIdx = (lbIdx + dir + lbTotal) % lbTotal;
+                var im = document.getElementById('_lbImg');
+                if (im) im.src = images[lbIdx];
+                var cnt = document.getElementById('_lbCounter');
+                if (cnt) cnt.textContent = (lbIdx+1) + ' / ' + lbTotal;
+            }
+
+            lb.addEventListener('click', function(ev) { if (ev.target === lb || ev.target === imgEl) lb.remove(); });
+            document.body.appendChild(lb);
+        };
+
+
+
+        document.body.appendChild(modal);
+        modal.addEventListener('click', function(ev){ if(ev.target===modal) modal.remove(); });
+
+        var cartBtn = document.getElementById('_pdCartBtn');
+        if (cartBtn) {
+            cartBtn.addEventListener('click', function() {
+                modal.remove();
+                showQtySelector(productId);
+            });
+        }
+    });
+}
+
+
 function showQtySelector(productId) {
     const qtyDiv = document.getElementById('qty-' + productId);
     if (!qtyDiv) return;
