@@ -4546,6 +4546,7 @@ function loadDriversAdmin() {
                   + '</div>'
                   + '<div style="display:flex;gap:6px;flex-wrap:wrap;">'
                     + '<button onclick="viewDriver(\'' + d.key + '\')" style="padding:5px 12px;background:#F5F7FA;color:#434b57;border:1.5px solid #E8EBF0;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;">👁️ بینین</button>'
+                    + '<button onclick="editDriver(\'' + d.key + '\')" style="padding:5px 12px;background:#EEF4FF;color:#3B5BDB;border:1.5px solid #BAC8FF;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;">✏️ دەستکاری</button>'
                     + '<button onclick="printDriver(\'' + d.key + '\')" style="padding:5px 12px;background:#F5F7FA;color:#2d3340;border:1.5px solid #E8EBF0;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;">🖨️ چاپ</button>'
                     + '<button onclick="resetDriverPassword(\'' + d.key + '\')" style="padding:5px 12px;background:#F5F7FA;color:#E6B800;border:1.5px solid #FFCC00;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;"><i class="fas fa-key"></i> وشە</button>'
                     + '<button onclick="deleteDriver(\'' + d.key + '\')" style="padding:5px 12px;background:#FFF5F5;color:#B02A37;border:1.5px solid #FFCDD2;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;"><i class="fas fa-trash"></i></button>'
@@ -4607,6 +4608,103 @@ function previewDriverPhoto(input, previewId) {
         preview.innerHTML = '<img src="' + e.target.result + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
     };
     reader.readAsDataURL(input.files[0]);
+}
+
+// ==================== Edit Driver ====================
+function editDriver(key) {
+    database.ref('drivers/' + key).once('value', function(snap) {
+        if (!snap.exists()) { showNotification('نەدۆزرایەوە', 'error'); return; }
+        var d = Object.assign({ key: key }, snap.val());
+
+        var old = document.getElementById('_editDriverModal');
+        if (old) old.remove();
+
+        var modal = document.createElement('div');
+        modal.id = '_editDriverModal';
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto;';
+        modal.innerHTML = `
+        <div style="background:#fff;border-radius:16px;width:100%;max-width:420px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.25);margin:auto;">
+          <!-- هێدەر -->
+          <div style="background:linear-gradient(135deg,#3B5BDB,#4C6EF5);padding:16px 18px;display:flex;justify-content:space-between;align-items:center;">
+            <div style="color:#fff;font-size:1rem;font-weight:900;">✏️ دەستکاریکردنی شۆفیر</div>
+            <button onclick="document.getElementById('_editDriverModal').remove()" style="background:rgba(255,255,255,.2);color:#fff;border:none;border-radius:8px;padding:5px 10px;cursor:pointer;font-size:1rem;">✕</button>
+          </div>
+          <!-- وێنە -->
+          <div style="padding:16px 18px 0;">
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;padding:10px;background:#F5F7FA;border-radius:10px;border:1.5px dashed #dee2e6;">
+              <div id="_editDriverPhotoPreview" style="width:64px;height:64px;border-radius:50%;background:#dee2e6;display:flex;align-items:center;justify-content:center;font-size:2rem;overflow:hidden;flex-shrink:0;">
+                ${d.photo ? '<img src="' + d.photo + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">' : '🚗'}
+              </div>
+              <div style="flex:1;">
+                <label style="font-size:.75rem;font-weight:700;color:#5a6476;display:block;margin-bottom:4px;">📷 وێنەی نوێ (ئارەزوومەند)</label>
+                <input type="file" id="_editDriverPhotoFile" accept="image/*" onchange="previewDriverPhoto(this,'_editDriverPhotoPreview')" style="width:100%;font-size:.8rem;font-family:inherit;">
+                <div style="font-size:.68rem;color:#adb5bd;margin-top:3px;">JPG, PNG — زیاتر لە 1MB مەبێت</div>
+              </div>
+            </div>
+            <!-- خانەکان -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+              <div>
+                <label style="font-size:.75rem;font-weight:700;color:#5a6476;display:block;margin-bottom:4px;">👤 ناوی شۆفیر</label>
+                <input type="text" id="_editDriverName" value="${escapeHtml(d.name||'')}" placeholder="ناوی تەواو..." style="width:100%;padding:9px 10px;border:1.5px solid #dee2e6;border-radius:8px;font-size:.85rem;font-family:inherit;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <label style="font-size:.75rem;font-weight:700;color:#5a6476;display:block;margin-bottom:4px;">📱 ژمارەی مۆبایل</label>
+                <input type="tel" id="_editDriverMobile" value="${escapeHtml(d.mobile||'')}" placeholder="07xxxxxxxxx" style="width:100%;padding:9px 10px;border:1.5px solid #dee2e6;border-radius:8px;font-size:.85rem;font-family:inherit;outline:none;direction:ltr;box-sizing:border-box;">
+              </div>
+              <div>
+                <label style="font-size:.75rem;font-weight:700;color:#5a6476;display:block;margin-bottom:4px;">🔑 Username</label>
+                <input type="text" id="_editDriverUsername" value="${escapeHtml(d.username||'')}" placeholder="driver1..." style="width:100%;padding:9px 10px;border:1.5px solid #dee2e6;border-radius:8px;font-size:.85rem;font-family:inherit;outline:none;direction:ltr;box-sizing:border-box;">
+              </div>
+              <div>
+                <label style="font-size:.75rem;font-weight:700;color:#5a6476;display:block;margin-bottom:4px;">🔒 وشەی تێپەڕ</label>
+                <input type="text" id="_editDriverPassword" value="${escapeHtml(d.password||'')}" placeholder="وشەی تێپەڕ..." style="width:100%;padding:9px 10px;border:1.5px solid #dee2e6;border-radius:8px;font-size:.85rem;font-family:inherit;outline:none;direction:ltr;box-sizing:border-box;">
+              </div>
+            </div>
+          </div>
+          <!-- دوگمەکان -->
+          <div style="padding:12px 18px 18px;display:flex;gap:8px;">
+            <button onclick="saveEditDriver('${key}')" style="flex:2;padding:11px;background:linear-gradient(135deg,#3B5BDB,#4C6EF5);color:#fff;border:none;border-radius:10px;font-size:.9rem;font-weight:900;cursor:pointer;font-family:inherit;"><i class="fas fa-save"></i> پاشەکەوتکردن</button>
+            <button onclick="document.getElementById('_editDriverModal').remove()" style="flex:1;padding:11px;background:#dee2e6;color:#1a1a2e;border:none;border-radius:10px;font-size:.88rem;cursor:pointer;font-family:inherit;">پاشگەزبوونەوە</button>
+          </div>
+        </div>`;
+        document.body.appendChild(modal);
+        modal.addEventListener('click', function(ev) { if (ev.target === modal) modal.remove(); });
+    });
+}
+
+function saveEditDriver(key) {
+    var name     = ((document.getElementById('_editDriverName')     || {}).value || '').trim();
+    var mobile   = ((document.getElementById('_editDriverMobile')   || {}).value || '').trim();
+    var username = ((document.getElementById('_editDriverUsername') || {}).value || '').trim();
+    var password = ((document.getElementById('_editDriverPassword') || {}).value || '').trim();
+
+    if (!name || !username) { showNotification('ناو و username پڕبکەرەوە!', 'error'); return; }
+
+    var photoFile = document.getElementById('_editDriverPhotoFile');
+    photoFile = photoFile && photoFile.files && photoFile.files[0] ? photoFile.files[0] : null;
+
+    function doUpdate(photoBase64) {
+        var data = { name: name, mobile: mobile, username: username };
+        if (password) data.password = password;
+        if (photoBase64) data.photo = photoBase64;
+        database.ref('drivers/' + key).update(data)
+            .then(function() {
+                showNotification('زانیاری شۆفیر نوێکرایەوە ✅');
+                var m = document.getElementById('_editDriverModal');
+                if (m) m.remove();
+                loadDriversAdmin();
+            })
+            .catch(function() { showNotification('هەڵە لە پاشەکەوتکردن!', 'error'); });
+    }
+
+    if (photoFile) {
+        if (photoFile.size > 1024 * 1024) { showNotification('وێنەکە زۆر گەورەیە! زیاتر لە 1MB مەبێت', 'error'); return; }
+        var reader = new FileReader();
+        reader.onload = function(e) { doUpdate(e.target.result); };
+        reader.readAsDataURL(photoFile);
+    } else {
+        doUpdate(null);
+    }
 }
 
 function deleteDriver(key) {
