@@ -1022,6 +1022,7 @@ function loadAllProducts() {
                 html += '<p><strong>شوێن:</strong> ' + escapeHtml(product.location || 'نادیار') + '</p>';
                 html += '<p><strong>وردەکاری:</strong> ' + escapeHtml(product.description || 'بەبەتاڵ') + '</p>';
                 html += '<div class="actions">';
+                html += '<button class="btn btn-small" onclick="editProduct(\'' + id + '\')" style="background:#EEF4FF;color:#3B5BDB;border:1.5px solid #BAC8FF;margin-left:6px;"><i class="fas fa-edit"></i> دەستکاری</button>';
                 html += '<button class="btn btn-danger btn-small" onclick="deleteProduct(\'' + id + '\')"><i class="fas fa-trash"></i> سڕینەوە</button>';
                 html += '</div></div>';
             });
@@ -1925,6 +1926,134 @@ function deleteProduct(productId) {
             .catch(() => {
                 showNotification('هەڵە لە سڕینەوە!', 'error');
             });
+    }
+}
+
+// ==================== Edit Product ====================
+function editProduct(productId) {
+    database.ref('products/' + productId).once('value', function(snap) {
+        if (!snap.exists()) { showNotification('کاڵا نەدۆزرایەوە', 'error'); return; }
+        var p = snap.val();
+
+        var old = document.getElementById('_editProductModal');
+        if (old) old.remove();
+
+        var cats = ['women','men','kids','home','electronics','beauty','shoes','bags','other'];
+        var catOptions = cats.map(function(c){ return '<option value="'+c+'"'+(p.category===c?' selected':'')+'>'+c+'</option>'; }).join('');
+        var currencies = ['IQD','USD','GBP','EUR'];
+        var currOptions = currencies.map(function(c){ return '<option value="'+c+'"'+(p.currency===c?' selected':'')+'>'+c+'</option>'; }).join('');
+
+        var currentImg = p.images && p.images[0] ? p.images[0] : '';
+
+        var modal = document.createElement('div');
+        modal.id = '_editProductModal';
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99999;display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto;';
+        modal.innerHTML = `
+        <div style="background:#fff;border-radius:16px;width:100%;max-width:460px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.25);margin:auto;">
+          <div style="background:linear-gradient(135deg,#3B5BDB,#4C6EF5);padding:16px 18px;display:flex;justify-content:space-between;align-items:center;">
+            <div style="color:#fff;font-size:1rem;font-weight:900;">✏️ دەستکاریکردنی کاڵا</div>
+            <button onclick="document.getElementById('_editProductModal').remove()" style="background:rgba(255,255,255,.2);color:#fff;border:none;border-radius:8px;padding:5px 10px;cursor:pointer;font-size:1rem;">✕</button>
+          </div>
+          <div style="padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <!-- وێنەی ئێستا -->
+            ${currentImg ? '<div style="text-align:center;"><img src="'+currentImg+'" style="width:80px;height:80px;object-fit:cover;border-radius:10px;border:2px solid #E8EBF0;"></div>' : ''}
+            <!-- وێنەی نوێ -->
+            <div>
+              <label style="font-size:.78rem;font-weight:700;color:#5a6476;display:block;margin-bottom:4px;">📷 گۆڕینی وێنە (ئارەزوومەند)</label>
+              <input type="file" id="_editProdImg" accept="image/*" style="width:100%;font-size:.8rem;font-family:inherit;">
+              <div style="font-size:.68rem;color:#adb5bd;margin-top:2px;">ئەگەر وێنەیەک هەڵنەبژێریت وێنەی کۆن دەمێنێتەوە</div>
+            </div>
+            <!-- ناوی کاڵا -->
+            <div>
+              <label style="font-size:.78rem;font-weight:700;color:#5a6476;display:block;margin-bottom:4px;">📦 ناوی کاڵا</label>
+              <input type="text" id="_editProdName" value="${escapeHtml(p.name||'')}" style="width:100%;padding:9px 10px;border:1.5px solid #dee2e6;border-radius:8px;font-size:.85rem;font-family:inherit;outline:none;box-sizing:border-box;">
+            </div>
+            <!-- جۆر و نرخ -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div>
+                <label style="font-size:.78rem;font-weight:700;color:#5a6476;display:block;margin-bottom:4px;">🏷️ جۆر</label>
+                <select id="_editProdCat" style="width:100%;padding:9px 10px;border:1.5px solid #dee2e6;border-radius:8px;font-size:.85rem;font-family:inherit;outline:none;box-sizing:border-box;">${catOptions}</select>
+              </div>
+              <div>
+                <label style="font-size:.78rem;font-weight:700;color:#5a6476;display:block;margin-bottom:4px;">💰 نرخ</label>
+                <div style="display:flex;gap:4px;">
+                  <input type="number" id="_editProdPrice" value="${escapeHtml(String(p.price||''))}" style="flex:1;padding:9px 8px;border:1.5px solid #dee2e6;border-radius:8px;font-size:.85rem;font-family:inherit;outline:none;box-sizing:border-box;">
+                  <select id="_editProdCurrency" style="padding:9px 6px;border:1.5px solid #dee2e6;border-radius:8px;font-size:.82rem;font-family:inherit;outline:none;">${currOptions}</select>
+                </div>
+              </div>
+            </div>
+            <!-- فرۆشیار -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div>
+                <label style="font-size:.78rem;font-weight:700;color:#5a6476;display:block;margin-bottom:4px;">👤 ناوی فرۆشیار</label>
+                <input type="text" id="_editProdSeller" value="${escapeHtml(p.sellerName||'')}" style="width:100%;padding:9px 10px;border:1.5px solid #dee2e6;border-radius:8px;font-size:.85rem;font-family:inherit;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <label style="font-size:.78rem;font-weight:700;color:#5a6476;display:block;margin-bottom:4px;">📱 مۆبایلی فرۆشیار</label>
+                <input type="tel" id="_editProdSellerMobile" value="${escapeHtml(p.sellerMobile||'')}" style="width:100%;padding:9px 10px;border:1.5px solid #dee2e6;border-radius:8px;font-size:.85rem;font-family:inherit;outline:none;direction:ltr;box-sizing:border-box;">
+              </div>
+            </div>
+            <!-- شوێن -->
+            <div>
+              <label style="font-size:.78rem;font-weight:700;color:#5a6476;display:block;margin-bottom:4px;">📍 شوێن</label>
+              <input type="text" id="_editProdLocation" value="${escapeHtml(p.location||'')}" style="width:100%;padding:9px 10px;border:1.5px solid #dee2e6;border-radius:8px;font-size:.85rem;font-family:inherit;outline:none;box-sizing:border-box;">
+            </div>
+            <!-- وردەکاری -->
+            <div>
+              <label style="font-size:.78rem;font-weight:700;color:#5a6476;display:block;margin-bottom:4px;">📝 وردەکاری</label>
+              <textarea id="_editProdDesc" rows="3" style="width:100%;padding:9px 10px;border:1.5px solid #dee2e6;border-radius:8px;font-size:.85rem;font-family:inherit;outline:none;box-sizing:border-box;resize:vertical;">${escapeHtml(p.description||'')}</textarea>
+            </div>
+          </div>
+          <div style="padding:12px 18px 18px;display:flex;gap:8px;">
+            <button onclick="saveEditProduct('${productId}')" style="flex:2;padding:11px;background:linear-gradient(135deg,#3B5BDB,#4C6EF5);color:#fff;border:none;border-radius:10px;font-size:.9rem;font-weight:900;cursor:pointer;font-family:inherit;"><i class="fas fa-save"></i> پاشەکەوتکردن</button>
+            <button onclick="document.getElementById('_editProductModal').remove()" style="flex:1;padding:11px;background:#dee2e6;color:#1a1a2e;border:none;border-radius:10px;font-size:.88rem;cursor:pointer;font-family:inherit;">پاشگەزبوونەوە</button>
+          </div>
+        </div>`;
+        document.body.appendChild(modal);
+        modal.addEventListener('click', function(ev){ if(ev.target===modal) modal.remove(); });
+    });
+}
+
+function saveEditProduct(productId) {
+    var name         = ((document.getElementById('_editProdName')         || {}).value || '').trim();
+    var category     = ((document.getElementById('_editProdCat')          || {}).value || '').trim();
+    var price        = ((document.getElementById('_editProdPrice')        || {}).value || '').trim();
+    var currency     = ((document.getElementById('_editProdCurrency')     || {}).value || '').trim();
+    var sellerName   = ((document.getElementById('_editProdSeller')       || {}).value || '').trim();
+    var sellerMobile = ((document.getElementById('_editProdSellerMobile') || {}).value || '').trim();
+    var location     = ((document.getElementById('_editProdLocation')     || {}).value || '').trim();
+    var description  = ((document.getElementById('_editProdDesc')         || {}).value || '').trim();
+
+    if (!name || !price) { showNotification('ناوی کاڵا و نرخ داخڵ بکە!', 'error'); return; }
+
+    var imgFile = document.getElementById('_editProdImg');
+    imgFile = imgFile && imgFile.files && imgFile.files[0] ? imgFile.files[0] : null;
+
+    function doUpdate(newImageUrl) {
+        var data = { name: name, category: category, price: price, currency: currency,
+                     sellerName: sellerName, sellerMobile: sellerMobile,
+                     location: location, description: description };
+        if (newImageUrl) {
+            // replace first image only; keep rest
+            database.ref('products/' + productId + '/images/0').set(newImageUrl);
+        }
+        database.ref('products/' + productId).update(data)
+            .then(function() {
+                showNotification('کاڵا نوێکرایەوە ✅');
+                var m = document.getElementById('_editProductModal');
+                if (m) m.remove();
+                loadAllProducts();
+            })
+            .catch(function() { showNotification('هەڵە لە پاشەکەوتکردن!', 'error'); });
+    }
+
+    if (imgFile) {
+        if (imgFile.size > 2 * 1024 * 1024) { showNotification('وێنەکە زۆر گەورەیە! زیاتر لە 2MB مەبێت', 'error'); return; }
+        var reader = new FileReader();
+        reader.onload = function(e) { doUpdate(e.target.result); };
+        reader.readAsDataURL(imgFile);
+    } else {
+        doUpdate(null);
     }
 }
 
@@ -4546,7 +4675,7 @@ function loadDriversAdmin() {
                   + '</div>'
                   + '<div style="display:flex;gap:6px;flex-wrap:wrap;">'
                     + '<button onclick="viewDriver(\'' + d.key + '\')" style="padding:5px 12px;background:#F5F7FA;color:#434b57;border:1.5px solid #E8EBF0;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;">👁️ بینین</button>'
-                    + '<button onclick="editDriver(\'' + d.key + '\')" style="padding:5px 12px;background:#EEF4FF;color:#3B5BDB;border:1.5px solid #BAC8FF;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;">✏️ دەستکاری</button>'
+                    + '<button onclick="editDriver(\'' + d.key + '\')" style="padding:5px 12px;background:#EEF4FF;color:#3B5BDB;border:1.5px solid #BAC8FF;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;">✏️ ویرکردنەوە</button>'
                     + '<button onclick="printDriver(\'' + d.key + '\')" style="padding:5px 12px;background:#F5F7FA;color:#2d3340;border:1.5px solid #E8EBF0;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;">🖨️ چاپ</button>'
                     + '<button onclick="resetDriverPassword(\'' + d.key + '\')" style="padding:5px 12px;background:#F5F7FA;color:#E6B800;border:1.5px solid #FFCC00;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;"><i class="fas fa-key"></i> وشە</button>'
                     + '<button onclick="deleteDriver(\'' + d.key + '\')" style="padding:5px 12px;background:#FFF5F5;color:#B02A37;border:1.5px solid #FFCDD2;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;"><i class="fas fa-trash"></i></button>'
