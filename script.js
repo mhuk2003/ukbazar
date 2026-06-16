@@ -3118,10 +3118,10 @@ function showProductDetail(productId) {
 
         var modal = document.createElement('div');
         modal.id = '_pdModal';
-        modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99999;display:flex;align-items:flex-end;justify-content:center;';
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;';
 
         modal.innerHTML =
-            '<div style="background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;box-shadow:0 -8px 32px rgba(0,0,0,.2);">'
+            '<div style="background:#fff;border-radius:16px;width:100%;max-width:460px;max-height:88vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.3);">'
             + '<div style="text-align:center;padding:10px 0 4px;"><div style="width:40px;height:4px;background:#dee2e6;border-radius:4px;display:inline-block;"></div></div>'
             // گرید وێنەکان
             + gridHtml
