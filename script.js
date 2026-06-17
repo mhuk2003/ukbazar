@@ -167,8 +167,8 @@ const DEFAULT_SLIDER_IMAGE = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.or
             padding: 4px 0 !important;
         }
         .label-qr-img {
-            width: 100px !important;
-            height: 100px !important;
+            width: 130px !important;
+            height: 130px !important;
         }
         .label-qr-hint {
             font-size: 0.65rem !important;
@@ -1122,7 +1122,7 @@ function renderDeliveryItems(items) {
             const qrText = encodeURIComponent(
                 `پسولە: ${orderNum} | نێردەر: ${d.senderName||d.name||''} ${d.senderMobile||d.mobile||''} (${d.senderLocation||d.address||''}) | وەرگر: ${d.receiverName||''} ${d.receiverMobile||''} (${d.receiverLocation||''}) | کەلوپەل: ${d.packageName||d.details||''} x${d.packageQty||''} - ${d.packageKg||''}کگ`
             );
-            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=4&data=${qrText}`;
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=4&data=${qrText}`;
             html += buildKurdishLabelHtml(d, key, orderNum, qrUrl);
         });
         html += '</div>';
@@ -1249,92 +1249,138 @@ function filterDeliverySearch() {
 }
 
 function buildKurdishLabelHtml(d, key, orderNum, qrUrl) {
+    const statusColors = {registered:'#434b57',picked_up:'#E6B800',loading:'#E6B800',in_transit:'#5a6476',sorting:'#434b57',delivered:'#2d9e5f'};
+    const statusLabels = {registered:'📋 تۆماركراو',picked_up:'🚗 وەرگیراو',loading:'🏭 بارکردن',in_transit:'🚛 لە ڕێگا',sorting:'📦 دابەشکردن',delivered:'✅ گەیشتووە'};
+    const curStatus = d.status||'registered';
+    const ts = escapeHtml(d.timestamp||'');
     return `
-    <div class="pending-item delivery-label-card" id="label-${key}">
-        <div class="label-header">
-            <span class="label-order-num"># ${orderNum}</span>
-            <span class="label-title-center"><i class="fas fa-shipping-fast"></i> لەیبلی گەیاندن</span>
-            <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
-                <button class="btn btn-sm btn-primary" onclick="printLabel('${key}')" style="padding:5px 10px;font-size:0.8rem;">
-                    <i class="fas fa-print"></i> چاپ
-                </button>
-                <button class="btn btn-sm" onclick="editDeliveryLabel('${key}')" style="padding:5px 10px;font-size:0.8rem;background:#e6fffa;color:#2d3340;border:1.5px solid #8492a6;border-radius:8px;cursor:pointer;" title="دەستکاریکردن">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn btn-sm" onclick="shareDeliveryWhatsApp('${key}')" style="padding:5px 10px;font-size:0.8rem;background:#F5F7FA;color:#25d366;border:1.5px solid #25d366;border-radius:8px;cursor:pointer;" title="شێرکردن بە واتسئاپ">
-                    <i class="fab fa-whatsapp"></i>
-                </button>
-                <button class="btn btn-sm" onclick="deleteDelivery('${key}')" style="padding:5px 10px;font-size:0.8rem;background:#fff0f0;color:#DC3545;border:1.5px solid #FF8A80;border-radius:8px;cursor:pointer;" title="سڕینەوەی لەیبل">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
+    <div class="pending-item delivery-label-card" id="label-${key}" style="border:2px solid #2d3340;border-radius:12px;overflow:hidden;margin-bottom:14px;background:#fff;font-family:'Noto Sans Arabic',Tahoma,Arial,sans-serif;"
+         data-sender-name="${escapeHtml(d.senderName||d.name||'')}"
+         data-sender-mobile="${escapeHtml(d.senderMobile||d.mobile||'')}"
+         data-sender-mobile2="${escapeHtml(d.senderMobile2||'')}"
+         data-sender-loc="${escapeHtml(d.senderLocation||d.address||'')}"
+         data-receiver-name="${escapeHtml(d.receiverName||'')}"
+         data-receiver-mobile="${escapeHtml(d.receiverMobile||'')}"
+         data-receiver-mobile2="${escapeHtml(d.receiverMobile2||'')}"
+         data-receiver-loc="${escapeHtml(d.receiverLocation||'')}"
+         data-pkg-name="${escapeHtml(d.packageName||d.details||'')}"
+         data-pkg-qty="${escapeHtml(String(d.packageQty||''))}"
+         data-pkg-kg="${escapeHtml(String(d.packageKg||''))}"
+         data-item-price="${escapeHtml(d.itemPrice||'')}"
+         data-delivery-price="${escapeHtml(d.deliveryPricePerKg||'')}"
+         data-timestamp="${ts}">
+
+        <!-- ── هێدەر ── -->
+        <div style="background:#2d3340;color:#fff;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:1rem;font-weight:900;letter-spacing:.5px;">🏠 KING STREET</span>
+                <span style="font-size:.7rem;color:#adb5bd;">لەیبلی کەیاندن</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+                <span id="ku-status-badge-${key}" style="background:${statusColors[curStatus]};color:#fff;font-size:.7rem;font-weight:700;padding:3px 8px;border-radius:20px;">${statusLabels[curStatus]||curStatus}</span>
+                <span class="label-order-num" style="background:#fff;color:#2d3340;font-size:.88rem;font-weight:900;padding:3px 10px;border-radius:6px;">${orderNum}</span>
             </div>
         </div>
-        <div class="label-body-wrap">
-            <div class="label-grid">
-                <div class="label-section sender-section">
-                    <div class="label-section-title">📤 نێردەر</div>
-                    <div class="label-row"><span>ناو:</span><strong>${escapeHtml(d.senderName||d.name||'—')}</strong></div>
-                    <div class="label-row"><span>ژمارە:</span><strong>${escapeHtml(d.senderMobile||d.mobile||'—')}</strong></div>
-                    ${d.senderMobile2 ? `<div class="label-row"><span>ژمارە ٢:</span><strong>${escapeHtml(d.senderMobile2)}</strong></div>` : ''}
-                    <div class="label-row"><span>شوێن:</span><strong>${escapeHtml(d.senderLocation||d.address||'—')}</strong></div>
-                </div>
-                <div class="label-section receiver-section">
-                    <div class="label-section-title">📥 وەرگر</div>
-                    <div class="label-row"><span>ناو:</span><strong>${escapeHtml(d.receiverName||'—')}</strong></div>
-                    <div class="label-row"><span>ژمارە:</span><strong>${escapeHtml(d.receiverMobile||'—')}</strong></div>
-                    ${d.receiverMobile2 ? `<div class="label-row"><span>ژمارە ٢:</span><strong>${escapeHtml(d.receiverMobile2)}</strong></div>` : ''}
-                    <div class="label-row"><span>شوێن:</span><strong>${escapeHtml(d.receiverLocation||'—')}</strong></div>
-                </div>
-            </div>
-            <div class="label-package">
-                <div class="label-row"><span>📦 کەلوپەل:</span><strong>${escapeHtml(d.packageName||d.details||'—')}</strong></div>
-                <div class="label-row"><span>🔢 پارچە:</span><strong>${escapeHtml(String(d.packageQty||'—'))}</strong></div>
-                <div class="label-row"><span>⚖️ کیلۆ:</span><strong>${escapeHtml(String(d.packageKg||'—'))} کگ</strong></div>
-                ${d.itemPrice ? `<div class="label-row"><span>💰 نرخی کاڵا:</span><strong>${escapeHtml(d.itemPrice)}</strong></div>` : ''}
-                ${d.deliveryPricePerKg ? `<div class="label-row"><span>🚚 نرخی گەیاندن:</span><strong>${escapeHtml(d.deliveryPricePerKg)}</strong></div>` : ''}
-                ${d.driverName||d.driverMobile ? `<div class="label-row label-driver-row"><span>🚗 شۆفیر:</span><strong>${escapeHtml(d.driverName||'—')} — ${escapeHtml(d.driverMobile||'')}</strong></div>` : ''}
-                ${d.deliveryNote ? `<div class="label-row label-note-row"><span>📝 تیبینی:</span><strong>${escapeHtml(d.deliveryNote)}</strong></div>` : ''}
-            </div>
-            <div class="label-admin-edit">
-                <div class="admin-edit-title"><i class="fas fa-pen"></i> شۆفیر و تیبینی</div>
-                <!-- Status Changer -->
-                <div style="margin-bottom:10px;background:#f0f4ff;border-radius:10px;padding:10px;">
-                    <label style="font-size:.82rem;font-weight:700;color:#434b57;display:block;margin-bottom:6px;">📊 ستاتەسی کاڵا:</label>
-                    <div style="display:flex;gap:6px;align-items:center;">
-                        <select id="status-select-${key}" onchange="updateDeliveryStatus('${key}', this.value, 'delivery')"
-                            style="flex:1;padding:8px 10px;border:2px solid #434b57;border-radius:10px;font-family:inherit;font-size:.88rem;background:#fff;color:#1a1a2e;cursor:pointer;outline:none;">
-                            <option value="registered"  ${(d.status||'registered')==='registered'  ? 'selected':''}>📋 تۆماركراو — Registered</option>
-                            <option value="picked_up"   ${(d.status||'')==='picked_up'   ? 'selected':''}>🚗 وەرگیراو — Picked Up</option>
-                            <option value="loading"     ${(d.status||'')==='loading'     ? 'selected':''}>🏭 بارکردنی کەلەک — Loading Warehouse</option>
-                            <option value="in_transit"  ${(d.status||'')==='in_transit'  ? 'selected':''}>🚛 لە ڕێگادایە — In Transit</option>
-                            <option value="sorting"     ${(d.status||'')==='sorting'     ? 'selected':''}>📦 کەلەکی دابەشکردن — Sorting Warehouse</option>
-                            <option value="delivered"   ${(d.status||'')==='delivered'   ? 'selected':''}>✅ گەیشتووە — Delivered</option>
-                        </select>
+
+        <!-- ── بۆدی: زانیاری + QR ── -->
+        <div style="display:flex;gap:0;align-items:stretch;">
+
+            <!-- چەپ: نێردەر + وەرگر + پاکێج -->
+            <div style="flex:1;min-width:0;padding:10px 12px;">
+
+                <!-- نێردەر -->
+                <div style="margin-bottom:8px;">
+                    <div style="background:#434b57;color:#fff;font-size:.75rem;font-weight:900;padding:3px 8px;border-radius:5px 5px 0 0;">📤 نێردەر — Sender</div>
+                    <div style="border:1.5px solid #434b57;border-top:none;border-radius:0 0 6px 6px;overflow:hidden;">
+                        <div style="display:flex;justify-content:space-between;padding:4px 8px;border-bottom:1px solid #eee;font-size:.8rem;"><span style="color:#8492a6;">👤 ناو</span><strong style="color:#1a1a2e;">${escapeHtml(d.senderName||d.name||'—')}</strong></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 8px;border-bottom:1px solid #eee;font-size:.8rem;"><span style="color:#8492a6;">📱 ژمارە</span><strong style="color:#1a1a2e;direction:ltr;">${escapeHtml(d.senderMobile||d.mobile||'—')}</strong></div>
+                        ${d.senderMobile2 ? `<div style="display:flex;justify-content:space-between;padding:4px 8px;border-bottom:1px solid #eee;font-size:.8rem;"><span style="color:#8492a6;">📱 ژمارە ٢</span><strong style="direction:ltr;">${escapeHtml(d.senderMobile2)}</strong></div>` : ''}
+                        <div style="display:flex;justify-content:space-between;padding:4px 8px;font-size:.8rem;"><span style="color:#8492a6;">📍 شوێن</span><strong style="color:#1a1a2e;">${escapeHtml(d.senderLocation||d.address||'—')}</strong></div>
                     </div>
                 </div>
-                <div class="admin-edit-fields">
-                    <div class="admin-edit-inputs">
-                        <input type="text" id="driver-name-${key}" placeholder="👤 ناوی شۆفیر" value="${escapeHtml(d.driverName||'')}">
-                        <input type="tel" id="driver-mobile-${key}" placeholder="📞 ژمارە" value="${escapeHtml(d.driverMobile||'')}">
-                    </div>
-                    <textarea id="delivery-note-${key}" placeholder="📝 تیبینی..." rows="3">${escapeHtml(d.deliveryNote||'')}</textarea>
-                    <div class="admin-edit-inputs" style="margin-top:6px;">
-                        <input type="text" id="item-price-${key}" placeholder="💰 نرخی کاڵا" value="${escapeHtml(d.itemPrice||'')}">
-                        <input type="text" id="delivery-price-${key}" placeholder="🚚 نرخی گەیاندن" value="${escapeHtml(d.deliveryPricePerKg||'')}">
+
+                <!-- وەرگر -->
+                <div style="margin-bottom:8px;">
+                    <div style="background:#1a1a2e;color:#fff;font-size:.75rem;font-weight:900;padding:3px 8px;border-radius:5px 5px 0 0;">📥 وەرگر — Receiver</div>
+                    <div style="border:1.5px solid #1a1a2e;border-top:none;border-radius:0 0 6px 6px;overflow:hidden;">
+                        <div style="display:flex;justify-content:space-between;padding:4px 8px;border-bottom:1px solid #eee;font-size:.8rem;"><span style="color:#8492a6;">👤 ناو</span><strong style="color:#1a1a2e;">${escapeHtml(d.receiverName||'—')}</strong></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 8px;border-bottom:1px solid #eee;font-size:.8rem;"><span style="color:#8492a6;">📱 ژمارە</span><strong style="color:#1a1a2e;direction:ltr;">${escapeHtml(d.receiverMobile||'—')}</strong></div>
+                        ${d.receiverMobile2 ? `<div style="display:flex;justify-content:space-between;padding:4px 8px;border-bottom:1px solid #eee;font-size:.8rem;"><span style="color:#8492a6;">📱 ژمارە ٢</span><strong style="direction:ltr;">${escapeHtml(d.receiverMobile2)}</strong></div>` : ''}
+                        <div style="display:flex;justify-content:space-between;padding:4px 8px;font-size:.8rem;"><span style="color:#8492a6;">📍 شوێن</span><strong style="color:#0c5da5;font-weight:900;">${escapeHtml(d.receiverLocation||'—')}</strong></div>
                     </div>
                 </div>
-                <button class="btn btn-sm btn-primary admin-save-btn" onclick="saveDriverInfo('${key}')">
-                    <i class="fas fa-save"></i> پاشەکەوتکردن
-                </button>
+
+                <!-- پاکێج -->
+                <div style="background:#f0f4ff;border-radius:8px;padding:7px 10px;font-size:.78rem;">
+                    <div style="font-weight:900;color:#434b57;margin-bottom:4px;font-size:.75rem;">📦 زانیاری پاکێج</div>
+                    <div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px dotted #c7d2fe;"><span style="color:#8492a6;">کەلوپەل</span><strong>${escapeHtml(d.packageName||d.details||'—')}</strong></div>
+                    <div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px dotted #c7d2fe;"><span style="color:#8492a6;">پارچە</span><strong>${escapeHtml(String(d.packageQty||'—'))} دانە</strong></div>
+                    <div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px dotted #c7d2fe;"><span style="color:#8492a6;">کیلۆ</span><strong>${escapeHtml(String(d.packageKg||'—'))} کگ</strong></div>
+                    ${d.itemPrice ? `<div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px dotted #c7d2fe;"><span style="color:#8492a6;">نرخی کاڵا</span><strong>${escapeHtml(d.itemPrice)}</strong></div>` : ''}
+                    ${d.deliveryPricePerKg ? `<div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px dotted #c7d2fe;"><span style="color:#8492a6;">نرخی گەیاندن</span><strong>${escapeHtml(d.deliveryPricePerKg)}</strong></div>` : ''}
+                    ${d.driverName||d.driverMobile ? `<div class="label-driver-row" style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px dotted #c7d2fe;"><span style="color:#8492a6;">🚗 شۆفیر</span><strong>${escapeHtml(d.driverName||'—')} ${escapeHtml(d.driverMobile||'')}</strong></div>` : ''}
+                    ${d.deliveryNote ? `<div class="label-note-row" style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px dotted #c7d2fe;"><span style="color:#8492a6;">📝 تیبینی</span><strong>${escapeHtml(d.deliveryNote)}</strong></div>` : ''}
+                    <div style="display:flex;justify-content:space-between;padding:2px 0;"><span style="color:#8492a6;">📅 بەروار</span><strong style="font-size:.72rem;">${ts}</strong></div>
+                </div>
             </div>
-            <div class="label-qr-wrap">
-                <img src="${qrUrl}" alt="QR" class="label-qr-img" loading="eager">
-                <div class="label-qr-hint">QR کۆد</div>
+
+            <!-- راست: QR گەورە -->
+            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px 10px;background:#f8f9fa;border-left:2px dashed #dee2e6;flex-shrink:0;min-width:130px;">
+                <img src="${qrUrl}" alt="QR" class="label-qr-img" loading="eager" style="width:130px;height:130px;display:block;border:3px solid #2d3340;border-radius:6px;padding:3px;background:#fff;">
+                <div style="text-align:center;">
+                    <div style="font-size:.68rem;font-weight:900;color:#2d3340;">Scan for info</div>
+                    <div style="font-size:.65rem;color:#8492a6;margin-top:2px;">${orderNum}</div>
+                </div>
             </div>
         </div>
-        <div class="label-footer">
-            <span>📅 ${escapeHtml(d.timestamp||'')}</span>
+
+        <!-- ── دوگمەکان ── -->
+        <div style="padding:8px 12px;background:#f8f9fa;border-top:1px solid #eee;display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end;">
+            <button class="btn btn-sm btn-primary" onclick="printLabel('${key}')" style="padding:5px 10px;font-size:.78rem;">
+                <i class="fas fa-print"></i> چاپ
+            </button>
+            <button class="btn btn-sm" onclick="editDeliveryLabel('${key}')" style="padding:5px 10px;font-size:.78rem;background:#e6fffa;color:#2d3340;border:1.5px solid #8492a6;border-radius:8px;cursor:pointer;">
+                <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-sm" onclick="shareDeliveryWhatsApp('${key}')" style="padding:5px 10px;font-size:.78rem;background:#F5F7FA;color:#25d366;border:1.5px solid #25d366;border-radius:8px;cursor:pointer;">
+                <i class="fab fa-whatsapp"></i>
+            </button>
+            <button class="btn btn-sm" onclick="deleteDelivery('${key}')" style="padding:5px 10px;font-size:.78rem;background:#fff0f0;color:#DC3545;border:1.5px solid #FF8A80;border-radius:8px;cursor:pointer;">
+                <i class="fas fa-trash-alt"></i>
+            </button>
         </div>
+
+        <!-- ── ئادمین ئێدیت ── -->
+        <div class="label-admin-edit" style="border-top:2px dashed #dee2e6;">
+            <div class="admin-edit-title"><i class="fas fa-pen"></i> شۆفیر و تیبینی</div>
+            <div style="margin-bottom:10px;background:#f0f4ff;border-radius:10px;padding:10px;">
+                <label style="font-size:.82rem;font-weight:700;color:#434b57;display:block;margin-bottom:6px;">📊 ستاتەسی کاڵا:</label>
+                <select id="status-select-${key}" onchange="updateDeliveryStatus('${key}', this.value, 'delivery')"
+                    style="width:100%;padding:8px 10px;border:2px solid #434b57;border-radius:10px;font-family:inherit;font-size:.88rem;background:#fff;color:#1a1a2e;cursor:pointer;outline:none;">
+                    <option value="registered"  ${curStatus==='registered'  ? 'selected':''}>📋 تۆماركراو — Registered</option>
+                    <option value="picked_up"   ${curStatus==='picked_up'   ? 'selected':''}>🚗 وەرگیراو — Picked Up</option>
+                    <option value="loading"     ${curStatus==='loading'     ? 'selected':''}>🏭 بارکردنی کەلەک — Loading Warehouse</option>
+                    <option value="in_transit"  ${curStatus==='in_transit'  ? 'selected':''}>🚛 لە ڕێگادایە — In Transit</option>
+                    <option value="sorting"     ${curStatus==='sorting'     ? 'selected':''}>📦 کەلەکی دابەشکردن — Sorting Warehouse</option>
+                    <option value="delivered"   ${curStatus==='delivered'   ? 'selected':''}>✅ گەیشتووە — Delivered</option>
+                </select>
+            </div>
+            <div class="admin-edit-fields">
+                <div class="admin-edit-inputs">
+                    <input type="text" id="driver-name-${key}" placeholder="👤 ناوی شۆفیر" value="${escapeHtml(d.driverName||'')}">
+                    <input type="tel" id="driver-mobile-${key}" placeholder="📞 ژمارە" value="${escapeHtml(d.driverMobile||'')}">
+                </div>
+                <textarea id="delivery-note-${key}" placeholder="📝 تیبینی..." rows="3">${escapeHtml(d.deliveryNote||'')}</textarea>
+                <div class="admin-edit-inputs" style="margin-top:6px;">
+                    <input type="text" id="item-price-${key}" placeholder="💰 نرخی کاڵا" value="${escapeHtml(d.itemPrice||'')}">
+                    <input type="text" id="delivery-price-${key}" placeholder="🚚 نرخی گەیاندن" value="${escapeHtml(d.deliveryPricePerKg||'')}">
+                </div>
+            </div>
+            <button class="btn btn-sm btn-primary admin-save-btn" onclick="saveDriverInfo('${key}')">
+                <i class="fas fa-save"></i> پاشەکەوتکردن
+            </button>
+        </div>
+
     </div>`;
 }
 
@@ -1514,14 +1560,13 @@ function updateDeliveryStatus(key, status, dbPath) {
     ref.update({ status })
         .then(() => {
             showNotification('ستاتەس نوێ کرایەوە ✅');
-            // نوێکردنەوەی بادگەی سەرووەکە بە جێجێ
-            var STATUS_COLORS = {registered:'#434b57',picked_up:'#FFCC00',loading:'#E6B800',in_transit:'#5a6476',sorting:'#434b57',delivered:'#434b57'};
+            var STATUS_COLORS = {registered:'#434b57',picked_up:'#FFCC00',loading:'#E6B800',in_transit:'#5a6476',sorting:'#434b57',delivered:'#2d9e5f'};
             var STATUS_LABELS = {registered:'📋 Registered',picked_up:'🚗 Picked Up',loading:'🏭 Loading',in_transit:'🚛 In Transit',sorting:'📦 Sorting',delivered:'✅ Delivered'};
+            var KU_LABELS     = {registered:'📋 تۆماركراو',picked_up:'🚗 وەرگیراو',loading:'🏭 بارکردن',in_transit:'🚛 لە ڕێگا',sorting:'📦 دابەشکردن',delivered:'✅ گەیشتووە'};
             var badge = document.getElementById('status-badge-' + key);
-            if (badge) {
-                badge.style.background = STATUS_COLORS[status] || '#434b57';
-                badge.textContent = STATUS_LABELS[status] || status;
-            }
+            if (badge) { badge.style.background = STATUS_COLORS[status]||'#434b57'; badge.textContent = STATUS_LABELS[status]||status; }
+            var kuBadge = document.getElementById('ku-status-badge-' + key);
+            if (kuBadge) { kuBadge.style.background = STATUS_COLORS[status]||'#434b57'; kuBadge.textContent = KU_LABELS[status]||status; }
         })
         .catch(() => showNotification('هەڵە لە نوێکردنەوەی ستاتەس!', 'error'));
 }
@@ -1547,64 +1592,64 @@ function printLabel(key) {
     const card = document.getElementById('label-' + key);
     if (!card) return;
 
-    const orderNum  = card.querySelector('.label-order-num') ? card.querySelector('.label-order-num').textContent.trim() : '';
+    const orderNum  = (card.querySelector('.label-order-num') || {textContent:''}).textContent.trim();
     const qrImg     = card.querySelector('.label-qr-img');
     const qrSrc     = qrImg ? qrImg.src : '';
-    const dateText  = card.querySelector('.label-footer span') ? card.querySelector('.label-footer span').textContent : '';
-    const drRow     = card.querySelector('.label-driver-row');
-    const nrRow     = card.querySelector('.label-note-row');
+    const dateText  = card.dataset.timestamp || '';
 
-    const getRows = (selector) => Array.from(card.querySelectorAll(selector)).map(r => {
-        const sp = r.querySelector('span'); const st = r.querySelector('strong');
-        if (!sp || !st) return '';
-        const v = st.textContent.trim();
-        if (!v || v === '—') return '';
-        return '<tr><td style="padding:3px 7px;border:1.5px solid #aaa;width:38%;font-size:.82rem;font-weight:800;color:#333;">' + sp.textContent + '</td>'
-             + '<td style="padding:3px 7px;border:1.5px solid #aaa;font-size:.82rem;font-weight:700;color:#111;">' + v + '</td></tr>';
-    }).join('');
+    // Read from data-* attributes (new design) — fall back to DOM scraping for legacy cards
+    const D = card.dataset;
+    const row = (label, val) => (!val||val==='—') ? '' :
+        '<tr><td style="padding:4px 8px;border:1.5px solid #aaa;width:38%;font-size:.82rem;font-weight:800;color:#333;">' + label + '</td>'
+      + '<td style="padding:4px 8px;border:1.5px solid #aaa;font-size:.82rem;font-weight:700;color:#111;">' + val + '</td></tr>';
 
-    const boxHtml = (title, rowsHtml, showQr) =>
-        '<div class="no-break" style="border:2px solid #2d3340;border-radius:6px;margin-bottom:10px;overflow:hidden;">'
-      + '<div style="background:#2d3340;color:#fff;padding:5px 10px;font-size:.85rem;font-weight:900;display:flex;justify-content:space-between;align-items:center;">'
-      + '<span>' + title + '</span></div>'
+    const senderRows   = row('👤 ناو', D.senderName) + row('📱 ژمارە', D.senderMobile) + row('📱 ژمارە ٢', D.senderMobile2) + row('📍 شوێن', D.senderLoc);
+    const receiverRows = row('👤 ناو', D.receiverName) + row('📱 ژمارە', D.receiverMobile) + row('📱 ژمارە ٢', D.receiverMobile2) + row('📍 شوێن', D.receiverLoc);
+    const pkgRows      = row('📦 کەلوپەل', D.pkgName) + row('🔢 پارچە', D.pkgQty ? D.pkgQty+' دانە' : '') + row('⚖️ کیلۆ', D.pkgKg ? D.pkgKg+' کگ' : '')
+                       + row('💰 نرخی کاڵا', D.itemPrice) + row('🚚 نرخی گەیاندن', D.deliveryPrice);
+
+    const driverNameEl  = document.getElementById('driver-name-' + key);
+    const driverMobEl   = document.getElementById('driver-mobile-' + key);
+    const noteEl        = document.getElementById('delivery-note-' + key);
+    const driverVal     = driverNameEl ? driverNameEl.value.trim() : '';
+    const driverMobVal  = driverMobEl  ? driverMobEl.value.trim()  : '';
+    const noteVal       = noteEl       ? noteEl.value.trim()       : '';
+    const extraRows     = (driverVal||driverMobVal ? row('🚗 شۆفیر', [driverVal,driverMobVal].filter(Boolean).join(' — ')) : '')
+                        + (noteVal ? row('📝 تیبینی', noteVal) : '');
+
+    const box = (title, rowsHtml, showQr) =>
+        '<div style="border:2px solid #2d3340;border-radius:6px;margin-bottom:10px;overflow:hidden;page-break-inside:avoid;break-inside:avoid;">'
+      + '<div style="background:#2d3340;color:#fff;padding:5px 10px;font-size:.85rem;font-weight:900;">' + title + '</div>'
       + '<table style="width:100%;border-collapse:collapse;">' + rowsHtml + '</table>'
-      + (showQr && qrSrc ? '<div style="display:flex;align-items:center;justify-content:center;gap:14px;padding:10px 14px;background:#F5F7FA;border-top:1px solid #dee2e6;">'
-         + '<img id="nauxo-qr-img" src="' + qrSrc + '" style="width:80px;height:80px;display:block;border-radius:6px;" alt="QR">'
-         + '<div style="text-align:center;"><div style="font-size:.75rem;font-weight:900;color:#2d3340;letter-spacing:.5px;">QR CODE</div>'
-         + '<div style="font-size:.68rem;color:#8492a6;margin-top:3px;">' + orderNum + '</div></div></div>' : '')
-      + '<div style="background:#2d3340;color:#fff;padding:5px 10px;font-size:.72rem;display:flex;justify-content:space-between;align-items:center;">'
-      + '<span>KING STREET - UK POST &nbsp;&nbsp; 07755436275 / 07507472656</span>'
-      + '<img src="https://flagcdn.com/h20/gb.png" style="height:14px;" alt="GB"></div></div>';
+      + (showQr && qrSrc ? '<div style="display:flex;align-items:center;justify-content:center;gap:16px;padding:10px;background:#F5F7FA;border-top:1px solid #dee2e6;">'
+         + '<img src="' + qrSrc + '" style="width:160px;height:160px;display:block;border:3px solid #2d3340;border-radius:6px;padding:3px;" alt="QR">'
+         + '<div style="text-align:center;"><div style="font-size:.8rem;font-weight:900;color:#2d3340;">Scan for info</div>'
+         + '<div style="font-size:.72rem;color:#8492a6;margin-top:4px;">' + orderNum + '</div></div></div>' : '')
+      + '<div style="background:#2d3340;color:#fff;padding:4px 10px;font-size:.7rem;display:flex;justify-content:space-between;">'
+      + '<span>KING STREET — UK POST &nbsp; 07755436275 / 07507472656</span>'
+      + '<img src="https://flagcdn.com/h20/iq.png" style="height:13px;" alt="IQ"></div></div>';
 
-    const senderRows   = getRows('.sender-section .label-row');
-    const receiverRows = getRows('.receiver-section .label-row');
-    const pkgRows      = getRows('.label-package .label-row:not(.label-driver-row):not(.label-note-row)');
-    const driverVal    = drRow ? drRow.querySelector('strong').textContent.trim() : '';
-    const noteVal      = nrRow ? nrRow.querySelector('strong').textContent.trim() : '';
-    const extraRows    = (driverVal ? '<tr><td style="padding:3px 7px;border:1.5px solid #aaa;font-size:.82rem;font-weight:800;color:#333;">🚗 شۆفیر</td><td style="padding:3px 7px;border:1.5px solid #aaa;font-size:.82rem;font-weight:700;color:#111;">' + driverVal + '</td></tr>' : '')
-                       + (noteVal  ? '<tr><td style="padding:3px 7px;border:1.5px solid #aaa;font-size:.82rem;font-weight:800;color:#333;">📝 تیبینی</td><td style="padding:3px 7px;border:1.5px solid #aaa;font-size:.82rem;font-weight:700;color:#111;">' + noteVal  + '</td></tr>' : '');
-
-    const html = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
+    const html = '<!DOCTYPE html><html dir="rtl"><head><meta charset="UTF-8">'
+        + '<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700;900&display=swap" rel="stylesheet">'
         + '<style>'
-        + '@page{size:A5;margin:5mm;}'
+        + '@page{size:A5;margin:6mm;}'
         + '*{box-sizing:border-box;}'
-        + 'body{font-family:Arial,sans-serif;margin:0;padding:4px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}'
-        + 'img{display:inline-block;}'
-        + '.no-break{page-break-inside:avoid;break-inside:avoid;}'
-        + '@media print{#dl-btn{display:none !important;}}'
+        + 'body{font-family:"Noto Sans Arabic",Tahoma,Arial,sans-serif;margin:0;padding:4px;-webkit-print-color-adjust:exact;print-color-adjust:exact;direction:rtl;}'
+        + '@media print{.no-print{display:none !important;}}'
         + '</style>'
         + '</head><body>'
-        + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;border-bottom:2px solid #2d3340;padding-bottom:5px;">'
-        + '<span style="font-size:1.1rem;font-weight:900;color:#2d3340;">' + orderNum + '</span>'
-        + '<div style="text-align:right;">'
-        + '<div style="font-size:.95rem;font-weight:900;color:#2d3340;white-space:nowrap;">UK POST - KING STREET</div>'
-        + '<div style="font-size:.7rem;color:#8492a6;">' + dateText + '</div>'
-        + '</div></div>'
-        + boxHtml('SENDER &nbsp;—&nbsp; نێردەر', senderRows, false)
-        + boxHtml('recipient &nbsp;--&nbsp; وەرگر', receiverRows + pkgRows + extraRows, true)
+        + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;border-bottom:3px solid #2d3340;padding-bottom:6px;">'
+        + '<div style="font-size:1.15rem;font-weight:900;color:#2d3340;">' + orderNum + '</div>'
+        + '<div style="text-align:center;">'
+        + '<div style="font-size:1rem;font-weight:900;color:#2d3340;">🏠 KING STREET</div>'
+        + '<div style="font-size:.7rem;color:#8492a6;">لەیبلی کەیاندن — Kurdistan Delivery</div>'
+        + '</div>'
+        + '<div style="font-size:.72rem;color:#8492a6;text-align:left;">' + dateText + '</div>'
+        + '</div>'
+        + box('📤 نێردەر — Sender', senderRows, false)
+        + box('📥 وەرگر — Receiver', receiverRows + pkgRows + extraRows, true)
         + '</body></html>';
 
-    // موبایل APK: Firebase Function بانگ بکە → PDF URL → داونلۆد
     var isMobileApk = /Android/i.test(navigator.userAgent);
     if (isMobileApk) {
         _serverPdf(html, 'label-' + orderNum.replace(/[^a-zA-Z0-9-]/g,''));
@@ -1787,48 +1832,70 @@ function printUkLabel(key) {
     </div>
 
     <!-- ───── Kurdish / Local Delivery Section ───── -->
-    <div style="margin-top:14px;border:3px solid #1a1a2e;border-radius:12px;padding:14px;font-family:'Tahoma','Arial',sans-serif;direction:rtl;background:#fff;color:#1a1a2e;">
-      <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px dashed #434b57;padding-bottom:8px;margin-bottom:10px;">
+    <div style="margin-top:14px;border:3px solid #1a1a2e;border-radius:12px;overflow:hidden;font-family:'Tahoma','Arial',sans-serif;direction:rtl;background:#fff;color:#1a1a2e;">
+
+      <!-- Header bar -->
+      <div style="background:#1a1a2e;color:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
         <div>
-          <div style="font-size:15px;font-weight:bold;color:#434b57;">🚚 لەیبلی گەیاندن / KING STREET</div>
-          <div style="font-size:10px;color:#E6B800;font-weight:700;margin-top:2px;">UK POST / KING STREET</div>
-          <div style="font-size:10px;color:#8492a6;margin-top:2px;">${dateText.replace('📅','').trim()}</div>
+          <div style="font-size:16px;font-weight:900;letter-spacing:.5px;">🏠 KING STREET / لەیبلی کەیاندن</div>
+          <div style="font-size:10px;color:#E6B800;margin-top:2px;">${dateText.replace('📅','').trim()}</div>
         </div>
-        <div style="font-size:20px;font-weight:bold;color:#1a1a2e;background:#eef2ff;padding:3px 12px;border-radius:8px;border:2px solid #434b57;">${orderNum.replace('#','').trim()}</div>
+        <div style="font-size:22px;font-weight:900;background:#eef2ff;color:#1a1a2e;padding:5px 14px;border-radius:8px;border:2px solid #434b57;letter-spacing:1px;">${orderNum.replace('#','').trim()}</div>
       </div>
-      <div style="display:flex;gap:10px;align-items:flex-start;">
-        <div style="flex:1;min-width:0;">
-          <div style="display:flex;gap:7px;margin-bottom:8px;">
-            <!-- Sender col -->
-            <div style="flex:1;border:1.5px solid #dee2e6;border-right:3px solid #434b57;border-radius:8px;padding:8px;background:#F5F7FA;min-width:0;">
-              <div style="font-size:11px;font-weight:bold;color:#434b57;border-bottom:1px solid #dee2e6;padding-bottom:3px;margin-bottom:5px;">📤 نێردەر / SENDER</div>
-              <div style="font-size:11px;padding:2px 0;border-bottom:1px dotted #dee2e6;display:flex;justify-content:space-between;gap:4px;"><span style="color:#8492a6;white-space:nowrap;">ناو:</span><strong>${name}</strong></div>
-              <div style="font-size:11px;padding:2px 0;border-bottom:1px dotted #dee2e6;display:flex;justify-content:space-between;gap:4px;"><span style="color:#8492a6;white-space:nowrap;">تەلەفۆن:</span><strong>${phone}</strong></div>
-              <div style="font-size:11px;padding:2px 0;display:flex;justify-content:space-between;gap:4px;"><span style="color:#8492a6;white-space:nowrap;">کاڵا:</span><strong>${item}</strong></div>
-            </div>
-            <!-- Receiver col -->
-            <div style="flex:1;border:1.5px solid #dee2e6;border-right:3px solid #5a6476;border-radius:8px;padding:8px;background:#F5F7FA;min-width:0;">
-              <div style="font-size:11px;font-weight:bold;color:#5a6476;border-bottom:1px solid #dee2e6;padding-bottom:3px;margin-bottom:5px;">📥 وەرگر / RECIPIENT</div>
-              ${receiverName && receiverName !== '—' ? `<div style="font-size:11px;padding:2px 0;border-bottom:1px dotted #dee2e6;display:flex;justify-content:space-between;gap:4px;"><span style="color:#8492a6;white-space:nowrap;">ناو:</span><strong>${receiverName}</strong></div>` : `<div style="font-size:11px;padding:2px 0;border-bottom:1px dotted #dee2e6;display:flex;justify-content:space-between;gap:4px;"><span style="color:#8492a6;white-space:nowrap;">ناو:</span><strong>${name}</strong></div>`}
-              ${receiverPhone && receiverPhone !== '—' ? `<div style="font-size:11px;padding:2px 0;border-bottom:1px dotted #dee2e6;display:flex;justify-content:space-between;gap:4px;"><span style="color:#8492a6;white-space:nowrap;">تەلەفۆن:</span><strong>${receiverPhone}</strong></div>` : `<div style="font-size:11px;padding:2px 0;border-bottom:1px dotted #dee2e6;display:flex;justify-content:space-between;gap:4px;"><span style="color:#8492a6;white-space:nowrap;">تەلەفۆن:</span><strong>${phone}</strong></div>`}
-              ${destinationCity && destinationCity !== '—' ? `<div style="font-size:11px;padding:2px 0;display:flex;justify-content:space-between;gap:4px;"><span style="color:#8492a6;white-space:nowrap;">شار:</span><strong style="color:#0c5da5;font-weight:900;">${destinationCity}</strong></div>` : ''}
-            </div>
+
+      <!-- Body: info + large QR side by side -->
+      <div style="display:flex;gap:0;align-items:stretch;">
+
+        <!-- Left: Sender + Receiver + Package -->
+        <div style="flex:1;min-width:0;padding:10px 12px;">
+
+          <!-- نێردەر -->
+          <div style="margin-bottom:8px;">
+            <div style="background:#1a1a2e;color:#fff;font-size:11px;font-weight:900;padding:4px 8px;border-radius:5px 5px 0 0;">📤 نێردەر — Sender</div>
+            <table style="width:100%;border-collapse:collapse;border:1.5px solid #1a1a2e;border-top:none;border-radius:0 0 5px 5px;">
+              <tr><td style="padding:4px 8px;border-bottom:1px solid #dee2e6;font-size:11px;color:#8492a6;width:36%;">👤 ناوی تەواو</td><td style="padding:4px 8px;border-bottom:1px solid #dee2e6;font-size:12px;font-weight:900;">${name}</td></tr>
+              <tr><td style="padding:4px 8px;border-bottom:1px solid #dee2e6;font-size:11px;color:#8492a6;">📱 ژمارە</td><td style="padding:4px 8px;border-bottom:1px solid #dee2e6;font-size:12px;font-weight:900;direction:ltr;text-align:right;">${phone}</td></tr>
+              <tr><td style="padding:4px 8px;font-size:11px;color:#8492a6;">📍 شوێن</td><td style="padding:4px 8px;font-size:12px;font-weight:700;">${destinationCity && destinationCity !== '—' ? destinationCity : (city || '—')}</td></tr>
+            </table>
           </div>
-          <!-- Package info Kurdish -->
-          <div style="background:#edf2ff;border-radius:8px;padding:8px;">
-            <div style="display:flex;justify-content:space-between;font-size:11px;padding:2px 0;border-bottom:1px dotted #c7d2fe;gap:4px;"><span style="color:#8492a6;">📦 کاڵا:</span><strong>${item}</strong></div>
-            ${qty && qty !== '—' ? `<div style="display:flex;justify-content:space-between;font-size:11px;padding:2px 0;border-bottom:1px dotted #c7d2fe;gap:4px;"><span style="color:#8492a6;">🔢 ژمارە:</span><strong>${qty} دانە</strong></div>` : ''}
-            ${kg && kg !== '—' ? `<div style="display:flex;justify-content:space-between;font-size:11px;padding:2px 0;border-bottom:1px dotted #c7d2fe;gap:4px;"><span style="color:#8492a6;">⚖️ کێش:</span><strong>${kg} کگ</strong></div>` : ''}
-            ${payment && payment !== '—' ? `<div style="display:flex;justify-content:space-between;font-size:11px;padding:2px 0;gap:4px;background:#F5F7FA;border-radius:4px;padding:3px 5px;"><span style="color:#2d3340;">💳 پارەدان:</span><strong style="color:#2d3340;">${payment}</strong></div>` : ''}
+
+          <!-- وەرگر -->
+          <div style="margin-bottom:8px;">
+            <div style="background:#434b57;color:#fff;font-size:11px;font-weight:900;padding:4px 8px;border-radius:5px 5px 0 0;">📥 وەرگر — Receiver</div>
+            <table style="width:100%;border-collapse:collapse;border:1.5px solid #434b57;border-top:none;border-radius:0 0 5px 5px;">
+              <tr><td style="padding:4px 8px;border-bottom:1px solid #dee2e6;font-size:11px;color:#8492a6;width:36%;">👤 ناوی تەواو</td><td style="padding:4px 8px;border-bottom:1px solid #dee2e6;font-size:12px;font-weight:900;">${receiverName && receiverName !== '—' ? receiverName : name}</td></tr>
+              <tr><td style="padding:4px 8px;border-bottom:1px solid #dee2e6;font-size:11px;color:#8492a6;">📱 ژمارە</td><td style="padding:4px 8px;border-bottom:1px solid #dee2e6;font-size:12px;font-weight:900;direction:ltr;text-align:right;">${receiverPhone && receiverPhone !== '—' ? receiverPhone : phone}</td></tr>
+              <tr><td style="padding:4px 8px;font-size:11px;color:#8492a6;">📍 شوێن</td><td style="padding:4px 8px;font-size:13px;font-weight:900;color:#0c5da5;">${destinationCity && destinationCity !== '—' ? destinationCity : '—'}</td></tr>
+            </table>
+          </div>
+
+          <!-- پاکێج -->
+          <div>
+            <div style="background:#5a6476;color:#fff;font-size:11px;font-weight:900;padding:4px 8px;border-radius:5px 5px 0 0;">📦 زانیاری پاکێج — Package Info</div>
+            <table style="width:100%;border-collapse:collapse;border:1.5px solid #5a6476;border-top:none;border-radius:0 0 5px 5px;">
+              <tr><td style="padding:4px 8px;border-bottom:1px solid #dee2e6;font-size:11px;color:#8492a6;width:36%;">📦 کەلوپەل</td><td style="padding:4px 8px;border-bottom:1px solid #dee2e6;font-size:12px;font-weight:700;">${item}</td></tr>
+              ${qty && qty !== '—' ? `<tr><td style="padding:4px 8px;border-bottom:1px solid #dee2e6;font-size:11px;color:#8492a6;">🔢 ژمارەی پارچە</td><td style="padding:4px 8px;border-bottom:1px solid #dee2e6;font-size:12px;font-weight:700;">${qty} دانە</td></tr>` : ''}
+              ${kg && kg !== '—' ? `<tr><td style="padding:4px 8px;border-bottom:1px solid #dee2e6;font-size:11px;color:#8492a6;">⚖️ کێشی کگ</td><td style="padding:4px 8px;border-bottom:1px solid #dee2e6;font-size:12px;font-weight:700;">${kg} کگ</td></tr>` : ''}
+              ${payment && payment !== '—' ? `<tr><td style="padding:4px 8px;font-size:11px;color:#8492a6;">💳 پارەدان</td><td style="padding:4px 8px;font-size:12px;font-weight:900;color:#1a1a2e;">${payment}</td></tr>` : `<tr><td style="padding:4px 8px;font-size:11px;color:#8492a6;">📅 بەروار</td><td style="padding:4px 8px;font-size:11px;font-weight:700;">${dateText.replace('📅','').trim()}</td></tr>`}
+            </table>
           </div>
         </div>
-        <!-- QR code repeated -->
-        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px;border:1.5px solid #dee2e6;border-radius:8px;background:#F5F7FA;flex-shrink:0;">
-          <img src="${qrSrc}" alt="QR" style="width:90px;height:90px;display:block;">
-          <small style="font-size:10px;color:#8492a6;">QR کۆد</small>
+
+        <!-- Right: Large QR -->
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:14px 12px;background:#F5F7FA;border-left:2px dashed #dee2e6;flex-shrink:0;min-width:160px;">
+          <img src="${qrSrc}" alt="QR Code" style="width:160px;height:160px;display:block;border:3px solid #1a1a2e;border-radius:8px;padding:4px;background:#fff;">
+          <div style="text-align:center;">
+            <div style="font-size:11px;font-weight:900;color:#1a1a2e;letter-spacing:.5px;">Scan for info</div>
+            <div style="font-size:10px;color:#8492a6;margin-top:2px;">${orderNum.replace('#','').trim()}</div>
+          </div>
         </div>
+
       </div>
-      <div style="text-align:center;font-size:10px;color:#adb5bd;margin-top:8px;border-top:1px dashed #dee2e6;padding-top:6px;">KING STREET — UK POST &nbsp;|&nbsp; 07755436275 / 07507472656</div>
+
+      <!-- Footer -->
+      <div style="background:#1a1a2e;color:#adb5bd;text-align:center;font-size:10px;padding:6px 14px;">
+        KING STREET — UK POST &nbsp;|&nbsp; 07755436275 / 07507472656
+      </div>
     </div>
 
     </div>`;
