@@ -28,7 +28,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-      // Hide any language switcher injected by i18n.js to avoid duplicates 
+      /* Hide any language switcher injected by i18n.js to avoid duplicates */
       .lang-switcher-external, #i18nLangBar, [data-i18n-bar],
       body > div.lang-bar:not([id]),
       header .lang-bar-auto { display: none !important; }
@@ -1650,49 +1650,37 @@ function _openPrintPage(htmlStr, filename) {
     var card = document.getElementById('label-' + key);
     if (!card) return;
 
-    // Read data from the same DOM card script.js uses
-    function getRow(section, label) {
-      var rows = card.querySelectorAll(section + ' .label-row');
-      for (var i = 0; i < rows.length; i++) {
-        var sp = rows[i].querySelector('span');
-        var st = rows[i].querySelector('strong');
-        if (sp && st && sp.textContent.indexOf(label) !== -1)
-          return st.textContent.trim();
-      }
-      return '';
-    }
-    function getPkg(label) {
-      var rows = card.querySelectorAll('.label-package .label-row');
-      for (var i = 0; i < rows.length; i++) {
-        var sp = rows[i].querySelector('span');
-        var st = rows[i].querySelector('strong');
-        if (sp && st && sp.textContent.indexOf(label) !== -1)
-          return st.textContent.trim();
-      }
-      return '';
-    }
-
-    var orderNum   = (card.querySelector('.label-order-num') || {}).textContent || '';
+    var orderNum = (card.querySelector('.label-order-num') || {}).textContent || '';
     orderNum = orderNum.replace(/^#\s*/, '').trim() || ('KU-' + Date.now().toString().slice(-6));
 
-    var senderName   = getRow('.sender-section',   'ناو:');
-    var senderPhone  = getRow('.sender-section',   'ژمارە:');
-    var senderPhone2 = getRow('.sender-section',   'ژمارە ٢');
-    var senderLoc    = getRow('.sender-section',   'شوێن');
-    var recvName     = getRow('.receiver-section', 'ناو:');
-    var recvPhone    = getRow('.receiver-section', 'ژمارە:');
-    var recvPhone2   = getRow('.receiver-section', 'ژمارە ٢');
-    var recvLoc      = getRow('.receiver-section', 'شوێن');
-    var pkgName      = getPkg('کەلوپەل');
-    var qty          = getPkg('پارچە');
-    var kg           = getPkg('کیلۆ');
-    var itemPrice    = getPkg('نرخی کاڵا');
-    var deliveryPpkg = getPkg('نرخی گەیاندن');
-    var driver       = card.querySelector('.label-driver-row strong');
-    var note         = card.querySelector('.label-note-row strong');
-    var dateText     = (card.querySelector('.label-footer span') || {}).textContent || '';
-    var qrImg        = card.querySelector('.label-qr-img');
-    var qrSrc        = qrImg ? qrImg.src : '';
+    // Read from data-* attributes (new card design)
+    var D = card.dataset || {};
+    var senderName   = D.senderName   || '';
+    var senderPhone  = D.senderMobile  || '';
+    var senderPhone2 = D.senderMobile2 || '';
+    var senderLoc    = D.senderLoc    || '';
+    var recvName     = D.receiverName  || '';
+    var recvPhone    = D.receiverMobile|| '';
+    var recvPhone2   = D.receiverMobile2 || '';
+    var recvLoc      = D.receiverLoc   || '';
+    var pkgName      = D.pkgName       || '';
+    var qty          = D.pkgQty        || '';
+    var kg           = D.pkgKg         || '';
+    var itemPrice    = D.itemPrice     || '';
+    var deliveryPpkg = D.deliveryPrice || '';
+    var dateText     = D.timestamp     || '';
+
+    // Driver/note from live input fields (may be updated after load)
+    var driverNameEl  = document.getElementById('driver-name-' + key);
+    var driverMobEl   = document.getElementById('driver-mobile-' + key);
+    var noteEl        = document.getElementById('delivery-note-' + key);
+    var driverVal     = driverNameEl  ? driverNameEl.value.trim()  : '';
+    var driverMobVal  = driverMobEl   ? driverMobEl.value.trim()   : '';
+    var noteVal       = noteEl        ? noteEl.value.trim()        : '';
+    var driver        = [driverVal, driverMobVal].filter(Boolean).join(' — ');
+
+    var qrImg = card.querySelector('.label-qr-img');
+    var qrSrc = qrImg ? qrImg.src : '';
 
     function row(l, v) {
       if (!v || v === '—') return '';
@@ -1700,51 +1688,45 @@ function _openPrintPage(htmlStr, filename) {
     }
 
     var css =
-      '@page{size:100mm 150mm;margin:0;}' +
+      '@page{size:100mm 160mm;margin:0;}' +
       '*{box-sizing:border-box;}' +
-      'body{font-family:"Segoe UI",Arial,sans-serif;background:#fff;margin:0;padding:0;width:100mm;direction:rtl;}' +
-      '.page{background:#fff;border:2.5px dashed #c8a000;width:100mm;min-height:148mm;overflow:hidden;display:flex;flex-direction:column;}' +
+      'body{font-family:"Segoe UI",Tahoma,Arial,sans-serif;background:#fff;margin:0;padding:0;width:100mm;direction:rtl;}' +
+      '.page{background:#fff;border:2.5px dashed #c8a000;width:100mm;min-height:155mm;overflow:hidden;display:flex;flex-direction:column;}' +
       '.action-bar{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;gap:8px;padding:8px 10px;background:#fff;border-bottom:1.5px solid #dee2e6;box-shadow:0 2px 8px rgba(0,0,0,.1);}' +
       '.action-bar button{flex:1;padding:12px 8px;border:none;border-radius:10px;font-size:.95rem;font-weight:800;cursor:pointer;font-family:inherit;}' +
       '.btn-x{background:linear-gradient(135deg,#DC3545,#B02A37);color:#fff;}' +
       '.btn-p{background:linear-gradient(135deg,#2d3340,#434b57);color:#fff;}' +
-      // Header 
-      '.hdr{display:flex;align-items:center;justify-content:space-between;padding:3px 7px 4px;border-bottom:2px solid #1a1a1a;background:#fff;}' +
-      '.hdr-l{display:flex;align-items:center;gap:4px;}' +
-      '.hdr-title{font-size:1rem;font-weight:900;color:#000;letter-spacing:.5px;}' +
-      '.hdr-sub{font-size:.6rem;font-weight:700;color:#444;}' +
-      '.hdr-id{font-size:1.05rem;font-weight:900;color:#000;border:2.5px solid #000;border-radius:4px;padding:2px 8px;letter-spacing:1px;}' +
-      // Body 
+      '.hdr{display:flex;align-items:center;justify-content:space-between;padding:5px 8px 5px;border-bottom:2px solid #1a1a1a;background:#1a1a2e;}' +
+      '.hdr-title{font-size:.95rem;font-weight:900;color:#fff;letter-spacing:.5px;}' +
+      '.hdr-sub{font-size:.58rem;font-weight:700;color:#adb5bd;}' +
+      '.hdr-id{font-size:1.1rem;font-weight:900;color:#fff;background:rgba(255,255,255,.15);border-radius:5px;padding:3px 10px;letter-spacing:1px;}' +
       '.body{display:flex;flex:1;}' +
-      '.qrc{width:22mm;flex-shrink:0;display:flex;flex-direction:column;align-items:center;padding:5px 3px 4px;border-left:1.5px dashed #bbb;gap:3px;}' +
-      '.qrc img{width:18mm;height:18mm;border:1px solid #ddd;border-radius:2px;}' +
-      '.qrc small{font-size:.42rem;color:#888;text-align:center;margin-top:2px;font-weight:700;}' +
+      /* QR column — now 30mm wide for large QR */
+      '.qrc{width:32mm;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:8px 4px 6px;border-left:1.5px dashed #bbb;gap:5px;}' +
+      '.qrc img{width:28mm;height:28mm;border:2px solid #1a1a2e;border-radius:3px;padding:2px;background:#fff;}' +
+      '.qrc small{font-size:.45rem;color:#888;text-align:center;font-weight:700;line-height:1.4;}' +
       '.info{flex:1;min-width:0;}' +
-      // Section headers 
-      '.sec{background:#1a1a1a;color:#fff;padding:3px 7px;font-size:.72rem;font-weight:900;letter-spacing:.3px;display:flex;align-items:center;gap:4px;}' +
-      // Table 
+      '.sec{background:#1a1a2e;color:#fff;padding:3px 7px;font-size:.7rem;font-weight:900;letter-spacing:.3px;}' +
       'table{width:100%;border-collapse:collapse;}' +
       'tr{border-bottom:1px solid #e0e0e0;}' +
       'tr:last-child{border-bottom:none;}' +
       'td{padding:3.5px 7px;vertical-align:middle;line-height:1.35;}' +
-      'td.lb{font-size:.7rem;font-weight:900;color:#555;width:36%;white-space:nowrap;}' +
-      'td.vl{font-size:.82rem;font-weight:900;color:#000;word-break:break-word;}' +
-      'td.vl.hi{font-size:.9rem;font-weight:900;color:#000;}' +
-      // Footer 
-      '.ftr{border-top:1.5px solid #ccc;padding:2px 7px;display:flex;justify-content:space-between;align-items:center;background:#f5f5f5;}' +
-      '.ftr span{font-size:.52rem;font-weight:700;color:#666;}' +
+      'td.lb{font-size:.68rem;font-weight:900;color:#555;width:36%;white-space:nowrap;}' +
+      'td.vl{font-size:.8rem;font-weight:900;color:#000;word-break:break-word;}' +
+      'td.vl.hi{font-size:.88rem;font-weight:900;color:#000;}' +
+      '.ftr{border-top:1.5px solid #ccc;padding:3px 7px;display:flex;justify-content:space-between;align-items:center;background:#f5f5f5;}' +
+      '.ftr span{font-size:.5rem;font-weight:700;color:#666;}' +
       '@media print{' +
-        '@page{size:100mm 150mm;margin:0;}' +
+        '@page{size:100mm 160mm;margin:0;}' +
         'body{background:#fff;padding:0!important;margin:0!important;width:100mm;}' +
-        '.page{box-shadow:none;border:2.5px dashed #c8a000;width:100mm;min-height:0;}' +
-        '#_iframeCtrl,.action-bar{display:none!important;}' +
+        '.page{box-shadow:none;border:2.5px dashed #c8a000;width:100mm;}' +
+        '.action-bar{display:none!important;}' +
         '*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}' +
-      '}' + '@media screen{.page{margin-top:62px;}}' +
-      'body{padding-top:0;}';
+      '}' + '@media screen{.page{margin-top:60px;}}';
 
-    var closeJs = "try{window.close();}catch(e){} history.length>1?history.back():(window.location.href='about:blank');";
+    var closeJs = "try{window.parent.document.getElementById('_ukPO').remove();}catch(e){}";
 
- var html =
+    var html =
       '<!DOCTYPE html><html dir="rtl" lang="ku"><head><meta charset="UTF-8">' +
       '<meta name="viewport" content="width=device-width,initial-scale=1">' +
       '<title>لەیبڵی گەیاندن</title><style>' + css + '</style></head><body>' +
@@ -1753,30 +1735,15 @@ function _openPrintPage(htmlStr, filename) {
         '<button class="btn-p" onclick="window.print()">🖨 چاپ</button>' +
       '</div>' +
       '<div class="page">' +
-       // Header — کوردی: تەنها King Street 
-
         '<div class="hdr">' +
-
-          '<div class="hdr-id">' + orderNum + '</div>' +
-
-          '<div style="text-align:center;">' +
-
-            '<div class="hdr-title">📦 KING STREET</div>' +
-
+          '<div style="display:flex;flex-direction:column;">' +
+            '<div class="hdr-title">🏠 KING STREET</div>' +
             '<div class="hdr-sub">Kurdistan Delivery Label · لەیبڵی گەیاندن</div>' +
-
           '</div>' +
-
-          '<span style="font-size:.9rem;">🏠</span>' +
-
-        '</div>' + 
-
-
-        // Body: QR left + info right 
+          '<div class="hdr-id">' + orderNum + '</div>' +
+        '</div>' +
         '<div class="body">' +
-          // Info section 
           '<div class="info">' +
-            // Sender 
             '<div class="sec">📤 Sender · نێردەر</div>' +
             '<table>' +
               row('ناوی تەواو', senderName) +
@@ -1784,7 +1751,6 @@ function _openPrintPage(htmlStr, filename) {
               row('📞 ژمارە ٢', senderPhone2) +
               row('📍 شوێن', senderLoc) +
             '</table>' +
-            // Receiver 
             '<div class="sec">📬 Receiver · وەرگر</div>' +
             '<table>' +
               '<tr><td class="lb">ناوی تەواو</td><td class="vl hi">' + (recvName||'—') + '</td></tr>' +
@@ -1792,34 +1758,30 @@ function _openPrintPage(htmlStr, filename) {
               row('📞 ژمارە ٢', recvPhone2) +
               row('📍 شوێن', recvLoc) +
             '</table>' +
-            // Package 
             '<div class="sec">📦 Package Info · زانیاری کەلوپەل</div>' +
             '<table>' +
               row('کەلوپەل', pkgName) +
               row('ژمارەی پارچە', qty) +
-              row('💪 کیلۆگرام', kg) +
-              (itemPrice    ? row('💰 نرخی کاڵا',    itemPrice)    : '') +
-              (deliveryPpkg ? row('🚚 نرخی گەیاندن', deliveryPpkg) : '') +
-              (driver ? row('🚗 شۆفیر', driver.textContent.trim()) : '') +
-              (note   ? row('📝 تیبینی', note.textContent.trim())   : '') +
+              row('⚖️ کیلۆگرام', kg ? kg+' کگ' : '') +
+              row('💰 نرخی کاڵا', itemPrice) +
+              row('🚚 نرخی گەیاندن', deliveryPpkg) +
+              row('🚗 شۆفیر', driver) +
+              row('📝 تیبینی', noteVal) +
               row('📅 بەروار', dateText) +
             '</table>' +
           '</div>' +
-          // QR code 
           '<div class="qrc">' +
-            (qrSrc ? '<img src="' + qrSrc + '" alt="QR">' : '<div style="width:18mm;height:18mm;background:#eee;border:1px solid #ccc;border-radius:2px;"></div>') +
-            '<small>کیوئار کۆد<br>Scan for info</small>' +
+            (qrSrc ? '<img src="' + qrSrc + '" alt="QR">' : '<div style="width:28mm;height:28mm;background:#eee;border:2px solid #1a1a2e;border-radius:3px;"></div>') +
+            '<small>Scan for info<br>کیوئار کۆد</small>' +
           '</div>' +
         '</div>' +
         '<div class="ftr">' +
           '<span>ukbazar.online</span>' +
-          '<span>UK POST &amp; King Street— Kurdistan Delivery</span>' +
+          '<span>UK POST &amp; King Street — Kurdistan Delivery</span>' +
         '</div>' +
       '</div>' +
-      '' +
       '</body></html>';
 
-    // Use blob URL — mobile-friendly, no popup blocker
     _openPrintPage(html, 'KU-' + orderNum + '.pdf');
   }
 
