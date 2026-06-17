@@ -167,8 +167,8 @@ const DEFAULT_SLIDER_IMAGE = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.or
             padding: 4px 0 !important;
         }
         .label-qr-img {
-            width: 100px !important;
-            height: 100px !important;
+            width: 160px !important;
+            height: 160px !important;
         }
         .label-qr-hint {
             font-size: 0.65rem !important;
@@ -1122,7 +1122,7 @@ function renderDeliveryItems(items) {
             const qrText = encodeURIComponent(
                 `پسولە: ${orderNum} | نێردەر: ${d.senderName||d.name||''} ${d.senderMobile||d.mobile||''} (${d.senderLocation||d.address||''}) | وەرگر: ${d.receiverName||''} ${d.receiverMobile||''} (${d.receiverLocation||''}) | کەلوپەل: ${d.packageName||d.details||''} x${d.packageQty||''} - ${d.packageKg||''}کگ`
             );
-            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=4&data=${qrText}`;
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=8&data=${qrText}`;
             html += buildKurdishLabelHtml(d, key, orderNum, qrUrl);
         });
         html += '</div>';
@@ -1136,7 +1136,7 @@ function renderDeliveryItems(items) {
             const orderNum = d.orderNumber || '—';
             const fullAddress = [d.address1, d.address2, d.city, d.county, d.postcode, 'United Kingdom'].filter(Boolean).join(', ');
             const qrText = encodeURIComponent(`Order: ${orderNum} | To: ${d.fullName||''} | Tel: ${d.phone||''} | ${fullAddress} | Item: ${d.packageName||''}`);
-            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=4&data=${qrText}`;
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=8&data=${qrText}`;
             html += buildUkLabelHtml(d, key, orderNum, qrUrl);
         });
         html += '</div>';
@@ -1569,7 +1569,7 @@ function printLabel(key) {
       + '<span>' + title + '</span></div>'
       + '<table style="width:100%;border-collapse:collapse;">' + rowsHtml + '</table>'
       + (showQr && qrSrc ? '<div style="display:flex;align-items:center;justify-content:center;gap:14px;padding:10px 14px;background:#F5F7FA;border-top:1px solid #dee2e6;">'
-         + '<img id="nauxo-qr-img" src="' + qrSrc + '" style="width:80px;height:80px;display:block;border-radius:6px;" alt="QR">'
+         + '<img id="nauxo-qr-img" src="' + qrSrc + '" style="width:130px;height:130px;display:block;border-radius:4px;" alt="QR">'
          + '<div style="text-align:center;"><div style="font-size:.75rem;font-weight:900;color:#2d3340;letter-spacing:.5px;">QR CODE</div>'
          + '<div style="font-size:.68rem;color:#8492a6;margin-top:3px;">' + orderNum + '</div></div></div>' : '')
       + '<div style="background:#2d3340;color:#fff;padding:5px 10px;font-size:.72rem;display:flex;justify-content:space-between;align-items:center;">'
@@ -4640,7 +4640,7 @@ function printIntlPost(key) {
           + row('Notes and payments', person.notes)
           + '</table>'
           + (showQr ? '<div style="display:flex;align-items:center;justify-content:center;gap:14px;padding:10px 14px;background:#F5F7FA;border-top:1px solid #dee2e6;">'
-            + '<img id="intl-qr-img" src="' + qrUrl + '" style="width:80px;height:80px;display:block;border-radius:6px;" alt="QR">'
+            + '<img id="intl-qr-img" src="' + qrUrl + '" style="width:130px;height:130px;display:block;border-radius:4px;" alt="QR">'
             + '<div style="text-align:center;">'
             + '<div style="font-size:.75rem;font-weight:900;color:#2d3340;letter-spacing:.5px;">QR CODE</div>'
             + '<div style="font-size:.68rem;color:#8492a6;margin-top:3px;">' + (d.orderNumber||'') + '</div>'
@@ -4651,7 +4651,7 @@ function printIntlPost(key) {
           + '</div></div>';
 
         const qrData = encodeURIComponent('# ' + (d.orderNumber||'') + ' | SENDER: ' + (s.name||'') + ' ' + (s.tel||'') + ' | RECIPIENT: ' + (r.name||'') + ' ' + (r.tel||'') + ' | ' + cname);
-        const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=4&data=' + qrData;
+        const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=8&data=' + qrData;
 
       const html = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
           + '<style>'
