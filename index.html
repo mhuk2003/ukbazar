@@ -1688,97 +1688,111 @@ function _openPrintPage(htmlStr, filename) {
     }
 
     var css =
-      '@page{size:100mm 160mm;margin:0;}' +
-      '*{box-sizing:border-box;}' +
-      'body{font-family:"Segoe UI",Tahoma,Arial,sans-serif;background:#fff;margin:0;padding:0;width:100mm;direction:rtl;}' +
-      '.page{background:#fff;border:2.5px dashed #c8a000;width:100mm;min-height:155mm;overflow:hidden;display:flex;flex-direction:column;}' +
+      '@page{size:100mm 150mm;margin:0;}' +
+      '*{box-sizing:border-box;margin:0;padding:0;}' +
+      'body{font-family:"Segoe UI",Tahoma,Arial,sans-serif;background:#fff;width:100mm;direction:rtl;}' +
+      '.page{background:#fff;border:2.5px dashed #c8a000;width:100mm;overflow:hidden;display:flex;flex-direction:column;}' +
       '.action-bar{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;gap:8px;padding:8px 10px;background:#fff;border-bottom:1.5px solid #dee2e6;box-shadow:0 2px 8px rgba(0,0,0,.1);}' +
-      '.action-bar button{flex:1;padding:12px 8px;border:none;border-radius:10px;font-size:.95rem;font-weight:800;cursor:pointer;font-family:inherit;}' +
-      '.btn-x{background:linear-gradient(135deg,#DC3545,#B02A37);color:#fff;}' +
-      '.btn-p{background:linear-gradient(135deg,#2d3340,#434b57);color:#fff;}' +
-      '.hdr{display:flex;align-items:center;justify-content:space-between;padding:5px 8px 5px;border-bottom:2px solid #1a1a1a;background:#1a1a2e;}' +
-      '.hdr-title{font-size:.95rem;font-weight:900;color:#fff;letter-spacing:.5px;}' +
-      '.hdr-sub{font-size:.58rem;font-weight:700;color:#adb5bd;}' +
-      '.hdr-id{font-size:1.1rem;font-weight:900;color:#fff;background:rgba(255,255,255,.15);border-radius:5px;padding:3px 10px;letter-spacing:1px;}' +
-      '.body{display:flex;flex:1;}' +
-      /* QR column — now 30mm wide for large QR */
-      '.qrc{width:32mm;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:8px 4px 6px;border-left:1.5px dashed #bbb;gap:5px;}' +
-      '.qrc img{width:28mm;height:28mm;border:2px solid #1a1a2e;border-radius:3px;padding:2px;background:#fff;}' +
-      '.qrc small{font-size:.45rem;color:#888;text-align:center;font-weight:700;line-height:1.4;}' +
-      '.info{flex:1;min-width:0;}' +
-      '.sec{background:#1a1a2e;color:#fff;padding:3px 7px;font-size:.7rem;font-weight:900;letter-spacing:.3px;}' +
+      '.action-bar button{flex:1;padding:10px 8px;border:none;border-radius:10px;font-size:.9rem;font-weight:800;cursor:pointer;font-family:inherit;}' +
+      '.btn-x{background:#DC3545;color:#fff;}' +
+      '.btn-p{background:#1a1a2e;color:#fff;}' +
+      /* ── Header ── */
+      '.hdr{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:#1a1a2e;}' +
+      '.hdr-brand{font-size:.9rem;font-weight:900;color:#fff;}' +
+      '.hdr-sub{font-size:.52rem;color:#adb5bd;margin-top:1px;}' +
+      '.hdr-id{font-size:1.05rem;font-weight:900;color:#fff;background:rgba(255,255,255,.18);border-radius:4px;padding:3px 9px;letter-spacing:1px;}' +
+      /* ── QR Hero — گەورەترین بەش ── */
+      '.qr-hero{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 4px 4px;background:#fff;border-bottom:2px solid #1a1a2e;}' +
+      '.qr-hero img{width:52mm;height:52mm;display:block;border:3px solid #1a1a2e;border-radius:4px;padding:2px;background:#fff;}' +
+      '.qr-hero .qr-caption{font-size:.6rem;font-weight:900;color:#555;margin-top:3px;letter-spacing:.5px;text-align:center;}' +
+      '.qr-hero .qr-id{font-size:.75rem;font-weight:900;color:#1a1a2e;margin-top:1px;}' +
+      /* ── شوێنی گەیاندن — گەورە و ئاڵۆز ── */
+      '.dest-bar{background:#1a1a2e;color:#fff;text-align:center;padding:4px 6px;font-size:.95rem;font-weight:900;letter-spacing:.5px;}' +
+      /* ── Info rows ── */
+      '.sec{background:#434b57;color:#fff;padding:2px 6px;font-size:.6rem;font-weight:900;letter-spacing:.3px;}' +
       'table{width:100%;border-collapse:collapse;}' +
-      'tr{border-bottom:1px solid #e0e0e0;}' +
+      'tr{border-bottom:1px solid #ebebeb;}' +
       'tr:last-child{border-bottom:none;}' +
-      'td{padding:3.5px 7px;vertical-align:middle;line-height:1.35;}' +
-      'td.lb{font-size:.68rem;font-weight:900;color:#555;width:36%;white-space:nowrap;}' +
-      'td.vl{font-size:.8rem;font-weight:900;color:#000;word-break:break-word;}' +
-      'td.vl.hi{font-size:.88rem;font-weight:900;color:#000;}' +
-      '.ftr{border-top:1.5px solid #ccc;padding:3px 7px;display:flex;justify-content:space-between;align-items:center;background:#f5f5f5;}' +
-      '.ftr span{font-size:.5rem;font-weight:700;color:#666;}' +
+      'td{padding:2.5px 6px;vertical-align:middle;line-height:1.3;}' +
+      'td.lb{font-size:.58rem;font-weight:700;color:#777;width:34%;white-space:nowrap;}' +
+      'td.vl{font-size:.72rem;font-weight:900;color:#111;word-break:break-word;}' +
+      'td.vl.hi{font-size:.78rem;font-weight:900;color:#000;}' +
+      '.ftr{border-top:1.5px solid #ccc;padding:2px 6px;display:flex;justify-content:space-between;background:#f5f5f5;}' +
+      '.ftr span{font-size:.48rem;font-weight:700;color:#888;}' +
       '@media print{' +
-        '@page{size:100mm 160mm;margin:0;}' +
-        'body{background:#fff;padding:0!important;margin:0!important;width:100mm;}' +
-        '.page{box-shadow:none;border:2.5px dashed #c8a000;width:100mm;}' +
+        '@page{size:100mm 150mm;margin:0;}' +
+        'body{width:100mm;}' +
+        '.page{border:2.5px dashed #c8a000;}' +
         '.action-bar{display:none!important;}' +
         '*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}' +
-      '}' + '@media screen{.page{margin-top:60px;}}';
+      '}' +
+      '@media screen{body{padding-top:58px;}}';
 
     var closeJs = "try{window.parent.document.getElementById('_ukPO').remove();}catch(e){}";
+
+    var destCity = recvLoc || senderLoc || '';
 
     var html =
       '<!DOCTYPE html><html dir="rtl" lang="ku"><head><meta charset="UTF-8">' +
       '<meta name="viewport" content="width=device-width,initial-scale=1">' +
       '<title>لەیبڵی گەیاندن</title><style>' + css + '</style></head><body>' +
+
+      /* دوگمەکان */
       '<div class="action-bar">' +
         '<button class="btn-x" onclick="' + closeJs + '">✕ داخستن</button>' +
         '<button class="btn-p" onclick="window.print()">🖨 چاپ</button>' +
       '</div>' +
+
       '<div class="page">' +
+
+        /* هێدەر */
         '<div class="hdr">' +
-          '<div style="display:flex;flex-direction:column;">' +
-            '<div class="hdr-title">🏠 KING STREET</div>' +
-            '<div class="hdr-sub">Kurdistan Delivery Label · لەیبڵی گەیاندن</div>' +
-          '</div>' +
+          '<div><div class="hdr-brand">🏠 KING STREET</div><div class="hdr-sub">Kurdistan Delivery · لەیبڵی گەیاندن</div></div>' +
           '<div class="hdr-id">' + orderNum + '</div>' +
         '</div>' +
-        '<div class="body">' +
-          '<div class="info">' +
-            '<div class="sec">📤 Sender · نێردەر</div>' +
-            '<table>' +
-              row('ناوی تەواو', senderName) +
-              row('📞 ژمارە', senderPhone) +
-              row('📞 ژمارە ٢', senderPhone2) +
-              row('📍 شوێن', senderLoc) +
-            '</table>' +
-            '<div class="sec">📬 Receiver · وەرگر</div>' +
-            '<table>' +
-              '<tr><td class="lb">ناوی تەواو</td><td class="vl hi">' + (recvName||'—') + '</td></tr>' +
-              '<tr><td class="lb">📞 ژمارە</td><td class="vl hi">' + (recvPhone||'—') + '</td></tr>' +
-              row('📞 ژمارە ٢', recvPhone2) +
-              row('📍 شوێن', recvLoc) +
-            '</table>' +
-            '<div class="sec">📦 Package Info · زانیاری کەلوپەل</div>' +
-            '<table>' +
-              row('کەلوپەل', pkgName) +
-              row('ژمارەی پارچە', qty) +
-              row('⚖️ کیلۆگرام', kg ? kg+' کگ' : '') +
-              row('💰 نرخی کاڵا', itemPrice) +
-              row('🚚 نرخی گەیاندن', deliveryPpkg) +
-              row('🚗 شۆفیر', driver) +
-              row('📝 تیبینی', noteVal) +
-              row('📅 بەروار', dateText) +
-            '</table>' +
-          '</div>' +
-          '<div class="qrc">' +
-            (qrSrc ? '<img src="' + qrSrc + '" alt="QR">' : '<div style="width:28mm;height:28mm;background:#eee;border:2px solid #1a1a2e;border-radius:3px;"></div>') +
-            '<small>Scan for info<br>کیوئار کۆد</small>' +
-          '</div>' +
+
+        /* ── QR گەورە لەسەرەوە ── */
+        '<div class="qr-hero">' +
+          (qrSrc
+            ? '<img src="' + qrSrc + '" alt="QR Code">'
+            : '<div style="width:52mm;height:52mm;background:#eee;border:3px solid #1a1a2e;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#999;">QR</div>') +
+          '<div class="qr-caption">📷 Scan for info · کیوئارەکە بخوێنەرەوە</div>' +
+          '<div class="qr-id">' + orderNum + '</div>' +
         '</div>' +
-        '<div class="ftr">' +
-          '<span>ukbazar.online</span>' +
-          '<span>UK POST &amp; King Street — Kurdistan Delivery</span>' +
-        '</div>' +
+
+        /* ── شوێنی گەیاندن ── */
+        (destCity ? '<div class="dest-bar">📍 ' + destCity + '</div>' : '') +
+
+        /* ── نێردەر ── */
+        '<div class="sec">📤 Sender · نێردەر</div>' +
+        '<table>' +
+          row('ناو', senderName) +
+          row('📞', senderPhone) +
+          (senderPhone2 ? row('📞٢', senderPhone2) : '') +
+        '</table>' +
+
+        /* ── وەرگر ── */
+        '<div class="sec">📬 Receiver · وەرگر</div>' +
+        '<table>' +
+          '<tr><td class="lb">ناو</td><td class="vl hi">' + (recvName||'—') + '</td></tr>' +
+          '<tr><td class="lb">📞</td><td class="vl hi">' + (recvPhone||'—') + '</td></tr>' +
+          (recvPhone2 ? row('📞٢', recvPhone2) : '') +
+        '</table>' +
+
+        /* ── پاکێج ── */
+        '<div class="sec">📦 Package · کەلوپەل</div>' +
+        '<table>' +
+          row('کاڵا', pkgName) +
+          row('پارچە', qty) +
+          row('کگ', kg ? kg+' کگ' : '') +
+          row('نرخ', itemPrice) +
+          row('گەیاندن', deliveryPpkg) +
+          row('شۆفیر', driver) +
+          row('تیبینی', noteVal) +
+          row('بەروار', dateText) +
+        '</table>' +
+
+        '<div class="ftr"><span>ukbazar.online</span><span>UK POST &amp; King Street — Kurdistan Delivery</span></div>' +
       '</div>' +
       '</body></html>';
 
