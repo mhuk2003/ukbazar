@@ -827,66 +827,50 @@ function loadApprovedProducts() {
     if (cachedProducts && cacheTime) {
         const now = Date.now();
         const timeDiff = now - parseInt(cacheTime);
-        
+
         if (timeDiff < 10 * 60 * 1000) {
             try {
                 products = JSON.parse(cachedProducts).map(sanitizeProduct);
-                
                 renderProducts(products);
                 createCategoryButtons();
-                
-                setTimeout(() => {
-                    hideLoading();
-                }, 300);
-                
-                // سلایدەر بار بکە
+                // یەکسەر پیشان بدە — چاوەری مەکە
+                hideLoading();
                 loadRealSliderImages();
-                // لە پشتەوە داتا نوێ بکەرەوە
                 refreshProductsFromFirebase();
                 return;
-                
             } catch (e) {
                 console.log('Cache error, loading from Firebase');
             }
         }
     }
-    
+
     loadProductsFromFirebase();
 }
 
 function loadProductsFromFirebase() {
+    // یەکسەر سکرین پیشان بدە — چاوەری Firebase مەکە
+    hideLoading();
+
     database.ref('products').once('value')
         .then((productSnapshot) => {
             products = [];
-            
             productSnapshot.forEach((child) => {
                 const val = child.val();
                 if (val.status === 'approved') {
                     products.push(sanitizeProduct({ ...val, firebaseId: child.key }));
                 }
             });
-            
             try {
                 localStorage.setItem('ukbazar_products', JSON.stringify(products));
                 localStorage.setItem('ukbazar_cache_time', Date.now().toString());
-            } catch (e) {
-                console.log('Cache save failed');
-            }
-            
+            } catch (e) {}
             renderProducts(products);
             createCategoryButtons();
-            
-            setTimeout(() => {
-                hideLoading();
-            }, 500);
-            
             if (products.length > 0) {
                 showNotification(products.length + (window.t ? window.t('products_loaded') : ' کاڵا بارکرا!'));
             }
-            
         }).catch((error) => {
             console.error("Error:", error);
-            
             const cachedProducts = localStorage.getItem('ukbazar_products');
             if (cachedProducts) {
                 try {
@@ -896,10 +880,6 @@ function loadProductsFromFirebase() {
                     showNotification('پیشاندانی داتای کاشکراو', 'info');
                 } catch (e) {}
             }
-            
-            setTimeout(() => {
-                hideLoading();
-            }, 500);
         });
 }
 
@@ -3890,7 +3870,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // سەیف-گارد: ئەگەر لۆدینگ سکرین پاش 4 چرکە هێشتا بوو — بیشارەوە
+    // سەیف-گارد: ئەگەر لۆدینگ سکرین پاش 1 چرکە هێشتا بوو — بیشارەوە
     setTimeout(() => {
         const spinner = document.getElementById('loadingSpinner');
         if (spinner) {
@@ -3898,7 +3878,7 @@ document.addEventListener('DOMContentLoaded', function() {
             spinner.style.pointerEvents = 'none';
             spinner.style.display = 'none';
         }
-    }, 4000);
+    }, 1000);
 });
 // ==================== UK Delivery Tab Switching ====================
 function ukSwitchTab(tab) {
