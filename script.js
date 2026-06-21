@@ -11,6 +11,9 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
+// ==================== ADMIN NOTIFICATION SETTINGS ====================
+const ADMIN_WHATSAPP = '9647755436275'; // ← ئەتۆ ژمارەی واتسئاپی ئادمین بنووسە
+
 let database, storage;
 try {
     database = firebase.database();
@@ -321,6 +324,56 @@ function openPrivacyPage() {
 function closePrivacyPage() {
     var p = document.getElementById('privacyPage');
     if (p) p.style.display = 'none';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔥 submitRequest - یەکسەر واتس + Firebase
+// ═══════════════════════════════════════════════════════════════
+function submitRequest() {
+    const type = document.getElementById('reqType').value;
+    const name = document.getElementById('reqName').value.trim();
+    const phone = document.getElementById('reqPhone').value.trim();
+    const details = document.getElementById('reqDetails').value.trim();
+
+    if (!name || !phone || !details) {
+        showNotification('تکایە هەموو کێڵگەکان پڕبکەرەوە ⚠️');
+        return;
+    }
+
+    const newReq = {
+        type: type,
+        name: name,
+        phone: phone,
+        details: details,
+        status: 'pending',
+        timestamp: Date.now()
+    };
+
+    // 1. پاشەکەوتکردنی داتاکە لە فایەربەیس بۆ داشبۆردەکەت
+    database.ref('requests').push(newReq).then(() => {
+        showNotification('داواکارییەکەت بە سەرکەوتوویی تۆمارکرا! 🚀');
+        closeRequestModal();
+
+        // 2. 🔥 کردنەوەی ئۆتۆماتیکی واتسئاپ بە نامەی ئامادەکراو
+        const joriForm = type === 'delivery' ? '📦 فۆڕمی گەیاندن (Delivery)' : '🛒 داواکاری کاڵا (Order)';
+        
+        const messageText = `🔔 *ئاگادارکردنەوە: داواکارییەکی نوێ هات!* 🔔\n\n` +
+                            `📝 *جۆری فۆڕم:* ${joriForm}\n` +
+                            `👤 *ناوی کڕیار:* ${name}\n` +
+                            `📞 *مۆبایلی کڕیار:* ${phone}\n` +
+                            `💬 *وردەکاری و داواکاری:* ${details}\n\n` +
+                            `👈 _تکایە سەیری داشبۆرد بکە بۆ پێداچوونەوە._`;
+
+        // لێرەدا ADMIN_WHATSAPP بەکاردێت کە لە دێڕی 15ی فایلەکەتدا هەیە (9647755436275)
+        const whatsappUrl = `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(messageText)}`;
+        
+        // کردنەوەی پەڕەی واتسئاپ لای بەکارهێنەرەکە
+        window.open(whatsappUrl, '_blank');
+
+    }).catch((err) => {
+        console.error(err);
+        showNotification('خەتایەک ڕوویدا لە پاشەکەوتکردن ❌');
+    });
 }
 
 function showHomePage() {
@@ -2725,6 +2778,12 @@ document.addEventListener('submit', async function(e) {
         database.ref('requests').push(requestData)
             .then(() => {
                 showNotification('داواکاریەکەت بە سەرکەوتوویی نێردرا! ✅');
+                
+                // 🔔 کۆدی واتس بۆ ئادمین
+                const joriForm = '📋 داواکاری عام';
+                const messageText = `🔔 *داواکارییەکی نوێ هات!* 🔔\n\n📝 *جۆر:* ${joriForm}\n👤 *ناو:* ${requestData.name}\n📞 *مۆبایل:* ${requestData.mobile}\n📦 *کاڵا:* ${requestData.itemName}\n💬 *وردەکاری:* ${requestData.details}`;
+                window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(messageText)}`, '_blank');
+                
                 closeModal('requestModal');
                 document.getElementById('requestForm').reset();
             })
@@ -2804,6 +2863,14 @@ document.addEventListener('submit', async function(e) {
             return database.ref('delivery').push(deliveryData);
         }).then(() => {
             showNotification('داواکاری گەیاندن نێردرا! ✅');
+            
+            // 🔔 کۆدی واتس بۆ ئادمین
+            const joriForm = '📦 فۆڕمی گەیاندن';
+            const senderInfo = document.getElementById('senderName').value;
+            const receiverInfo = document.getElementById('receiverName').value;
+            const messageText = `🔔 *داواکارییەکی نوێ هات!* 🔔\n\n📝 *جۆر:* ${joriForm}\n👤 *ناوی ناردەر:* ${senderInfo}\n📞 *مۆبایلی ناردەر:* ${document.getElementById('senderMobile').value}\n📍 *شوێنی ناردەر:* ${document.getElementById('senderLocation').value}\n\n👤 *ناوی وەرگر:* ${receiverInfo}\n📞 *مۆبایلی وەرگر:* ${document.getElementById('receiverMobile').value}\n📍 *شوێنی وەرگر:* ${document.getElementById('receiverLocation').value}\n\n📦 *ناوی بەسته:* ${document.getElementById('packageName').value}`;
+            window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(messageText)}`, '_blank');
+            
             closeModal('deliveryModal');
             document.getElementById('deliveryForm').reset();
         }).catch(() => { showNotification('هەڵە لە ناردن!', 'error'); });
@@ -3159,8 +3226,26 @@ function showProductDetail(productId) {
                 return '<div style="'+span+'height:'+h+'px;overflow:hidden;cursor:zoom-in;" onclick="_pdZoom('+i+')">' + '<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;"></div>';
             }).join('') + '</div>';
 
-        var waNum = (p.sellerMobile || '').replace(/\D/g,'');
-        var waLink = 'https://wa.me/' + (waNum.startsWith('0') ? '964'+waNum.slice(1) : waNum);
+        // ---- Fix WhatsApp Number + Message ----
+        var mobileFull = (p.sellerMobile || '').trim();
+        var waNum = mobileFull.replace(/\D/g,'');
+        
+        if (!waNum.startsWith('964')) {
+            if (waNum.startsWith('0')) {
+                waNum = '964' + waNum.slice(1);
+            }
+        }
+        
+        // Build message with product details
+        var waMsg = '*🛍️ داواکاری بۆ کاڵا*\n\n' +
+            '📦 *ناوی کاڵا:* ' + escapeHtml(p.name || 'بێ ناو') + '\n' +
+            '💰 *نرخ:* ' + escapeHtml(String(p.price || '0')) + ' ' + escapeHtml(p.currency || 'IQD') + '\n' +
+            '🏷️ *جۆر:* ' + escapeHtml(p.category || '') + '\n' +
+            '👤 *فرۆشیار:* ' + escapeHtml(p.sellerName || 'نادیار') + '\n' +
+            (p.description ? '📝 *وردەکاری:* ' + escapeHtml(p.description.substring(0, 100)) + '\n' : '') +
+            '\n✉️ تکایە زیاتر زانیاری دەدە';
+        
+        var waLink = 'https://wa.me/' + waNum + '?text=' + encodeURIComponent(waMsg);
         var descHtml = p.description ? '<div style="background:#F8F9FA;border-radius:10px;padding:10px 12px;font-size:.82rem;color:#5a6476;line-height:1.7;margin-top:4px;">' + escapeHtml(p.description) + '</div>' : '';
 
         var modal = document.createElement('div');
@@ -3391,6 +3476,7 @@ function submitBuyerOrder(productId, productName, price, currency, qty, sellerMo
         database.ref('requests').push(orderData)
             .then(function() {
                 showNotification('✅ داواکارییەکەت نێردرا و پاشەکەوت کرا!');
+                sendAdminNotification(orderData); // ← نۆتیفکەیشن بۆ ئادمین
                 _openWhatsApp();
             })
             .catch(function() {
@@ -3407,6 +3493,7 @@ function submitBuyerOrder(productId, productName, price, currency, qty, sellerMo
             localStorage.setItem('ukbazar_orders', JSON.stringify(lsOrders));
         } catch(e) {}
         showNotification('✅ داواکارییەکەت نێردرا!');
+        sendAdminNotification(orderData); // ← نۆتیفکەیشن بۆ ئادمین
         _openWhatsApp();
     }
 }
@@ -3501,6 +3588,32 @@ function copyFibNumber() {
         document.body.removeChild(textarea);
         showNotification('ژمارەی FIB کۆپی کرا: ' + fibNumber + ' ✅');
     });
+}
+
+// ==================== ADMIN NOTIFICATION - Send WhatsApp Alert ====================
+function sendAdminNotification(orderData) {
+    // ✅ یەکسەر واتس بکە بۆ ئادمین
+    if (!ADMIN_WHATSAPP) {
+        console.log('⚠️  ژمارەی ئادمین ستوونبێت');
+        return;
+    }
+    
+    // دروستکردنی دەقی نامەکە بە شێوازێکی ڕێک و پێک
+    const message = `🛒 *داواکاری نوێ لە UK BAZAR*\n\n` +
+                    `👤 *ناو:* ${orderData.name}\n` +
+                    `📞 *مۆبایل:* ${orderData.mobile}\n` +
+                    `📍 *ناونیشان:* ${orderData.address}\n` +
+                    `📦 *کاڵا:* ${orderData.itemName}\n` +
+                    `🔢 *دانە:* ${orderData.qty || 1}\n` +
+                    `💰 *نرخ:* ${orderData.price} ${orderData.currency}\n` +
+                    `📝 *وردەکاری:* ${orderData.details || 'نییە'}\n\n` +
+                    `⏰ _UK BAZAR - سیستەمی گەیاندن_`;
+    
+    // کۆدکردنی دەقەکە بۆ ئەوەی گونجاو بێت بۆ بەستەر (URL)
+    const whatsappUrl = `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(message)}`;
+    
+    // کردنەوەی واتسئاپ لە پەنجەرەیەکی نوێدا
+    window.open(whatsappUrl, '_blank');
 }
 
 // ==================== Slider Functions - Quick Loading ====================
