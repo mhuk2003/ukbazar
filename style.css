@@ -2927,3 +2927,46 @@ html { scroll-behavior: smooth; }
         margin: 5mm;
     }
 }
+
+/* ==================== تێبینی لیست مۆدال ====================*/
+#notificationHistoryModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 10px;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(50px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#notificationHistoryList {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    background: #fafbfc;
+}
+
+#notificationBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #ff6b6b;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: bold;
+    min-width: 24px;
+    min-height: 24px;
+}
