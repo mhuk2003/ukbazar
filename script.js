@@ -2841,10 +2841,22 @@ document.addEventListener('submit', async function(e) {
                 packageQty:       document.getElementById('packageQty').value,
                 packageKg:        document.getElementById('packageKg').value,
                 timestamp:        new Date().toLocaleString('ku'),
-                sortKey:          Date.now()
+                sortKey:          Date.now(),
+                status:           'registered'  // ✅ نۆتیفیکەیشن دروست بکات
             };
             return database.ref('delivery').push(deliveryData);
         }).then(() => {
+            // ✅ زیادکردنی نۆتیفیکەیشن بۆ لیستی تێبینی و زەنگۆڵە
+            const packageName = document.getElementById('packageName').value;
+            const senderName = document.getElementById('senderName').value;
+            
+            addToNotificationHistory({
+                type: 'delivery',
+                title: '🚚 داواکاری گەیاندنی کوردی',
+                message: `کاڵا: ${packageName} - نێردەر: ${senderName}`,
+                orderNumber: ''
+            });
+            
             showNotification('داواکاری گەیاندن نێردرا! ✅');
             closeModal('deliveryModal');
             document.getElementById('deliveryForm').reset();
@@ -3892,7 +3904,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 receiverName, receiverPhone, receiverCompany,
                 receiverPostcode: receiverPost, receiverAddress1: receiverAddr1, receiverAddress2: receiverAddr2,
                 receiverCity, receiverCounty, receiverNote, receiverCountry, destinationCity,
-                packageName, packageQty, packageKg, payment, country: 'United Kingdom', timestamp, sortKey: Date.now()
+                packageName, packageQty, packageKg, payment, country: 'United Kingdom', timestamp, sortKey: Date.now(),
+                status: 'registered'  // ✅ نۆتیفیکەیشن دروست بکات
             };
             showLoading();
             database.ref('delivery').push(deliveryData)
