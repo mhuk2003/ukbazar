@@ -11,9 +11,6 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-// ==================== ADMIN NOTIFICATION SETTINGS ====================
-const ADMIN_WHATSAPP = '9647755436275'; // ← ئەتۆ ژمارەی واتسئاپی ئادمین بنووسە
-
 let database, storage;
 try {
     database = firebase.database();
@@ -37,6 +34,8 @@ let isAdmin = false;
 let currentSlide = 0;
 let totalSlides = 0;
 let autoPlayInterval = null;
+let notificationHistory = [];
+let notificationCount = 0;
 
 // ==================== HTTP → HTTPS فیکسەر ====================
 // وێنەکانی Firebase کەواتە http:// ذخیرە کراون — یەکسەر بگۆڕێن بۆ https://
@@ -324,56 +323,6 @@ function openPrivacyPage() {
 function closePrivacyPage() {
     var p = document.getElementById('privacyPage');
     if (p) p.style.display = 'none';
-}
-
-// ═══════════════════════════════════════════════════════════════
-// 🔥 submitRequest - یەکسەر واتس + Firebase
-// ═══════════════════════════════════════════════════════════════
-function submitRequest() {
-    const type = document.getElementById('reqType').value;
-    const name = document.getElementById('reqName').value.trim();
-    const phone = document.getElementById('reqPhone').value.trim();
-    const details = document.getElementById('reqDetails').value.trim();
-
-    if (!name || !phone || !details) {
-        showNotification('تکایە هەموو کێڵگەکان پڕبکەرەوە ⚠️');
-        return;
-    }
-
-    const newReq = {
-        type: type,
-        name: name,
-        phone: phone,
-        details: details,
-        status: 'pending',
-        timestamp: Date.now()
-    };
-
-    // 1. پاشەکەوتکردنی داتاکە لە فایەربەیس بۆ داشبۆردەکەت
-    database.ref('requests').push(newReq).then(() => {
-        showNotification('داواکارییەکەت بە سەرکەوتوویی تۆمارکرا! 🚀');
-        closeRequestModal();
-
-        // 2. 🔥 کردنەوەی ئۆتۆماتیکی واتسئاپ بە نامەی ئامادەکراو
-        const joriForm = type === 'delivery' ? '📦 فۆڕمی گەیاندن (Delivery)' : '🛒 داواکاری کاڵا (Order)';
-        
-        const messageText = `🔔 *ئاگادارکردنەوە: داواکارییەکی نوێ هات!* 🔔\n\n` +
-                            `📝 *جۆری فۆڕم:* ${joriForm}\n` +
-                            `👤 *ناوی کڕیار:* ${name}\n` +
-                            `📞 *مۆبایلی کڕیار:* ${phone}\n` +
-                            `💬 *وردەکاری و داواکاری:* ${details}\n\n` +
-                            `👈 _تکایە سەیری داشبۆرد بکە بۆ پێداچوونەوە._`;
-
-        // لێرەدا ADMIN_WHATSAPP بەکاردێت کە لە دێڕی 15ی فایلەکەتدا هەیە (9647755436275)
-        const whatsappUrl = `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(messageText)}`;
-        
-        // کردنەوەی پەڕەی واتسئاپ لای بەکارهێنەرەکە
-        window.open(whatsappUrl, '_blank');
-
-    }).catch((err) => {
-        console.error(err);
-        showNotification('خەتایەک ڕوویدا لە پاشەکەوتکردن ❌');
-    });
 }
 
 function showHomePage() {
@@ -776,6 +725,13 @@ function _doAdminLogin() {
         if (categorySection) categorySection.style.display = 'none';
 
         showNotification('بەخێربێیت بەڕێوەبەر! 🔐');
+        
+        // داشبۆردی رێژکار شروعبکە
+        setTimeout(() => {
+            setupDashboardRealtimeListener();
+            displayPendingRequestsForAdmin();
+        }, 500);
+        
         showAdminTab('products');
       } else {
         if(errEl){ errEl.textContent='هەڵە! ناوی بەکارهێنەر یان وشەی تێپەڕ هەڵەیە ❌'; errEl.style.display='block'; }
@@ -2773,17 +2729,12 @@ document.addEventListener('submit', async function(e) {
             details: document.getElementById('requestDetails').value,
             name: document.getElementById('requestName').value,
             mobile: document.getElementById('requestMobile').value,
-            timestamp: new Date().toLocaleString('ku')
+            timestamp: new Date().toLocaleString('ku'),
+            status: 'pending'  // ✅ status زیادبکراو
         };
         database.ref('requests').push(requestData)
             .then(() => {
                 showNotification('داواکاریەکەت بە سەرکەوتوویی نێردرا! ✅');
-                
-                // 🔔 کۆدی واتس بۆ ئادمین
-                const joriForm = '📋 داواکاری عام';
-                const messageText = `🔔 *داواکارییەکی نوێ هات!* 🔔\n\n📝 *جۆر:* ${joriForm}\n👤 *ناو:* ${requestData.name}\n📞 *مۆبایل:* ${requestData.mobile}\n📦 *کاڵا:* ${requestData.itemName}\n💬 *وردەکاری:* ${requestData.details}`;
-                window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(messageText)}`, '_blank');
-                
                 closeModal('requestModal');
                 document.getElementById('requestForm').reset();
             })
@@ -2825,7 +2776,39 @@ document.addEventListener('submit', async function(e) {
         };
         
         database.ref('products').push(productData)
-            .then(() => {
+            .then((ref) => {
+                // کاڵای نوێ - نۆتیفکەیشن بۆ بەریوبەر
+                const productId = ref.key;
+                const notification = {
+                    id: Date.now(),
+                    title: '📦 کاڵای نوێ - پەسەند دابنێی',
+                    message: `${productData.name} - ${productData.sellerName}`,
+                    type: 'product',
+                    productId: productId,
+                    productName: productData.name,
+                    sellerName: productData.sellerMobile,
+                    timestamp: productData.timestamp,
+                    read: false
+                };
+                
+                // لە notificationHistory زیادبکە
+                if (!notificationHistory) notificationHistory = [];
+                notificationHistory.unshift(notification);
+                if (notificationHistory.length > 50) notificationHistory = notificationHistory.slice(0, 50);
+                
+                try {
+                    localStorage.setItem('notificationHistory', JSON.stringify(notificationHistory));
+                } catch(e) {}
+                
+                // بادجی بزیاتبکە
+                _notificationCount++;
+                updateNotificationBadge();
+                
+                // سەروو پلە
+                playNotificationSound();
+                
+                console.log('📦 کاڵای نوێ نۆتیفای کرا:', productData.name);
+                
                 showNotification('کاڵاکەت نێردرا! چاوەڕوانی پەسەندکردنی بەڕێوەبەر بکە 📦');
                 closeModal('addProductModal');
                 document.getElementById('addProductForm').reset();
@@ -2863,14 +2846,6 @@ document.addEventListener('submit', async function(e) {
             return database.ref('delivery').push(deliveryData);
         }).then(() => {
             showNotification('داواکاری گەیاندن نێردرا! ✅');
-            
-            // 🔔 کۆدی واتس بۆ ئادمین
-            const joriForm = '📦 فۆڕمی گەیاندن';
-            const senderInfo = document.getElementById('senderName').value;
-            const receiverInfo = document.getElementById('receiverName').value;
-            const messageText = `🔔 *داواکارییەکی نوێ هات!* 🔔\n\n📝 *جۆر:* ${joriForm}\n👤 *ناوی ناردەر:* ${senderInfo}\n📞 *مۆبایلی ناردەر:* ${document.getElementById('senderMobile').value}\n📍 *شوێنی ناردەر:* ${document.getElementById('senderLocation').value}\n\n👤 *ناوی وەرگر:* ${receiverInfo}\n📞 *مۆبایلی وەرگر:* ${document.getElementById('receiverMobile').value}\n📍 *شوێنی وەرگر:* ${document.getElementById('receiverLocation').value}\n\n📦 *ناوی بەسته:* ${document.getElementById('packageName').value}`;
-            window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(messageText)}`, '_blank');
-            
             closeModal('deliveryModal');
             document.getElementById('deliveryForm').reset();
         }).catch(() => { showNotification('هەڵە لە ناردن!', 'error'); });
@@ -3226,26 +3201,8 @@ function showProductDetail(productId) {
                 return '<div style="'+span+'height:'+h+'px;overflow:hidden;cursor:zoom-in;" onclick="_pdZoom('+i+')">' + '<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;"></div>';
             }).join('') + '</div>';
 
-        // ---- Fix WhatsApp Number + Message ----
-        var mobileFull = (p.sellerMobile || '').trim();
-        var waNum = mobileFull.replace(/\D/g,'');
-        
-        if (!waNum.startsWith('964')) {
-            if (waNum.startsWith('0')) {
-                waNum = '964' + waNum.slice(1);
-            }
-        }
-        
-        // Build message with product details
-        var waMsg = '*🛍️ داواکاری بۆ کاڵا*\n\n' +
-            '📦 *ناوی کاڵا:* ' + escapeHtml(p.name || 'بێ ناو') + '\n' +
-            '💰 *نرخ:* ' + escapeHtml(String(p.price || '0')) + ' ' + escapeHtml(p.currency || 'IQD') + '\n' +
-            '🏷️ *جۆر:* ' + escapeHtml(p.category || '') + '\n' +
-            '👤 *فرۆشیار:* ' + escapeHtml(p.sellerName || 'نادیار') + '\n' +
-            (p.description ? '📝 *وردەکاری:* ' + escapeHtml(p.description.substring(0, 100)) + '\n' : '') +
-            '\n✉️ تکایە زیاتر زانیاری دەدە';
-        
-        var waLink = 'https://wa.me/' + waNum + '?text=' + encodeURIComponent(waMsg);
+        var waNum = (p.sellerMobile || '').replace(/\D/g,'');
+        var waLink = 'https://wa.me/' + (waNum.startsWith('0') ? '964'+waNum.slice(1) : waNum);
         var descHtml = p.description ? '<div style="background:#F8F9FA;border-radius:10px;padding:10px 12px;font-size:.82rem;color:#5a6476;line-height:1.7;margin-top:4px;">' + escapeHtml(p.description) + '</div>' : '';
 
         var modal = document.createElement('div');
@@ -3269,9 +3226,10 @@ function showProductDetail(productId) {
             + '</div>'
             + (p.description ? '<div style="font-size:.78rem;font-weight:700;color:#5a6476;margin-bottom:5px;">📝 وردەکاری</div>' + descHtml : '')
             + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px;">'
-            +   '<a href="' + waLink + '" target="_blank" style="padding:13px;background:#25D366;color:#fff;border:none;border-radius:12px;font-size:.9rem;font-weight:900;cursor:pointer;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;"><i class=\"fab fa-whatsapp\"></i> پەیوەندی</a>'
+            +   '<button id="_pdWaBtn" onclick="sendProductToWhatsApp(\''+escapeHtml(p.name||'')+'\', \''+escapeHtml(String(p.price||'0'))+'\', \''+escapeHtml(p.currency||'IQD')+'\', \''+escapeHtml(p.sellerMobile||'')+'\', \''+productId+'\'); return false;" style="padding:13px;background:#25D366;color:#fff;border:none;border-radius:12px;font-size:.9rem;font-weight:900;cursor:pointer;font-family:inherit;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;"><i class=\"fab fa-whatsapp\"></i> واتسئاپی</button>'
             +   '<button id="_pdCartBtn" style="padding:13px;background:#434b57;color:#fff;border:none;border-radius:12px;font-size:.9rem;font-weight:900;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;"><i class=\"fas fa-shopping-cart\"></i> سەبەتە</button>'
             + '</div>'
+            + '<button id="_pdInfoBtn" onclick="showProductInfo(\''+escapeHtml(p.name||'')+'\', \''+escapeHtml(p.description||'')+'\', \''+escapeHtml(p.category||'')+'\'); return false;" style="width:100%;padding:13px;background:#667eea;color:#fff;border:none;border-radius:12px;font-size:.9rem;font-weight:900;cursor:pointer;font-family:inherit;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:6px;"><i class=\"fas fa-info-circle\"></i> شێرەتێکە</button>'
             + '</div>'
             + '</div>';
 
@@ -3467,21 +3425,33 @@ function submitBuyerOrder(productId, productName, price, currency, qty, sellerMo
         window.open('https://wa.me/' + sellerMobile.replace(/\D/g,'') + '?text=' + encodeURIComponent(msg), '_blank');
     }
 
-    // داخستنی مۆدال
-    var m = document.getElementById('buyerInfoModal');
-    if (m) m.remove();
-
     // پاشەکەوتکردن لە Firebase
     if (!_isFileProtocol()) {
         database.ref('requests').push(orderData)
             .then(function() {
+                // نۆتیفکەیشن ناوی مۆدالدا + سەرەوە
+                showModalNotification('buyerInfoModal', '✅ داواکاری بە سەرکەوتویی نێردرا!', 'success');
                 showNotification('✅ داواکارییەکەت نێردرا و پاشەکەوت کرا!');
-                sendAdminNotification(orderData); // ← نۆتیفکەیشن بۆ ئادمین
+                
+                // 2 چرکە دوایی مۆدال بگە
+                setTimeout(function() {
+                    var m = document.getElementById('buyerInfoModal');
+                    if (m) m.remove();
+                }, 2000);
+                
                 _openWhatsApp();
             })
             .catch(function() {
                 // ئەگەر Firebase سەرکەوتوو نەبوو — واتساپ بکەرەوە بەهەر حاڵ
+                showModalNotification('buyerInfoModal', '❌ پاشەکەوت نەکرا - لە دوای کاتەوە هەوڵ بدە', 'error');
                 showNotification('واتساپ کراوەتەوە — داواکاری پاشەکەوت نەکرا', 'error');
+                
+                // 2 چرکە دوایی مۆدال بگە
+                setTimeout(function() {
+                    var m = document.getElementById('buyerInfoModal');
+                    if (m) m.remove();
+                }, 2000);
+                
                 _openWhatsApp();
             });
     } else {
@@ -3492,8 +3462,17 @@ function submitBuyerOrder(productId, productName, price, currency, qty, sellerMo
             lsOrders.push(orderData);
             localStorage.setItem('ukbazar_orders', JSON.stringify(lsOrders));
         } catch(e) {}
+        
+        // نۆتیفکەیشن ناوی مۆدالدا + سەرەوە
+        showModalNotification('buyerInfoModal', '✅ داواکاری بە سەرکەوتویی نێردرا!', 'success');
         showNotification('✅ داواکارییەکەت نێردرا!');
-        sendAdminNotification(orderData); // ← نۆتیفکەیشن بۆ ئادمین
+        
+        // 2 چرکە دوایی مۆدال بگە
+        setTimeout(function() {
+            var m = document.getElementById('buyerInfoModal');
+            if (m) m.remove();
+        }, 2000);
+        
         _openWhatsApp();
     }
 }
@@ -3588,32 +3567,6 @@ function copyFibNumber() {
         document.body.removeChild(textarea);
         showNotification('ژمارەی FIB کۆپی کرا: ' + fibNumber + ' ✅');
     });
-}
-
-// ==================== ADMIN NOTIFICATION - Send WhatsApp Alert ====================
-function sendAdminNotification(orderData) {
-    // ✅ یەکسەر واتس بکە بۆ ئادمین
-    if (!ADMIN_WHATSAPP) {
-        console.log('⚠️  ژمارەی ئادمین ستوونبێت');
-        return;
-    }
-    
-    // دروستکردنی دەقی نامەکە بە شێوازێکی ڕێک و پێک
-    const message = `🛒 *داواکاری نوێ لە UK BAZAR*\n\n` +
-                    `👤 *ناو:* ${orderData.name}\n` +
-                    `📞 *مۆبایل:* ${orderData.mobile}\n` +
-                    `📍 *ناونیشان:* ${orderData.address}\n` +
-                    `📦 *کاڵا:* ${orderData.itemName}\n` +
-                    `🔢 *دانە:* ${orderData.qty || 1}\n` +
-                    `💰 *نرخ:* ${orderData.price} ${orderData.currency}\n` +
-                    `📝 *وردەکاری:* ${orderData.details || 'نییە'}\n\n` +
-                    `⏰ _UK BAZAR - سیستەمی گەیاندن_`;
-    
-    // کۆدکردنی دەقەکە بۆ ئەوەی گونجاو بێت بۆ بەستەر (URL)
-    const whatsappUrl = `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(message)}`;
-    
-    // کردنەوەی واتسئاپ لە پەنجەرەیەکی نوێدا
-    window.open(whatsappUrl, '_blank');
 }
 
 // ==================== Slider Functions - Quick Loading ====================
@@ -3948,6 +3901,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     closeModal('ukDeliveryModal');
                     ukForm.reset();
                     ukSwitchTab('sender');
+                    addToNotificationHistory({
+                        type: 'uk-delivery',
+                        title: 'UK Delivery Request',
+                        message: `Package: ${packageName}`,
+                        orderNumber: orderNumber
+                    });
                     showNotification(`✅ UK delivery request submitted! Order: ${orderNumber}`);
                 })
                 .catch((err) => {
@@ -3974,6 +3933,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadApprovedProducts();
     updateCartBadge();
     loadVideos();
+    loadNotificationHistory();
 
     // Back to Top scroll visibility
     const backToTopBtn = document.getElementById('backToTopBtn');
@@ -7318,3 +7278,729 @@ function deleteUserAdmin(key, source, name) {
         afterDelete();
     }
 }
+
+// ==================== نۆتیفکەیشن لیست ====================
+function addToNotificationHistory(data) {
+    const item = {
+        id: Date.now(),
+        type: data.type || 'form',
+        title: data.title || 'نۆتیفکەیشن',
+        message: data.message || '',
+        orderNumber: data.orderNumber || '',
+        timestamp: new Date().toLocaleString('en-GB'),
+        read: false
+    };
+    notificationHistory.unshift(item);
+    if (notificationHistory.length > 50) notificationHistory = notificationHistory.slice(0, 50);
+    notificationCount++;
+    updateNotificationBadge();
+    try { localStorage.setItem('notificationHistory', JSON.stringify(notificationHistory)); } catch(e) {}
+}
+
+function loadNotificationHistory() {
+    try {
+        const saved = localStorage.getItem('notificationHistory');
+        if (saved) notificationHistory = JSON.parse(saved);
+    } catch(e) {}
+    updateNotificationBadge();
+}
+
+function updateNotificationBadge() {
+    const unread = notificationHistory.filter(n => !n.read).length;
+    document.querySelectorAll('[id*="notificationBadge"]').forEach(badge => {
+        if (unread > 0) {
+            badge.textContent = unread;
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+    });
+}
+
+function showNotificationHistory() {
+    const modal = document.getElementById('notificationHistoryModal');
+    if (!modal) return;
+    const list = document.getElementById('notificationHistoryList');
+    if (!list) return;
+    
+    notificationHistory.forEach(n => n.read = true);
+    
+    if (notificationHistory.length === 0) {
+        list.innerHTML = '<div style="padding:20px;text-align:center;color:#8492a6;">لیست بە تێبینی نیە</div>';
+    } else {
+        list.innerHTML = notificationHistory.map(item => `
+            <div style="border-bottom:1px solid #dee2e6;padding:10px;margin-bottom:8px;background:#f8f9fa;border-radius:6px;">
+                <div style="font-weight:600;color:#1a1a2e;">${item.title}</div>
+                <div style="font-size:0.85rem;color:#434b57;margin:4px 0;">${item.message}</div>
+                ${item.orderNumber ? `<div style="font-size:0.8rem;color:#667eea;">Order: ${item.orderNumber}</div>` : ''}
+                <div style="font-size:0.75rem;color:#999;margin-top:4px;">${item.timestamp}</div>
+            </div>
+        `).join('');
+    }
+    modal.style.display = 'flex';
+    updateNotificationBadge();
+}
+
+function clearNotificationHistory() {
+    if (confirm('آیا دەتەوێت تێبینیەکان سڕ بکەیت؟')) {
+        notificationHistory = [];
+        notificationCount = 0;
+        localStorage.removeItem('notificationHistory');
+        updateNotificationBadge();
+        const list = document.getElementById('notificationHistoryList');
+        if (list) list.innerHTML = '<div style="padding:20px;text-align:center;color:#8492a6;">لیست بە تێبینی نیە</div>';
+    }
+}
+
+
+
+// ═══════════════════════════════════════════════════════════
+// REAL-TIME NOTIFICATIONS - سیستەمی ئاگادار کردنەوەی رێژکار
+// ═══════════════════════════════════════════════════════════
+
+let _notificationCount = 0;
+let _unreadOrders = [];
+
+function updateNotificationBadge() {
+    const badge = document.getElementById('notificationFooterBadge');
+    if (badge) {
+        if (_notificationCount > 0) {
+            badge.textContent = _notificationCount > 99 ? '99+' : _notificationCount;
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+}
+
+function listenForNewOrders() {
+    // لێگەیەندریی داواکاریە نوێکانی (requests)
+    if (!database) return;
+    
+    database.ref('requests').on('child_added', function(snapshot) {
+        const order = snapshot.val();
+        const key = snapshot.key;
+        
+        if (order && order.type === 'cart-order' && order.status === 'pending') {
+            _notificationCount++;
+            _unreadOrders.push({ key: key, data: order });
+            updateNotificationBadge();
+            
+            // پیام ئاگادار کردنەوە
+            const msg = `📦 داواکاری نوێ: ${order.itemName} - ${order.name}`;
+            console.log('🔔 ' + msg);
+            
+            // نۆتیفکەیشن ساڵن (sound)
+            playNotificationSound();
+        }
+    });
+    
+    // لێگەیەندریی داواکاریە گەیاندنەکانی (delivery)
+    database.ref('delivery').on('child_added', function(snapshot) {
+        const delivery = snapshot.val();
+        const key = snapshot.key;
+        
+        if (delivery && delivery.status === 'registered') {
+            _notificationCount++;
+            _unreadOrders.push({ key: key, data: delivery });
+            updateNotificationBadge();
+            
+            const msg = `🚛 گەیاندنی نوێ: ${delivery.senderName} → ${delivery.receiverLocation}`;
+            console.log('🔔 ' + msg);
+            playNotificationSound();
+        }
+    });
+}
+
+function playNotificationSound() {
+    try {
+        // سەروو ساخت
+        const context = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = context.createOscillator();
+        const gainNode = context.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(context.destination);
+        
+        oscillator.frequency.value = 800;
+        oscillator.type = 'sine';
+        
+        gainNode.gain.setValueAtTime(0.3, context.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.5);
+        
+        oscillator.start(context.currentTime);
+        oscillator.stop(context.currentTime + 0.5);
+    } catch(e) {
+        console.log('سەروو پلە پێ نەدا');
+    }
+}
+
+function clearNotificationBadge() {
+    _notificationCount = 0;
+    _unreadOrders = [];
+    updateNotificationBadge();
+}
+
+function markOrderAsRead(key) {
+    _unreadOrders = _unreadOrders.filter(o => o.key !== key);
+    if (_unreadOrders.length < _notificationCount) {
+        _notificationCount = _unreadOrders.length;
+    }
+    updateNotificationBadge();
+}
+
+// سەرەتای نیگەیدانی کاتی دەستپێکردنی پەڕە
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        listenForNewOrders();
+        console.log('✅ Real-Time Notification System - چالاکرا');
+    }, 1000);
+});
+
+
+// ═══════════════════════════════════════════════════════════
+// MODAL NOTIFICATION - نۆتیفکەیشن لە ناوی مۆدالدا
+// ═══════════════════════════════════════════════════════════
+
+function showModalNotification(modalId, message, type) {
+    type = type || 'success';
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+    
+    // پێشتر notification هەبووبێ بیسڕ
+    const oldNotif = modal.querySelector('.modal-notification-simple');
+    if (oldNotif) oldNotif.remove();
+    
+    // نۆتیفکەیشن دروستبکە
+    const div = document.createElement('div');
+    div.className = 'modal-notification-simple';
+    
+    // رەنگە و ستایل
+    let bgColor = '#d4edda';
+    let textColor = '#155724';
+    let icon = '✅';
+    
+    if (type === 'error') {
+        bgColor = '#f8d7da';
+        textColor = '#721c24';
+        icon = '❌';
+    } else if (type === 'info') {
+        bgColor = '#cce5ff';
+        textColor = '#004085';
+        icon = 'ℹ️';
+    }
+    
+    div.style.cssText = `
+        padding: 12px 16px;
+        margin: 12px;
+        background: ${bgColor};
+        color: ${textColor};
+        border-radius: 8px;
+        border-left: 4px solid ${textColor};
+        font-weight: 600;
+        animation: slideIn 0.3s ease-out;
+        text-align: center;
+    `;
+    
+    div.innerHTML = `${icon} ${message}`;
+    
+    // لە سەرەتای مۆدال دابنێ
+    modal.insertBefore(div, modal.firstChild);
+    
+    // 3 چرکە دوایی شاردەدات
+    setTimeout(() => {
+        if (div.parentNode) {
+            div.style.animation = 'slideOut 0.3s ease-out';
+            setTimeout(() => {
+                if (div.parentNode) div.remove();
+            }, 300);
+        }
+    }, 3000);
+}
+
+// Animation CSS زیادبکە
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    @keyframes slideOut {
+        from {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        to {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+    }
+`;
+document.head.appendChild(style);
+
+// submitBuyerOrder فانکشنی بیڕوپشاندە تا نۆتیفکەیشن ناوی مۆدالدا پیشان بدات
+const originalSubmitBuyerOrder = window.submitBuyerOrder;
+if (originalSubmitBuyerOrder) {
+    window.submitBuyerOrder = function(...args) {
+        const result = originalSubmitBuyerOrder.apply(this, args);
+        // پاشێک نۆتیفکەیشن پیشان بدە
+        setTimeout(() => {
+            showModalNotification('buyerInfoModal', 'داواکاری تێبینی بە سەرکەوتویی نێردرا!', 'success');
+        }, 300);
+        return result;
+    };
+}
+
+
+// ═══════════════════════════════════════════════════════════
+// DEBUG - چیکردن
+// ═══════════════════════════════════════════════════════════
+
+window.testNotification = function() {
+    console.log('🔧 تیست: showModalNotification');
+    
+    const modal = document.getElementById('buyerInfoModal');
+    console.log('Modal:', modal ? '✅ دۆزرایەوە' : '❌ نیی');
+    
+    if (modal) {
+        showModalNotification('buyerInfoModal', '✅ ئیمتیحان کام!', 'success');
+        console.log('✅ showModalNotification بانگدرا');
+    } else {
+        alert('⚠️ Modal نیی! لە دێڕی 3346 چیک بکە');
+    }
+};
+
+console.log('✅ Test function دروست بوو - testNotification() بانگبکە');
+
+
+// ═══════════════════════════════════════════════════════════
+// ADD ORDERS TO NOTIFICATION HISTORY - داواکاریە نوێ لە لیست
+// ═══════════════════════════════════════════════════════════
+
+function addToNotificationHistory(order, type) {
+    if (!notificationHistory) notificationHistory = [];
+    
+    const notification = {
+        id: Date.now(),
+        title: type === 'delivery' ? '🚛 گەیاندن نوێ' : '📦 داواکاری نوێ',
+        message: type === 'delivery' 
+            ? `${order.senderName} → ${order.receiverLocation}`
+            : `${order.itemName} - ${order.name}`,
+        orderNumber: order.orderNumber || order.key,
+        timestamp: new Date().toLocaleString('ku'),
+        type: type,
+        read: false
+    };
+    
+    notificationHistory.unshift(notification);
+    if (notificationHistory.length > 50) notificationHistory = notificationHistory.slice(0, 50);
+    
+    // Save to localStorage
+    try {
+        localStorage.setItem('notificationHistory', JSON.stringify(notificationHistory));
+    } catch(e) {}
+}
+
+// Override listenForNewOrders - لیستی نوێ
+const originalListenForNewOrders = window.listenForNewOrders;
+window.listenForNewOrders = function() {
+    if (!database) return;
+    
+    // لێگەیەندریی requests
+    database.ref('requests').on('child_added', function(snapshot) {
+        const order = snapshot.val();
+        const key = snapshot.key;
+        
+        if (order && order.status === 'pending') {
+            _notificationCount++;
+            addToNotificationHistory(order, 'request');
+            updateNotificationBadge();
+            playNotificationSound();
+            console.log('📦 داواکاری نوێ:', order.itemName);
+        }
+    });
+    
+    // لێگەیەندریی delivery
+    database.ref('delivery').on('child_added', function(snapshot) {
+        const delivery = snapshot.val();
+        const key = snapshot.key;
+        
+        if (delivery && delivery.status === 'registered') {
+            _notificationCount++;
+            addToNotificationHistory(delivery, 'delivery');
+            updateNotificationBadge();
+            playNotificationSound();
+            console.log('🚛 گەیاندن نوێ:', delivery.senderName);
+        }
+    });
+};
+
+console.log('✅ Notification History System - چالاک');
+
+
+// ═══════════════════════════════════════════════════════════
+// PRODUCT DETAIL FUNCTIONS - فانکشنە کالاکان
+// ═══════════════════════════════════════════════════════════
+
+function sendProductToWhatsApp(productName, price, currency, sellerMobile, productId) {
+    if (!sellerMobile) {
+        alert('⚠️ ژمارەی واتساپ نیی');
+        return;
+    }
+    
+    // سڕینەوەی بێ ژمارەی
+    var waNum = sellerMobile.replace(/\D/g, '');
+    
+    // بڕگە پێوەندی
+    var message = '🛍️ سڵاو، من بەتیبینیدا ئەم کاڵایە:\n\n'
+        + '📦 کاڵا: ' + productName + '\n'
+        + '💰 نرخ: ' + price + ' ' + currency + '\n'
+        + '📍 بڕوا: ' + window.location.href + '\n\n'
+        + 'کریار ئیم بۆ زیاتری زانیاری';
+    
+    // WhatsApp لینک
+    var waLink = 'https://wa.me/' + (waNum.startsWith('0') ? '964' + waNum.slice(1) : waNum) + '?text=' + encodeURIComponent(message);
+    
+    // کوڕ بکە
+    window.open(waLink, '_blank');
+}
+
+function showProductInfo(productName, description, category) {
+    alert('📦 کاڵا: ' + productName + '\n📂 جۆر: ' + category + '\n\n📝 وردەکاری:\n' + (description || 'وردەکاری نیی'));
+}
+
+console.log('✅ Product Detail Functions - دروست بوو');
+
+
+// ═══════════════════════════════════════════════════════════
+// LISTEN FOR NEW PRODUCTS - لێگەیەندریی کاڵای نوێ
+// ═══════════════════════════════════════════════════════════
+
+function listenForNewProducts() {
+    if (!database) return;
+    
+    // لێگەیەندریی کاڵاو نوێکان
+    database.ref('products').orderByChild('status').equalTo('pending').on('child_added', function(snapshot) {
+        const product = snapshot.val();
+        const key = snapshot.key;
+        
+        if (product && !product.notified) {
+            _notificationCount++;
+            updateNotificationBadge();
+            
+            // نۆتیفکەیشن زیادبکە
+            const notification = {
+                id: Date.now(),
+                title: '📦 کاڵای نوێ - دەتوێت پەسەند بکرێت',
+                message: `${product.name} - ${product.sellerName}`,
+                type: 'product',
+                productId: key,
+                timestamp: product.timestamp || new Date().toLocaleString('ku'),
+                read: false
+            };
+            
+            if (!notificationHistory) notificationHistory = [];
+            notificationHistory.unshift(notification);
+            if (notificationHistory.length > 50) notificationHistory = notificationHistory.slice(0, 50);
+            
+            try {
+                localStorage.setItem('notificationHistory', JSON.stringify(notificationHistory));
+            } catch(e) {}
+            
+            playNotificationSound();
+            console.log('📦 کاڵای نوێ نیگەیانا:', product.name);
+        }
+    });
+}
+
+// سەرەتای سیستەم
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        listenForNewProducts();
+        console.log('✅ Product Listener - چالاک');
+    }, 2000);
+});
+
+console.log('✅ Product Notification System - دروست بوو');
+
+
+// ═══════════════════════════════════════════════════════════
+// REAL-TIME DASHBOARD UPDATE - داشبۆردی رێژکار
+// ═══════════════════════════════════════════════════════════
+
+let _adminDashboardListening = false;
+
+function setupDashboardRealtimeListener() {
+    if (_adminDashboardListening) return;
+    if (!database) return;
+    
+    _adminDashboardListening = true;
+    
+    // لێگەیەندریی داواکاریەکان
+    database.ref('requests').on('value', function(snapshot) {
+        console.log('📊 داواکاری تێڕامان - داشبۆردی بنوێنە');
+        
+        // لیستی داواکاریە چاوەڕوان پیشان بدە
+        displayPendingRequestsForAdmin();
+        
+        var totalRequests = 0, pendingRequests = 0;
+        if (snapshot.exists()) {
+            snapshot.forEach(function(r) {
+                totalRequests++;
+                if ((r.val().status || 'pending') === 'pending') pendingRequests++;
+            });
+        }
+        
+        // Card نوێ بکۆ
+        updateDashboardCard('requests', totalRequests, pendingRequests + ' چاوەڕوانی وەڵام');
+        console.log('✅ داشبۆردی داواکاری نوێ کرا:', totalRequests, '- چاوەڕوان:', pendingRequests);
+    });
+    
+    // لێگەیەندریی کاڵاکان
+    database.ref('products').on('value', function(snapshot) {
+        var totalProducts = 0, pendingProducts = 0, approvedProducts = 0;
+        if (snapshot.exists()) {
+            snapshot.forEach(function(c) {
+                c.forEach(function(p) {
+                    totalProducts++;
+                    var v = p.val();
+                    if (v.status === 'pending') pendingProducts++;
+                    else if (v.status === 'approved') approvedProducts++;
+                });
+            });
+        }
+        
+        updateDashboardCard('products', totalProducts, approvedProducts + ' پەسەندکراو / ' + pendingProducts + ' چاوەڕوان');
+    });
+    
+    // لێگەیەندریی گەیاندنە
+    database.ref('delivery').on('value', function(snapshot) {
+        var totalDeliveries = 0, pendingDeliveries = 0, deliveredCount = 0;
+        if (snapshot.exists()) {
+            snapshot.forEach(function(d) {
+                totalDeliveries++;
+                var st = d.val().status || 'pending';
+                if (st === 'pending') pendingDeliveries++;
+                else if (st === 'delivered') deliveredCount++;
+            });
+        }
+        
+        updateDashboardCard('delivery', totalDeliveries, deliveredCount + ' گەیاو / ' + pendingDeliveries + ' چاوەڕوان');
+    });
+}
+
+function updateDashboardCard(cardType, value, sub) {
+    // فایڕ بکە - داشبۆردی کاردی نوێ بکۆ
+    var cards = document.querySelectorAll('[data-card-type]');
+    cards.forEach(function(card) {
+        if (card.getAttribute('data-card-type') === cardType) {
+            // Value نوێ بکۆ
+            var valueEl = card.querySelector('.card-value, .dashboard-stat-value');
+            if (valueEl) {
+                valueEl.textContent = value;
+            }
+            
+            // Sub نوێ بکۆ
+            var subEl = card.querySelector('.card-sub, .dashboard-stat-sub');
+            if (subEl) {
+                subEl.textContent = sub;
+            }
+        }
+    });
+    
+    // ئەگەر کاردی نهێنی - تێڕامان بیکە
+    updateAdminPanelStats(cardType, value, sub);
+}
+
+function updateAdminPanelStats(type, value, sub) {
+    // Admin panel دا کارتە نوێ بکۆ
+    // بتن admin panel کراو بێت
+    const adminPanel = document.getElementById('adminPanel');
+    if (!adminPanel || adminPanel.style.display === 'none') return;
+    
+    // کاردی نوێ بکۆ بە class یا ID
+    const requestCard = document.querySelector('.admin-card[data-type="requests"]');
+    if (requestCard && type === 'requests') {
+        const val = requestCard.querySelector('.stat-value');
+        const sub_el = requestCard.querySelector('.stat-sub');
+        if (val) val.textContent = value;
+        if (sub_el) sub_el.textContent = sub;
+    }
+}
+
+// سەرەتای شنیدە - بەریوبەر داخستنی
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        // Admin panel کراو بێت؟
+        const adminPanel = document.getElementById('adminPanel');
+        if (adminPanel && adminPanel.style.display !== 'none') {
+            setupDashboardRealtimeListener();
+            console.log('✅ Dashboard Real-Time Listener - چالاک');
+        }
+    }, 2000);
+});
+
+console.log('✅ Dashboard Real-Time System - دروست بوو');
+
+
+// ═══════════════════════════════════════════════════════════
+// DISPLAY PENDING REQUESTS FOR ADMIN - لیستی داواکاریە چاوەڕوان
+// ═══════════════════════════════════════════════════════════
+
+function displayPendingRequestsForAdmin() {
+    if (!database) return;
+    
+    // هەموو داواکاریەکان بار بکە - نە تەنیا pending
+    database.ref('requests').once('value', function(snapshot) {
+        var pendingList = [];
+        
+        if (snapshot.exists()) {
+            snapshot.forEach(function(child) {
+                var req = child.val();
+                var key = child.key;
+                
+                // تەنیا pending دانی (یا بێ status)
+                var status = req.status || 'pending';
+                if (status === 'pending') {
+                    pendingList.push({
+                        key: key,
+                        data: req
+                    });
+                }
+            });
+        }
+        
+        if (pendingList.length === 0) {
+            console.log('⚠️ داواکاری چاوەڕوان نیی');
+            var content = document.getElementById('adminContent');
+            if (content) {
+                content.innerHTML = '<div style="padding:20px;text-align:center;color:#888;font-size:1.1rem;">📋 داواکاری چاوەڕوان نیی ✅</div>';
+            }
+            return;
+        }
+        
+        var html = '<div style="padding:20px;background:#fff;">'
+            + '<h2 style="font-size:1.3rem;font-weight:900;margin-bottom:16px;color:#1a1a2e;">📋 داواکاریە چاوەڕوان (' + pendingList.length + ')</h2>'
+            + '<div style="display:flex;flex-direction:column;gap:12px;">';
+        
+        pendingList.forEach(function(item) {
+            var req = item.data;
+            var key = item.key;
+            
+            html += '<div style="background:#f8f9fa;border:2px solid #dee2e6;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px;">'
+                // سەرۆکی
+                + '<div style="display:flex;justify-content:space-between;align-items:center;">'
+                +   '<div style="flex:1;">'
+                +     '<div style="font-weight:900;color:#1a1a2e;font-size:1.1rem;">📦 ' + escapeHtml(req.itemName||'نادیار') + '</div>'
+                +     '<div style="font-size:0.9rem;color:#5a6476;margin-top:4px;">💰 نرخ: ' + escapeHtml(req.price||'0') + ' ' + escapeHtml(req.currency||'IQD') + '</div>'
+                +   '</div>'
+                +   '<div style="font-size:0.75rem;color:#888;">' + escapeHtml(req.timestamp||'') + '</div>'
+                + '</div>'
+                // کریار زانیاری
+                + '<div style="background:#fff;padding:12px;border-radius:8px;border-left:4px solid #0066ff;display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:0.85rem;">'
+                +   '<div><span style="color:#888;">👤 ناو:</span> <strong>' + escapeHtml(req.name||'نادیار') + '</strong></div>'
+                +   '<div><span style="color:#888;">📱 مۆبایل:</span> <strong>' + escapeHtml(req.mobile||'نادیار') + '</strong></div>'
+                +   '<div style="grid-column:1/3;"><span style="color:#888;">📍 ناونیشان:</span> <strong>' + escapeHtml(req.address||'نادیار') + '</strong></div>'
+                + '</div>'
+                // دوگمە
+                + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">'
+                +   '<button onclick="approveRequest(\'' + key + '\',\'' + escapeHtml(req.name||'کریار') + '\',\'' + escapeHtml(req.itemName||'کاڵا') + '\')" style="padding:10px;background:#28a745;color:#fff;border:none;border-radius:8px;font-weight:900;cursor:pointer;font-family:inherit;">✅ پەسەند بکە</button>'
+                +   '<button onclick="rejectRequest(\'' + key + '\',\'' + escapeHtml(req.name||'کریار') + '\')" style="padding:10px;background:#dc3545;color:#fff;border:none;border-radius:8px;font-weight:900;cursor:pointer;font-family:inherit;">❌ رەت بکە</button>'
+                + '</div>'
+                + '</div>';
+        });
+        
+        html += '</div></div>';
+        
+        // لە adminContent دا دابنێ
+        var content = document.getElementById('adminContent');
+        if (content) {
+            content.innerHTML = html;
+        }
+        
+        console.log('✅ داواکاریە چاوەڕوان پیشان درا:', pendingList.length);
+    });
+}
+
+function approveRequest(requestId, customerName, itemName) {
+    if (confirm('دڵنیا یت پەسەندی دەکەی؟\n\nکریار: ' + customerName + '\nکاڵا: ' + itemName)) {
+        database.ref('requests/' + requestId).update({
+            status: 'approved',
+            approvedAt: new Date().toLocaleString('ku')
+        }).then(() => {
+            showNotification('✅ داواکاری پەسەندکرا!');
+            displayPendingRequestsForAdmin();
+        }).catch(() => {
+            showNotification('❌ هەڵە لە پەسەندکردن!', 'error');
+        });
+    }
+}
+
+function rejectRequest(requestId, customerName) {
+    if (confirm('دڵنیا یت رەت دەکەی؟\n\nکریار: ' + customerName)) {
+        database.ref('requests/' + requestId).update({
+            status: 'rejected',
+            rejectedAt: new Date().toLocaleString('ku')
+        }).then(() => {
+            showNotification('❌ داواکاری رەتکرا!');
+            displayPendingRequestsForAdmin();
+        }).catch(() => {
+            showNotification('❌ هەڵە لە رەتکردن!', 'error');
+        });
+    }
+}
+
+// سەرەتا - بەریوبەر داخستنی
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        const adminPanel = document.getElementById('adminPanel');
+        if (adminPanel && adminPanel.style.display !== 'none') {
+            displayPendingRequestsForAdmin();
+        }
+    }, 2000);
+});
+
+console.log('✅ Pending Requests Display - دروست بوو');
+
+
+// ═══════════════════════════════════════════════════════════
+// PENDING REQUESTS BUTTON & DISPLAY - دوگمە چاوەروان
+// ═══════════════════════════════════════════════════════════
+
+function showPendingRequests() {
+    const adminPanel = document.getElementById('adminPanel');
+    if (!adminPanel || adminPanel.style.display === 'none') return;
+    
+    const tabs = document.querySelectorAll('.admin-tab');
+    tabs.forEach(t => t.classList.remove('active'));
+    
+    // دوگمە "چاوەڕوان" چالاک بکە
+    const pendingBtn = document.querySelector('[onclick*="showPendingRequests"]');
+    if (pendingBtn) pendingBtn.classList.add('active');
+    
+    displayPendingRequestsForAdmin();
+}
+
+function countPendingRequests(callback) {
+    if (!database) return;
+    
+    database.ref('requests').once('value', function(snapshot) {
+        var count = 0;
+        if (snapshot.exists()) {
+            snapshot.forEach(function(child) {
+                var req = child.val();
+                var status = req.status || 'pending';
+                if (status === 'pending') count++;
+            });
+        }
+        if (callback) callback(count);
+    });
+}
+
+console.log('✅ Pending Requests Button - دروست بوو');
