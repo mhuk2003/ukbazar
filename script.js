@@ -169,8 +169,8 @@ const DEFAULT_SLIDER_IMAGE = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.or
             padding: 4px 0 !important;
         }
         .label-qr-img {
-            width: 130px !important;
-            height: 130px !important;
+            width: 100px  /* OPTIMIZED */ !important;
+            height: 100px  /* OPTIMIZED */ !important;
         }
         .label-qr-hint {
             font-size: 0.65rem !important;
@@ -1111,7 +1111,7 @@ function renderDeliveryItems(items) {
             const qrText = encodeURIComponent(
                 `پسولە: ${orderNum} | نێردەر: ${d.senderName||d.name||''} ${d.senderMobile||d.mobile||''} (${d.senderLocation||d.address||''}) | وەرگر: ${d.receiverName||''} ${d.receiverMobile||''} (${d.receiverLocation||''}) | کەلوپەل: ${d.packageName||d.details||''} x${d.packageQty||''} - ${d.packageKg||''}کگ`
             );
-            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=4&data=${qrText}`;
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200  /* OPTIMIZED */&margin=4&data=${qrText}`;
             html += buildKurdishLabelHtml(d, key, orderNum, qrUrl);
         });
         html += '</div>';
@@ -1315,7 +1315,7 @@ function buildKurdishLabelHtml(d, key, orderNum, qrUrl) {
 
             <!-- راست: QR گەورە -->
             <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px 10px;background:#f8f9fa;border-left:2px dashed #dee2e6;flex-shrink:0;min-width:130px;">
-                <img src="${qrUrl}" alt="QR" class="label-qr-img" loading="eager" style="width:130px;height:130px;display:block;border:3px solid #2d3340;border-radius:6px;padding:3px;background:#fff;">
+                <img src="${qrUrl}" alt="QR" class="label-qr-img" loading="eager" style="width:100px;height:100px;display:block;border:3px solid #2d3340;border-radius:6px;padding:3px;background:#fff;"  /* OPTIMIZED QR SIZE */>
                 <div style="text-align:center;">
                     <div style="font-size:.68rem;font-weight:900;color:#2d3340;">Scan for info</div>
                     <div style="font-size:.65rem;color:#8492a6;margin-top:2px;">${orderNum}</div>
@@ -8017,3 +8017,94 @@ function countPendingRequests(callback) {
 }
 
 console.log('✅ Pending Requests Button - دروست بوو');
+
+
+function kuPrint(key) {
+    var card = document.getElementById('label-' + key);
+    if (!card) return;
+
+    // وەرگرتنی ژمارەی پسوڵە
+    var orderNum = (card.querySelector('.label-order-num') || {}).textContent || '';
+    orderNum = orderNum.replace(/^#\s*/, '').trim() || ('KU-' + Date.now().toString().slice(-6));
+
+    // وەرگرتنی نرخەکان لە ناو کارتەکەوە
+    var D = card.dataset || {};
+    var itemPrice     = D.itemPrice     || '0';
+    var deliveryPrice = D.deliveryPrice || '0';
+
+    // خوێندنەوەی نرخە زیندووەکانی ناو ئینپوتەکانی شۆفێر و تێبینی
+    var driverNameVal = '—';
+    var driverMobVal  = '—';
+    var noteVal       = '—';
+
+    var driverNameEl  = document.getElementById('driver-name-' + key);
+    var driverMobEl   = document.getElementById('driver-mobile-' + key);
+    var noteEl        = document.getElementById('delivery-note-' + key);
+    
+    if (driverNameEl && driverNameEl.value.trim() !== '') driverNameVal = driverNameEl.value.trim();
+    if (driverMobEl && driverMobEl.value.trim() !== '')   driverMobVal  = driverMobEl.value.trim();
+    if (noteEl && noteEl.value.trim() !== '')             noteVal       = noteEl.value.trim();
+
+    // وەرگرتنی وێنەی QR کۆدەکە
+    var qrImg = card.querySelector('.label-qr-img');
+    var qrSrc = qrImg ? qrImg.src : '';
+
+    // دروستکردنی پەڕەیەکی چاپ بە فۆرماتی تایبەت بۆ لەیبل (80mm)
+    var htmlContent = `
+    <!DOCTYPE html>
+    <html dir="rtl" lang="ku">
+    <head>
+        <meta charset="UTF-8">
+        <title>Label #${orderNum}</title>
+        <style>
+            @page { size: 80mm auto; margin: 0; }
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { font-family: "Tahoma", "Arial", sans-serif; padding: 8px; width: 80mm; background: #fff; color: #000; text-align: center; }
+            .print-box { border: 1px dashed #000; padding: 6px; width: 100%; display: block; }
+            .title { font-size: 14px; font-weight: bold; margin-bottom: 4px; }
+            .order-id { font-size: 12px; font-weight: bold; background: #000; color: #fff; padding: 3px; margin-bottom: 8px; display: inline-block; width: 100%; }
+            
+            .qr-zone { margin: 5px auto; text-align: center; }
+            .qr-zone img { width: 90px !important; height: 90px !important; display: block; margin: 0 auto; border: 1px solid #000; padding: 2px; }
+            
+            .info-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+            .info-table td { font-size: 11px; padding: 4px 2px; border-bottom: 1px dotted #888; text-align: right; color: #000; }
+            .info-table td.lbl { font-weight: bold; width: 40%; }
+            .info-table td.val { text-align: left; font-weight: bold; }
+        </style>
+    </head>
+    <body>
+        <div class="print-box">
+            <div class="title">UK BAZAR - گەیاندن</div>
+            <div class="order-id">#${orderNum}</div>
+            
+            <div class="qr-zone">
+                ${qrSrc ? `<img src="${qrSrc}" alt="QR">` : ''}
+            </div>
+            
+            <table class="info-table">
+                <tr><td class="lbl">ناوی شۆفێر:</td><td class="val">${driverNameVal}</td></tr>
+                <tr><td class="lbl">ژمارەی شۆفێر:</td><td class="val">${driverMobVal}</td></tr>
+                <tr><td class="lbl">تێبینی:</td><td class="val">${noteVal}</td></tr>
+                <tr><td class="lbl">نرخی کاڵا:</td><td class="val">${itemPrice} د.ع</td></tr>
+                <tr><td class="lbl">نرخی گەیاندن:</td><td class="val">${deliveryPrice} د.ع</td></tr>
+            </table>
+        </div>
+        <script>
+            window.onload = function() {
+                window.print();
+                setTimeout(function() { window.close(); }, 500);
+            };
+        <\/script>
+    </body>
+    </html>`;
+
+    // کردنەوەی پەڕەیەکی نوێی سەربەخۆ
+    var printWindow = window.open('', '_blank');
+    if (printWindow) {
+        printWindow.document.write(htmlContent);
+        printWindow.document.close();
+    } else {
+        alert('تکایە ڕێگە بە Pop-ups بدە لە وێبگەڕەکەتدا بۆ ئەوەی چاپەکە کاربکات');
+    }
+}
