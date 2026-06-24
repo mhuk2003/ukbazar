@@ -2866,107 +2866,190 @@ html { scroll-behavior: smooth; }
 }
 
 /* ==================== PRINT / PDF — چاپ و PDF ==================== */
+/* ════════════════════════════════════════════════════════════════
+   🎯 گۆڕانکاری تایبەت بە چاپی لەیبل و بچوکردنەوەی QR
+   ════════════════════════════════════════════════════════════════ */
 @media print {
-    /* شاردنەوەی هەموو بەشەکانی ماڵپەڕ جگە لە لەیبلەکە */
-    body * {
-        visibility: hidden !important;
+    @page { 
+        size: 80mm auto; 
+        margin: 0; 
     }
-
-    /* نیشاندانی تەنها کارتی گەیاندن */
-    .delivery-label-card,
-    .delivery-label-card * {
-        visibility: visible !important;
-    }
-
+    
+    /* ڕێکخستنی گشتی لەیبلەکە */
     .delivery-label-card {
-        position: absolute !important;
-        left: 0 !important;
-        top: 0 !important;
+        width: 80mm !important;
+        padding: 3mm !important;
+        direction: rtl !important;
+        font-family: 'Noto Sans Arabic', Tahoma, sans-serif !important;
+    }
+
+    /* بچوکردنەوەی کیو ئار کۆد */
+    .label-qr-img {
+        width: 70px !important;  /* کەمێک بچوکتر کراوەتەوە */
+        height: 70px !important;
+        margin: 0 auto 5px auto !important;
+        display: block !important;
+    }
+
+    /* لکاندنی زانیارییەکان بە ڕێکی لە ژێر QR کۆدەکە */
+    .label-qr {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
         width: 100% !important;
-        box-shadow: none !important;
-        border: none !important;
-        overflow: visible !important;
+        text-align: center !important;
+        margin-top: 5px !important;
     }
 
-    /* شاردنەوەی دوگمەکان لە کاتی چاپدا */
-    .label-actions,
-    .label-action-btn,
-    #_printCtrl,
-    .btn {
-        display: none !important;
-        visibility: hidden !important;
+    /* شێوازی پیشاندانی زانیارییەکان بە بچووکی */
+    .label-qr-details {
+        display: block !important;
+        width: 100% !important;
+        font-size: 11px !important; /* قەبارەی بچووک بۆ دەقەکان */
+        line-height: 1.4 !important;
+        color: #000000 !important;
+        margin-top: 4px !important;
+        font-weight: bold !important;
     }
 
-    /* مۆدالەکان — overflow سڕینەوە بۆ چاپ */
-    .modal,
-    .modal-content {
-        overflow: visible !important;
-        position: static !important;
-        max-height: none !important;
-        height: auto !important;
-    }
-
-    /* backdrop-filter لە چاپدا کاری نییە — لابردن */
-    .multi-image-badge,
-    [style*="backdrop-filter"] {
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-        background: rgba(0,0,0,0.6) !important;
-    }
-
-    /* header و navigation شاربکە */
-    .header,
-    .nav-buttons,
-    .loading-spinner {
-        display: none !important;
-    }
-
-    /* رووکاری چاپ */
-    @page {
-        size: A5;
-        margin: 5mm;
+    .label-qr-details div {
+        border-bottom: 1px dashed #ccc !important;
+        padding: 2px 0 !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        direction: rtl !important;
     }
 }
 
-/* ==================== تێبینی لیست مۆدال ====================*/
-#notificationHistoryModal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 9999;
-    justify-content: center;
-    align-items: flex-end;
-    padding: 10px;
-    animation: slideUp 0.3s ease;
-}
-
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(50px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-#notificationHistoryList {
-    flex: 1;
-    overflow-y: auto;
-    padding: 12px;
-    background: #fafbfc;
-}
-
-#notificationBadge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: #ff6b6b;
-    color: white;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
+/* ڕێکخستنی شێوازەکە لە ناو شاشەشدا بۆ ئەوەی تێک نەچێت */
+.label-qr-details {
+    width: 100%;
     font-size: 0.75rem;
-    font-weight: bold;
-    min-width: 24px;
-    min-height: 24px;
+    margin-top: 8px;
+}
+.label-qr-details div {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    border-bottom: 1px dashed #dee2e6;
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   🎯 OPTIMIZED: PRINT STYLES - Thermal Printer (80mm)
+   ════════════════════════════════════════════════════════════════ */
+@media print {
+    @page { size: 80mm auto; margin: 0; }
+    
+    /* HIDE NAVIGATION AND BUTTONS ONLY */
+    body > *:not(.delivery-label-card) { display: none !important; }
+    button, nav, .sidebar, .btn, .btn-sm { display: none !important; }
+    
+    /* SHOW THE LABEL - EVERYTHING */
+    .delivery-label-card {
+        width: 80mm !important;
+        margin: 0 !important;
+        padding: 2mm !important;
+        page-break-after: always;
+        page-break-inside: avoid;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        overflow: visible !important;
+        height: auto !important;
+        max-height: none !important;
+    }
+    
+    /* VERY IMPORTANT: SHOW ALL LABEL DATA ROWS */
+    .label-driver-row { display: flex !important; }
+    .label-note-row { display: flex !important; }
+    .label-package { display: block !important; }
+    .label-package div { display: flex !important; }
+    
+    /* HIDE ADMIN FORM ELEMENTS (Keep text visible) */
+    select, input, textarea { display: none !important; }
+    
+    /* SHOW ADMIN SECTION TITLE AND DATA */
+    .label-admin-edit { display: block !important; }
+    .admin-edit-title { display: block !important; }
+    
+    /* QR CODE */
+    .label-qr-img {
+        width: 90px !important;
+        height: 90px !important;
+        background: white !important;
+        border: 2px solid #000 !important;
+    }
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   📱 OPTIMIZED: MOBILE RESPONSIVE - Small Screens (< 380px)
+   ════════════════════════════════════════════════════════════════ */
+@media screen and (max-width: 380px) {
+    .delivery-label-card {
+        font-size: 0.75rem;
+        margin-bottom: 6px;
+    }
+    
+    .label-body-wrap {
+        flex-direction: column !important;
+    }
+    
+    .label-qr-wrap {
+        width: 100% !important;
+        min-width: unset !important;
+        border-left: none !important;
+        border-top: 1px dashed #ddd !important;
+        padding: 8px 6px !important;
+        margin-top: 4px;
+        flex-direction: row;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .label-qr-img {
+        width: 85px !important;
+        height: 85px !important;
+    }
+    
+    .label-section {
+        margin-bottom: 4px;
+    }
+    
+    .label-row {
+        font-size: 0.66rem;
+        padding: 1px 4px !important;
+    }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   📱 TABLET RESPONSIVE (381px - 500px)
+   ════════════════════════════════════════════════════════════════ */
+@media screen and (min-width: 381px) and (max-width: 500px) {
+    .delivery-label-card {
+        font-size: 0.78rem;
+    }
+    
+    .label-qr-img {
+        width: 95px !important;
+        height: 95px !important;
+    }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   🖥️ DESKTOP RESPONSIVE (> 500px)
+   ════════════════════════════════════════════════════════════════ */
+@media screen and (min-width: 501px) {
+    .delivery-label-card {
+        font-size: 0.82rem;
+    }
+    
+    .label-qr-img {
+        width: 130px !important;
+        height: 130px !important;
+    }
+    
+    .label-qr-wrap {
+        min-width: 130px;
+    }
 }
