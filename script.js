@@ -1971,18 +1971,78 @@ function rejectProduct(productId) {
     }
 }
 
-function deleteProduct(productId) {
-    if (confirm('دڵنیایت لە سڕینەوەی ئەم کاڵایە؟')) {
-        database.ref('products/' + productId).remove()
-            .then(() => {
-                showNotification('کاڵا بە سەرکەوتوویی سڕایەوە! 🗑️');
-                loadAllProducts();
-                loadApprovedProducts();
-            })
-            .catch(() => {
-                showNotification('هەڵە لە سڕینەوە!', 'error');
-            });
+// ==================== Shared Admin Delete Password Modal ====================
+function _promptAdminDelete(title, message, onConfirmed) {
+    var old = document.getElementById('_adminDelModal');
+    if (old) old.remove();
+
+    var modal = document.createElement('div');
+    modal.id = '_adminDelModal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999999;display:flex;align-items:center;justify-content:center;padding:16px;';
+    modal.innerHTML = `
+        <div style="background:#fff;border-radius:16px;padding:22px;width:100%;max-width:360px;box-shadow:0 12px 40px rgba(0,0,0,.25);">
+          <div style="font-weight:900;color:#B02A37;font-size:1rem;margin-bottom:6px;">${title}</div>
+          <div style="font-size:.82rem;color:#5a6476;margin-bottom:14px;">${message}</div>
+          <div style="font-size:.78rem;color:#8492a6;margin-bottom:8px;">وشەی تێپەڕی بەڕێوەبەر داخڵ بکە بۆ سڕینەوە.</div>
+          <div style="position:relative;margin-bottom:14px;">
+            <input id="_adminDelPass" type="password" placeholder="وشەی تێپەڕ..." autocomplete="off"
+              style="width:100%;padding:11px 44px 11px 14px;border:2px solid #FFCDD2;border-radius:10px;font-size:.95rem;font-family:inherit;box-sizing:border-box;direction:ltr;"
+              onkeydown="if(event.key==='Enter')_doAdminDelete()">
+            <button type="button"
+              onclick="(function(b){var i=document.getElementById('_adminDelPass');if(i.type==='password'){i.type='text';b.innerHTML='\u{1F649}';}else{i.type='password';b.innerHTML='\u{1F441}\uFE0F';}})(this)"
+              style="position:absolute;left:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1rem;">\u{1F441}\uFE0F</button>
+          </div>
+          <div id="_adminDelErr" style="display:none;color:#DC3545;font-size:.8rem;margin-bottom:10px;padding:7px;background:#FFF5F5;border-radius:8px;"></div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="document.getElementById('_adminDelModal').remove()"
+              style="flex:1;padding:10px;background:#dee2e6;color:#1a1a2e;border:none;border-radius:10px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:inherit;">پاشگەزبوونەوە</button>
+            <button onclick="_doAdminDelete()"
+              style="flex:2;padding:10px;background:linear-gradient(135deg,#DC3545,#B02A37);color:#fff;border:none;border-radius:10px;font-size:.9rem;font-weight:800;cursor:pointer;font-family:inherit;">🗑️ سڕینەوە</button>
+          </div>
+        </div>`;
+
+    modal._onConfirmed = onConfirmed;
+    document.body.appendChild(modal);
+    modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
+    setTimeout(function() { var i = document.getElementById('_adminDelPass'); if (i) i.focus(); }, 80);
+}
+
+function _doAdminDelete() {
+    var inp = document.getElementById('_adminDelPass');
+    var pass = inp ? inp.value : '';
+    var errEl = document.getElementById('_adminDelErr');
+    var modal = document.getElementById('_adminDelModal');
+    if (!pass) {
+        if (errEl) { errEl.textContent = 'وشەی تێپەڕ بنووسە!'; errEl.style.display = 'block'; }
+        return;
     }
+    _checkAdminPass(pass).then(function(ok) {
+        if (!ok) {
+            if (errEl) { errEl.textContent = '\u274C وشەی تێپەڕ هەڵەیە!'; errEl.style.display = 'block'; }
+            if (inp) { inp.value = ''; inp.focus(); }
+            return;
+        }
+        var cb = modal ? modal._onConfirmed : null;
+        if (modal) modal.remove();
+        if (cb) cb();
+    });
+}
+
+
+function deleteProduct(productId) {
+    _promptAdminDelete(
+        '🗑️ سڕینەوەی کاڵا',
+        'دڵنیایت لە سڕینەوەی ئەم کاڵایە؟',
+        function() {
+            database.ref('products/' + productId).remove()
+                .then(() => {
+                    showNotification('کاڵا بە سەرکەوتوویی سڕایەوە! 🗑️');
+                    loadAllProducts();
+                    loadApprovedProducts();
+                })
+                .catch(() => showNotification('هەڵە لە سڕینەوە!', 'error'));
+        }
+    );
 }
 
 // ==================== Edit Product ====================
@@ -2114,34 +2174,41 @@ function saveEditProduct(productId) {
 }
 
 function deleteSliderImage(sliderId) {
-    if (confirm('دڵنیایت لە سڕینەوەی ئەم وێنەیە؟')) {
-        database.ref('slider/' + sliderId).remove()
-            .then(() => {
-                showNotification('وێنە بە سەرکەوتوویی سڕایەوە! 🗑️');
-                loadSliderManagement();
-                loadRealSliderImages();
-            })
-            .catch(() => {
-                showNotification('هەڵە لە سڕینەوە!', 'error');
-            });
-    }
+    _promptAdminDelete(
+        '🗑️ سڕینەوەی وێنەی سلایدەر',
+        'دڵنیایت لە سڕینەوەی ئەم وێنەیە؟',
+        function() {
+            database.ref('slider/' + sliderId).remove()
+                .then(() => {
+                    showNotification('وێنە بە سەرکەوتوویی سڕایەوە! 🗑️');
+                    loadSliderManagement();
+                    loadRealSliderImages();
+                })
+                .catch(() => showNotification('هەڵە لە سڕینەوە!', 'error'));
+        }
+    );
 }
 
 // ==================== Delete Request ====================
 function deleteRequest(key) {
-    if (!confirm('دڵنیایت لە سڕینەوەی ئەم داواکارییە؟')) return;
-    database.ref('requests/' + key).remove()
-        .then(() => {
-            showNotification('داواکاری بە سەرکەوتوویی سڕایەوە 🗑️');
-            const item = document.getElementById('request-' + key);
-            if (item) {
-                item.style.transition = 'opacity 0.3s, transform 0.3s';
-                item.style.opacity = '0';
-                item.style.transform = 'scale(0.95)';
-                setTimeout(() => item.remove(), 300);
-            }
-        })
-        .catch(() => showNotification('هەڵە لە سڕینەوە!', 'error'));
+    _promptAdminDelete(
+        '🗑️ سڕینەوەی داواکاری',
+        'دڵنیایت لە سڕینەوەی ئەم داواکارییە؟',
+        function() {
+            database.ref('requests/' + key).remove()
+                .then(() => {
+                    showNotification('داواکاری بە سەرکەوتوویی سڕایەوە 🗑️');
+                    const item = document.getElementById('request-' + key);
+                    if (item) {
+                        item.style.transition = 'opacity 0.3s, transform 0.3s';
+                        item.style.opacity = '0';
+                        item.style.transform = 'scale(0.95)';
+                        setTimeout(() => item.remove(), 300);
+                    }
+                })
+                .catch(() => showNotification('هەڵە لە سڕینەوە!', 'error'));
+        }
+    );
 }
 
 // ==================== Edit Delivery Label ====================
@@ -2149,7 +2216,8 @@ function editDeliveryLabel(key) {
     const item = _allDeliveryItems.find(i => i.key === key);
     if (!item) { showNotification('زانیاری نەدۆزرایەوە!', 'error'); return; }
     const d = item;
-    const isUk = !!d.fullName; // UK labels have fullName field
+    // بەکارهێنانی d.type بۆ ناساندنی جۆری لەیبل — درووستترە لە !!d.fullName
+    const isUk = d.type === 'uk' || (!d.type && !!(d.fullName) && !(d.senderName));
 
     // Remove existing modal if any
     const existingModal = document.getElementById('editDeliveryModal');
@@ -2158,15 +2226,28 @@ function editDeliveryLabel(key) {
     let formFields = '';
     if (isUk) {
         formFields = `
+            <div style="font-size:.8rem;font-weight:700;color:#434b57;background:#F5F7FA;padding:6px 10px;border-radius:8px;margin-bottom:10px;">📤 Sender (UK)</div>
             <div class="form-group"><label style="font-weight:700;">Full Name *</label><input type="text" id="edit-fullName" value="${escapeHtml(d.fullName||'')}" style="direction:ltr;"></div>
             <div class="form-group"><label style="font-weight:700;">Phone *</label><input type="tel" id="edit-phone" value="${escapeHtml(d.phone||'')}" style="direction:ltr;"></div>
-            <div class="form-group"><label style="font-weight:700;">Receiver Name</label><input type="text" id="edit-receiverName" value="${escapeHtml(d.receiverName||'')}" style="direction:ltr;"></div>
-            <div class="form-group"><label style="font-weight:700;">Receiver Phone</label><input type="tel" id="edit-receiverPhone" value="${escapeHtml(d.receiverPhone||'')}" style="direction:ltr;"></div>
+            <div class="form-group"><label style="font-weight:700;">Company</label><input type="text" id="edit-company" value="${escapeHtml(d.company||'')}" style="direction:ltr;"></div>
+            <div class="form-group"><label style="font-weight:700;">Postcode *</label><input type="text" id="edit-postcode" value="${escapeHtml(d.postcode||'')}" style="direction:ltr;text-transform:uppercase;"></div>
             <div class="form-group"><label style="font-weight:700;">Address 1 *</label><input type="text" id="edit-address1" value="${escapeHtml(d.address1||'')}" style="direction:ltr;"></div>
             <div class="form-group"><label style="font-weight:700;">Address 2</label><input type="text" id="edit-address2" value="${escapeHtml(d.address2||'')}" style="direction:ltr;"></div>
             <div class="form-group"><label style="font-weight:700;">City *</label><input type="text" id="edit-city" value="${escapeHtml(d.city||'')}" style="direction:ltr;"></div>
             <div class="form-group"><label style="font-weight:700;">County</label><input type="text" id="edit-county" value="${escapeHtml(d.county||'')}" style="direction:ltr;"></div>
-            <div class="form-group"><label style="font-weight:700;">Postcode *</label><input type="text" id="edit-postcode" value="${escapeHtml(d.postcode||'')}" style="direction:ltr;text-transform:uppercase;"></div>
+            <hr style="margin:14px 0;border-color:#dee2e6;">
+            <div style="font-size:.8rem;font-weight:700;color:#434b57;background:#F5F7FA;padding:6px 10px;border-radius:8px;margin-bottom:10px;">📬 Receiver</div>
+            <div class="form-group"><label style="font-weight:700;">Receiver Name</label><input type="text" id="edit-receiverName" value="${escapeHtml(d.receiverName||'')}" style="direction:ltr;"></div>
+            <div class="form-group"><label style="font-weight:700;">Receiver Phone</label><input type="tel" id="edit-receiverPhone" value="${escapeHtml(d.receiverPhone||'')}" style="direction:ltr;"></div>
+            <div class="form-group"><label style="font-weight:700;">Receiver Company</label><input type="text" id="edit-receiverCompany" value="${escapeHtml(d.receiverCompany||'')}" style="direction:ltr;"></div>
+            <div class="form-group"><label style="font-weight:700;">Receiver Postcode</label><input type="text" id="edit-receiverPostcode" value="${escapeHtml(d.receiverPostcode||'')}" style="direction:ltr;text-transform:uppercase;"></div>
+            <div class="form-group"><label style="font-weight:700;">Receiver Address 1</label><input type="text" id="edit-receiverAddress1" value="${escapeHtml(d.receiverAddress1||'')}" style="direction:ltr;"></div>
+            <div class="form-group"><label style="font-weight:700;">Receiver Address 2</label><input type="text" id="edit-receiverAddress2" value="${escapeHtml(d.receiverAddress2||'')}" style="direction:ltr;"></div>
+            <div class="form-group"><label style="font-weight:700;">Receiver City</label><input type="text" id="edit-receiverCity" value="${escapeHtml(d.receiverCity||'')}" style="direction:ltr;"></div>
+            <div class="form-group"><label style="font-weight:700;">Receiver County</label><input type="text" id="edit-receiverCounty" value="${escapeHtml(d.receiverCounty||'')}" style="direction:ltr;"></div>
+            <div class="form-group"><label style="font-weight:700;">Destination City / شارەکەی مەبەست</label><input type="text" id="edit-destinationCity" value="${escapeHtml(d.destinationCity||'')}" style="direction:ltr;"></div>
+            <hr style="margin:14px 0;border-color:#dee2e6;">
+            <div style="font-size:.8rem;font-weight:700;color:#434b57;background:#F5F7FA;padding:6px 10px;border-radius:8px;margin-bottom:10px;">📦 Package</div>
             <div class="form-group"><label style="font-weight:700;">Package / Item *</label><input type="text" id="edit-packageName" value="${escapeHtml(d.packageName||'')}" style="direction:ltr;"></div>
             <div style="display:flex;gap:10px;">
                 <div class="form-group" style="flex:1;"><label style="font-weight:700;">Qty</label><input type="number" id="edit-packageQty" value="${escapeHtml(String(d.packageQty||''))}" style="direction:ltr;"></div>
@@ -2177,20 +2258,42 @@ function editDeliveryLabel(key) {
         `;
     } else {
         formFields = `
-            <div class="form-group"><label>ناوی نێردەر *</label><input type="text" id="edit-senderName" value="${escapeHtml(d.senderName||d.name||'')}"></div>
-            <div class="form-group"><label>ژمارەی نێردەر *</label><input type="tel" id="edit-senderMobile" value="${escapeHtml(d.senderMobile||d.mobile||'')}"></div>
-            <div class="form-group"><label>ژمارەی نێردەر ٢</label><input type="tel" id="edit-senderMobile2" value="${escapeHtml(d.senderMobile2||'')}"></div>
-            <div class="form-group"><label>شوێنی نێردەر *</label><input type="text" id="edit-senderLocation" value="${escapeHtml(d.senderLocation||d.address||'')}"></div>
-            <div class="form-group"><label>ناوی وەرگر *</label><input type="text" id="edit-receiverName" value="${escapeHtml(d.receiverName||'')}"></div>
-            <div class="form-group"><label>ژمارەی وەرگر *</label><input type="tel" id="edit-receiverMobile" value="${escapeHtml(d.receiverMobile||'')}"></div>
-            <div class="form-group"><label>ژمارەی وەرگر ٢</label><input type="tel" id="edit-receiverMobile2" value="${escapeHtml(d.receiverMobile2||'')}"></div>
-            <div class="form-group"><label>شوێنی وەرگر *</label><input type="text" id="edit-receiverLocation" value="${escapeHtml(d.receiverLocation||'')}"></div>
-            <div class="form-group"><label>ناوی کەلوپەل *</label><input type="text" id="edit-packageName" value="${escapeHtml(d.packageName||d.details||'')}"></div>
-            <div style="display:flex;gap:10px;">
-                <div class="form-group" style="flex:1;"><label>ژمارەی پارچە</label><input type="number" id="edit-packageQty" value="${escapeHtml(String(d.packageQty||''))}" min="1"></div>
-                <div class="form-group" style="flex:1;"><label>کیلۆ</label><input type="number" id="edit-packageKg" value="${escapeHtml(String(d.packageKg||''))}" step="0.1" min="0"></div>
+            <div style="display:flex;border-bottom:2px solid #e8ebf0;margin-bottom:16px;">
+                <button id="kuEditTab-sender" onclick="kuEditSwitchTab('sender')"
+                    style="flex:1;padding:10px;background:none;border:none;border-bottom:3px solid #434b57;font-family:inherit;font-size:.9rem;font-weight:700;color:#434b57;cursor:pointer;">
+                    📤 نێردەر
+                </button>
+                <button id="kuEditTab-receiver" onclick="kuEditSwitchTab('receiver')"
+                    style="flex:1;padding:10px;background:none;border:none;border-bottom:3px solid transparent;font-family:inherit;font-size:.9rem;font-weight:700;color:#8492a6;cursor:pointer;">
+                    📬 وەرگر
+                </button>
             </div>
-            <div class="form-group"><label>تیبینی</label><textarea id="edit-deliveryNote" rows="3">${escapeHtml(d.deliveryNote||'')}</textarea></div>
+            <div id="kuEditPane-sender">
+                <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:.82rem;color:#1D4ED8;">
+                    ℹ️ زانیاری <strong>نێردەر</strong> داخڵ بکە — ئەوەی بەستەکە دەنێرێت.
+                </div>
+                <div class="form-group"><label>ناوی نێردەر *</label><input type="text" id="edit-senderName" value="${escapeHtml(d.senderName||d.name||'')}"></div>
+                <div class="form-group"><label>ژمارەی مۆبایل *</label><input type="tel" id="edit-senderMobile" value="${escapeHtml(d.senderMobile||d.mobile||'')}"></div>
+                <div class="form-group"><label>ژمارەی مۆبایل ٢</label><input type="tel" id="edit-senderMobile2" value="${escapeHtml(d.senderMobile2||'')}"></div>
+                <div class="form-group"><label>شوێن *</label><input type="text" id="edit-senderLocation" value="${escapeHtml(d.senderLocation||d.address||'')}"></div>
+                <hr style="margin:14px 0;border-color:#e8ebf0;">
+                <div style="font-size:.8rem;font-weight:700;color:#434b57;background:#F5F7FA;padding:6px 10px;border-radius:8px;margin-bottom:10px;">📦 زانیاری بەستە</div>
+                <div class="form-group"><label>ناوی کەلوپەل *</label><input type="text" id="edit-packageName" value="${escapeHtml(d.packageName||d.details||'')}"></div>
+                <div style="display:flex;gap:10px;">
+                    <div class="form-group" style="flex:1;"><label>ژمارەی پارچە</label><input type="number" id="edit-packageQty" value="${escapeHtml(String(d.packageQty||''))}" min="1"></div>
+                    <div class="form-group" style="flex:1;"><label>کیلۆ</label><input type="number" id="edit-packageKg" value="${escapeHtml(String(d.packageKg||''))}" step="0.1" min="0"></div>
+                </div>
+                <div class="form-group"><label>تێبینی</label><textarea id="edit-deliveryNote" rows="3">${escapeHtml(d.deliveryNote||'')}</textarea></div>
+            </div>
+            <div id="kuEditPane-receiver" style="display:none;">
+                <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:.82rem;color:#166534;">
+                    ℹ️ زانیاری <strong>وەرگر</strong> داخڵ بکە — ئەوەی بەستەکە وەردەگرێت.
+                </div>
+                <div class="form-group"><label>ناوی وەرگر *</label><input type="text" id="edit-receiverName" value="${escapeHtml(d.receiverName||'')}"></div>
+                <div class="form-group"><label>ژمارەی مۆبایل *</label><input type="tel" id="edit-receiverMobile" value="${escapeHtml(d.receiverMobile||'')}"></div>
+                <div class="form-group"><label>ژمارەی مۆبایل ٢</label><input type="tel" id="edit-receiverMobile2" value="${escapeHtml(d.receiverMobile2||'')}"></div>
+                <div class="form-group"><label>شوێنی وەرگر *</label><input type="text" id="edit-receiverLocation" value="${escapeHtml(d.receiverLocation||'')}"></div>
+            </div>
         `;
     }
 
@@ -2221,6 +2324,26 @@ function editDeliveryLabel(key) {
     document.body.appendChild(modal);
 }
 
+function kuEditSwitchTab(tab) {
+    var senderPane = document.getElementById('kuEditPane-sender');
+    var receiverPane = document.getElementById('kuEditPane-receiver');
+    var senderTab = document.getElementById('kuEditTab-sender');
+    var receiverTab = document.getElementById('kuEditTab-receiver');
+    if (!senderPane || !receiverPane) return;
+
+    if (tab === 'sender') {
+        senderPane.style.display = 'block';
+        receiverPane.style.display = 'none';
+        if (senderTab) { senderTab.style.borderBottom = '3px solid #434b57'; senderTab.style.color = '#434b57'; }
+        if (receiverTab) { receiverTab.style.borderBottom = '3px solid transparent'; receiverTab.style.color = '#8492a6'; }
+    } else {
+        senderPane.style.display = 'none';
+        receiverPane.style.display = 'block';
+        if (receiverTab) { receiverTab.style.borderBottom = '3px solid #434b57'; receiverTab.style.color = '#434b57'; }
+        if (senderTab) { senderTab.style.borderBottom = '3px solid transparent'; senderTab.style.color = '#8492a6'; }
+    }
+}
+
 function saveEditedDelivery(key, isUk) {
     const g = (id) => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
     let updates = {};
@@ -2229,10 +2352,14 @@ function saveEditedDelivery(key, isUk) {
             showNotification('Please fill in required fields!', 'error'); return;
         }
         updates = {
-            fullName: g('edit-fullName'), phone: g('edit-phone'),
+            fullName: g('edit-fullName'), phone: g('edit-phone'), company: g('edit-company'),
+            postcode: g('edit-postcode'), address1: g('edit-address1'), address2: g('edit-address2'),
+            city: g('edit-city'), county: g('edit-county'),
             receiverName: g('edit-receiverName'), receiverPhone: g('edit-receiverPhone'),
-            address1: g('edit-address1'), address2: g('edit-address2'),
-            city: g('edit-city'), county: g('edit-county'), postcode: g('edit-postcode'),
+            receiverCompany: g('edit-receiverCompany'), receiverPostcode: g('edit-receiverPostcode'),
+            receiverAddress1: g('edit-receiverAddress1'), receiverAddress2: g('edit-receiverAddress2'),
+            receiverCity: g('edit-receiverCity'), receiverCounty: g('edit-receiverCounty'),
+            destinationCity: g('edit-destinationCity'),
             packageName: g('edit-packageName'), packageQty: g('edit-packageQty'),
             packageKg: g('edit-packageKg'), payment: g('edit-payment'),
             deliveryNote: g('edit-deliveryNote')
@@ -3854,8 +3981,32 @@ document.addEventListener('keydown', function(event) {
 
 function onUkCountryChange(val) {
     var note = document.getElementById('ukCountryNote');
-    if (!note) return;
-    note.style.display = (val && val !== 'United Kingdom') ? 'block' : 'none';
+    var destCityWrap = document.getElementById('ukDestinationCityWrap');
+    var destCity = document.getElementById('ukDestinationCity');
+
+    // نۆت پیشان بدە کاتێک ولات United Kingdom نەبێت
+    if (note) note.style.display = (val && val !== 'United Kingdom') ? 'block' : 'none';
+
+    // شاری مەبەست: تەنها بۆ Iraq و United Kingdom پیشان بدە
+    if (destCityWrap) {
+        var showDest = (val === 'Iraq' || val === 'United Kingdom' || val === '');
+        destCityWrap.style.display = showDest ? 'block' : 'none';
+    }
+    if (destCity) {
+        // تەنها Iraq و UK پێویستیان بە destination city هەیە
+        destCity.required = (val === 'Iraq' || val === 'United Kingdom' || val === '');
+        if (!destCity.required) destCity.value = '';
+    }
+
+    // نرخی هەڵبژێردراوی ولات ڕاست بکەوە بۆ ئەوەی United Kingdom نەبێت
+    var countrySelect = document.getElementById('ukReceiverCountry');
+    if (countrySelect && countrySelect.value === '' && val === '') {
+        // "Other Countries" separator هەڵبژێردراوە — UK بگەڕێنەوە
+        countrySelect.value = 'United Kingdom';
+        if (note) note.style.display = 'none';
+        if (destCityWrap) destCityWrap.style.display = 'block';
+        if (destCity) destCity.required = true;
+    }
 }
 
 function showUkDeliveryModal() { showModal('ukDeliveryModal'); }
@@ -4435,10 +4586,15 @@ function loadVideoListAdmin() {
 }
 
 function deleteVideo(key) {
-    if (!confirm('دڵنیایت لە سڕینەوەی ئەم ڤیدیۆیە؟')) return;
-    database.ref('videos/' + key).remove()
-        .then(() => { showNotification('ڤیدیۆ سڕایەوە 🗑️'); loadVideoListAdmin(); loadVideos(); })
-        .catch(() => showNotification('هەڵە لە سڕینەوە!', 'error'));
+    _promptAdminDelete(
+        '🗑️ سڕینەوەی ڤیدیۆ',
+        'دڵنیایت لە سڕینەوەی ئەم ڤیدیۆیە؟',
+        function() {
+            database.ref('videos/' + key).remove()
+                .then(() => { showNotification('ڤیدیۆ سڕایەوە 🗑️'); loadVideoListAdmin(); loadVideos(); })
+                .catch(() => showNotification('هەڵە لە سڕینەوە!', 'error'));
+        }
+    );
 }
 
 // ==================== International Post ====================
@@ -4732,10 +4888,15 @@ function intlSideHtml(title, s) {
 }
 
 function deleteIntlPost(key) {
-    if (!confirm('دڵنیایت لە سڕینەوە؟')) return;
-    database.ref('intlPost/' + key).remove()
-        .then(() => { showNotification('سڕایەوە 🗑️'); loadIntlPost(); })
-        .catch(() => showNotification('هەڵە!', 'error'));
+    _promptAdminDelete(
+        '🗑️ سڕینەوەی پۆستی نێودەوڵەتی',
+        'دڵنیایت لە سڕینەوەی ئەم تۆمارە؟',
+        function() {
+            database.ref('intlPost/' + key).remove()
+                .then(() => { showNotification('سڕایەوە 🗑️'); loadIntlPost(); })
+                .catch(() => showNotification('هەڵە!', 'error'));
+        }
+    );
 }
 
 function printIntlPost(key) {
@@ -5106,10 +5267,15 @@ function saveEditDriver(key) {
 }
 
 function deleteDriver(key) {
-    if (!confirm('دڵنیایت لە سڕینەوەی شۆفیر؟')) return;
-    database.ref('drivers/' + key).remove()
-        .then(function() { showNotification('سڕایەوە 🗑️'); loadDriversAdmin(); })
-        .catch(function() { showNotification('هەڵە!', 'error'); });
+    _promptAdminDelete(
+        '🗑️ سڕینەوەی شۆفیر',
+        'دڵنیایت لە سڕینەوەی ئەم شۆفیرە؟',
+        function() {
+            database.ref('drivers/' + key).remove()
+                .then(function() { showNotification('سڕایەوە 🗑️'); loadDriversAdmin(); })
+                .catch(function() { showNotification('هەڵە!', 'error'); });
+        }
+    );
 }
 
 function resetDriverPassword(key) {
@@ -5441,11 +5607,16 @@ function clearExpenseForm() {
 }
 
 function deleteExpense(key) {
-    if (!confirm('دڵنیایت لە سڕینەوەی ئەم خەرجیە؟')) return;
-    database.ref('expenses/' + key).remove().then(function() {
-        showNotification('سڕایەوە ✅');
-        _loadExpensesFromDB();
-    }).catch(function() { showNotification('هەڵە!', 'error'); });
+    _promptAdminDelete(
+        '🗑️ سڕینەوەی خەرجی',
+        'دڵنیایت لە سڕینەوەی ئەم خەرجیە؟',
+        function() {
+            database.ref('expenses/' + key).remove().then(function() {
+                showNotification('سڕایەوە ✅');
+                _loadExpensesFromDB();
+            }).catch(function() { showNotification('هەڵە!', 'error'); });
+        }
+    );
 }
 
 // ── پانێلی وردەکاری (ئوڤەرلەی) ──
@@ -7267,29 +7438,30 @@ function filterUsersAdmin(val) {
 }
 
 function deleteUserAdmin(key, source, name) {
-    if (!confirm('دڵنیایت لە سڕینەوەی ئەکاونتی «' + name + '»؟\nئەم کارە گەڕاندنەوەی نییە.')) return;
-
-    function afterDelete() {
-        showNotification('ئەکاونتی ' + name + ' سڕایەوە 🗑️');
-        loadUsersAdmin();
-    }
-
-    // لە localStorage سڕەوە
-    try {
-        var lsUsers = JSON.parse(localStorage.getItem('ukbazar_siteUsers') || '{}');
-        if (lsUsers[key]) {
-            delete lsUsers[key];
-            localStorage.setItem('ukbazar_siteUsers', JSON.stringify(lsUsers));
+    _promptAdminDelete(
+        '🗑️ سڕینەوەی ئەکاونت',
+        'دڵنیایت لە سڕینەوەی ئەکاونتی «' + name + '»؟ ئەم کارە گەڕاندنەوەی نییە.',
+        function() {
+            function afterDelete() {
+                showNotification('ئەکاونتی ' + name + ' سڕایەوە 🗑️');
+                loadUsersAdmin();
+            }
+            try {
+                var lsUsers = JSON.parse(localStorage.getItem('ukbazar_siteUsers') || '{}');
+                if (lsUsers[key]) {
+                    delete lsUsers[key];
+                    localStorage.setItem('ukbazar_siteUsers', JSON.stringify(lsUsers));
+                }
+            } catch(e) {}
+            if (source === 'firebase' && !_isFileProtocol()) {
+                database.ref('siteUsers/' + key).remove()
+                    .then(afterDelete)
+                    .catch(function() { showNotification('هەڵە لە سڕینەوە', 'error'); });
+            } else {
+                afterDelete();
+            }
         }
-    } catch(e) {}
-
-    if (source === 'firebase' && !_isFileProtocol()) {
-        database.ref('siteUsers/' + key).remove()
-            .then(afterDelete)
-            .catch(function() { showNotification('هەڵە لە سڕینەوە', 'error'); });
-    } else {
-        afterDelete();
-    }
+    );
 }
 
 // ==================== نۆتیفکەیشن لیست ====================
