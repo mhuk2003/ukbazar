@@ -643,9 +643,14 @@ function showFibModal() { showModal('fibModal'); }
 // ==================== Admin Functions ====================
 // وشەی تێپەڕی بەڕێوەبەر بە hash پاراستراوە — نەک بە تەکست ئاشکرا
 var _ADMIN_H = 'aa5ff7ddeca7848ed7eb16270306d14ba2f7b65171ca0e700ec2e2adda115b83';
+var _DELETE_H = '718b1419c14f1f76f5898e944860429c5ceb7a64c0a63fce8e0e4f8f710fe429'; // hama1977
 function _checkAdminPass(p) {
   return crypto.subtle.digest('SHA-256', new TextEncoder().encode(p))
     .then(function(b){ return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0');}).join('') === _ADMIN_H; });
+}
+function _checkDeletePass(p) {
+  return crypto.subtle.digest('SHA-256', new TextEncoder().encode(p))
+    .then(function(b){ return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0');}).join('') === _DELETE_H; });
 }
 
 function showAdminLogin() {
@@ -2016,7 +2021,7 @@ function _doAdminDelete() {
         if (errEl) { errEl.textContent = 'وشەی تێپەڕ بنووسە!'; errEl.style.display = 'block'; }
         return;
     }
-    _checkAdminPass(pass).then(function(ok) {
+    _checkDeletePass(pass).then(function(ok) {
         if (!ok) {
             if (errEl) { errEl.textContent = '\u274C وشەی تێپەڕ هەڵەیە!'; errEl.style.display = 'block'; }
             if (inp) { inp.value = ''; inp.focus(); }
@@ -2527,7 +2532,7 @@ function _doDeleteLabel(key) {
     var pass = inp ? inp.value : '';
     var errEl = document.getElementById('_delLabelErr');
     if (!pass) { if(errEl){errEl.textContent='وشەی تێپەڕ بنووسە!';errEl.style.display='block';} return; }
-    _checkAdminPass(pass).then(function(ok) {
+    _checkDeletePass(pass).then(function(ok) {
       if (!ok) {
           if(errEl){errEl.textContent='❌ وشەی تێپەڕ هەڵەیە!';errEl.style.display='block';}
           if(inp){inp.value='';inp.focus();}
