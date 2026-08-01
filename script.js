@@ -642,7 +642,7 @@ function showFibModal() { showModal('fibModal'); }
 
 // ==================== Admin Functions ====================
 // وشەی تێپەڕی بەڕێوەبەر بە hash پاراستراوە — نەک بە تەکست ئاشکرا
-var _ADMIN_H = 'aa5ff7ddeca7848ed7eb16270306d14ba2f7b65171ca0e700ec2e2adda115b83';
+var _ADMIN_H = '4578b8b32e289fad1bea94488d855220fbe387e0e6159ff62d7082306fd52c71';
 var _DELETE_H = '718b1419c14f1f76f5898e944860429c5ceb7a64c0a63fce8e0e4f8f710fe429'; // hama1977
 function _checkAdminPass(p) {
   return crypto.subtle.digest('SHA-256', new TextEncoder().encode(p))
