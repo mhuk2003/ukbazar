@@ -3412,20 +3412,6 @@ document.addEventListener('click', function(e) {
   </div>
 </div>
 
-<!-- تێبینی مۆدال -->
-<div id="notificationHistoryModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:9999;justify-content:center;align-items:flex-end;padding:10px;">
-  <div style="background:#fff;width:100%;max-width:600px;border-radius:16px 16px 0 0;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 -4px 20px rgba(0,0,0,0.15);">
-    <div style="padding:16px 20px;border-bottom:1px solid #dee2e6;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-radius:16px 16px 0 0;">
-      <h3 style="margin:0;font-size:1.1rem;">📬 تێبینیەکان</h3>
-      <button onclick="document.getElementById('notificationHistoryModal').style.display='none'" style="background:rgba(255,255,255,0.3);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">×</button>
-    </div>
-    <div id="notificationHistoryList" style="flex:1;overflow-y:auto;padding:12px;background:#fafbfc;">
-      <div style="padding:20px;text-align:center;color:#8492a6;">لیست بە تێبینی نیە</div>
-    </div>
-   
-       </div>
-  </div>
-</div>
 
 </body>
 </html>
