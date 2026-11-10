@@ -57,8 +57,9 @@ function sanitizeProduct(p) {
 }
 
 // وێنەی یەدەگ - بەکارهێنانی وێنەی SVG سادە
-const DEFAULT_PRODUCT_IMAGE = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'300\' viewBox=\'0 0 300 300\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23667eea\'/%3E%3Ctext x=\'50\' y=\'150\' font-family=\'Arial\' font-size=\'24\' fill=\'%23ffffff\'%3EUK BAZAR%3C/text%3E%3C/svg%3E';
-const DEFAULT_SLIDER_IMAGE = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'1200\' height=\'400\' viewBox=\'0 0 1200 400\'%3E%3Crect width=\'1200\' height=\'400\' fill=\'%23667eea\'/%3E%3Ctext x=\'400\' y=\'200\' font-family=\'Arial\' font-size=\'48\' fill=\'%23ffffff\'%3EUK BAZAR%3C/text%3E%3C/svg%3E';
+// Encode SVG quotes so these URLs are safe inside inline onerror JavaScript strings.
+const DEFAULT_PRODUCT_IMAGE = 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27300%27 height=%27300%27 viewBox=%270 0 300 300%27%3E%3Crect width=%27300%27 height=%27300%27 fill=%27%23667eea%27/%3E%3Ctext x=%2750%27 y=%27150%27 font-family=%27Arial%27 font-size=%2724%27 fill=%27%23ffffff%27%3EUK BAZAR%3C/text%3E%3C/svg%3E';
+const DEFAULT_SLIDER_IMAGE = 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%271200%27 height=%27400%27 viewBox=%270 0 1200 400%27%3E%3Crect width=%271200%27 height=%27400%27 fill=%27%23667eea%27/%3E%3Ctext x=%27400%27 y=%27200%27 font-family=%27Arial%27 font-size=%2748%27 fill=%27%23ffffff%27%3EUK BAZAR%3C/text%3E%3C/svg%3E';
 
 // ==================== Inject Compact Label CSS for Mobile ====================
 (function injectLabelStyles() {
